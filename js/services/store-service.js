@@ -1,0 +1,104 @@
+const bcrypt = require('bcryptjs');
+
+class StoreService {
+  constructor(repository) {
+    this.repository = repository;
+  }
+
+  async getProducts(options = {}) {
+    return this.repository.getProducts(options);
+  }
+
+  async getProductById(id) {
+    return this.repository.getProductById(id);
+  }
+
+  async createProduct(productData) {
+    if (!productData || !productData.name || !productData.category || !Number.isFinite(Number(productData.price)) || !Number.isFinite(Number(productData.stock))) {
+      throw new Error('جميع الحقول مطلوبة (الاسم، القسم، السعر، الكمية)');
+    }
+    return this.repository.createProduct(productData);
+  }
+
+  async updateProduct(id, productData) {
+    return this.repository.updateProduct(id, productData);
+  }
+
+  async deleteProduct(id) {
+    return this.repository.deleteProduct(id);
+  }
+
+  async createUser(userData) {
+    if (!userData || !String(userData.email || '').trim()) {
+      throw new Error('البريد الإلكتروني مطلوب');
+    }
+    if (!userData.password || String(userData.password).length < 6) {
+      throw new Error('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+    }
+    return this.repository.createUser(userData);
+  }
+
+  async verifyUserCredentials(email, password) {
+    if (!email || !password) return null;
+    return this.repository.verifyUserCredentials(email, password);
+  }
+
+  async findUserByEmail(email) {
+    return this.repository.findUserByEmail(email);
+  }
+
+  async findUserById(id) {
+    return this.repository.findUserById(id);
+  }
+
+  async updateUserProfile(id, data) {
+    return this.repository.updateUserProfile(id, data);
+  }
+
+  async addUserAddress(userId, addressData) {
+    return this.repository.addUserAddress(userId, addressData);
+  }
+
+  async deleteUserAddress(userId, addressId) {
+    return this.repository.deleteUserAddress(userId, addressId);
+  }
+
+  async addToCart(userId, productId, quantity = 1) {
+    return this.repository.addToCart(userId, productId, quantity);
+  }
+
+  async getCartItems(userId) {
+    return this.repository.getCartItems(userId);
+  }
+
+  async updateCartItem(cartItemId, quantity) {
+    return this.repository.updateCartItem(cartItemId, quantity);
+  }
+
+  async removeCartItem(cartItemId) {
+    return this.repository.removeCartItem(cartItemId);
+  }
+
+  async createOrder(orderData) {
+    if (!orderData || (!orderData.cart && !orderData.total)) {
+      throw new Error('السلة أو الإجمالي مطلوب');
+    }
+    return this.repository.createOrder(orderData);
+  }
+
+  async getOrderById(id) {
+    return this.repository.getOrderById(id);
+  }
+
+  async getOrderItems(orderId) {
+    return this.repository.getOrderItems(orderId);
+  }
+
+  async getOrders(userId = null) {
+    return this.repository.getOrders(userId);
+  }
+}
+
+module.exports = {
+  createStoreService: (repository) => new StoreService(repository)
+};

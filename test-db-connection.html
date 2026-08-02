@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>اختبار اتصال قاعدة البيانات</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #3498db;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>اختبار اتصال قاعدة البيانات</h1>
+
+        <div class="test-section">
+            <h2>اختبار الاتصال المباشر</h2>
+            <p>اختبار الاتصال بقاعدة البيانات مباشرة من المتصفح باستخدام واجهة برمجة التطبيقات (API).</p>
+            <button class="btn" id="testDirectConnection">
+                <i class="fas fa-database"></i> اختبار الاتصال المباشر
+            </button>
+            <div id="directResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>اختبار الاتصال عبر الخادم</h2>
+            <p>اختبار الاتصال بقاعدة البيانات عبر الخادم Node.js.</p>
+            <button class="btn" id="testServerConnection">
+                <i class="fas fa-server"></i> اختبار الاتصال عبر الخادم
+            </button>
+            <div id="serverResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>اختبار استعلام المنتجات</h2>
+            <p>اختبار استرجاع قائمة المنتجات من قاعدة البيانات.</p>
+            <button class="btn" id="testProductsQuery">
+                <i class="fas fa-box"></i> اختبار استعلام المنتجات
+            </button>
+            <div id="productsResult" class="result"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>اختبار استعلام المستخدمين</h2>
+            <p>اختبار استرجاع قائمة المستخدمين من قاعدة البيانات.</p>
+            <button class="btn" id="testUsersQuery">
+                <i class="fas fa-users"></i> اختبار استعلام المستخدمين
+            </button>
+            <div id="usersResult" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // اختبار الاتصال المباشر
+            document.getElementById('testDirectConnection').addEventListener('click', function() {
+                const resultDiv = document.getElementById('directResult');
+                resultDiv.innerHTML = '<div class="loading"></div> جاري اختبار الاتصال...';
+                resultDiv.style.display = 'block';
+
+                // محاولة الاتصال مباشرة
+                fetch('/api/test-connection')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            resultDiv.className = 'result success';
+                            resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> الاتصال ناجح: ' + data.message;
+                        } else {
+                            resultDiv.className = 'result error';
+                            resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> فشل الاتصال: ' + data.message;
+                        }
+                    })
+                    .catch(error => {
+                        resultDiv.className = 'result error';
+                        resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> خطأ في الاتصال: ' + error.message;
+                    });
+            });
+
+            // اختبار الاتصال عبر الخادم
+            document.getElementById('testServerConnection').addEventListener('click', function() {
+                const resultDiv = document.getElementById('serverResult');
+                resultDiv.innerHTML = '<div class="loading"></div> جاري اختبار الاتصال...';
+                resultDiv.style.display = 'block';
+
+                fetch('/api/server-connection')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            resultDiv.className = 'result success';
+                            resultDiv.innerHTML = '<i class="fas fa-check-circle"></i> الاتصال ناجح: ' + data.message;
+                        } else {
+                            resultDiv.className = 'result error';
+                            resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> فشل الاتصال: ' + data.message;
+                        }
+                    })
+                    .catch(error => {
+                        resultDiv.className = 'result error';
+                        resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> خطأ في الاتصال: ' + error.message;
+                    });
+            });
+
+            // اختبار استعلام المنتجات
+            document.getElementById('testProductsQuery').addEventListener('click', function() {
+                const resultDiv = document.getElementById('productsResult');
+                resultDiv.innerHTML = '<div class="loading"></div> جاري جلب المنتجات...';
+                resultDiv.style.display = 'block';
+
+                fetch('/api/products')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (Array.isArray(data)) {
+                            resultDiv.className = 'result success';
+                            resultDiv.innerHTML = `
+                                <i class="fas fa-check-circle"></i> تم جلب ${data.length} منتج بنجاح
+                                <div class="pre">${JSON.stringify(data.slice(0, 3), null, 2)}</div>
+                                ${data.length > 3 ? '<p>... (تم عرض أول 3 منتجات فقط)</p>' : ''}
+                            `;
+                        } else {
+                            resultDiv.className = 'result error';
+                            resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> فشل جلب المنتجات: البيانات غير صالحة';
+                        }
+                    })
+                    .catch(error => {
+                        resultDiv.className = 'result error';
+                        resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> خطأ في جلب المنتجات: ' + error.message;
+                    });
+            });
+
+            // اختبار استعلام المستخدمين
+            document.getElementById('testUsersQuery').addEventListener('click', function() {
+                const resultDiv = document.getElementById('usersResult');
+                resultDiv.innerHTML = '<div class="loading"></div> جاري جلب المستخدمين...';
+                resultDiv.style.display = 'block';
+
+                fetch('/api/users')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (Array.isArray(data)) {
+                            resultDiv.className = 'result success';
+                            resultDiv.innerHTML = `
+                                <i class="fas fa-check-circle"></i> تم جلب ${data.length} مستخدم بنجاح
+                                <div class="pre">${JSON.stringify(data.slice(0, 3), null, 2)}</div>
+                                ${data.length > 3 ? '<p>... (تم عرض أول 3 مستخدمين فقط)</p>' : ''}
+                            `;
+                        } else {
+                            resultDiv.className = 'result error';
+                            resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> فشل جلب المستخدمين: البيانات غير صالحة';
+                        }
+                    })
+                    .catch(error => {
+                        resultDiv.className = 'result error';
+                        resultDiv.innerHTML = '<i class="fas fa-times-circle"></i> خطأ في جلب المستخدمين: ' + error.message;
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

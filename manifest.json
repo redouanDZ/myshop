@@ -1,0 +1,23 @@
+{
+  "short_name": "متجري",
+  "name": "متجري - المتجر الإلكتروني التقني",
+  "icons": [
+    {
+      "src": "/images/christopher-gower-m_HRfLhgABo-unsplash.jpg",
+      "type": "image/jpeg",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/christopher-gower-m_HRfLhgABo-unsplash.jpg",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#0f172a",
+  "theme_color": "#2563eb",
+  "display": "standalone",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "ar"
+}

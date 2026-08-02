@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الطلبات - متجر الإلكتروني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">متجر الإلكتروني</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">الموقع</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
+                    <li><a href="orders.html" class="active">الطلبات</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="admin-dashboard">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>مرحباً، أحمد</h2>
+                <p>مدير المتجر</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i>لوحة التحكم</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i>المنتجات</a></li>
+                <li><a href="orders.html" class="active"><i class="fas fa-shopping-bag"></i>الطلبات</a></li>
+                <li><a href="#"><i class="fas fa-users"></i>العملاء</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i>التقارير</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i>الإعدادات</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i>تسجيل الخروج</a></li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1>إدارة الطلبات</h1>
+            </div>
+
+            <div class="orders-container">
+                <h2>قائمة الطلبات</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>رقم الطلب</th>
+                            <th>العميل</th>
+                            <th>الإجمالي</th>
+                            <th>التاريخ</th>
+                            <th>الحالة</th>
+                            <th>إجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-orders-tbody">
+                        <!-- Dynamic content loaded via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadAdminOrders() {
+            try {
+                const response = await fetch('/api/orders');
+                if (!response.ok) return;
+                const orders = await response.json();
+
+                const tbody = document.getElementById('admin-orders-tbody');
+                if (!tbody) return;
+
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">لا توجد طلبات حالياً</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = orders.map(order => `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${order.shippingInfo ? order.shippingInfo.fullName || 'عميل المتجر' : 'عميل #' + order.user_id}</td>
+                        <td class="order-total">${Number(order.total).toLocaleString()} دج</td>
+                        <td>${new Date(order.created_at).toLocaleDateString('ar-SA')}</td>
+                        <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
+                        <td class="order-actions">
+                            <a href="../order-confirmation.html?id=${order.id}" target="_blank" class="btn-view" title="معاينة"><i class="fas fa-eye"></i></a>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+
+            }
+        }
+
+        function getStatusText(status) {
+            const map = {
+                'pending': 'قيد المعالجة',
+                'processing': 'قيد الشحن',
+                'shipped': 'مرسل',
+                'delivered': 'مكتمل',
+                'cancelled': 'ملغي'
+            };
+            return map[status] || status;
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAdminOrders);
+    </script>
+</body>
+</html>

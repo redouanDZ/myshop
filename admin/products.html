@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المنتجات - متجر الإلكتروني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- رأس الموقع -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">متجر الإلكتروني</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">الموقع</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="../cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="#" class="user-icon">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- لوحة التحكم -->
+    <div class="admin-dashboard">
+        <!-- الشريط الجانبي -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>مرحباً، أحمد</h2>
+                <p>مدير المتجر</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i>لوحة التحكم</a></li>
+                <li><a href="products.html" class="active"><i class="fas fa-box"></i>المنتجات</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i>الطلبات</a></li>
+                <li><a href="#"><i class="fas fa-users"></i>العملاء</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i>التقارير</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i>الإعدادات</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i>تسجيل الخروج</a></li>
+            </ul>
+        </div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <div class="page-header">
+                <h1>إدارة المنتجات</h1>
+                <button class="add-product-btn" onclick="openAddProductModal()">
+                    <i class="fas fa-plus"></i> إضافة منتج جديد
+                </button>
+            </div>
+
+            <div class="products-container">
+                <div class="products-header">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="ابحث عن منتج...">
+                    </div>
+                    <div class="filter-box">
+                        <select id="categoryFilter">
+                            <option value="">الكل</option>
+                            <option value="إلكترونيات">إلكترونيات</option>
+                            <option value="ملابس">ملابس</option>
+                            <option value="منزل">منزل</option>
+                            <option value="كتب">كتب</option>
+                        </select>
+                        <select id="stockFilter">
+                            <option value="">الكل</option>
+                            <option value="in-stock">متوفر</option>
+                            <option value="low-stock">قليل</option>
+                            <option value="out-of-stock">غير متوفر</option>
+                        </select>
+                        <select id="sortFilter">
+                            <option value="newest">الأحدث أولاً</option>
+                            <option value="oldest">الأقدم أولاً</option>
+                            <option value="price-asc">السعر: من الأقل إلى الأعلى</option>
+                            <option value="price-desc">السعر: من الأعلى إلى الأقل</option>
+                            <option value="name-asc">الاسم: أ-ي</option>
+                            <option value="name-desc">الاسم: ي-أ</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>المنتج</th>
+                            <th>السعر</th>
+                            <th>الكمية</th>
+                            <th>الحالة</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <div class="pagination">
+                    <button class="page-btn" id="prevPage"><i class="fas fa-chevron-left"></i></button>
+                    <button class="page-btn active" data-page="1">1</button>
+                    <button class="page-btn" data-page="2">2</button>
+                    <button class="page-btn" data-page="3">3</button>
+                    <button class="page-btn" data-page="4">4</button>
+                    <button class="page-btn" data-page="5">5</button>
+                    <button class="page-btn" id="nextPage"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- نافذة منبثقة لإضافة/تعديل المنتج -->
+    <div class="modal" id="productModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">إضافة منتج جديد</h2>
+                <button class="close-modal" onclick="closeProductModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productName">اسم المنتج</label>
+                            <input type="text" id="productName" placeholder="أدخل اسم المنتج">
+                        </div>
+                        <div class="form-group">
+                            <label for="productCategory">التصنيف</label>
+                            <select id="productCategory">
+                                <option value="">اختر تصنيف</option>
+                                <option value="إلكترونيات">إلكترونيات</option>
+                                <option value="ملابس">ملابس</option>
+                                <option value="منزل">منزل</option>
+                                <option value="كتب">كتب</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="productPrice">السعر (بالدج)</label>
+                            <input type="number" id="productPrice" placeholder="أدخل السعر بالدج" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label for="productStock">الكمية المتوفرة</label>
+                            <input type="number" id="productStock" placeholder="أدخل الكمية" min="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>صورة المنتج</label>
+                        <div class="image-upload">
+                            <div class="image-preview">
+                                <img src="../images/product-placeholder.jpg" alt="معاينة الصورة" id="imagePreview">
+                            </div>
+                            <input type="file" id="productImage" accept="image/*" style="display: none;">
+                            <button type="button" class="upload-btn" onclick="document.getElementById('productImage').click()">
+                                <i class="fas fa-upload"></i> تحميل صورة
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeProductModal()">إلغاء</button>
+                <button type="button" class="btn btn-primary" onclick="saveProduct()">حفظ المنتج</button>
+            </div>
+        </div>
+    </div>
+<script>
+// Gestion de la prévisualisation de l'image
+document.addEventListener('DOMContentLoaded', function() {
+    const productImage = document.getElementById('productImage');
+    const imagePreview = document.getElementById('imagePreview');
+    
+    if (productImage && imagePreview) {
+        productImage.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});
+
+// Fonctions pour gérer la modale des produits
+function openAddProductModal() {
+    document.getElementById('modalTitle').textContent = 'إضافة منتج جديد';
+    document.getElementById('productModal').style.display = 'block';
+    document.getElementById('productName').value = '';
+    document.getElementById('productCategory').value = '';
+    document.getElementById('productPrice').value = '';
+    document.getElementById('productStock').value = '';
+    document.getElementById('imagePreview').src = '../images/product-placeholder.jpg';
+}
+
+function closeProductModal() {
+    document.getElementById('productModal').style.display = 'none';
+}
+
+// Fonction pour sauvegarder le produit
+async function saveProduct() {
+    const name = document.getElementById('productName').value;
+    const category = document.getElementById('productCategory').value;
+    const price = parseFloat(document.getElementById('productPrice').value);
+    const stock = parseInt(document.getElementById('productStock').value);
+    const imageInput = document.getElementById('productImage');
+    
+    // Validation
+    if (!name || !category || isNaN(price) || isNaN(stock)) {
+        alert('يرجى ملء جميع الحقول الإلزامية');
+        return;
+    }
+    
+    try {
+        // Créer un objet FormData pour inclure l'image
+        const formData = new FormData();
+        formData.append('name', name);
+        formData.append('category', category);
+        formData.append('price', price);
+        formData.append('stock', stock);
+        formData.append('status', 'active');
+        
+        // Ajouter l'image si elle a été sélectionnée
+        if (imageInput.files[0]) {
+            formData.append('image', imageInput.files[0]);
+        }
+        
+        // Envoyer les données au serveur
+        const response = await fetch('/api/products', {
+            method: 'POST',
+            body: formData
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erreur lors de la sauvegarde du produit');
+        }
+        
+        const result = await response.json();
+        alert('تم حفظ المنتج بنجاح!');
+        closeProductModal();
+        
+        // Recharger la liste des produits
+        loadProducts();
+    } catch (error) {
+
+        alert('حدث خطأ أثناء حفظ المنتج');
+    }
+}
+
+// Fonction pour charger les produits
+async function loadProducts() {
+    try {
+        const response = await fetch('/api/products');
+        if (!response.ok) throw new Error('Erreur lors du chargement des produits');
+        
+        const data = await response.json();
+        const products = Array.isArray(data) ? data : (Array.isArray(data && data.products) ? data.products : []);
+        const tbody = document.querySelector('.products-table tbody');
+        
+        if (tbody) {
+            tbody.innerHTML = '';
+            
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <div class="product-info">
+                            <img src="${product.image_url || '../images/product-placeholder.jpg'}" alt="${product.name}">
+                            <span>${product.name}</span>
+                        </div>
+                    </td>
+                    <td>${product.price.toFixed(2)} دج</td>
+                    <td>${product.stock}</td>
+                    <td>
+                        <span class="status-badge ${product.status === 'active' ? 'active' : 'inactive'}">
+                            ${product.status === 'active' ? 'نشط' : 'غير نشط'}
+                        </span>
+                    </td>
+                    <td>
+                        <button class="action-btn edit" onclick="editProduct(${product.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteProduct(${product.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+    } catch (error) {
+
+    }
+}
+
+// Fonction pour modifier un produit
+function editProduct(id) {
+    // Implémenter la modification de produit
+
+}
+
+// Fonction pour supprimer un produit
+async function deleteProduct(id) {
+    if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+    
+    try {
+        const response = await fetch(`/api/products/${id}`, {
+            method: 'DELETE'
+        });
+        
+        if (!response.ok) throw new Error('Erreur lors de la suppression');
+        
+        alert('تم حذف المنتج بنجاح');
+        loadProducts();
+    } catch (error) {
+
+        alert('حدث خطأ أثناء حذف المنتج');
+    }
+}
+
+// Initialiser la page
+document.addEventListener('DOMContentLoaded', function() {
+    loadProducts();
+    
+    // Gérer la pagination
+    document.getElementById('prevPage').addEventListener('click', function() {
+        // Implémenter la navigation vers la page précédente
+    });
+    
+    document.getElementById('nextPage').addEventListener('click', function() {
+        // Implémenter la navigation vers la page suivante
+    });
+    
+    // Gérer les filtres
+    document.getElementById('searchInput').addEventListener('input', function() {
+        loadProducts();
+    });
+    
+    document.getElementById('categoryFilter').addEventListener('change', function() {
+        loadProducts();
+    });
+    
+    document.getElementById('stockFilter').addEventListener('change', function() {
+        loadProducts();
+    });
+    
+    document.getElementById('sortFilter').addEventListener('change', function() {
+        loadProducts();
+    });
+});
+</script>
+    <script src="../js/products.js"></script>
+</body>
+</html>

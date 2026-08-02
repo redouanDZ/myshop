@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - متجر الإلكتروني</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+
+</head>
+<body>
+    <!-- رأس الموقع -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">متجر الإلكتروني</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">الموقع</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="../cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="#" class="user-icon">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- لوحة التحكم -->
+    <div class="admin-dashboard">
+        <!-- الشريط الجانبي -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>مرحباً، أحمد</h2>
+                <p>مدير المتجر</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html" class="active"><i class="fas fa-tachometer-alt"></i>لوحة التحكم</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i>المنتجات</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i>الطلبات</a></li>
+                <li><a href="#"><i class="fas fa-users"></i>العملاء</a></li>
+                <li><a href="#"><i class="fas fa-chart-bar"></i>التقارير</a></li>
+                <li><a href="#"><i class="fas fa-cog"></i>الإعدادات</a></li>
+                <li><a href="#"><i class="fas fa-sign-out-alt"></i>تسجيل الخروج</a></li>
+            </ul>
+        </div>
+
+        <!-- المحتوى الرئيسي -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <h1>لوحة التحكم</h1>
+                <div class="user-info">
+                    <span>أحمد محمد</span>
+                    <img src="../images/admin-avatar.jpg" alt="صورة المدير">
+                </div>
+            </div>
+
+            <!-- إحصائيات عامة -->
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>1,234</h3>
+                        <p>إجمالي الزوار</p>
+                    </div>
+                    <div class="stat-icon blue">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>567</h3>
+                        <p>إجمالي الطلبات</p>
+                    </div>
+                    <div class="stat-icon green">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>89</h3>
+                        <p>طلبات جديدة</p>
+                    </div>
+                    <div class="stat-icon orange">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p>المنتجات المنتهية</p>
+                    </div>
+                    <div class="stat-icon red">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الرسوم البيانية -->
+            <div class="charts-container">
+                <div class="chart-box">
+                    <h2>عدد الطلبات حسب الشهور</h2>
+                    <canvas id="ordersChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h2>حالات الطلبات</h2>
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <!-- النشاط الأخير -->
+            <div class="recent-activity">
+                <h2>النشاط الأخير</h2>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>طلب جديد #12345</h4>
+                        <p>تم إيداع طلب جديد من قبل عميل جديد</p>
+                    </div>
+                    <div class="activity-time">منذ 5 دقائق</div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>عميل جديد</h4>
+                        <p>قام عميل جديد بالتسجيل في المتجر</p>
+                    </div>
+                    <div class="activity-time">منذ 15 دقيقة</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        // مخطط الطلبات
+        const ordersCtx = document.getElementById('ordersChart').getContext('2d');
+        new Chart(ordersCtx, {
+            type: 'line',
+            data: {
+                labels: ['يناير', 'فبراير', 'مارس', 'أبريل', 'ماي', 'جوان'],
+                datasets: [{
+                    label: 'عدد الطلبات',
+                    data: [10, 20, 15, 30, 25, 40],
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.2)',
+                    fill: true
+                }]
+            }
+        });
+
+        // مخطط حالات الطلبات
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['قيد الانتظار', 'تم التسليم', 'ملغي'],
+                datasets: [{
+                    data: [12, 30, 5],
+                    backgroundColor: ['#f39c12', '#2ecc71', '#e74c3c']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>

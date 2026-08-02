@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حسابي - متجر التجارة الإلكترونية</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Account Dashboard Custom Styles */
+        .account-page-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 900px) {
+            .account-page-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .account-sidebar {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 24px 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            height: fit-content;
+        }
+
+        .user-card-header {
+            text-align: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .user-avatar-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: #ffffff;
+            font-size: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 12px;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .user-card-header h3 {
+            font-size: 1.2rem;
+            margin: 0 0 4px;
+            color: var(--dark-color, #2c3e50);
+        }
+
+        .user-card-header p {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin: 0;
+        }
+
+        .account-nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .account-nav-list li {
+            margin-bottom: 8px;
+        }
+
+        .account-nav-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            color: #555555;
+            font-size: 0.98rem;
+            font-weight: 500;
+            text-align: right;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .account-nav-btn i {
+            font-size: 1.1rem;
+            width: 20px;
+            color: #7f8c8d;
+            transition: color 0.25s ease;
+        }
+
+        .account-nav-btn:hover {
+            background-color: rgba(52, 152, 219, 0.08);
+            color: #3498db;
+        }
+
+        .account-nav-btn.active {
+            background-color: #3498db;
+            color: #ffffff;
+        }
+
+        .account-nav-btn.active i {
+            color: #ffffff;
+        }
+
+        .account-content-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            min-height: 500px;
+        }
+
+        .tab-section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f1f2f6;
+            color: var(--dark-color, #2c3e50);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: #333333;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            padding: 12px 14px;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+        }
+
+        /* Address Cards Grid */
+        .addresses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .address-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+            background: #fafbfc;
+            transition: all 0.2s ease;
+        }
+
+        .address-card.default-address {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.03);
+        }
+
+        .address-badge {
+            display: inline-block;
+            background: #3498db;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .address-card h4 {
+            margin: 0 0 8px;
+            font-size: 1.1rem;
+        }
+
+        .address-card p {
+            margin: 4px 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .address-actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-sm-danger {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        /* Orders Table */
+        .order-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .order-item-card {
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 18px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #ffffff;
+        }
+
+        .order-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .order-id-tag {
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: #2c3e50;
+        }
+
+        .order-status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: bold;
+        }
+
+        .status-pending { background: #f39c12; color: #fff; }
+        .status-processing { background: #3498db; color: #fff; }
+        .status-shipped { background: #9b59b6; color: #fff; }
+        .status-delivered { background: #2ecc71; color: #fff; }
+
+        .order-details-btn {
+            background: #f1f2f6;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #333;
+            transition: background 0.2s ease;
+        }
+
+        .order-details-btn:hover {
+            background: #e4e7eb;
+        }
+
+        /* Modal Styles */
+        .account-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .account-modal.show {
+            display: flex;
+        }
+
+        .account-modal-content {
+            background: #fff;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: transparent;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: #888;
+        }
+
+        /* Dark mode overrides for account page */
+        [data-theme="dark"] .account-sidebar,
+        [data-theme="dark"] .account-content-card,
+        [data-theme="dark"] .account-modal-content,
+        body.dark-mode .account-sidebar,
+        body.dark-mode .account-content-card,
+        body.dark-mode .account-modal-content {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #cbd5e1 !important;
+        }
+
+        [data-theme="dark"] .user-card-header h3,
+        [data-theme="dark"] .section-title,
+        [data-theme="dark"] .address-card h4,
+        [data-theme="dark"] .order-id-tag,
+        body.dark-mode .user-card-header h3,
+        body.dark-mode .section-title,
+        body.dark-mode .address-card h4,
+        body.dark-mode .order-id-tag {
+            color: #f1f5f9 !important;
+        }
+
+        [data-theme="dark"] .account-nav-btn,
+        body.dark-mode .account-nav-btn {
+            color: #94a3b8;
+        }
+
+        [data-theme="dark"] .account-nav-btn:hover,
+        body.dark-mode .account-nav-btn:hover {
+            background-color: rgba(56, 189, 248, 0.12);
+            color: #38bdf8;
+        }
+
+        [data-theme="dark"] .account-nav-btn.active,
+        body.dark-mode .account-nav-btn.active {
+            background-color: #0284c7 !important;
+            color: #ffffff !important;
+        }
+
+        [data-theme="dark"] .address-card,
+        [data-theme="dark"] .order-item-card,
+        body.dark-mode .address-card,
+        body.dark-mode .order-item-card {
+            background-color: #0f172a !important;
+            border-color: #334155 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <a href="index.html">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>متجري الإلكتروني</span>
+                </a>
+            </div>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="ابحث عن المنتجات..." id="search-input">
+                <button type="button" id="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            
+            <div class="user-actions">
+                <a href="account.html" class="user-icon" title="حسابي">
+                    <i class="fas fa-user"></i>
+                </a>
+                <a href="account.html?tab=wishlist" class="wishlist-icon" title="المفضلة">
+                    <i class="far fa-heart"></i>
+                    <span class="wishlist-count">0</span>
+                </a>
+                <a href="cart.html" class="cart-icon" title="سلة التسوق">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+            </div>
+        </div>
+        
+        <nav>
+            <ul>
+                <li><a href="index.html">الرئيسية</a></li>
+                <li><a href="shop.html">المنتجات</a></li>
+                <li><a href="shop.html?category=electronics">إلكترونيات</a></li>
+                <li><a href="shop.html?category=fashion">أزياء</a></li>
+                <li><a href="account.html" class="active">حسابي</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="account-page-container">
+        <!-- Sidebar Navigation -->
+        <aside class="account-sidebar">
+            <div class="user-card-header">
+                <div class="user-avatar-circle" id="avatar-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 id="sidebar-user-name">زائر</h3>
+                <p id="sidebar-user-email">لم يتم تسجيل الدخول</p>
+            </div>
+
+            <ul class="account-nav-list">
+                <li>
+                    <button type="button" class="account-nav-btn active" data-tab="profile">
+                        <i class="fas fa-user-cog"></i>
+                        <span>الملف الشخصي</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="account-nav-btn" data-tab="addresses">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>عناوين الشحن</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="account-nav-btn" data-tab="orders">
+                        <i class="fas fa-box"></i>
+                        <span>طلباتي</span>
+                    </button>
+                </li>
+                <li>
+                    <button type="button" class="account-nav-btn" data-tab="wishlist">
+                        <i class="fas fa-heart"></i>
+                        <span>قائمة المفضلة</span>
+                    </button>
+                </li>
+                <li style="margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 15px;">
+                    <button type="button" class="account-nav-btn" id="logout-sidebar-btn" style="color: #e74c3c;">
+                        <i class="fas fa-sign-out-alt" style="color: #e74c3c;"></i>
+                        <span>تسجيل الخروج</span>
+                    </button>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Dashboard View Area -->
+        <section class="account-content-card">
+            <!-- TAB 1: Profile -->
+            <div class="tab-section active" id="tab-profile">
+                <div class="section-title">
+                    <span><i class="fas fa-user-edit" style="color: #3498db; margin-left: 8px;"></i>بيانات الملف الشخصي</span>
+                </div>
+
+                <form id="profile-update-form">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="profile-name">الاسم الكامل</label>
+                            <input type="text" id="profile-name" required placeholder="مثال: أحمد محمد">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-phone">رقم الهاتف</label>
+                            <input type="tel" id="profile-phone" placeholder="0550000000">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="profile-email">البريد الإلكتروني</label>
+                        <input type="email" id="profile-email" required placeholder="name@example.com">
+                    </div>
+
+                    <div style="margin-top: 30px; border-top: 1px solid #f1f2f6; padding-top: 20px;">
+                        <h4 style="margin-bottom: 15px; font-size: 1.1rem;">تغيير كلمة المرور</h4>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="profile-new-pass">كلمة المرور الجديدة</label>
+                                <input type="password" id="profile-new-pass" placeholder="اتركه فارغاً إذا لم ترد التغيير">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-confirm-pass">تأكيد كلمة المرور الجديدة</label>
+                                <input type="password" id="profile-confirm-pass" placeholder="تأكيد كلمة المرور">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px; text-align: left;">
+                        <button type="submit" class="btn" style="padding: 12px 30px; font-weight: bold;">
+                            <i class="fas fa-save" style="margin-left: 8px;"></i>حفظ التغيرات
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- TAB 2: Addresses -->
+            <div class="tab-section" id="tab-addresses">
+                <div class="section-title">
+                    <span><i class="fas fa-map-marked-alt" style="color: #3498db; margin-left: 8px;"></i>عناوين الشحن المكتوبة</span>
+                    <button type="button" class="btn" id="open-add-address-btn" style="font-size: 0.88rem; padding: 8px 16px;">
+                        <i class="fas fa-plus" style="margin-left: 6px;"></i>إضافة عنوان جديد
+                    </button>
+                </div>
+
+                <div class="addresses-grid" id="addresses-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- TAB 3: Orders -->
+            <div class="tab-section" id="tab-orders">
+                <div class="section-title">
+                    <span><i class="fas fa-shopping-bag" style="color: #3498db; margin-left: 8px;"></i>سجل الطلبات</span>
+                </div>
+
+                <div class="order-history-list" id="orders-container">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+
+            <!-- TAB 4: Wishlist -->
+            <div class="tab-section" id="tab-wishlist">
+                <div class="section-title">
+                    <span><i class="fas fa-heart" style="color: #e74c3c; margin-left: 8px;"></i>قائمة المفضلة</span>
+                </div>
+
+                <div class="products-grid" id="wishlist-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
+                    <!-- Populated dynamically via JS -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal for Adding Address -->
+    <div class="account-modal" id="add-address-modal">
+        <div class="account-modal-content">
+            <button class="close-modal-btn" id="close-address-modal">&times;</button>
+            <h3 style="margin-bottom: 20px;"><i class="fas fa-map-marker-alt" style="color:#3498db; margin-left:8px;"></i>إضافة عنوان شحن جديد</h3>
+            <form id="add-address-form">
+                <div class="form-group">
+                    <label for="addr-title">اسم العنوان (مثال: المنزل، العمل)</label>
+                    <input type="text" id="addr-title" required placeholder="المنزل">
+                </div>
+                <div class="form-group">
+                    <label for="addr-fullname">الاسم الكامل للمستلم</label>
+                    <input type="text" id="addr-fullname" required placeholder="الاسم الكامل">
+                </div>
+                <div class="form-group">
+                    <label for="addr-phone">رقم الهاتف</label>
+                    <input type="tel" id="addr-phone" required placeholder="0550000000">
+                </div>
+                <div class="form-group">
+                    <label for="addr-city">المدينة / الولاية</label>
+                    <input type="text" id="addr-city" required placeholder="الجزائر العاصمة">
+                </div>
+                <div class="form-group">
+                    <label for="addr-street">العنوان التفصيلي</label>
+                    <textarea id="addr-street" rows="3" required placeholder="اسم الشارع، رقم العمارة، الشقة..."></textarea>
+                </div>
+                <div style="margin-top: 10px;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="addr-default"> تعيين كعنوان افتراضي
+                    </label>
+                </div>
+                <div style="margin-top: 25px; display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" class="btn" style="background:#95a5a6;" id="cancel-address-btn">إلغاء</button>
+                    <button type="submit" class="btn">حفظ العنوان</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-col">
+                <h3>عن متجرنا</h3>
+                <p>متجرنا يقدم أفضل المنتجات بجودة عالية وأسعار منافسة مع خدمة توصيل سريعة لكل الولايات.</p>
+            </div>
+            <div class="footer-col">
+                <h3>روابط سريعة</h3>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="shop.html">المنتجات</a></li>
+                    <li><a href="account.html">حسابي</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>النشرة البريدية</h3>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="بريدك الإلكتروني" required>
+                    <button type="submit">اشتراك</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 جميع الحقوق محفوظة لـ متجري الإلكتروني
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/user-system.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            // Check auth
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                // Prompt login modal or notice
+                if (window.showLoginForm) {
+                    window.showLoginForm();
+                }
+            }
+
+            // Tab Switching Logic
+            const navButtons = document.querySelectorAll('.account-nav-btn[data-tab]');
+            const tabSections = document.querySelectorAll('.tab-section');
+
+            function switchTab(tabId) {
+                navButtons.forEach(btn => {
+                    if (btn.getAttribute('data-tab') === tabId) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+
+                tabSections.forEach(section => {
+                    if (section.id === `tab-${tabId}`) {
+                        section.classList.add('active');
+                    } else {
+                        section.classList.remove('active');
+                    }
+                });
+
+                if (tabId === 'addresses') loadAddresses();
+                if (tabId === 'orders') loadUserOrders();
+                if (tabId === 'wishlist') loadUserWishlist();
+            }
+
+            navButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    switchTab(tabId);
+                });
+            });
+
+            // Check URL query param e.g., ?tab=orders
+            const urlParams = new URLSearchParams(window.location.search);
+            const initialTab = urlParams.get('tab');
+            if (initialTab) {
+                switchTab(initialTab);
+            }
+
+            // Load User Profile Data
+            async function loadProfile() {
+                try {
+                    const res = await fetch('/api/user/profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const user = await res.json();
+                        document.getElementById('sidebar-user-name').textContent = user.username || user.name || 'مستخدم';
+                        document.getElementById('sidebar-user-email').textContent = user.email || '';
+                        document.getElementById('profile-name').value = user.username || user.name || '';
+                        document.getElementById('profile-email').value = user.email || '';
+                        document.getElementById('profile-phone').value = user.phone || '';
+                        
+                        // Set avatar letter
+                        const avatarIcon = document.getElementById('avatar-icon');
+                        if (user.username) {
+                            avatarIcon.innerHTML = user.username.charAt(0).toUpperCase();
+                        }
+                    }
+                } catch (e) {
+
+                }
+            }
+
+            loadProfile();
+
+            // Handle Profile Form Submission
+            document.getElementById('profile-update-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('profile-name').value.trim();
+                const email = document.getElementById('profile-email').value.trim();
+                const phone = document.getElementById('profile-phone').value.trim();
+                const newPass = document.getElementById('profile-new-pass').value;
+                const confirmPass = document.getElementById('profile-confirm-pass').value;
+
+                if (newPass && newPass !== confirmPass) {
+                    showToast('كلمتا المرور غير متطابقتين', 'error');
+                    return;
+                }
+
+                try {
+                    const payload = { username, email, phone };
+                    if (newPass) payload.password = newPass;
+
+                    const res = await fetch('/api/user/profile', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await res.json();
+                    if (res.ok) {
+                        showToast('تم تحديث البيانات بنجاح 🎉', 'success');
+                        localStorage.setItem('currentUser', JSON.stringify(data.user));
+                        loadProfile();
+                        document.getElementById('profile-new-pass').value = '';
+                        document.getElementById('profile-confirm-pass').value = '';
+                    } else {
+                        showToast(data.message || 'حدث خطأ في تحديث البيانات', 'error');
+                    }
+                } catch (err) {
+                    showToast('خطأ في الاتصال بالخادم', 'error');
+                }
+            });
+
+            // Load Saved Addresses
+            async function loadAddresses() {
+                const container = document.getElementById('addresses-container');
+                try {
+                    const res = await fetch('/api/user/profile', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        const user = await res.json();
+                        const addresses = user.addresses || [];
+
+                        if (addresses.length === 0) {
+                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">لا توجد عناوين شحن محفوظة حتى الآن.</div>`;
+                            return;
+                        }
+
+                        container.innerHTML = addresses.map(addr => `
+                            <div class="address-card ${addr.isDefault ? 'default-address' : ''}">
+                                ${addr.isDefault ? '<span class="address-badge">العنوان الافتراضي</span>' : ''}
+                                <h4>${addr.title || 'عنوان'}</h4>
+                                <p><strong>المستلم:</strong> ${addr.fullName}</p>
+                                <p><strong>الهاتف:</strong> ${addr.phone}</p>
+                                <p><strong>المدينة:</strong> ${addr.city}</p>
+                                <p><strong>العنوان:</strong> ${addr.address}</p>
+                                <div class="address-actions">
+                                    <button class="btn-sm-danger" onclick="deleteAddress(${addr.id})">
+                                        <i class="fas fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } catch (e) {
+
+                }
+            }
+
+            // Modal address handlers
+            const addressModal = document.getElementById('add-address-modal');
+            document.getElementById('open-add-address-btn').addEventListener('click', () => addressModal.classList.add('show'));
+            document.getElementById('close-address-modal').addEventListener('click', () => addressModal.classList.remove('show'));
+            document.getElementById('cancel-address-btn').addEventListener('click', () => addressModal.classList.remove('show'));
+
+            document.getElementById('add-address-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const payload = {
+                    title: document.getElementById('addr-title').value.trim(),
+                    fullName: document.getElementById('addr-fullname').value.trim(),
+                    phone: document.getElementById('addr-phone').value.trim(),
+                    city: document.getElementById('addr-city').value.trim(),
+                    address: document.getElementById('addr-street').value.trim(),
+                    isDefault: document.getElementById('addr-default').checked
+                };
+
+                try {
+                    const res = await fetch('/api/user/addresses', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    if (res.ok) {
+                        showToast('تم حفظ العنوان بنجاح', 'success');
+                        addressModal.classList.remove('show');
+                        document.getElementById('add-address-form').reset();
+                        loadAddresses();
+                    } else {
+                        showToast('حدث خطأ أثناء حفظ العنوان', 'error');
+                    }
+                } catch (e) {
+                    showToast('خطأ في الاتصال بالخادم', 'error');
+                }
+            });
+
+            window.deleteAddress = async function(id) {
+                if (!confirm('هل أنت تأكد من إزالة هذا العنوان؟')) return;
+                try {
+                    const res = await fetch(`/api/user/addresses/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    if (res.ok) {
+                        showToast('تم حذف العنوان بنجاح', 'info');
+                        loadAddresses();
+                    }
+                } catch (e) {
+                    showToast('حدث خطأ في الحذف', 'error');
+                }
+            };
+
+            // Load Orders
+            async function loadUserOrders() {
+                const container = document.getElementById('orders-container');
+                try {
+                    const res = await fetch('/api/orders');
+                    if (res.ok) {
+                        const orders = await res.json();
+                        if (orders.length === 0) {
+                            container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;">لم تقم بإجراء أي طلبات بعد.</div>`;
+                            return;
+                        }
+
+                        container.innerHTML = orders.map(ord => `
+                            <div class="order-item-card">
+                                <div class="order-header-row">
+                                    <div>
+                                        <span class="order-id-tag">طلب #${ord.id}</span>
+                                        <span style="font-size: 0.85rem; color: #7f8c8d; margin-right: 12px;">
+                                            ${new Date(ord.created_at || Date.now()).toLocaleDateString('ar-EG')}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <span class="order-status-badge status-${ord.status}">${getStatusLabel(ord.status)}</span>
+                                        <strong style="margin-right: 15px; font-size: 1.1rem; color: #27ae60;">${ord.total ? ord.total.toLocaleString() : '0'} د.ج</strong>
+                                    </div>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                                    <p style="margin: 0; font-size: 0.9rem; color: #555;">
+                                        <strong>طريقة الدفع:</strong> ${ord.shippingInfo && ord.shippingInfo.paymentMethod === 'cod' ? 'الدفع عند الاستلام' : 'بطاقة إلكترونية'}
+                                    </p>
+                                    <a href="order-confirmation.html?id=${ord.id}" class="order-details-btn">
+                                        عرض التفاصيل <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } catch (e) {
+                    container.innerHTML = `<div style="text-align: center; padding: 20px;">خطأ في تحميل الطلبات</div>`;
+                }
+            }
+
+            function getStatusLabel(status) {
+                switch(status) {
+                    case 'pending': return 'قيد الانتظار';
+                    case 'processing': return 'جاري المعالجة';
+                    case 'shipped': return 'تم الشحن';
+                    case 'delivered': return 'تم التسليم';
+                    default: return status || 'قيد المعالجة';
+                }
+            }
+
+            // Load Wishlist Items
+            async function loadUserWishlist() {
+                const container = document.getElementById('wishlist-container');
+                const wishlistIds = window.getWishlist ? window.getWishlist() : [];
+
+                if (wishlistIds.length === 0) {
+                    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">قائمة المفضلة فارغة حالياً.</div>`;
+                    return;
+                }
+
+                try {
+                    const res = await fetch('/api/products');
+                    if (res.ok) {
+                        const data = await res.json();
+                        const products = Array.isArray(data) ? data : (Array.isArray(data && data.products) ? data.products : []);
+                        const favoritedProducts = products.filter(p => wishlistIds.includes(p.id));
+
+                        if (favoritedProducts.length === 0) {
+                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">قائمة المفضلة فارغة حالياً.</div>`;
+                            return;
+                        }
+
+                        container.innerHTML = favoritedProducts.map(p => `
+                            <div class="product-card" style="border: 1px solid #e1e8ed; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                                <div>
+                                    <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
+                                    <h4 style="font-size: 0.95rem; margin-bottom: 8px;">${p.name}</h4>
+                                    <p style="font-weight: bold; color: #27ae60; margin-bottom: 12px;">${p.price.toLocaleString()} د.ج</p>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn" style="flex: 1; font-size: 0.8rem; padding: 6px;" onclick="addToCart(${p.id})">
+                                        <i class="fas fa-shopping-cart"></i> السلة
+                                    </button>
+                                    <button class="btn-sm-danger" style="padding: 6px 10px;" onclick="removeFromWishlist(${p.id}, '${p.name}')">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } catch (e) {
+
+                }
+            }
+
+            window.removeFromWishlist = function(id, name) {
+                if (window.toggleWishlist) {
+                    window.toggleWishlist(id, name);
+                    loadUserWishlist();
+                }
+            };
+
+            // Sidebar Logout button
+            document.getElementById('logout-sidebar-btn').addEventListener('click', () => {
+                if (window.logoutUser) {
+                    window.logoutUser();
+                } else {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'index.html';
+                }
+            });
+        });
+    </script>
+    <script src="js/main.js"></script>
+    <script src="js/user-system.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

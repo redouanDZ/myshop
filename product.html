@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل المنتج - متجر الإلكتروني</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* CSS كما في النسخة السابقة (بدون تغيير) */
+    </style>
+</head>
+<body>
+    <!-- رأس الموقع -->
+    <header>
+        <div class="container">
+            <div class="logo"><a href="index.html">متجر الإلكتروني</a></div>
+            <nav><ul><li><a href="index.html">الرئيسية</a></li><li><a href="shop.html">التسوق</a></li><li><a href="cart.html">عربة التسوق</a></li><li><a href="checkout.html">الدفع</a></li></ul></nav>
+            <div class="user-actions"><a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a><a href="account.html" class="user-icon" title="حسابي"><i class="fas fa-user"></i></a></div>
+        </div>
+    </header>
+
+    <div class="page-title">
+        <div class="container">
+            <h1 id="product-title">تفاصيل المنتج</h1>
+            <div class="breadcrumb"><a href="index.html">الرئيسية</a> <i class="fas fa-chevron-left"></i> <a href="shop.html">التسوق</a> <i class="fas fa-chevron-left"></i> <span id="product-breadcrumb">تفاصيل المنتج</span></div>
+        </div>
+    </div>
+
+    <section class="product-details">
+        <div class="container">
+            <div class="product-container">
+                <div class="product-images">
+                    <div class="main-image"><img id="main-image" src="images/product-main.jpg" alt="المنتج الرئيسي"></div>
+                    <div class="thumbnail-images" id="thumbnail-images"></div>
+                </div>
+                <div class="product-info">
+                    <h2 id="product-name">اسم المنتج هنا</h2>
+                    <div class="product-rating" id="product-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><span id="rating-score">(4.0)</span></div>
+                    <div class="product-price"><span class="price" id="product-price">299.00 دج</span><span class="old-price" id="old-price">399.00 دج</span><span class="discount" id="discount">-25%</span></div>
+                    <div class="product-description" id="product-description"><p>وصف المنتج...</p></div>
+                    <div class="product-options">
+                        <div class="color-options"><h3>اللون:</h3><div class="color-select" id="color-select"></div></div>
+                        <div class="size-options"><h3>المقاس:</h3><div class="size-select" id="size-select"></div></div>
+                    </div>
+                    <div class="product-actions">
+                        <div class="quantity"><button class="quantity-btn decrease" onclick="changeQuantity(-1)">-</button><input type="number" id="quantity" value="1" min="1" max="10"><button class="quantity-btn increase" onclick="changeQuantity(1)">+</button></div>
+                        <button class="add-to-cart" onclick="addToCartFromProduct()">أضف إلى السلة</button>
+                        <button class="add-to-wishlist" onclick="addToWishlist()"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div class="product-tabs">
+                <div class="tabs-header"><button class="tab-btn active" data-tab="description">الوصف</button><button class="tab-btn" data-tab="specifications">المواصفات</button><button class="tab-btn" data-tab="reviews">المراجعات</button><button class="tab-btn" data-tab="shipping">الشحن والتوصيل</button></div>
+                <div class="tabs-content">
+                    <div class="tab-panel active" id="description"><h3>وصف المنتج</h3><div id="description-content"><p>وصف المنتج...</p></div></div>
+                    <div class="tab-panel" id="specifications"><h3>مواصفات المنتج</h3><table class="spec-table" id="spec-table"><tr><td>العلامة التجارية</td><td>اسم العلامة</td></tr><tr><td>المادة</td><td>100% قطن</td></tr></table></div>
+                    <div class="tab-panel" id="reviews"><h3>المراجعات</h3><div class="reviews-container" id="reviews-container"></div><div class="add-review"><h4>أضف مراجعة</h4><div class="review-form"><div class="rating-input"><span>التقييم:</span><div class="stars" id="review-stars"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i><i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i></div><input type="hidden" id="review-rating" value="0"></div><div class="comment-input"><textarea id="review-comment" placeholder="اكتب مراجعتك هنا..."></textarea></div><button class="submit-review" onclick="submitReview()">إرسال المراجعة</button></div></div></div>
+                    <div class="tab-panel" id="shipping"><h3>سياسة الشحن والتوصيل</h3><p>شحن خلال 1-2 يوم...</p></div>
+                </div>
+            </div>
+            <div class="similar-products"><h2>منتجات مشابهة</h2><div class="products-grid" id="similar-products"></div></div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid"><div class="footer-col"><h3>عن المتجر</h3><p>متجر متخصص في المنتجات عالية الجودة...</p></div><div class="footer-col"><h3>روابط سريعة</h3><ul><li><a href="index.html">الرئيسية</a></li><li><a href="shop.html">التسوق</a></li></ul></div></div>
+            <div class="footer-bottom"><p>&copy; 2025 متجر الإلكتروني</p></div>
+        </div>
+    </footer>
+
+    <script>
+        let currentProduct = null;
+        var currentUserId = window.currentUserId || 1; // افتراضي، يجب استبداله بمعرف المستخدم الحالي (مثل من الجلسة)
+
+        async function loadProductDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id') || 1;
+
+            try {
+                const response = await fetch(`/api/products/${productId}`);
+                if (!response.ok) throw new Error('خطأ في جلب المنتج');
+                currentProduct = await response.json();
+
+                document.getElementById('product-title').textContent = currentProduct.name;
+                document.getElementById('product-breadcrumb').textContent = currentProduct.name;
+                document.getElementById('product-name').textContent = currentProduct.name;
+                document.getElementById('product-price').textContent = `${currentProduct.price.toLocaleString()} دج`;
+                document.getElementById('product-description').innerHTML = `<p>${currentProduct.description || 'وصف غير متوفر'}</p>`;
+                updateStars(currentProduct.rating || 4.0);
+
+                const thumbnails = document.getElementById('thumbnail-images');
+                const mainImage = document.getElementById('main-image');
+                const images = [currentProduct.image_url || 'images/product-main.jpg', 'images/product-thumb2.jpg', 'images/product-thumb3.jpg', 'images/product-thumb4.jpg'];
+                thumbnails.innerHTML = images.map((img, index) => `<img src="${img}" alt="صورة ${index + 1}" class="${index === 0 ? 'active' : ''}" onclick="switchImage(${index})">`).join('');
+                mainImage.src = images[0];
+
+                loadProductOptions(currentProduct);
+                loadSimilarProducts(currentProduct.category);
+            } catch (error) {
+
+                alert('خطأ في تحميل المنتج');
+            }
+        }
+
+        function switchImage(index) {
+            const thumbnails = document.querySelectorAll('.thumbnail-images img');
+            const mainImage = document.getElementById('main-image');
+            thumbnails.forEach((thumb, i) => thumb.classList.toggle('active', i === index));
+            mainImage.src = thumbnails[index].src;
+        }
+
+        function updateStars(rating) {
+            const stars = document.querySelectorAll('#product-rating i');
+            stars.forEach((star, index) => {
+                star.className = index < rating ? 'fas fa-star' : 'far fa-star';
+            });
+        }
+
+        function loadProductOptions(product) {
+            const colors = ['أسود', 'أبيض', 'أزرق'];
+            const sizes = ['S', 'M', 'L', 'XL'];
+            document.getElementById('color-select').innerHTML = colors.map(color => `<button class="color-btn ${color === 'أسود' ? 'active' : ''}" data-color="${color}">${color}</button>`).join('');
+            document.getElementById('size-select').innerHTML = sizes.map(size => `<button class="size-btn ${size === 'M' ? 'active' : ''}" data-size="${size}">${size}</button>`).join('');
+            document.querySelectorAll('.color-btn').forEach(btn => btn.addEventListener('click', e => {
+                e.target.parentNode.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+            }));
+            document.querySelectorAll('.size-btn').forEach(btn => btn.addEventListener('click', e => {
+                e.target.parentNode.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+            }));
+        }
+
+        function changeQuantity(change) {
+            let quantity = parseInt(document.getElementById('quantity').value);
+            quantity = Math.max(1, Math.min(10, quantity + change));
+            document.getElementById('quantity').value = quantity;
+        }
+
+        async function addToCartFromProduct() {
+            if (!currentProduct) return;
+            const quantity = parseInt(document.getElementById('quantity').value, 10) || 1;
+            
+            if (window.addToCart) {
+                await window.addToCart(currentProduct, quantity);
+            } else {
+                try {
+                    const response = await fetch('/api/cart/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: currentUserId || 1, productId: currentProduct.id, quantity })
+                    });
+                    if (!response.ok) throw new Error('خطأ في الإضافة');
+                    if (window.showToast) {
+                        window.showToast('تمت إضافة المنتج إلى السلة بنجاح! 🛒', 'success');
+                    } else {
+                        alert('تم الإضافة إلى العربة');
+                    }
+                } catch (error) {
+
+                    if (window.showToast) {
+                        window.showToast('حدث خطأ أثناء إضافة المنتج', 'error');
+                    }
+                }
+            }
+            
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 600);
+        }
+
+        function addToWishlist() {
+            if (window.showToast) {
+                window.showToast('تم إضافة المنتج إلى قائمة الرغبات ❤️', 'info');
+            } else {
+                alert('تم إضافة المنتج إلى قائمة الرغبات');
+            }
+        }
+
+        function initTabs() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const tabPanels = document.querySelectorAll('.tab-panel');
+            tabBtns.forEach(btn => btn.addEventListener('click', e => {
+                const tab = e.target.dataset.tab;
+                tabBtns.forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                tabPanels.forEach(p => p.classList.remove('active'));
+                document.getElementById(tab).classList.add('active');
+            }));
+        }
+
+        function submitReview() {
+            const rating = document.getElementById('review-rating').value;
+            const comment = document.getElementById('review-comment').value.trim();
+            if (rating < 1 || !comment) {
+                if (window.showToast) {
+                    window.showToast('يرجى إضافة تقييم وتعليق', 'warning');
+                } else {
+                    alert('يرجى إضافة تقييم وتعليق');
+                }
+                return;
+            }
+            // يمكن إضافة POST /api/reviews لاحقًا
+            const reviewsContainer = document.getElementById('reviews-container');
+            const newReview = document.createElement('div');
+            newReview.className = 'review-item';
+            newReview.innerHTML = `
+                <div class="review-header">
+                    <div class="reviewer-info"><div class="reviewer-name">مستخدم ${currentUserId}</div><div class="review-date">${new Date().toLocaleDateString('ar-SA')}</div></div>
+                    <div class="review-rating">${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</div>
+                </div>
+                <div class="review-content"><p>${comment}</p></div>
+            `;
+            reviewsContainer.insertBefore(newReview, reviewsContainer.firstChild);
+            document.getElementById('review-comment').value = '';
+            document.getElementById('review-rating').value = 0;
+            updateStars(0);
+            if (window.showToast) {
+                window.showToast('تم إضافة المراجعة بنجاح! ⭐', 'success');
+            } else {
+                alert('تم إضافة المراجعة بنجاح');
+            }
+        }
+
+        document.getElementById('review-stars').addEventListener('click', e => {
+            if (e.target.classList.contains('fa-star')) {
+                const rating = parseInt(e.target.dataset.rating);
+                document.getElementById('review-rating').value = rating;
+                updateStars(rating);
+            }
+        });
+
+        async function loadSimilarProducts(category) {
+            try {
+                const response = await fetch(`/api/products?category=${category}`);
+                if (!response.ok) throw new Error('خطأ في جلب المنتجات');
+                const allProducts = await response.json();
+                const similar = allProducts.filter(p => p.id !== currentProduct.id).slice(0, 4);
+                const container = document.getElementById('similar-products');
+                container.innerHTML = similar.map(p => `
+                    <div class="similar-product">
+                        <img src="${p.image_url}" alt="${p.name}">
+                        <h3>${p.name}</h3>
+                        <p class="price">${p.price.toLocaleString()} دج</p>
+                        <a href="product.html?id=${p.id}">عرض التفاصيل</a>
+                    </div>
+                `).join('');
+            } catch (error) {
+
+                document.getElementById('similar-products').innerHTML = '<p>لا توجد منتجات مشابهة</p>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProductDetails();
+            initTabs();
+        });
+    </script>
+    <script src="js/main.js"></script>
+    <script src="js/user-system.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/cart-new.js"></script>
+</body>
+</html>

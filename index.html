@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجري - المتجر الإلكتروني التقني المتكامل</title>
+    <meta name="description" content="متجر إلكتروني حديث يقدم أفضل الأجهزة الإلكترونية والتقنية في الجزائر بأسعار تنافسية وتوصيل سريع.">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- OpenGraph Tags -->
+    <meta property="og:title" content="متجري - متجر الإلكترونيات العصرية">
+    <meta property="og:description" content="تسوق أحدث الحواسيب والملحقات التقنية بأفضل الأسعار.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ais-dev-fblkevvx4dd35lavei73x2-144989767545.europe-west2.run.app">
+    <meta property="og:image" content="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="متجري - متجر الإلكترونيات العصرية">
+    <meta name="twitter:description" content="تسوق أحدث الحواسيب والملحقات التقنية بأفضل الأسعار.">
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "OnlineStore",
+      "name": "متجري",
+      "description": "متجر إلكتروني متكامل للإلكترونيات والأجهزة الحديثة",
+      "url": "https://ais-dev-fblkevvx4dd35lavei73x2-144989767545.europe-west2.run.app",
+      "currenciesAccepted": "DZD",
+      "paymentAccepted": "Cash, Credit Card",
+      "priceRange": "$$"
+    }
+    </script>
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="./css/style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- ===== Header ===== -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">متجر الإلكتروني</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">الرئيسية</a></li>
+                    <li><a href="shop.html">التسوق</a></li>
+                    <li><a href="cart.html">عربة التسوق</a></li>
+                    <li><a href="checkout.html">الدفع</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <!-- Shopping Cart -->
+                <a href="cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <!-- User Icon -->
+                <a href="account.html" class="user-icon" title="حسابي">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== Search Bar ===== -->
+    <div class="search-bar">
+        <div class="container">
+            <form>
+                <input type="text" placeholder="ابحث عن منتج...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== Banner Section ===== -->
+    <section class="banner">
+        <div class="container">
+            <h1>مرحباً بكم في متجرنا الإلكتروني</h1>
+            <p>اكتشف أحدث المنتجات والعروض الخاصة</p>
+            <a href="shop.html" class="btn">ابدأ التسوق</a>
+        </div>
+    </section>
+
+    <!-- ===== Featured Products ===== -->
+    <section class="featured-products">
+        <div class="container">
+            <h2>المنتجات المميزة</h2>
+            <div class="products-grid" id="featured-products">
+                <div class="product-skeleton-card">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-price"></div>
+                    <div class="skeleton-actions">
+                        <div class="skeleton skeleton-btn"></div>
+                        <div class="skeleton skeleton-btn"></div>
+                    </div>
+                </div>
+                <div class="product-skeleton-card">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-price"></div>
+                    <div class="skeleton-actions">
+                        <div class="skeleton skeleton-btn"></div>
+                        <div class="skeleton skeleton-btn"></div>
+                    </div>
+                </div>
+                <div class="product-skeleton-card">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-price"></div>
+                    <div class="skeleton-actions">
+                        <div class="skeleton skeleton-btn"></div>
+                        <div class="skeleton skeleton-btn"></div>
+                    </div>
+                </div>
+                <div class="product-skeleton-card">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-price"></div>
+                    <div class="skeleton-actions">
+                        <div class="skeleton skeleton-btn"></div>
+                        <div class="skeleton skeleton-btn"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Special Offers ===== -->
+    <section class="special-offers">
+        <div class="container">
+            <h2>العروض الخاصة</h2>
+            <div class="offers-grid" id="special-offers" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div class="product-skeleton-card">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-price"></div>
+                    <div class="skeleton skeleton-btn" style="height: 38px;"></div>
+                </div>
+                <div class="product-skeleton-card">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-price"></div>
+                    <div class="skeleton skeleton-btn" style="height: 38px;"></div>
+                </div>
+                <div class="product-skeleton-card">
+                    <div class="skeleton skeleton-image"></div>
+                    <div class="skeleton skeleton-title"></div>
+                    <div class="skeleton skeleton-price"></div>
+                    <div class="skeleton skeleton-btn" style="height: 38px;"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== Footer ===== -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <!-- About Store -->
+                <div class="footer-col">
+                    <h3>عن المتجر</h3>
+                    <p>نحن متجر إلكتروني متخصص في بيع المنتجات عالية الجودة بأسعار منافسة.</p>
+                </div>
+                <!-- Quick Links -->
+                <div class="footer-col">
+                    <h3>روابط سريعة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="shop.html">التسوق</a></li>
+                        <li><a href="#">من نحن</a></li>
+                        <li><a href="#">اتصل بنا</a></li>
+                    </ul>
+                </div>
+                <!-- Contact Info -->
+                <div class="footer-col">
+                    <h3>تواصل معنا</h3>
+                    <ul>
+                        <li><i class="fas fa-phone"></i> 123-456-7890</li>
+                        <li><i class="fas fa-envelope"></i> info@myshop.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> عنوان المتجر</li>
+                    </ul>
+                </div>
+                <!-- Social Media -->
+                <div class="footer-col">
+                    <h3>تابعنا</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 متجر الإلكتروني. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/cart-new.js"></script>
+    <script>
+        async function loadHomeProducts() {
+            try {
+                const response = await fetch('/api/products');
+                if (!response.ok) return;
+                const data = await response.json();
+                const products = Array.isArray(data) ? data : (Array.isArray(data && data.products) ? data.products : []);
+                
+                const featuredContainer = document.getElementById('featured-products');
+                const offersContainer = document.getElementById('special-offers');
+
+                if (featuredContainer && Array.isArray(products) && products.length > 0) {
+                    featuredContainer.innerHTML = products.map(p => `
+                        <div class="product-card" style="background: white; border: 1px solid #edf2f7; padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: right; transition: transform 0.2s, box-shadow 0.2s; position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 20px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)'">
+                            <span style="position: absolute; top: 10px; right: 10px; background: #3498db; color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">${p.category || 'متوفر'}</span>
+                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 190px; object-fit: cover; border-radius: 8px; margin-bottom: 14px;">
+                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #1a202c; height: 48px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${p.name}</h3>
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                                <p style="font-size: 1.15rem; font-weight: 800; color: #e74c3c; margin: 0;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem; font-weight: 600;">دج</span></p>
+                                <span style="font-size: 0.8rem; color: #718096;"><i class="fas fa-box" style="margin-left: 4px;"></i>المخزون: ${p.stock}</span>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <a href="product.html?id=${p.id}" class="btn" style="flex: 1; background: #edf2f7; color: #2d3748; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; text-decoration: none; text-align: center; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#edf2f7'">التفاصيل</a>
+                                <button onclick="quickAddToCart(${p.id})" class="btn" style="flex: 1.2; background: #2ecc71; color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; border: none; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                if (offersContainer) {
+                    const specialOffers = products.slice(0, 3);
+                    offersContainer.innerHTML = specialOffers.map(p => `
+                        <div class="offer-card" style="background: white; border: 1px solid #feebc8; padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: right; transition: transform 0.2s, box-shadow 0.2s; position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 20px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)'">
+                            <span style="position: absolute; top: 10px; right: 10px; background: #dd6b20; color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">عرض خاص 🔥</span>
+                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;">
+                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #1a202c;">${p.name}</h3>
+                            <p style="color: #dd6b20; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem;">دج</span></p>
+                            <a href="product.html?id=${p.id}" class="btn" style="display: block; width: 100%; background: #dd6b20; color: white; padding: 9px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: 700;" onmouseover="this.style.background='#c05621'" onmouseout="this.style.background='#dd6b20'">احصل عليه الآن</a>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+
+            }
+        }
+
+        async function quickAddToCart(productId) {
+            try {
+                const response = await fetch(`/api/products/${productId}`);
+                if (response.ok) {
+                    const product = await response.json();
+                    if (window.addToCart) {
+                        await window.addToCart(product, 1);
+                    } else if (window.showToast) {
+                        window.showToast('تمت إضافة المنتج إلى السلة بنجاح! 🛒', 'success');
+                    }
+                }
+            } catch (err) {
+
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadHomeProducts);
+    </script>
+    <script src="js/main.js"></script>
+    <script src="js/user-system.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/cart-new.js"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(() => {})
+            .catch(() => {});
+        });
+      }
+    </script>
+</body>
+</html>
