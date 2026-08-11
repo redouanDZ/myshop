@@ -359,7 +359,7 @@ nav ul li a:hover, nav ul li a.active {
 
 /* قسم البانر البصري الفاخر */
 .banner {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(79, 70, 229, 0.85)), url('../images/banner.jpg');
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(79, 70, 229, 0.85)), url('../images/christopher-gower-m_HRfLhgABo-unsplash.jpg');
     background-size: cover;
     background-position: center;
     border-radius: 28px;

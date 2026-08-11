@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
+    "dev": "nodemon server.js",
     "build": "echo 'Build complete'",
     "lint": "node -e \"console.log('No lint issues')\"",
     "dev:node": "node server.js",
