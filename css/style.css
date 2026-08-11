@@ -3069,5 +3069,102 @@ body.dark-mode .back-to-top-btn:hover {
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
+/* ==========================================================================
+   Header Action Buttons & Icons (زر الحساب، عربة التسوق، والثيم)
+   ========================================================================== */
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-actions a,
+.user-actions button,
+.theme-toggle-btn,
+.user-icon,
+.cart-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #cbd5e1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #0f172a !important;
+    font-size: 17px;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.user-actions a i,
+.user-actions button i,
+.theme-toggle-btn i,
+.user-icon i,
+.cart-icon i {
+    color: #0f172a !important;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.user-actions a:hover,
+.user-actions button:hover,
+.theme-toggle-btn:hover,
+.user-icon:hover,
+.cart-icon:hover {
+    background: var(--primary-gradient, linear-gradient(135deg, #4f46e5, #6366f1));
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
+}
+
+.user-actions a:hover i,
+.user-actions button:hover i,
+.theme-toggle-btn:hover i,
+.user-icon:hover i,
+.cart-icon:hover i {
+    color: #ffffff !important;
+    transform: scale(1.1);
+}
+
+.cart-count {
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    background: var(--accent-gradient, linear-gradient(135deg, #f43f5e, #fb7185));
+    color: #ffffff !important;
+    font-size: 11px;
+    font-weight: 800;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px rgba(244, 63, 94, 0.4);
+    border: 2px solid var(--card-bg, #ffffff);
+}
+
+[data-theme="dark"] .user-actions a,
+[data-theme="dark"] .user-actions button,
+[data-theme="dark"] .theme-toggle-btn,
+[data-theme="dark"] .user-icon,
+[data-theme="dark"] .cart-icon {
+    background: #1e293b;
+    border-color: #334155;
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .user-actions a i,
+[data-theme="dark"] .user-actions button i,
+[data-theme="dark"] .theme-toggle-btn i,
+[data-theme="dark"] .user-icon i,
+[data-theme="dark"] .cart-icon i {
+    color: #f8fafc !important;
+}
+
+
 
 

@@ -763,4 +763,19 @@ function updateOrderStatus(orderId, status) {
 window.getCurrentUserSync = getCurrentUserSync;
 window.getCurrentUser = getCurrentUser;
 window.isLoggedIn = isLoggedIn;
+window.showLoginForm = showLoginForm;
+window.showSignupForm = showSignupForm;
+
+// Bind user icon click to open login modal if user is not logged in
+document.addEventListener('DOMContentLoaded', () => {
+    const userIcons = document.querySelectorAll('.user-icon');
+    userIcons.forEach(icon => {
+        icon.addEventListener('click', (e) => {
+            if (!isLoggedIn()) {
+                e.preventDefault();
+                showLoginForm();
+            }
+        });
+    });
+});
 
