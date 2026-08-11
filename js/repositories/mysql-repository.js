@@ -607,7 +607,14 @@ class MysqlRepository {
 
   async getOrderById(id) {
     const [rows] = await this.pool.query('SELECT * FROM orders WHERE id = ? LIMIT 1', [Number(id)]);
-    return rows[0] || null;
+    if (!rows[0]) return null;
+    const row = rows[0];
+    return {
+      ...row,
+      id: Number(row.id),
+      user_id: Number(row.user_id),
+      total: Number(row.total)
+    };
   }
 
   async getOrderItems(orderId) {

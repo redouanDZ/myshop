@@ -23,23 +23,92 @@ function initSearch() {
     const searchForm = document.querySelector('.search-bar form');
     const searchInput = document.querySelector('.search-bar input');
 
+    if (!searchInput) return;
+
+    // إنشاء حاوية مقترحات البحث المنبثقة
+    let suggestionsContainer = document.querySelector('.search-suggestions');
+    if (!suggestionsContainer && searchForm) {
+        suggestionsContainer = document.createElement('div');
+        suggestionsContainer.className = 'search-suggestions';
+        suggestionsContainer.style.cssText = `
+            position: absolute;
+            top: 105%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg, #ffffff);
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            z-index: 1050;
+            max-height: 360px;
+            overflow-y: auto;
+            display: none;
+            padding: 8px 0;
+        `;
+        searchForm.parentElement.style.position = 'relative';
+        searchForm.parentElement.appendChild(suggestionsContainer);
+    }
+
     if (searchForm) {
         searchForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            if (suggestionsContainer) suggestionsContainer.style.display = 'none';
             performSearch();
         });
     }
 
-    if (searchInput) {
-        // البحث أثناء الكتابة (بعد تأخير)
-        let searchTimeout;
-        searchInput.addEventListener('input', function() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                performSearch();
-            }, 500); // تأخير نصف ثانية
-        });
-    }
+    let searchTimeout;
+    searchInput.addEventListener('input', function() {
+        clearTimeout(searchTimeout);
+        const query = searchInput.value.trim();
+
+        if (query.length < 2) {
+            if (suggestionsContainer) suggestionsContainer.style.display = 'none';
+            performSearch();
+            return;
+        }
+
+        searchTimeout = setTimeout(async () => {
+            performSearch();
+            if (window.apiClient && suggestionsContainer) {
+                try {
+                    const results = await window.apiClient.get(`/products/autocomplete?q=${encodeURIComponent(query)}`);
+                    if (Array.isArray(results) && results.length > 0) {
+                        suggestionsContainer.innerHTML = results.map(p => `
+                            <a href="product.html?id=${p.id}" class="search-suggestion-item" style="
+                                display: flex;
+                                align-items: center;
+                                gap: 12px;
+                                padding: 10px 16px;
+                                border-bottom: 1px solid var(--border-color, #f1f5f9);
+                                text-decoration: none;
+                                color: var(--text-color, #1e293b);
+                                transition: background 0.2s;
+                            " onmouseover="this.style.background='var(--light-color, #f8fafc)'" onmouseout="this.style.background='transparent'">
+                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${p.name}" style="width: 44px; height: 44px; object-fit: cover; border-radius: 8px;">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 700; font-size: 14px; color: var(--dark-color);">${p.name}</div>
+                                    <div style="font-size: 12px; color: var(--light-text);">${p.category}</div>
+                                </div>
+                                <div style="font-weight: 800; font-size: 14px; color: var(--primary-color);">${Number(p.price).toLocaleString()} د.ج</div>
+                            </a>
+                        `).join('');
+                        suggestionsContainer.style.display = 'block';
+                    } else {
+                        suggestionsContainer.style.display = 'none';
+                    }
+                } catch (e) {
+                    suggestionsContainer.style.display = 'none';
+                }
+            }
+        }, 300);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (suggestionsContainer && !searchForm.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+            suggestionsContainer.style.display = 'none';
+        }
+    });
 }
 
 /**

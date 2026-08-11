@@ -205,8 +205,6 @@
     </footer>
 
     <!-- Main JavaScript -->
-    <script src="js/main.js"></script>
-    <script src="js/cart-new.js"></script>
     <script>
         async function loadHomeProducts() {
             try {
@@ -271,10 +269,10 @@
 
         document.addEventListener('DOMContentLoaded', loadHomeProducts);
     </script>
+    <script src="js/api-client.js"></script>
     <script src="js/main.js"></script>
     <script src="js/user-system.js"></script>
     <script src="js/cart.js"></script>
-    <script src="js/cart-new.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

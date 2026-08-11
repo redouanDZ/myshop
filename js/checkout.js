@@ -1,15 +1,11 @@
 /**
  * نظام إدارة الدفع والطلبات
  * يوفر وظائف للتعامل مع معلومات الدفع وتأكيد الطلبات
- * يعتمد على ملف cart-new.js لإدارة عربة التسوق
+ * يعتمد على ملف cart.js لإدارة عربة التسوق
  */
 
-// Node import removed for browser compatibility
-// const db = require('./db-connection.js');
-
-// التأكد من تحميل ملف cart-new.js أولاً
+// التأكد من تحميل ملف cart.js أولاً
 document.addEventListener('DOMContentLoaded', function() {
-    // التأكد من وجود متغير cart من ملف cart-new.js
     if (typeof window.cartModule !== 'undefined') {
         window.cart = window.cartModule.getCart();
     }

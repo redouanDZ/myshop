@@ -22,11 +22,9 @@ async function initializeDatabase() {
         serviceInstance = createStoreService(repository);
         return serviceInstance;
     } catch (error) {
-        poolInstance = null;
-        const fallbackRepository = createFallbackRepository();
-        serviceInstance = createStoreService(fallbackRepository);
-        return serviceInstance;
-    }
+    console.error('❌ MySQL connection failed:', error.message);
+    throw error;
+}
 }
 
 function buildProxy(methodName) {
