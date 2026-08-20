@@ -10,7 +10,7 @@
     "lint": "node -e \"console.log('No lint issues')\"",
     "dev:node": "node server.js",
     "migrate": "node database/migrate.js",
-    "test": "node --test test/*.test.js"
+    "test": "node --test"
   },
   "keywords": [
     "ecommerce",

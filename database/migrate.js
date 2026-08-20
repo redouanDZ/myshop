@@ -7,7 +7,7 @@ const mysql = require('mysql2/promise');
 
 async function runMigrations() {
   const env = process.env.NODE_ENV || 'development';
-  const dbConfig = require('../config/database.js').getConfig();
+  const dbConfig = require('../src/config/database.js').getConfig();
 
   console.log(`🚀 بدء الترحيلات لقاعدة البيانات: ${dbConfig.database} على البيئة: [${env}]...`);
 

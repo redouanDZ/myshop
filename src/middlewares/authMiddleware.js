@@ -14,8 +14,10 @@ function requireAuth(req, res, next) {
             const decoded = jwt.verify(accessToken, config.JWT_SECRET);
             req.sessionId = decoded.sessionId || null;
         } catch (error) {
-            req.sessionId = null;
+            return res.status(401).json({ message: 'توكن غير صالح' });
         }
+    } else {
+        return res.status(401).json({ message: 'التوكن مفقود' });
     }
     next();
 }

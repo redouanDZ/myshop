@@ -139,10 +139,6 @@ function parseUserFromReq(req) {
         session.lastSeen = Date.now();
         return Number(decoded.id);
     } catch (error) {
-        if (token.startsWith('token_user_')) {
-            const legacyId = parseInt(token.replace('token_user_', ''), 10);
-            if (!Number.isNaN(legacyId)) return legacyId;
-        }
         return null;
     }
 }

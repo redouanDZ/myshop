@@ -1,4 +1,4 @@
-const db = require('../../js/db-connection.js');
+const db = require('../data/db-connection.js');
 const { parseUserFromReq } = require('../utils/tokenUtils');
 
 function requireAdmin(req, res, next) {

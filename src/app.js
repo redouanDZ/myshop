@@ -107,19 +107,31 @@ app.get('/health', (req, res) => {
 
 // Static Files & Assets
 const rootDir = path.join(__dirname, '..');
-app.use(express.static(rootDir));
+
+// Only serve these specific directories statically
 app.use('/admin', express.static(path.join(rootDir, 'admin')));
 app.use('/css', express.static(path.join(rootDir, 'css')));
 app.use('/js', express.static(path.join(rootDir, 'js')));
 app.use('/images', express.static(path.join(rootDir, 'images')));
 
-// API Routes
-app.use('/api', apiRoutes);
+// Public HTML Pages
+const publicHtmlPages = ['index.html', 'shop.html', 'product.html', 'cart.html', 'checkout.html', 'order-confirmation.html', 'account.html'];
+publicHtmlPages.forEach((page) => {
+    app.get(`/${page}`, (req, res) => res.sendFile(path.join(rootDir, page)));
+});
 
 // Root Page fallback
 app.get('/', (req, res) => {
     res.sendFile(path.join(rootDir, 'index.html'));
 });
+
+// Other Public Files
+['manifest.json', 'robots.txt', 'sitemap.xml', 'sw.js'].forEach((file) => {
+    app.get(`/${file}`, (req, res) => res.sendFile(path.join(rootDir, file)));
+});
+
+// API Routes
+app.use('/api', apiRoutes);
 
 // Error handling middlewares
 app.use(errorHandler);

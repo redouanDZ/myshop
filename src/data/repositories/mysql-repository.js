@@ -116,7 +116,7 @@ function slugify(value) {
 }
 
 function readMigrationFiles() {
-  const schemaDir = path.join(__dirname, '..', '..', 'database', 'migrations');
+  const schemaDir = path.join(__dirname, '..', '..', '..', 'database', 'migrations');
   const files = fs.readdirSync(schemaDir).filter(file => file.endsWith('.sql')).sort();
   return files.map(file => fs.readFileSync(path.join(schemaDir, file), 'utf8'));
 }

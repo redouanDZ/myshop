@@ -1,4 +1,4 @@
-const db = require('../../js/db-connection.js');
+const db = require('../data/db-connection.js');
 
 async function getProfile(req, res) {
     try {
