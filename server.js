@@ -1,6 +1,7 @@
 /**
  * Entry point for myshop server
  */
+require('dotenv').config();
 const app = require('./src/app');
 const config = require('./src/config/database');
 

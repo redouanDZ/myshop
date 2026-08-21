@@ -8,7 +8,9 @@ const dbEnvironments = {
         host: process.env.DB_HOST || '127.0.0.1',
         port: Number(process.env.DB_PORT) || 3306,
         user: process.env.DB_USER || 'ecommerce_user',
-        password: process.env.DB_PASSWORD || '***REMOVED***',
+        password: process.env.DB_PASSWORD || (() => {
+            throw new Error('DB_PASSWORD environment variable is required.');
+        })(),
         database: process.env.DB_NAME || 'ecommerce_store',
         waitForConnections: true,
         connectionLimit: 10,
@@ -22,7 +24,9 @@ const dbEnvironments = {
         host: process.env.DB_HOST || '127.0.0.1',
         port: Number(process.env.DB_PORT) || 3306,
         user: process.env.DB_USER || 'ecommerce_user',
-        password: process.env.DB_PASSWORD || '***REMOVED***',
+        password: process.env.DB_PASSWORD || (() => {
+            throw new Error('DB_PASSWORD environment variable is required.');
+        })(),
         database: process.env.DB_NAME || 'ecommerce_store',
         waitForConnections: true,
         connectionLimit: 20,
@@ -36,7 +40,9 @@ const dbEnvironments = {
         host: process.env.DB_HOST || '127.0.0.1',
         port: Number(process.env.DB_PORT) || 3306,
         user: process.env.DB_USER || 'ecommerce_user',
-        password: process.env.DB_PASSWORD || '***REMOVED***',
+        password: process.env.DB_PASSWORD || (() => {
+            throw new Error('DB_PASSWORD environment variable is required.');
+        })(),
         database: process.env.DB_NAME || 'ecommerce_store_test',
         waitForConnections: true,
         connectionLimit: 5,
