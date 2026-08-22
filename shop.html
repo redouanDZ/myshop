@@ -165,17 +165,21 @@
   <header>
     <div class="container">
       <div class="logo">
-        <a href="index.html">متجر الإلكتروني</a>
+        <a href="index.html" data-i18n="common.store_name">المتجر الإلكتروني</a>
       </div>
       <nav>
         <ul>
-          <li><a href="index.html">الرئيسية</a></li>
-          <li><a href="shop.html" class="active">التسوق</a></li>
-          <li><a href="cart.html">عربة التسوق</a></li>
-          <li><a href="track-order.html">تتبع طلبي</a></li>
+          <li><a href="index.html" data-i18n="nav.home">الرئيسية</a></li>
+          <li><a href="shop.html" class="active" data-i18n="nav.shop">التسوق</a></li>
+          <li><a href="cart.html" data-i18n="nav.cart">عربة التسوق</a></li>
+          <li><a href="track-order.html" data-i18n="nav.track_order">تتبع طلبي</a></li>
         </ul>
       </nav>
       <div class="user-actions">
+        <a href="wishlist.html" class="wishlist-icon" title="المفضلة" style="position: relative; margin-left: 12px; color: #ef4444; font-size: 1.15rem;">
+          <i class="fas fa-heart"></i>
+          <span class="wishlist-count" id="wishlist-count" style="position: absolute; top: -8px; right: -10px; background: #ef4444; color: #fff; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: bold;">0</span>
+        </a>
         <a href="cart.html" class="cart-icon">
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-count" id="cart-count">0</span>
@@ -246,6 +250,29 @@
             </div>
           </div>
 
+          <!-- فلتر تقييم النجوم -->
+          <div class="filter-group">
+            <h4><i class="fas fa-star" style="color:#f59e0b;"></i> التقييم</h4>
+            <div class="filter-options">
+              <label class="filter-option-label">
+                <input type="radio" name="ratingFilter" value="0" checked onchange="applyFilters()">
+                <span>جميع التقييمات</span>
+              </label>
+              <label class="filter-option-label">
+                <input type="radio" name="ratingFilter" value="4.5" onchange="applyFilters()">
+                <span>⭐ 4.5 فما فوق (ممتاز)</span>
+              </label>
+              <label class="filter-option-label">
+                <input type="radio" name="ratingFilter" value="4.0" onchange="applyFilters()">
+                <span>⭐ 4.0 فما فوق (جيد جداً)</span>
+              </label>
+              <label class="filter-option-label">
+                <input type="radio" name="ratingFilter" value="3.0" onchange="applyFilters()">
+                <span>⭐ 3.0 فما فوق</span>
+              </label>
+            </div>
+          </div>
+
           <!-- فلتر حالة المخزون -->
           <div class="filter-group">
             <h4><i class="fas fa-boxes" style="color:#2ecc71;"></i> التوفر في المتجر</h4>
@@ -269,6 +296,7 @@
               <span id="resultsCount" style="font-weight: 600; color: #64748b; font-size: 0.9rem;"></span>
               <select id="sortFilter" onchange="applyFilters()">
                 <option value="newest">الأحدث أولاً</option>
+                <option value="rating-desc">التقييم: الأعلى تقييماً ⭐</option>
                 <option value="price-asc">السعر: الأقل إلى الأعلى</option>
                 <option value="price-desc">السعر: الأعلى إلى الأقل</option>
                 <option value="name-asc">الاسم: أ-ي</option>
@@ -375,6 +403,9 @@
       const selectedCategoryRadio = document.querySelector('input[name="categoryFilter"]:checked');
       const categoryValue = selectedCategoryRadio ? selectedCategoryRadio.value : '';
 
+      const selectedRatingRadio = document.querySelector('input[name="ratingFilter"]:checked');
+      const minRating = Number(selectedRatingRadio ? selectedRatingRadio.value : 0);
+
       const maxPrice = Number(document.getElementById('priceRange')?.value || 200000);
       const inStockOnly = document.getElementById('inStockOnly')?.checked || false;
       const sortFilter = document.getElementById('sortFilter')?.value || 'newest';
@@ -382,18 +413,21 @@
       filteredProducts = products.filter(product => {
         const price = Number(product.price);
         const stock = Number(product.stock);
+        const rating = Number(product.rating || 5);
 
         const matchesSearch = product.name.toLowerCase().includes(searchQuery);
         const matchesCategory = !categoryValue || product.category === categoryValue;
         const matchesPrice = price <= maxPrice;
+        const matchesRating = rating >= minRating;
         const matchesStock = !inStockOnly || stock > 0;
 
-        return matchesSearch && matchesCategory && matchesPrice && matchesStock;
+        return matchesSearch && matchesCategory && matchesPrice && matchesRating && matchesStock;
       });
 
       filteredProducts.sort((a, b) => {
         switch (sortFilter) {
           case 'newest': return new Date(b.created_at) - new Date(a.created_at);
+          case 'rating-desc': return (Number(b.rating) || 0) - (Number(a.rating) || 0);
           case 'price-asc': return Number(a.price) - Number(b.price);
           case 'price-desc': return Number(b.price) - Number(a.price);
           case 'name-asc': return a.name.localeCompare(b.name, 'ar');
@@ -419,6 +453,9 @@
       const defaultCategoryRadio = document.querySelector('input[name="categoryFilter"][value=""]');
       if (defaultCategoryRadio) defaultCategoryRadio.checked = true;
 
+      const defaultRatingRadio = document.querySelector('input[name="ratingFilter"][value="0"]');
+      if (defaultRatingRadio) defaultRatingRadio.checked = true;
+
       const priceSlider = document.getElementById('priceRange');
       if (priceSlider) {
         priceSlider.value = priceSlider.max;
@@ -438,19 +475,29 @@
 
       const container = document.getElementById('products-container');
       if (pageProducts.length === 0) {
-        container.innerHTML = '<p>لا توجد منتجات مطابقة.</p>';
+        container.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b; grid-column:1/-1;"><i class="fas fa-search fa-3x" style="margin-bottom:10px; opacity:0.5;"></i><p>لا توجد منتجات مطابقة لخيارات الفلترة الحالية.</p></div>';
         return;
       }
 
       container.innerHTML = pageProducts.map(product => `
-        <div class="product-card">
+        <div class="product-card" style="position: relative;">
+          <button onclick="toggleWishlistShop(${product.id})" class="wishlist-toggle-btn" title="إضافة للمفضلة" style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #ef4444; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 5;">
+            <i class="far fa-heart"></i>
+          </button>
           <img src="${product.image_url}" alt="${product.name}" class="product-image">
           <h3 class="product-name">${product.name}</h3>
-          <p class="product-category">${product.category}</p>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <span class="product-category">${product.category}</span>
+            <span style="font-size:0.85rem; color:#f59e0b; font-weight:bold;"><i class="fas fa-star"></i> ${product.rating || '5.0'}</span>
+          </div>
           <p class="product-price">${Number(product.price).toLocaleString()} دج</p>
-          <p class="product-stock ${product.stock == 0 ? 'out-of-stock' : product.stock < 5 ? 'low-stock' : 'in-stock'}">الكمية: ${product.stock}</p>
+          <p class="product-stock ${product.stock == 0 ? 'out-of-stock' : product.stock < 5 ? 'low-stock' : 'in-stock'}">
+            ${product.stock == 0 ? 'نفد المخزون' : 'الكمية: ' + product.stock}
+          </p>
           <span class="status-badge ${product.status === 'active' ? 'active' : 'inactive'}">${product.status === 'active' ? 'نشط' : 'غير نشط'}</span>
-          <button onclick="addToCart(${product.id})" class="add-to-cart">إضافة إلى العربة</button>
+          <button onclick="addToCart(${product.id})" class="add-to-cart" ${product.stock == 0 ? 'disabled style="background:#94a3b8; cursor:not-allowed;"' : ''}>
+            ${product.stock == 0 ? 'غير متوفر' : 'إضافة إلى العربة'}
+          </button>
           <a href="product.html?id=${product.id}" class="view-details">عرض التفاصيل</a>
         </div>
       `).join('');
@@ -546,6 +593,13 @@
       }, 3000);
     }
 
+    async function toggleWishlistShop(productId) {
+      const prod = products.find(p => p.id === productId);
+      if (prod && window.WishlistManager) {
+        await window.WishlistManager.toggleItem(prod);
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       loadProducts();
       const searchInput = document.getElementById('searchInput');
@@ -559,5 +613,7 @@
   <script src="js/main.js"></script>
   <script src="js/user-system.js"></script>
   <script src="js/cart.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/i18n.js"></script>
 </body>
 </html>

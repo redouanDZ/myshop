@@ -9,6 +9,7 @@ const userRoutes = require('./userRoutes');
 const wilayaRoutes = require('./wilayaRoutes');
 const adminRoutes = require('./adminRoutes');
 const paymentRoutes = require('./paymentRoutes');
+const wishlistRoutes = require('./wishlistRoutes');
 
 // Mount routes
 router.use('/', authRoutes);
@@ -19,5 +20,6 @@ router.use('/user', userRoutes);
 router.use('/wilayas', wilayaRoutes);
 router.use('/admin', adminRoutes);
 router.use('/payments', paymentRoutes);
+router.use('/wishlist', wishlistRoutes);
 
 module.exports = router;

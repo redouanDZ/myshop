@@ -284,6 +284,43 @@ function syncCartCounter() {
   }
 }
 
+// Network Status Watcher (Online / Offline mode)
+function initNetworkStatusWatcher() {
+  const banner = document.createElement('div');
+  banner.id = 'offline-notification-banner';
+  banner.style.cssText = 'display:none; position:fixed; top:0; left:0; right:0; z-index:10000; background:#dc2626; color:#fff; text-align:center; padding:10px 15px; font-weight:bold; font-size:0.92rem; box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+  banner.innerHTML = '<i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت حالياً (وضع التصفح دون اتصال). يلزم الاتصال لتأكيد الطلبات.';
+  document.body.appendChild(banner);
+
+  function updateStatus() {
+    if (!navigator.onLine) {
+      banner.style.display = 'block';
+    } else {
+      if (banner.style.display === 'block') {
+        banner.style.display = 'none';
+        if (window.showToast) {
+          window.showToast('✅ تمت استعادة الاتصال بالإنترنت بنجاح!', 'success');
+        }
+      }
+    }
+  }
+
+  window.addEventListener('online', updateStatus);
+  window.addEventListener('offline', updateStatus);
+  if (!navigator.onLine) updateStatus();
+}
+
+// Service Worker Registration
+function registerPwaServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => {})
+        .catch(() => {});
+    });
+  }
+}
+
 // Page Initialization
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
@@ -292,5 +329,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNewsletter();
   updateWishlistUI();
   syncCartCounter();
+  initNetworkStatusWatcher();
+  registerPwaServiceWorker();
 });
 

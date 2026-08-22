@@ -36,12 +36,12 @@ app.use(helmet({
 }));
 
 // Rate Limiters
-const apiRateLimiter = rateLimit({
+const trackOrderRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 200,
+    max: 20,
     standardHeaders: true,
     legacyHeaders: false,
-    message: { error: 'تم تجاوز عدد المحاولات المسموح بها، يرجى المحاولة بعد 15 دقيقة' }
+    message: { error: 'تم تجاوز عدد محاولات التتبع المسموح بها، يرجى المحاولة بعد 15 دقيقة' }
 });
 
 const authRateLimiter = rateLimit({
@@ -52,9 +52,18 @@ const authRateLimiter = rateLimit({
     message: { error: 'تم تجاوز عدد المحاولات المسموح بها، يرجى المحاولة بعد 15 دقيقة' }
 });
 
-app.use('/api', apiRateLimiter);
+const apiRateLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 200,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { error: 'تم تجاوز عدد المحاولات المسموح بها، يرجى المحاولة بعد 15 دقيقة' }
+});
+
+app.use('/api/orders/track', trackOrderRateLimiter);
 app.use('/api/login', authRateLimiter);
 app.use('/api/register', authRateLimiter);
+app.use('/api', apiRateLimiter);
 
 // CORS Config
 app.use(cors({
@@ -114,9 +123,10 @@ app.use('/admin', express.static(path.join(rootDir, 'admin')));
 app.use('/css', express.static(path.join(rootDir, 'css')));
 app.use('/js', express.static(path.join(rootDir, 'js')));
 app.use('/images', express.static(path.join(rootDir, 'images')));
+app.use('/locales', express.static(path.join(rootDir, 'locales')));
 
 // Public HTML Pages
-const publicHtmlPages = ['index.html', 'shop.html', 'product.html', 'cart.html', 'checkout.html', 'order-confirmation.html', 'account.html', 'track-order.html', 'invoice.html'];
+const publicHtmlPages = ['index.html', 'shop.html', 'product.html', 'cart.html', 'checkout.html', 'order-confirmation.html', 'account.html', 'track-order.html', 'invoice.html', 'wishlist.html'];
 publicHtmlPages.forEach((page) => {
     app.get(`/${page}`, (req, res) => res.sendFile(path.join(rootDir, page)));
 });

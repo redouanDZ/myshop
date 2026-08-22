@@ -14,6 +14,20 @@ CREATE TABLE IF NOT EXISTS wilayas (
     UNIQUE KEY uq_wilaya_code (code)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Alter orders table to support guest checkout, payments and tracking if columns do not exist
+ALTER TABLE orders MODIFY COLUMN user_id INT UNSIGNED NULL;
+ALTER TABLE orders ADD COLUMN order_number VARCHAR(50) NULL AFTER id;
+ALTER TABLE orders ADD COLUMN tracking_token VARCHAR(100) NULL AFTER order_number;
+ALTER TABLE orders ADD COLUMN payment_method VARCHAR(30) NOT NULL DEFAULT 'cod' AFTER status;
+ALTER TABLE orders ADD COLUMN payment_status ENUM('pending', 'paid', 'failed', 'refunded') NOT NULL DEFAULT 'pending' AFTER payment_method;
+ALTER TABLE orders ADD COLUMN shipping_full_name VARCHAR(150) NULL AFTER payment_status;
+ALTER TABLE orders ADD COLUMN phone VARCHAR(30) NULL AFTER shipping_full_name;
+ALTER TABLE orders ADD COLUMN email VARCHAR(100) NULL AFTER phone;
+ALTER TABLE orders ADD COLUMN wilaya_id INT UNSIGNED NULL AFTER city;
+ALTER TABLE orders ADD COLUMN wilaya_name VARCHAR(100) NULL AFTER wilaya_id;
+ALTER TABLE orders ADD COLUMN delivery_type ENUM('home', 'desk') NOT NULL DEFAULT 'home' AFTER wilaya_name;
+ALTER TABLE orders ADD COLUMN shipping_cost DECIMAL(10,2) NOT NULL DEFAULT 0.00 AFTER delivery_type;
+
 -- إدراج الولايات الـ 58 إذا لم تكن موجودة
 INSERT IGNORE INTO wilayas (id, code, name_ar, name_fr, home_delivery_price, desk_delivery_price, delivery_time_days) VALUES
 (1, '01', 'أدرار', 'Adrar', 1000.00, 700.00, '3-6 أيام'),
@@ -43,18 +57,18 @@ INSERT IGNORE INTO wilayas (id, code, name_ar, name_fr, home_delivery_price, des
 (25, '25', 'قسنطينة', 'Constantine', 600.00, 400.00, '2-3 أيام'),
 (26, '26', 'المدية', 'Médéa', 550.00, 350.00, '1-2 أيام'),
 (27, '27', 'مستغانم', 'Mostaganem', 600.00, 400.00, '2-3 أيام'),
-(28, '28', 'المسيلة', 'M''Sila', 650.00, 450.00, '2-4 أيام'),
+(28, '28', 'المسيلة', 'M''Sila', 700.00, 500.00, '2-4 أيام'),
 (29, '29', 'معسكر', 'Mascara', 600.00, 400.00, '2-3 أيام'),
 (30, '30', 'ورقلة', 'Ouargla', 800.00, 600.00, '2-5 أيام'),
-(31, '31', 'وهران', 'Oran', 550.00, 350.00, '1-2 أيام'),
+(31, '31', 'وهران', 'Oran', 550.00, 350.00, '24-48 ساعة'),
 (32, '32', 'البيض', 'El Bayadh', 800.00, 600.00, '3-5 أيام'),
-(33, '33', 'إليزي', 'Illizi', 1300.00, 950.00, '4-7 أيام'),
-(34, '34', 'برج بوعريريج', 'Bordj Bou Arréridj', 600.00, 400.00, '2-3 أيام'),
-(35, '35', 'بومرداس', 'Boumerdès', 500.00, 300.00, '1-2 أيام'),
+(33, '33', 'إليزي', 'Illizi', 1400.00, 1000.00, '4-7 أيام'),
+(34, '34', 'برج بوعريريج', 'Bordj Bou Arreridj', 600.00, 400.00, '2-3 أيام'),
+(35, '35', 'بومرداس', 'Boumerdès', 450.00, 250.00, '1-2 أيام'),
 (36, '36', 'الطارف', 'El Tarf', 700.00, 500.00, '2-4 أيام'),
 (37, '37', 'تندوف', 'Tindouf', 1300.00, 950.00, '4-7 أيام'),
-(38, '38', 'تسمسيلت', 'Tissemsilt', 650.00, 450.00, '2-4 أيام'),
-(39, '39', 'الوادي', 'El Oued', 800.00, 600.00, '2-5 أيام'),
+(38, '38', 'تيسمسيلت', 'Tissemsilt', 650.00, 450.00, '2-4 أيام'),
+(39, '39', 'الوادي', 'El Oued', 750.00, 550.00, '2-4 أيام'),
 (40, '40', 'خنشلة', 'Khenchela', 700.00, 500.00, '2-4 أيام'),
 (41, '41', 'سوق أهراس', 'Souk Ahras', 700.00, 500.00, '2-4 أيام'),
 (42, '42', 'تيبازة', 'Tipaza', 500.00, 300.00, '1-2 أيام'),

@@ -438,13 +438,18 @@ class MysqlRepository {
   }
 
   async getProducts(options = {}) {
-    const { category, search, minPrice, maxPrice, sortBy, page = 1, limit = 100 } = options;
+    const { category, search, minPrice, maxPrice, minRating, inStock, status = 'active', sortBy, page = 1, limit = 100 } = options;
     const queryParams = [];
     let whereSql = ' WHERE 1 = 1';
 
+    if (status && status !== 'all') {
+      whereSql += ' AND p.status = ?';
+      queryParams.push(status);
+    }
+
     if (category && category !== 'all') {
-      whereSql += ' AND c.slug = ?';
-      queryParams.push(slugify(category));
+      whereSql += ' AND (c.slug = ? OR c.name = ?)';
+      queryParams.push(slugify(category), category);
     }
 
     if (search) {
@@ -463,10 +468,21 @@ class MysqlRepository {
       queryParams.push(Number(maxPrice));
     }
 
+    if (minRating !== null && minRating !== undefined && !Number.isNaN(Number(minRating))) {
+      whereSql += ' AND p.rating >= ?';
+      queryParams.push(Number(minRating));
+    }
+
+    if (inStock === true || inStock === 'true' || inStock === 1 || inStock === '1') {
+      whereSql += ' AND p.stock > 0';
+    }
+
     let orderSql = ' ORDER BY p.created_at DESC';
     if (sortBy === 'price-asc') orderSql = ' ORDER BY p.price ASC';
     if (sortBy === 'price-desc') orderSql = ' ORDER BY p.price DESC';
-    if (sortBy === 'rating') orderSql = ' ORDER BY p.rating DESC';
+    if (sortBy === 'rating' || sortBy === 'rating-desc') orderSql = ' ORDER BY p.rating DESC, p.created_at DESC';
+    if (sortBy === 'name-asc') orderSql = ' ORDER BY p.name ASC';
+    if (sortBy === 'name-desc') orderSql = ' ORDER BY p.name DESC';
     if (sortBy === 'newest') orderSql = ' ORDER BY p.created_at DESC';
 
     const totalQuery = `SELECT COUNT(*) AS total FROM products p INNER JOIN categories c ON c.id = p.category_id${whereSql}`;
@@ -894,6 +910,43 @@ class MysqlRepository {
       lowStockProducts
     };
   }
+
+  async addToWishlist(userId, productId) {
+    await this.pool.query(
+      'INSERT IGNORE INTO wishlist_items (user_id, product_id) VALUES (?, ?)',
+      [Number(userId), Number(productId)]
+    );
+    return true;
+  }
+
+  async removeFromWishlist(userId, productId) {
+    const [result] = await this.pool.query(
+      'DELETE FROM wishlist_items WHERE user_id = ? AND product_id = ?',
+      [Number(userId), Number(productId)]
+    );
+    return result.affectedRows > 0;
+  }
+
+  async getWishlist(userId) {
+    const [rows] = await this.pool.query(
+      `SELECT p.*, c.name AS category_name, w.created_at AS added_at
+       FROM wishlist_items w
+       INNER JOIN products p ON p.id = w.product_id
+       INNER JOIN categories c ON c.id = p.category_id
+       WHERE w.user_id = ?
+       ORDER BY w.id DESC`,
+      [Number(userId)]
+    );
+    return rows.map(normalizeProductRow);
+  }
+
+  async isInWishlist(userId, productId) {
+    const [rows] = await this.pool.query(
+      'SELECT id FROM wishlist_items WHERE user_id = ? AND product_id = ? LIMIT 1',
+      [Number(userId), Number(productId)]
+    );
+    return rows.length > 0;
+  }
 }
 
 function createMysqlRepository(pool) {
@@ -1238,6 +1291,32 @@ function createFallbackRepository() {
         })),
         lowStockProducts: state.products.filter(p => Number(p.stock) <= 3)
       };
+    },
+    async addToWishlist(userId, productId) {
+      if (!state.wishlist) state.wishlist = [];
+      const exists = state.wishlist.some(w => w.userId === Number(userId) && w.productId === Number(productId));
+      if (!exists) {
+        state.wishlist.push({ userId: Number(userId), productId: Number(productId), createdAt: new Date().toISOString() });
+      }
+      return true;
+    },
+    async removeFromWishlist(userId, productId) {
+      if (!state.wishlist) state.wishlist = [];
+      const initLen = state.wishlist.length;
+      state.wishlist = state.wishlist.filter(w => !(w.userId === Number(userId) && w.productId === Number(productId)));
+      return state.wishlist.length < initLen;
+    },
+    async getWishlist(userId) {
+      if (!state.wishlist) state.wishlist = [];
+      const userItems = state.wishlist.filter(w => w.userId === Number(userId));
+      return userItems.map(w => {
+        const prod = state.products.find(p => p.id === w.productId);
+        return prod ? { ...prod, added_at: w.createdAt } : null;
+      }).filter(Boolean);
+    },
+    async isInWishlist(userId, productId) {
+      if (!state.wishlist) state.wishlist = [];
+      return state.wishlist.some(w => w.userId === Number(userId) && w.productId === Number(productId));
     }
   };
   return repo;

@@ -1,6 +1,7 @@
 {
-  "short_name": "متجري",
-  "name": "متجري - المتجر الإلكتروني التقني",
+  "short_name": "المتجر الإلكتروني",
+  "name": "المتجر الإلكتروني - تجربة تسوق جزائرية متكاملة",
+  "description": "تسوق أحدث المنتجات والإلكترونيات بأفضل الأسعار مع التوصيل لكافة الولايات والدفع عند الاستلام.",
   "icons": [
     {
       "src": "/images/christopher-gower-m_HRfLhgABo-unsplash.jpg",
@@ -14,7 +15,7 @@
     }
   ],
   "start_url": "/index.html",
-  "background_color": "#0f172a",
+  "background_color": "#0b0f19",
   "theme_color": "#2563eb",
   "display": "standalone",
   "orientation": "portrait",

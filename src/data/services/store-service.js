@@ -129,6 +129,22 @@ class StoreService {
   async getAdminDashboardStats() {
     return this.repository.getAdminDashboardStats();
   }
+
+  async addToWishlist(userId, productId) {
+    return this.repository.addToWishlist(userId, productId);
+  }
+
+  async removeFromWishlist(userId, productId) {
+    return this.repository.removeFromWishlist(userId, productId);
+  }
+
+  async getWishlist(userId) {
+    return this.repository.getWishlist(userId);
+  }
+
+  async isInWishlist(userId, productId) {
+    return this.repository.isInWishlist(userId, productId);
+  }
 }
 
 module.exports = {

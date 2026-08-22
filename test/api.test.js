@@ -3,9 +3,40 @@ const assert = require('node:assert');
 
 test('Product Search and Filters Logic Test', async () => {
     const db = require('../src/data/db-connection.js');
-    const result = await db.getProducts({ search: 'حاسوب' });
-    assert.ok(result.products, 'Result should have products array');
-    assert.strictEqual(Array.isArray(result.products), true);
+    
+    // 1. Search term
+    const searchRes = await db.getProducts({ search: 'حاسوب' });
+    assert.ok(searchRes.products, 'Result should have products array');
+    assert.strictEqual(Array.isArray(searchRes.products), true);
+    assert.ok(searchRes.products.length > 0, 'Should find product with search term');
+
+    // 2. Price filter
+    const priceRes = await db.getProducts({ minPrice: 10000, maxPrice: 30000 });
+    assert.ok(Array.isArray(priceRes.products), 'Price filter should return array');
+    priceRes.products.forEach(p => {
+        assert.ok(p.price >= 10000 && p.price <= 30000, `Product price ${p.price} should be within [10000, 30000]`);
+    });
+
+    // 3. Rating filter
+    const ratingRes = await db.getProducts({ minRating: 4.7 });
+    assert.ok(Array.isArray(ratingRes.products), 'Rating filter should return array');
+    ratingRes.products.forEach(p => {
+        assert.ok(Number(p.rating) >= 4.7, `Product rating ${p.rating} should be >= 4.7`);
+    });
+
+    // 4. In-Stock filter
+    const stockRes = await db.getProducts({ inStock: true });
+    assert.ok(Array.isArray(stockRes.products), 'In-stock filter should return array');
+    stockRes.products.forEach(p => {
+        assert.ok(p.stock > 0, `Product stock ${p.stock} should be > 0`);
+    });
+
+    // 5. Sorting by price asc
+    const sortRes = await db.getProducts({ sortBy: 'price-asc' });
+    assert.ok(sortRes.products.length >= 2, 'Should have multiple products to test sorting');
+    for (let i = 0; i < sortRes.products.length - 1; i++) {
+        assert.ok(sortRes.products[i].price <= sortRes.products[i + 1].price, 'Products should be sorted by price ascending');
+    }
 });
 
 test('User Database Credentials Verification Test', async () => {
@@ -104,10 +135,63 @@ test('Algerian 58 Wilayas Retrieval Test', async () => {
     assert.ok(algiers.home_delivery_price > 0, 'Home delivery price must be defined');
 });
 
+test('Wishlist Add, Check, List and Remove Test', async () => {
+    const db = require('../src/data/db-connection.js');
+    const userId = 1;
+    const productId = 1;
+
+    // Add to wishlist
+    const added = await db.addToWishlist(userId, productId);
+    assert.strictEqual(added, true, 'Product should be added to wishlist');
+
+    // Check status
+    const inWishlist = await db.isInWishlist(userId, productId);
+    assert.strictEqual(inWishlist, true, 'Product should be confirmed in wishlist');
+
+    // Get wishlist items
+    const list = await db.getWishlist(userId);
+    assert.ok(Array.isArray(list), 'Wishlist items must be returned as array');
+    assert.ok(list.some(p => p.id === productId), 'Added product should be present in wishlist array');
+
+    // Remove from wishlist
+    const removed = await db.removeFromWishlist(userId, productId);
+    assert.strictEqual(removed, true, 'Product should be removed from wishlist');
+
+    // Verify removal
+    const stillInWishlist = await db.isInWishlist(userId, productId);
+    assert.strictEqual(stillInWishlist, false, 'Product should no longer be in wishlist');
+});
+
+test('Multi-language AR/FR/EN Localization Files Test', async () => {
+    const fs = require('fs');
+    const path = require('path');
+
+    const localesDir = path.join(__dirname, '..', 'locales');
+    const arPath = path.join(localesDir, 'ar.json');
+    const frPath = path.join(localesDir, 'fr.json');
+    const enPath = path.join(localesDir, 'en.json');
+
+    assert.ok(fs.existsSync(arPath), 'ar.json must exist');
+    assert.ok(fs.existsSync(frPath), 'fr.json must exist');
+    assert.ok(fs.existsSync(enPath), 'en.json must exist');
+
+    const ar = JSON.parse(fs.readFileSync(arPath, 'utf8'));
+    const fr = JSON.parse(fs.readFileSync(frPath, 'utf8'));
+    const en = JSON.parse(fs.readFileSync(enPath, 'utf8'));
+
+    assert.strictEqual(ar.dir, 'rtl', 'Arabic must be RTL');
+    assert.strictEqual(fr.dir, 'ltr', 'French must be LTR');
+    assert.strictEqual(en.dir, 'ltr', 'English must be LTR');
+
+    assert.ok(ar.nav && ar.common && ar.cart && ar.checkout, 'Arabic dictionary must have core sections');
+    assert.ok(fr.nav && fr.common && fr.cart && fr.checkout, 'French dictionary must have core sections');
+    assert.ok(en.nav && en.common && en.cart && en.checkout, 'English dictionary must have core sections');
+});
+
 test.after(async () => {
     const db = require('../src/data/db-connection.js');
     if (db.pool && typeof db.pool.end === 'function') {
         try { await db.pool.end(); } catch (e) {}
     }
-    process.exit(0);
+    setTimeout(() => process.exit(0), 150);
 });

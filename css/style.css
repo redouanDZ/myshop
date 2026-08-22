@@ -3151,7 +3151,8 @@ body.dark-mode .back-to-top-btn:hover {
 [data-theme="dark"] .user-actions button,
 [data-theme="dark"] .theme-toggle-btn,
 [data-theme="dark"] .user-icon,
-[data-theme="dark"] .cart-icon {
+[data-theme="dark"] .cart-icon,
+[data-theme="dark"] .wishlist-icon {
     background: #1e293b;
     border-color: #334155;
     color: #f8fafc !important;
@@ -3161,8 +3162,131 @@ body.dark-mode .back-to-top-btn:hover {
 [data-theme="dark"] .user-actions button i,
 [data-theme="dark"] .theme-toggle-btn i,
 [data-theme="dark"] .user-icon i,
-[data-theme="dark"] .cart-icon i {
+[data-theme="dark"] .cart-icon i,
+[data-theme="dark"] .wishlist-icon i {
     color: #f8fafc !important;
+}
+
+/* ==========================================================================
+   Comprehensive Dark Mode Rules for All Pages & Components
+   ========================================================================== */
+[data-theme="dark"],
+body.dark-mode {
+    background-color: #0b0f19;
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] header,
+body.dark-mode header {
+    background: rgba(15, 23, 42, 0.95);
+    border-bottom: 1px solid #1e293b;
+}
+
+[data-theme="dark"] .product-card,
+[data-theme="dark"] .shop-sidebar,
+[data-theme="dark"] .track-container,
+[data-theme="dark"] .order-details-box,
+[data-theme="dark"] .wishlist-card,
+[data-theme="dark"] .empty-wishlist,
+[data-theme="dark"] .checkout-container,
+[data-theme="dark"] .cart-summary,
+[data-theme="dark"] .order-summary,
+[data-theme="dark"] .product-details,
+body.dark-mode .product-card,
+body.dark-mode .shop-sidebar,
+body.dark-mode .track-container,
+body.dark-mode .order-details-box,
+body.dark-mode .wishlist-card,
+body.dark-mode .empty-wishlist,
+body.dark-mode .checkout-container,
+body.dark-mode .cart-summary,
+body.dark-mode .order-summary,
+body.dark-mode .product-details {
+    background-color: #111827;
+    border-color: #1f2937;
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .order-header-info,
+[data-theme="dark"] .info-grid,
+[data-theme="dark"] .summary-totals-box,
+[data-theme="dark"] .card-img-wrapper,
+body.dark-mode .order-header-info,
+body.dark-mode .info-grid,
+body.dark-mode .summary-totals-box,
+body.dark-mode .card-img-wrapper {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+}
+
+[data-theme="dark"] .delivery-card,
+body.dark-mode .delivery-card {
+    background-color: #111827;
+    border-color: #374151;
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .delivery-card.active,
+body.dark-mode .delivery-card.active {
+    background-color: #1e293b;
+    border-color: #6366f1;
+}
+
+[data-theme="dark"] .delivery-card-info strong,
+[data-theme="dark"] .order-info-item strong,
+[data-theme="dark"] .product-name,
+[data-theme="dark"] .card-title,
+[data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] h4,
+body.dark-mode .delivery-card-info strong,
+body.dark-mode .order-info-item strong,
+body.dark-mode .product-name,
+body.dark-mode .card-title,
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4 {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .order-items-table th,
+[data-theme="dark"] .order-items-table td,
+body.dark-mode .order-items-table th,
+body.dark-mode .order-items-table td {
+    border-color: #1f2937;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .order-items-table th,
+body.dark-mode .order-items-table th {
+    background-color: #1f2937;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .step-icon,
+body.dark-mode .step-icon {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .btn-outline,
+body.dark-mode .btn-outline {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-outline:hover,
+body.dark-mode .btn-outline:hover {
+    background-color: #374151;
+}
+
+[data-theme="dark"] .page-title,
+body.dark-mode .page-title {
+    background: #0f172a;
+    border-bottom: 1px solid #1e293b;
+}
+
+[data-theme="dark"] .page-title h1,
+body.dark-mode .page-title h1 {
+    color: #f8fafc;
 }
 
 

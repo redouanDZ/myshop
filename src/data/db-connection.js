@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mysql = require('mysql2/promise');
 const { createMysqlRepository, createFallbackRepository } = require('./repositories/mysql-repository');
 const { createStoreService } = require('./services/store-service');
@@ -70,5 +71,9 @@ module.exports = {
     getWilayas: buildProxy('getWilayas'),
     getWilayaById: buildProxy('getWilayaById'),
     updateWilayaPrice: buildProxy('updateWilayaPrice'),
-    getAdminDashboardStats: buildProxy('getAdminDashboardStats')
+    getAdminDashboardStats: buildProxy('getAdminDashboardStats'),
+    addToWishlist: buildProxy('addToWishlist'),
+    removeFromWishlist: buildProxy('removeFromWishlist'),
+    getWishlist: buildProxy('getWishlist'),
+    isInWishlist: buildProxy('isInWishlist')
 };

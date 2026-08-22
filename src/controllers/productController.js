@@ -39,12 +39,15 @@ async function createProduct(req, res) {
 
 async function getProducts(req, res) {
     try {
-        const { category, search, minPrice, maxPrice, sortBy, page, limit } = req.query;
+        const { category, search, minPrice, maxPrice, minRating, inStock, status, sortBy, page, limit } = req.query;
         const result = await db.getProducts({
             category,
             search,
             minPrice: minPrice ? parseFloat(minPrice) : null,
             maxPrice: maxPrice ? parseFloat(maxPrice) : null,
+            minRating: minRating ? parseFloat(minRating) : null,
+            inStock: inStock === 'true' || inStock === '1' || inStock === true,
+            status,
             sortBy,
             page: page ? parseInt(page, 10) : 1,
             limit: limit ? parseInt(limit, 10) : 100

@@ -1,0 +1,101 @@
+{
+  "dir": "rtl",
+  "lang": "ar",
+  "nav": {
+    "home": "الرئيسية",
+    "shop": "التسوق",
+    "cart": "عربة التسوق",
+    "wishlist": "المفضلة",
+    "track_order": "تتبع طلبي",
+    "account": "حسابي"
+  },
+  "common": {
+    "store_name": "المتجر الإلكتروني",
+    "search": "بحث...",
+    "search_placeholder": "ابحث عن منتج بالاسم...",
+    "currency": "دج",
+    "add_to_cart": "إضافة إلى العربة",
+    "in_stock": "متوفر في المخزون",
+    "out_of_stock": "نفد المخزون",
+    "all": "الكل",
+    "price": "السعر",
+    "rating": "التقييم",
+    "category": "التصنيف",
+    "electronics": "إلكترونيات",
+    "clothing": "ملابس",
+    "books": "كتب",
+    "details": "عرض التفاصيل",
+    "checkout": "متابعة الشراء",
+    "rights_reserved": "جميع الحقوق محفوظة",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "remove": "حذف",
+    "close": "إغلاق"
+  },
+  "filters": {
+    "title": "فلاتر المنتجات",
+    "reset": "إعادة ضبط",
+    "max_price": "أقصى سعر (دج)",
+    "ratings": "التقييم",
+    "all_ratings": "جميع التقييمات",
+    "stars_above_4_5": "⭐ 4.5 فما فوق (ممتاز)",
+    "stars_above_4": "⭐ 4.0 فما فوق (جيد جداً)",
+    "stars_above_3": "⭐ 3.0 فما فوق",
+    "stock_status": "التوفر في المتجر",
+    "in_stock_only": "المتوفر في المخزون فقط",
+    "sort_newest": "الأحدث أولاً",
+    "sort_rating": "التقييم: الأعلى تقييماً ⭐",
+    "sort_price_asc": "السعر: الأقل إلى الأعلى",
+    "sort_price_desc": "السعر: الأعلى إلى الأقل",
+    "sort_name_asc": "الاسم: أ-ي",
+    "sort_name_desc": "الاسم: ي-أ"
+  },
+  "wishlist": {
+    "title": "قائمة الرغبات والمفضلة",
+    "saved_products": "المنتجات المحفوظة",
+    "empty_title": "قائمة الرغبات فارغة",
+    "empty_desc": "لم تقم بحفظ أي منتجات في المفضلة بعد. استكشف متجرنا وأضف المنتجات التي تنال إعجابك!",
+    "explore_btn": "تصفح المنتجات الآن"
+  },
+  "cart": {
+    "title": "عربة التسوق",
+    "empty_title": "عربة التسوق فارغة",
+    "summary_title": "ملخص الطلب",
+    "subtotal": "المجموع الفرعي",
+    "shipping": "الشحن والتوصيل",
+    "total": "الإجمالي",
+    "proceed_checkout": "التقدم لإتمام الطلب",
+    "continue_shopping": "مواصلة التسوق"
+  },
+  "checkout": {
+    "title": "إتمام عملية الشراء",
+    "step_shipping": "معلومات الشحن والتوصيل",
+    "step_payment": "طريقة الدفع",
+    "step_review": "مراجعة وتأكيد الطلب",
+    "full_name": "الاسم الكامل",
+    "phone": "رقم الهاتف (الجزائر)",
+    "wilaya": "الولاية (58 ولاية)",
+    "address": "العنوان بالتفصيل",
+    "notes": "ملاحظات إضافية للتوصيل",
+    "delivery_home": "توصيل للمنزل",
+    "delivery_desk": "استلام من المكتب (Stop Desk)",
+    "cod": "الدفع عند الاستلام (COD)",
+    "chargily": "الدفع الإلكتروني عبر البطاقة الذهبية / CIB (Chargily Pay)",
+    "confirm_order": "تأكيد الطلب نهائياً"
+  },
+  "tracking": {
+    "title": "تتبع حالة الطلب",
+    "order_id": "رقم الطلب",
+    "phone": "رقم الهاتف المسجل",
+    "track_btn": "تتبع الطلب الآن",
+    "order_details": "تفاصيل الطلب",
+    "step_received": "تم استلام الطلب",
+    "step_processing": "جاري التجهيز",
+    "step_shipped": "خرج للتوصيل",
+    "step_delivered": "تم التسليم بنجاح"
+  },
+  "pwa": {
+    "offline_notice": "أنت غير متصل بالإنترنت حالياً (وضع التصفح دون اتصال). يلزم الاتصال لتأكيد الطلبات.",
+    "online_restored": "تمت استعادة الاتصال بالإنترنت بنجاح!"
+  }
+}

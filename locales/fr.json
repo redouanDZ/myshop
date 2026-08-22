@@ -1,0 +1,101 @@
+{
+  "dir": "ltr",
+  "lang": "fr",
+  "nav": {
+    "home": "Accueil",
+    "shop": "Boutique",
+    "cart": "Panier",
+    "wishlist": "Favoris",
+    "track_order": "Suivi de commande",
+    "account": "Mon compte"
+  },
+  "common": {
+    "store_name": "Boutique Électronique",
+    "search": "Recherche...",
+    "search_placeholder": "Rechercher un produit par nom...",
+    "currency": "DZD",
+    "add_to_cart": "Ajouter au panier",
+    "in_stock": "En stock",
+    "out_of_stock": "Épuisé",
+    "all": "Tous",
+    "price": "Prix",
+    "rating": "Note",
+    "category": "Catégorie",
+    "electronics": "Électronique",
+    "clothing": "Vêtements",
+    "books": "Livres",
+    "details": "Voir détails",
+    "checkout": "Commander",
+    "rights_reserved": "Tous droits réservés",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "remove": "Supprimer",
+    "close": "Fermer"
+  },
+  "filters": {
+    "title": "Filtres des produits",
+    "reset": "Réinitialiser",
+    "max_price": "Prix max (DZD)",
+    "ratings": "Évaluation",
+    "all_ratings": "Toutes les notes",
+    "stars_above_4_5": "⭐ 4.5 et plus (Excellent)",
+    "stars_above_4": "⭐ 4.0 et plus (Très bon)",
+    "stars_above_3": "⭐ 3.0 et plus",
+    "stock_status": "Disponibilité",
+    "in_stock_only": "En stock uniquement",
+    "sort_newest": "Plus récents d'abord",
+    "sort_rating": "Note: Meilleures notes ⭐",
+    "sort_price_asc": "Prix: Moins cher au plus cher",
+    "sort_price_desc": "Prix: Plus cher au moins cher",
+    "sort_name_asc": "Nom: A à Z",
+    "sort_name_desc": "Nom: Z à A"
+  },
+  "wishlist": {
+    "title": "Liste de souhaits & Favoris",
+    "saved_products": "Produits sauvegardés",
+    "empty_title": "Votre liste de souhaits est vide",
+    "empty_desc": "Vous n'avez pas encore de favoris. Explorez notre catalogue et ajoutez vos coups de cœur !",
+    "explore_btn": "Explorer la boutique"
+  },
+  "cart": {
+    "title": "Mon Panier",
+    "empty_title": "Votre panier est vide",
+    "summary_title": "Récapitulatif de la commande",
+    "subtotal": "Sous-total",
+    "shipping": "Frais de livraison",
+    "total": "Total général",
+    "proceed_checkout": "Passer la commande",
+    "continue_shopping": "Continuer les achats"
+  },
+  "checkout": {
+    "title": "Finaliser la commande",
+    "step_shipping": "Informations de livraison",
+    "step_payment": "Mode de paiement",
+    "step_review": "Vérification et confirmation",
+    "full_name": "Nom complet",
+    "phone": "Numéro de téléphone (Algérie)",
+    "wilaya": "Wilaya (58 wilayas)",
+    "address": "Adresse détaillée",
+    "notes": "Remarques de livraison",
+    "delivery_home": "Livraison à domicile",
+    "delivery_desk": "Point relais (Stop Desk)",
+    "cod": "Paiement à la livraison (COD)",
+    "chargily": "Paiement en ligne EDAHABIA / CIB (Chargily Pay)",
+    "confirm_order": "Confirmer la commande définitivement"
+  },
+  "tracking": {
+    "title": "Suivi de votre commande",
+    "order_id": "Numéro de commande",
+    "phone": "Numéro de téléphone enregistré",
+    "track_btn": "Suivre ma commande",
+    "order_details": "Détails de la commande",
+    "step_received": "Commande reçue",
+    "step_processing": "En préparation",
+    "step_shipped": "En cours de livraison",
+    "step_delivered": "Livrée avec succès"
+  },
+  "pwa": {
+    "offline_notice": "Vous êtes actuellement hors-ligne (mode navigation). Une connexion est requise pour valider vos commandes.",
+    "online_restored": "Connexion Internet rétablie avec succès !"
+  }
+}

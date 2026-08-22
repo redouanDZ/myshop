@@ -188,11 +188,17 @@
             }, 600);
         }
 
-        function addToWishlist() {
-            if (window.showToast) {
-                window.showToast('تم إضافة المنتج إلى قائمة الرغبات ❤️', 'info');
+        async function addToWishlist() {
+            if (!currentProduct) return;
+            if (window.WishlistManager) {
+                const added = await window.WishlistManager.toggleItem(currentProduct);
+                const heartBtn = document.querySelector('.add-to-wishlist i');
+                if (heartBtn) {
+                    heartBtn.className = added ? 'fas fa-heart' : 'far fa-heart';
+                    heartBtn.style.color = added ? '#ef4444' : '';
+                }
             } else {
-                alert('تم إضافة المنتج إلى قائمة الرغبات');
+                alert('تمت إضافة المنتج إلى قائمة الرغبات');
             }
         }
 
@@ -279,5 +285,7 @@
     <script src="js/main.js"></script>
     <script src="js/user-system.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/i18n.js"></script>
 </body>
 </html>

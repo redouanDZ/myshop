@@ -44,17 +44,22 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="index.html">متجر الإلكتروني</a>
+                <a href="index.html" data-i18n="common.store_name">المتجر الإلكتروني</a>
             </div>
             <nav>
                 <ul>
-                    <li><a href="index.html" class="active">الرئيسية</a></li>
-                    <li><a href="shop.html">التسوق</a></li>
-                    <li><a href="cart.html">عربة التسوق</a></li>
-                    <li><a href="track-order.html">تتبع طلبي</a></li>
+                    <li><a href="index.html" class="active" data-i18n="nav.home">الرئيسية</a></li>
+                    <li><a href="shop.html" data-i18n="nav.shop">التسوق</a></li>
+                    <li><a href="cart.html" data-i18n="nav.cart">عربة التسوق</a></li>
+                    <li><a href="track-order.html" data-i18n="nav.track_order">تتبع طلبي</a></li>
                 </ul>
             </nav>
             <div class="user-actions">
+                <!-- Wishlist -->
+                <a href="wishlist.html" class="wishlist-icon" title="المفضلة" style="position: relative; margin-left: 12px; color: #ef4444; font-size: 1.15rem;">
+                    <i class="fas fa-heart"></i>
+                    <span class="wishlist-count" id="wishlist-count" style="position: absolute; top: -8px; right: -10px; background: #ef4444; color: #fff; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: bold;">0</span>
+                </a>
                 <!-- Shopping Cart -->
                 <a href="cart.html" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
@@ -273,6 +278,8 @@
     <script src="js/main.js"></script>
     <script src="js/user-system.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {

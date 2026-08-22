@@ -1,0 +1,101 @@
+{
+  "dir": "ltr",
+  "lang": "en",
+  "nav": {
+    "home": "Home",
+    "shop": "Shop",
+    "cart": "Cart",
+    "wishlist": "Wishlist",
+    "track_order": "Track Order",
+    "account": "Account"
+  },
+  "common": {
+    "store_name": "E-Commerce Store",
+    "search": "Search...",
+    "search_placeholder": "Search products by name...",
+    "currency": "DZD",
+    "add_to_cart": "Add to Cart",
+    "in_stock": "In Stock",
+    "out_of_stock": "Out of Stock",
+    "all": "All",
+    "price": "Price",
+    "rating": "Rating",
+    "category": "Category",
+    "electronics": "Electronics",
+    "clothing": "Clothing",
+    "books": "Books",
+    "details": "View Details",
+    "checkout": "Checkout",
+    "rights_reserved": "All rights reserved",
+    "save": "Save",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "close": "Close"
+  },
+  "filters": {
+    "title": "Product Filters",
+    "reset": "Reset Filters",
+    "max_price": "Max Price (DZD)",
+    "ratings": "Rating",
+    "all_ratings": "All Ratings",
+    "stars_above_4_5": "⭐ 4.5 & up (Excellent)",
+    "stars_above_4": "⭐ 4.0 & up (Very Good)",
+    "stars_above_3": "⭐ 3.0 & up",
+    "stock_status": "Availability",
+    "in_stock_only": "In Stock Only",
+    "sort_newest": "Newest First",
+    "sort_rating": "Rating: Highest First ⭐",
+    "sort_price_asc": "Price: Low to High",
+    "sort_price_desc": "Price: High to Low",
+    "sort_name_asc": "Name: A to Z",
+    "sort_name_desc": "Name: Z to A"
+  },
+  "wishlist": {
+    "title": "Wishlist & Favorites",
+    "saved_products": "Saved Products",
+    "empty_title": "Your Wishlist is Empty",
+    "empty_desc": "You haven't saved any items yet. Explore our store and find products you love!",
+    "explore_btn": "Explore Products Now"
+  },
+  "cart": {
+    "title": "Shopping Cart",
+    "empty_title": "Your Cart is Empty",
+    "summary_title": "Order Summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping Fee",
+    "total": "Total Amount",
+    "proceed_checkout": "Proceed to Checkout",
+    "continue_shopping": "Continue Shopping"
+  },
+  "checkout": {
+    "title": "Complete Your Purchase",
+    "step_shipping": "Shipping Information",
+    "step_payment": "Payment Method",
+    "step_review": "Review & Confirm",
+    "full_name": "Full Name",
+    "phone": "Phone Number (Algeria)",
+    "wilaya": "Wilaya (58 Wilayas)",
+    "address": "Detailed Address",
+    "notes": "Delivery Notes",
+    "delivery_home": "Home Delivery",
+    "delivery_desk": "Pickup from Desk (Stop Desk)",
+    "cod": "Cash on Delivery (COD)",
+    "chargily": "Online Payment EDAHABIA / CIB (Chargily Pay)",
+    "confirm_order": "Confirm Order"
+  },
+  "tracking": {
+    "title": "Track Your Order",
+    "order_id": "Order Number",
+    "phone": "Registered Phone",
+    "track_btn": "Track Now",
+    "order_details": "Order Details",
+    "step_received": "Order Received",
+    "step_processing": "Processing",
+    "step_shipped": "Out for Delivery",
+    "step_delivered": "Delivered"
+  },
+  "pwa": {
+    "offline_notice": "You are currently offline (browsing mode). Internet connection is required to complete orders.",
+    "online_restored": "Internet connection restored successfully!"
+  }
+}

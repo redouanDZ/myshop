@@ -253,6 +253,11 @@ async function placeOrderNow() {
         return;
     }
 
+    if (!navigator.onLine) {
+        showNotification('عذراً، أنت غير متصل بالإنترنت حالياً. يلزم توفر اتصال فعلي لتأكيد الطلب والدفع.', 'error');
+        return;
+    }
+
     const btn = document.getElementById('confirmOrderBtn');
     if (btn) {
         btn.disabled = true;
@@ -263,6 +268,10 @@ async function placeOrderNow() {
     try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
     if (cart.length === 0) {
         showNotification('السلة فارغة!', 'error');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = 'تأكيد الطلب نهائياً <i class="fas fa-check"></i>';
+        }
         return;
     }
 
