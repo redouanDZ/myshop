@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -115,7 +116,7 @@ app.use('/js', express.static(path.join(rootDir, 'js')));
 app.use('/images', express.static(path.join(rootDir, 'images')));
 
 // Public HTML Pages
-const publicHtmlPages = ['index.html', 'shop.html', 'product.html', 'cart.html', 'checkout.html', 'order-confirmation.html', 'account.html'];
+const publicHtmlPages = ['index.html', 'shop.html', 'product.html', 'cart.html', 'checkout.html', 'order-confirmation.html', 'account.html', 'track-order.html', 'invoice.html'];
 publicHtmlPages.forEach((page) => {
     app.get(`/${page}`, (req, res) => res.sendFile(path.join(rootDir, page)));
 });

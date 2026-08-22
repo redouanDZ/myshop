@@ -1,463 +1,377 @@
 /**
- * نظام إدارة الدفع والطلبات
- * يوفر وظائف للتعامل مع معلومات الدفع وتأكيد الطلبات
- * يعتمد على ملف cart.js لإدارة عربة التسوق
+ * myshop - نظام إدارة الدفع والولايات والطلبات
  */
 
-// التأكد من تحميل ملف cart.js أولاً
-document.addEventListener('DOMContentLoaded', function() {
-    if (typeof window.cartModule !== 'undefined') {
-        window.cart = window.cartModule.getCart();
-    }
-});
+let allWilayas = [];
+let selectedWilaya = null;
+let currentDeliveryType = 'home';
+let currentShippingCost = 500;
 
-// استدعاء الدوال عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', function() {
-    initCheckoutSteps();
-    initFormValidation();
-    loadCartDetails();
-
-    const checkoutForm = document.getElementById('checkout-form');
-    if (checkoutForm) {
-        checkoutForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            placeOrder();
-        });
-    }
+document.addEventListener('DOMContentLoaded', async function() {
+    await loadWilayas();
+    loadCartData();
+    initPaymentMethodListeners();
+    prefillCustomerInfo();
 });
 
 /**
- * تهيئة خطوات الدفع
+ * جلب قائمة الولايات الـ 58 من API
  */
-function initCheckoutSteps() {
+async function loadWilayas() {
+    const select = document.getElementById('wilayaSelect');
+    if (!select) return;
 
-    // تهيئة أزرار التنقل بين خطوات الدفع
-    const nextButtons = document.querySelectorAll('.next-step-btn');
-    const prevButtons = document.querySelectorAll('.prev-step-btn');
+    try {
+        const response = await fetch('/api/wilayas');
+        if (!response.ok) throw new Error('فشل جلب الولايات');
+        allWilayas = await response.json();
 
-
-    if (nextButtons.length > 0) {
-        nextButtons.forEach((button, index) => {
-
-            button.addEventListener('click', function() {
-
-                const currentStep = this.closest('.checkout-step');
-                if (currentStep) {
-                    const stepId = currentStep.id;
-
-                    if (stepId === 'shipping-info' && validateShippingStep()) {
-
-                        goToPaymentStep();
-                    } else if (stepId === 'payment-method' && validatePaymentStep()) {
-
-                        goToOrderReview();
-                    }
-                }
-            });
+        select.innerHTML = '<option value="">-- اختر ولايتك (58 ولاية) --</option>';
+        allWilayas.forEach(w => {
+            const opt = document.createElement('option');
+            opt.value = w.id;
+            opt.textContent = `${w.code} - ${w.name_ar} (${w.name_fr})`;
+            select.appendChild(opt);
         });
-    }
-    
-    if (prevButtons.length > 0) {
-        prevButtons.forEach((button, index) => {
 
-            button.addEventListener('click', function() {
-                const currentStep = this.closest('.checkout-step');
-                if (currentStep) {
-                    const stepId = currentStep.id;
-                    
-                    if (stepId === 'payment-method') {
-                        goToShippingStep();
-                    } else if (stepId === 'order-review') {
-                        goToPaymentStep();
-                    }
-                }
-            });
-        });
-    }
-    
-    // تهيئة خيارات الشحن
-    initShippingOptions();
-    
-    // تهيئة خيارات الدفع
-    initPaymentOptions();
-}
-
-// الانتقال إلى خطوة معلومات الشحن
-function goToShippingStep() {
-
-    const steps = document.querySelectorAll('.checkout-step');
-    steps.forEach(step => step.classList.remove('active'));
-    
-    const shippingInfo = document.getElementById('shipping-info');
-    if (shippingInfo) {
-        shippingInfo.classList.add('active');
-        updateCheckoutTitle('معلومات الشحن');
-
-    } else {
-
-    }
-}
-
-// الانتقال إلى خطوة الدفع
-function goToPaymentStep() {
-
-    const steps = document.querySelectorAll('.checkout-step');
-    steps.forEach(step => step.classList.remove('active'));
-    
-    const paymentMethod = document.getElementById('payment-method');
-    if (paymentMethod) {
-        paymentMethod.classList.add('active');
-        updateCheckoutTitle('طريقة الدفع');
-
-    } else {
-
-    }
-}
-
-// الانتقال إلى خطوة مراجعة الطلب
-function goToOrderReview() {
-
-    const steps = document.querySelectorAll('.checkout-step');
-    steps.forEach(step => step.classList.remove('active'));
-    
-    const orderReview = document.getElementById('order-review');
-    if (orderReview) {
-        orderReview.classList.add('active');
-        updateCheckoutTitle('مراجعة الطلب');
-
-        // تحديث ملخص الطلب في هذه الخطوة
-        updateOrderReview();
-    } else {
-
-    }
-}
-
-// تحديث عنوان صفحة الدفع
-function updateCheckoutTitle(title) {
-
-    const titleElement = document.querySelector('.page-title h1');
-    if (titleElement) {
-        titleElement.textContent = title;
-
-    } else {
-
-    }
-}
-
-
-
-function validateStep(step) {
-    switch(step) {
-        case '1': return validateShippingStep();
-        case '2': return validatePaymentStep();
-        default: return true;
-    }
-}
-
-function initShippingOptions() {
-
-    const shippingOptions = document.querySelectorAll('input[name="shipping-method"]');
-
-    if (shippingOptions.length === 0) {
-
-        return;
-    }
-    
-    shippingOptions.forEach((option, index) => {
-
-        option.addEventListener('change', function() {
-
-            updateShippingCost();
-            updateOrderSummary();
-        });
-    });
-}
-
-function validateShippingStep() {
-
-    const fullName = document.getElementById('fullname');
-    const phone = document.getElementById('phone');
-    const address = document.getElementById('address');
-    const city = document.getElementById('city');
-    const postalCode = document.getElementById('postal-code');
-
-    if (!fullName) { showNotification('لم يتم العثور على حقل الاسم الكامل', 'error'); return false; }
-    if (!phone) { showNotification('لم يتم العثور على حقل رقم الهاتف', 'error'); return false; }
-    if (!address) { showNotification('لم يتم العثور على حقل العنوان', 'error'); return false; }
-    if (!city) { showNotification('لم يتم العثور على حقل المدينة', 'error'); return false; }
-    if (!postalCode) { showNotification('لم يتم العثور على حقل الرمز البريدي', 'error'); return false; }
-
-    if (!fullName.value.trim()) { showNotification('الرجاء إدخال الاسم الكامل', 'error'); fullName.focus(); return false; }
-    if (!phone.value.trim()) { showNotification('الرجاء إدخال رقم الهاتف', 'error'); phone.focus(); return false; }
-    if (!address.value.trim()) { showNotification('الرجاء إدخال العنوان', 'error'); address.focus(); return false; }
-    if (!city.value.trim()) { showNotification('الرجاء إدخال المدينة', 'error'); city.focus(); return false; }
-    if (!postalCode.value.trim()) { showNotification('الرجاء إدخال الرمز البريدي', 'error'); postalCode.focus(); return false; }
-
-    saveShippingInfo();
-    return true;
-}
-
-function saveShippingInfo() {
-    const shippingInfo = {
-        fullName: document.getElementById('fullname').value,
-        phone: document.getElementById('phone').value,
-        email: document.getElementById('email').value,
-        address: document.getElementById('address').value,
-        city: document.getElementById('city').value,
-        postalCode: document.getElementById('postal-code').value,
-        notes: document.getElementById('notes').value,
-        shippingMethod: document.querySelector('input[name="shipping-method"]:checked')?.value || 'standard'
-    };
-
-    localStorage.setItem('shippingInfo', JSON.stringify(shippingInfo));
-}
-
-function initPaymentOptions() {
-
-    const paymentOptions = document.querySelectorAll('input[name="payment-method"]');
-
-    if (paymentOptions.length === 0) {
-
-        return;
-    }
-    
-    paymentOptions.forEach((option, index) => {
-
-        option.addEventListener('change', function() {
-
-            const cardDetails = document.getElementById('bank-transfer-details');
-            if (cardDetails) {
-                cardDetails.style.display = (this.value === 'bank-transfer') ? 'block' : 'none';
-
-            }
-        });
-    });
-}
-
-function validatePaymentStep() {
-
-    const paymentMethod = document.querySelector('input[name="payment-method"]:checked');
-    if (!paymentMethod) { 
-
-        showNotification('الرجاء اختيار طريقة الدفع', 'error'); 
-        return false; 
-    }
-
-    // لا حاجة للتحقق من تفاصيل البطاقة لأننا نستخدم دفع عند الاستلام أو التحويل البنكي
-
-    return true;
-}
-
-function saveCardInfo() {
-    const cardInfo = {
-        cardNumber: document.getElementById('card-number').value,
-        expiryDate: document.getElementById('expiry-date').value,
-        cvv: document.getElementById('cvv').value,
-        cardName: document.getElementById('card-name').value
-    };
-
-    localStorage.setItem('cardInfo', JSON.stringify(cardInfo));
-}
-
-function loadCartDetails() {
-    const savedCart = localStorage.getItem('cart');
-    if (!savedCart) {
-        showNotification('عربة التسوق فارغة', 'error');
-        setTimeout(() => { window.location.href = 'shop.html'; }, 2000);
-        return;
-    }
-
-    try { cart = JSON.parse(savedCart); }
-    catch (e) { cart = []; }
-
-    updateCartUI();
-    updateOrderSummary();
-}
-
-function updateOrderReview() {
-    const orderItems = document.querySelector('.order-items');
-    if (!orderItems) return;
-    
-    orderItems.innerHTML = '';
-    
-    if (cart.length === 0) {
-        orderItems.innerHTML = '<p>لا توجد منتجات في الطلب</p>';
-        return;
-    }
-    
-    cart.forEach(item => {
-        const itemHTML = `
-            <div class="order-item">
-                <div class="item-image">
-                    <img src="${item.image}" alt="${item.name}">
-                </div>
-                <div class="item-details">
-                    <h4>${item.name}</h4>
-                    <div class="item-quantity">الكمية: ${item.quantity}</div>
-                </div>
-                <div class="item-price">${(item.price * item.quantity).toFixed(2)} دج</div>
-            </div>
-        `;
-        orderItems.innerHTML += itemHTML;
-    });
-    
-    updateOrderSummary();
-}
-
-function updateShippingCost() {
-    const shippingMethod = document.querySelector('input[name="shipping-method"]:checked');
-    if (!shippingMethod) return;
-
-    let cost = 0;
-    if (shippingMethod.value === 'standard') cost = 200;
-    else if (shippingMethod.value === 'express') cost = 400;
-    else if (shippingMethod.value === 'pickup') cost = 0;
-
-    // تحديث تكلفة الشحن في ملخص الطلب
-    const summaryContainer = document.querySelector('.order-summary');
-    if (summaryContainer) {
-        const shippingCostElement = summaryContainer.querySelector('.summary-item:nth-child(2) span:last-child');
-        if (shippingCostElement) {
-            shippingCostElement.textContent = cost.toFixed(2) + ' دج';
+        // Set default to Alger (16) or first
+        const defaultWilaya = allWilayas.find(w => w.code === '16') || allWilayas[0];
+        if (defaultWilaya) {
+            select.value = defaultWilaya.id;
+            onWilayaChange();
         }
-        
-        // إعادة حساب الإجمالي
+    } catch (error) {
+        console.error('Error loading wilayas:', error);
+        select.innerHTML = '<option value="16">16 - الجزائر العاصمة (Alger)</option>';
+        currentShippingCost = 400;
         updateOrderSummary();
     }
 }
 
-function updateOrderSummary() {
-    // تحديث ملخص الطلب في صفحة الدفع
-    const summaryContainer = document.querySelector('.order-summary');
-    if (!summaryContainer) return;
+/**
+ * عند تغيير الولاية
+ */
+function onWilayaChange() {
+    const select = document.getElementById('wilayaSelect');
+    const wilayaId = Number(select.value);
+    selectedWilaya = allWilayas.find(w => Number(w.id) === wilayaId) || null;
 
-    let subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
-    // الحصول على تكلفة الشحن
-    let shippingCost = 0;
-    const shippingMethod = document.querySelector('input[name="shipping-method"]:checked');
-    if (shippingMethod) {
-        if (shippingMethod.value === 'standard') shippingCost = 200;
-        else if (shippingMethod.value === 'express') shippingCost = 400;
-        else if (shippingMethod.value === 'pickup') shippingCost = 0;
-    }
-
-    const savedPromo = getSavedPromoCode();
-    let discount = 0;
-    let discountCode = '';
-
-    if (savedPromo) {
-        discount = subtotal * savedPromo.discount;
-        discountCode = savedPromo.code;
-    }
-
-    const total = subtotal + shippingCost - discount;
-
-    // تحديث ملخص الطلب الموجود في الصفحة
-    const summaryItems = summaryContainer.querySelectorAll('.summary-item');
-    if (summaryItems.length >= 3) {
-        summaryItems[0].querySelector('span:last-child').textContent = subtotal.toFixed(2) + ' دج';
-        summaryItems[1].querySelector('span:last-child').textContent = shippingCost.toFixed(2) + ' دج';
+    if (selectedWilaya) {
+        document.getElementById('homeDeliveryPriceLabel').textContent = `السعر: ${selectedWilaya.home_delivery_price.toLocaleString()} دج (${selectedWilaya.delivery_time_days})`;
+        document.getElementById('deskDeliveryPriceLabel').textContent = `السعر: ${selectedWilaya.desk_delivery_price.toLocaleString()} دج (${selectedWilaya.delivery_time_days})`;
         
-        if (discount > 0) {
-            // إذا كان هناك خصم، تأكد من وجود عنصر الخصم
-            let discountElement = summaryContainer.querySelector('.summary-item.discount');
-            if (!discountElement) {
-                // إنشاء عنصر الخصم إذا لم يكن موجوداً
-                discountElement = document.createElement('div');
-                discountElement.className = 'summary-item discount';
-                summaryItems[1].after(discountElement);
-            }
-            discountElement.innerHTML = `
-                <span>كود خصم (${discountCode})</span>
-                <span>-${discount.toFixed(2)} دج</span>
-            `;
-        }
-        
-        // تحديث الإجمالي النهائي
-        const totalElement = summaryContainer.querySelector('.summary-total span:last-child');
-        if (totalElement) {
-            totalElement.textContent = total.toFixed(2) + ' دج';
-        }
+        currentShippingCost = currentDeliveryType === 'home' 
+            ? selectedWilaya.home_delivery_price 
+            : selectedWilaya.desk_delivery_price;
+    } else {
+        currentShippingCost = 500;
     }
+
+    updateOrderSummary();
 }
 
-async function placeOrder() {
-    // التحقق من صحة خطوات الشحن والدفع
-    if (!validateShippingStep() || !validatePaymentStep()) return;
+/**
+ * عند تغيير نوع التوصيل (منزل / مكتب)
+ */
+function onDeliveryTypeChange() {
+    const homeRadio = document.querySelector('input[name="delivery-type"][value="home"]');
+    const deskRadio = document.querySelector('input[name="delivery-type"][value="desk"]');
+    const homeCard = document.getElementById('deliveryCardHome');
+    const deskCard = document.getElementById('deliveryCardDesk');
 
-    try {
-        // الحصول على طريقة الشحن
-        const shippingMethod = document.querySelector('input[name="shipping-method"]:checked')?.value || 'standard';
-        const shippingText = shippingMethod === 'standard' ? 'شحن عادي' :
-                             shippingMethod === 'express' ? 'شحن سريع' :
-                             'استلام من المتجر';
+    if (homeRadio && homeRadio.checked) {
+        currentDeliveryType = 'home';
+        homeCard.classList.add('active');
+        deskCard.classList.remove('active');
+    } else {
+        currentDeliveryType = 'desk';
+        deskCard.classList.add('active');
+        homeCard.classList.remove('active');
+    }
 
-        const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
-        const userId = (user && user.id) ? user.id : 1;
-        const cartTotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0) + 
-                          (shippingMethod === 'standard' ? 200 : shippingMethod === 'express' ? 400 : 0);
+    if (selectedWilaya) {
+        currentShippingCost = currentDeliveryType === 'home' 
+            ? selectedWilaya.home_delivery_price 
+            : selectedWilaya.desk_delivery_price;
+    }
 
-        const response = await fetch('/api/orders', {
-            method: 'POST',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
-            },
-            body: JSON.stringify({
-                userId: userId,
-                total: cartTotal,
-                shippingInfo: JSON.parse(localStorage.getItem('shippingInfo') || '{}')
-            })
+    updateOrderSummary();
+}
+
+/**
+ * تهيئة الاستماع لطرق الدفع
+ */
+function initPaymentMethodListeners() {
+    const radios = document.querySelectorAll('input[name="payment-method"]');
+    const bankDetails = document.getElementById('bank-transfer-details');
+
+    radios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('active'));
+            this.closest('.payment-option').classList.add('active');
+
+            if (bankDetails) {
+                bankDetails.style.display = this.value === 'bank-transfer' ? 'block' : 'none';
+            }
         });
+    });
+}
 
-        if (response.ok) {
-            const data = await response.json();
-            const orderId = data.id || Math.floor(Math.random() * 90000) + 10000;
+/**
+ * التنقل بين الخطوات
+ */
+function goToShippingStep() {
+    switchStep(1);
+}
 
-            if (window.cartModule && window.cartModule.clearCart) {
-                window.cartModule.clearCart();
-            } else {
-                cart = [];
-                localStorage.removeItem('cart');
-            }
-            localStorage.removeItem('promoCode');
-            localStorage.setItem('lastOrderId', orderId);
+function proceedToPayment() {
+    const fullname = document.getElementById('fullname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const wilaya = document.getElementById('wilayaSelect').value;
 
-            window.location.href = `order-confirmation.html?id=${orderId}`;
-        } else {
-            showNotification('فشل في إنشاء الطلب', 'error');
-        }
-    } catch (error) {
+    if (!fullname) { showNotification('يرجى إدخال الاسم الكامل', 'error'); return; }
+    if (!phone || phone.length < 8) { showNotification('يرجى إدخال رقم هاتف صحيح', 'error'); return; }
+    if (!wilaya) { showNotification('يرجى اختيار الولاية', 'error'); return; }
+    if (!address) { showNotification('يرجى إدخال العنوان بالتفصيل', 'error'); return; }
 
-        showNotification('حدث خطأ أثناء إنشاء الطلب', 'error');
+    switchStep(2);
+}
+
+function goToPaymentStep() {
+    switchStep(2);
+}
+
+function proceedToReview() {
+    renderReviewItems();
+    updateOrderSummary();
+    switchStep(3);
+}
+
+function switchStep(stepNumber) {
+    document.querySelectorAll('.checkout-step').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.checkout-steps .step').forEach(el => el.classList.remove('active'));
+
+    if (stepNumber === 1) {
+        document.getElementById('shipping-info').classList.add('active');
+        document.getElementById('stepIndicator1').classList.add('active');
+    } else if (stepNumber === 2) {
+        document.getElementById('payment-method').classList.add('active');
+        document.getElementById('stepIndicator2').classList.add('active');
+    } else if (stepNumber === 3) {
+        document.getElementById('order-review').classList.add('active');
+        document.getElementById('stepIndicator3').classList.add('active');
     }
 }
 
-function generateOrderId() {
-    const date = new Date();
-    return `ORD-${date.getFullYear()}${String(date.getMonth()+1).padStart(2,'0')}${String(date.getDate()).padStart(2,'0')}-${Math.floor(Math.random()*1000).toString().padStart(3,'0')}`;
-}
+/**
+ * تحميل السلة وتحديث الملخص
+ */
+function loadCartData() {
+    const saved = localStorage.getItem('cart');
+    let cart = [];
+    try { cart = saved ? JSON.parse(saved) : []; } catch (e) { cart = []; }
 
-function getSavedPromoCode() {
-    const savedPromo = localStorage.getItem('promoCode');
-    if (savedPromo) {
-        try { return JSON.parse(savedPromo); }
-        catch (e) { return null; }
+    if (cart.length === 0) {
+        showNotification('عربة التسوق فارغة، جاري تحويلك للمتجر...', 'error');
+        setTimeout(() => { window.location.href = 'shop.html'; }, 1500);
+        return;
     }
-    return null;
+
+    updateOrderSummary();
 }
 
-// Fonction pour obtenir l'utilisateur courant
-function getCurrentUser() {
-    const savedUser = localStorage.getItem('currentUser');
-    if (!savedUser) return null;
+function renderReviewItems() {
+    const container = document.getElementById('reviewOrderItems');
+    if (!container) return;
+
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
+
+    container.innerHTML = cart.map(item => `
+        <div class="order-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <img src="${item.image || item.image_url || '/images/product-placeholder.jpg'}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                <div>
+                    <strong style="display: block; font-size: 0.95rem; color: #1e293b;">${item.name}</strong>
+                    <span style="font-size: 0.85rem; color: #64748b;">الكمية: ${item.quantity}</span>
+                </div>
+            </div>
+            <strong style="color: #2563eb;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</strong>
+        </div>
+    `).join('');
+}
+
+function updateOrderSummary() {
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
+
+    const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
+    const wilayaName = selectedWilaya ? selectedWilaya.name_ar : 'الولاية';
+    
+    // Promo discount if applicable
+    const promo = getSavedPromo();
+    const discount = promo ? subtotal * promo.discount : 0;
+    const grandTotal = Math.max(0, subtotal + currentShippingCost - discount);
+
+    const subtotalEl = document.getElementById('reviewSubtotal');
+    const shippingEl = document.getElementById('reviewShippingCost');
+    const wilayaNameEl = document.getElementById('reviewWilayaName');
+    const grandTotalEl = document.getElementById('reviewGrandTotal');
+    const discountRow = document.getElementById('reviewDiscountRow');
+    const discountEl = document.getElementById('reviewDiscount');
+
+    if (subtotalEl) subtotalEl.textContent = `${subtotal.toLocaleString()} دج`;
+    if (shippingEl) shippingEl.textContent = `${currentShippingCost.toLocaleString()} دج`;
+    if (wilayaNameEl) wilayaNameEl.textContent = wilayaName;
+    if (grandTotalEl) grandTotalEl.textContent = `${grandTotal.toLocaleString()} دج`;
+
+    if (discount > 0 && discountRow && discountEl) {
+        discountRow.style.display = 'flex';
+        discountEl.textContent = `-${discount.toLocaleString()} دج`;
+    } else if (discountRow) {
+        discountRow.style.display = 'none';
+    }
+}
+
+function getSavedPromo() {
     try {
-        return JSON.parse(savedUser);
+        const p = localStorage.getItem('promoCode');
+        return p ? JSON.parse(p) : null;
     } catch (e) {
-
         return null;
     }
+}
+
+/**
+ * إرسال وإنشاء الطلب
+ */
+async function placeOrderNow() {
+    const terms = document.getElementById('terms');
+    if (terms && !terms.checked) {
+        showNotification('يرجى الموافقة على شروط الخدمة لتأكيد الطلب', 'error');
+        return;
+    }
+
+    const btn = document.getElementById('confirmOrderBtn');
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تأكيد وتسجيل الطلب...';
+    }
+
+    let cart = [];
+    try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
+    if (cart.length === 0) {
+        showNotification('السلة فارغة!', 'error');
+        return;
+    }
+
+    const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
+    const promo = getSavedPromo();
+    const discount = promo ? subtotal * promo.discount : 0;
+    const grandTotal = Math.max(0, subtotal + currentShippingCost - discount);
+
+    const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'cod';
+    const fullname = document.getElementById('fullname').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const notes = document.getElementById('notes').value.trim();
+
+    // Check if user is logged in
+    let currentUser = null;
+    try { currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch (e) {}
+
+    const orderPayload = {
+        userId: currentUser && currentUser.id ? currentUser.id : null,
+        paymentMethod: paymentMethod,
+        total: grandTotal,
+        cart: cart.map(item => ({
+            id: item.id || item.product_id,
+            name: item.name,
+            price: Number(item.price),
+            quantity: Number(item.quantity),
+            image_url: item.image || item.image_url || '/images/product-placeholder.jpg'
+        })),
+        shippingInfo: {
+            fullName: fullname,
+            phone: phone,
+            email: email,
+            address: address,
+            city: selectedWilaya ? selectedWilaya.name_ar : 'الجزائر',
+            wilayaId: selectedWilaya ? selectedWilaya.id : 16,
+            wilayaName: selectedWilaya ? selectedWilaya.name_ar : 'الجزائر العاصمة',
+            deliveryType: currentDeliveryType,
+            shippingCost: currentShippingCost,
+            paymentMethod: paymentMethod,
+            notes: notes
+        }
+    };
+
+    try {
+        const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': currentUser && currentUser.token ? `Bearer ${currentUser.token}` : ''
+            },
+            body: JSON.stringify(orderPayload)
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || data.message || 'فشل في إنشاء الطلب');
+        }
+
+        const orderId = data.id;
+        const orderNumber = data.orderNumber || `DZ-${orderId}`;
+        const trackingToken = data.trackingToken || '';
+
+        // Clear cart
+        localStorage.removeItem('cart');
+        localStorage.removeItem('promoCode');
+        localStorage.setItem('lastOrderId', orderId);
+        localStorage.setItem('lastOrderPhone', phone);
+        localStorage.setItem('lastOrderToken', trackingToken);
+
+        // If Chargily Pay selected: Redirect to payment gateway
+        if (paymentMethod === 'chargily') {
+            try {
+                const payRes = await fetch('/api/payments/chargily/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ orderId })
+                });
+                const payData = await payRes.json();
+                if (payRes.ok && payData.checkoutUrl) {
+                    window.location.href = payData.checkoutUrl;
+                    return;
+                }
+            } catch (payErr) {
+                console.error('Chargily redirect error:', payErr);
+            }
+        }
+
+        // Direct Confirmation
+        window.location.href = `order-confirmation.html?id=${orderId}&token=${trackingToken}&phone=${encodeURIComponent(phone)}`;
+    } catch (error) {
+        showNotification(error.message, 'error');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب الآن';
+        }
+    }
+}
+
+function prefillCustomerInfo() {
+    try {
+        const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        if (user) {
+            if (user.username && document.getElementById('fullname')) document.getElementById('fullname').value = user.username;
+            if (user.phone && document.getElementById('phone')) document.getElementById('phone').value = user.phone;
+            if (user.email && document.getElementById('email')) document.getElementById('email').value = user.email;
+        }
+    } catch (e) {}
 }
 
 function showNotification(message, type = 'success') {
@@ -465,39 +379,13 @@ function showNotification(message, type = 'success') {
         window.showToast(message, type);
         return;
     }
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-
-    document.body.appendChild(notification);
-
-    setTimeout(() => notification.classList.add('show'), 10);
-
+    const n = document.createElement('div');
+    n.className = `notification ${type}`;
+    n.textContent = message;
+    document.body.appendChild(n);
+    setTimeout(() => n.classList.add('show'), 10);
     setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => document.body.removeChild(notification), 300);
-    }, 3000);
-}
-
-function initFormValidation() {
-    // منع إرسال النماذج التقليدي
-    const forms = document.querySelectorAll('form');
-    forms.forEach(form => {
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-        });
-    });
-    
-    // إضافة التحقق من صحة حقول النموذج
-    const requiredFields = document.querySelectorAll('[required]');
-    requiredFields.forEach(field => {
-        field.addEventListener('blur', function() {
-            if (!this.value.trim()) {
-                this.classList.add('error');
-                showNotification(`الرجاء إدخال ${this.previousElementSibling.textContent}`.replace(':', ''), 'error');
-            } else {
-                this.classList.remove('error');
-            }
-        });
-    });
+        n.classList.remove('show');
+        setTimeout(() => n.remove(), 300);
+    }, 3500);
 }

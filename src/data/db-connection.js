@@ -22,9 +22,9 @@ async function initializeDatabase() {
         serviceInstance = createStoreService(repository);
         return serviceInstance;
     } catch (error) {
-    console.error('❌ MySQL connection failed:', error.message);
-    throw error;
-}
+        console.error('❌ MySQL connection failed:', error.message);
+        throw error;
+    }
 }
 
 function buildProxy(methodName) {
@@ -54,6 +54,10 @@ module.exports = {
     removeCartItem: buildProxy('removeCartItem'),
     createOrder: buildProxy('createOrder'),
     getOrderById: buildProxy('getOrderById'),
+    getOrderByNumber: buildProxy('getOrderByNumber'),
+    getOrderByTracking: buildProxy('getOrderByTracking'),
+    updateOrderStatus: buildProxy('updateOrderStatus'),
+    updateOrderPaymentStatus: buildProxy('updateOrderPaymentStatus'),
     getOrderItems: buildProxy('getOrderItems'),
     getOrders: buildProxy('getOrders'),
     createUser: buildProxy('createUser'),
@@ -62,6 +66,9 @@ module.exports = {
     findUserById: buildProxy('findUserById'),
     updateUserProfile: buildProxy('updateUserProfile'),
     addUserAddress: buildProxy('addUserAddress'),
-    deleteUserAddress: buildProxy('deleteUserAddress')
+    deleteUserAddress: buildProxy('deleteUserAddress'),
+    getWilayas: buildProxy('getWilayas'),
+    getWilayaById: buildProxy('getWilayaById'),
+    updateWilayaPrice: buildProxy('updateWilayaPrice'),
+    getAdminDashboardStats: buildProxy('getAdminDashboardStats')
 };
-

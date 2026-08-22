@@ -6,6 +6,9 @@ const productRoutes = require('./productRoutes');
 const cartRoutes = require('./cartRoutes');
 const orderRoutes = require('./orderRoutes');
 const userRoutes = require('./userRoutes');
+const wilayaRoutes = require('./wilayaRoutes');
+const adminRoutes = require('./adminRoutes');
+const paymentRoutes = require('./paymentRoutes');
 
 // Mount routes
 router.use('/', authRoutes);
@@ -13,5 +16,8 @@ router.use('/products', productRoutes);
 router.use('/cart', cartRoutes);
 router.use('/', orderRoutes);
 router.use('/user', userRoutes);
+router.use('/wilayas', wilayaRoutes);
+router.use('/admin', adminRoutes);
+router.use('/payments', paymentRoutes);
 
 module.exports = router;

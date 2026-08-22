@@ -3,22 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة الطلبات - متجر الإلكتروني</title>
+    <title>إدارة ومتابعة الطلبات - لوحة التحكم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .status-select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: 1.5px solid #cbd5e1;
+            background: #fff;
+            outline: none;
+        }
+        .status-select.pending { background: #fef3c7; color: #d97706; border-color: #fde68a; }
+        .status-select.processing { background: #e0f2fe; color: #0284c7; border-color: #bae6fd; }
+        .status-select.shipped { background: #ede9fe; color: #7c3aed; border-color: #ddd6fe; }
+        .status-select.delivered { background: #d1fae5; color: #059669; border-color: #a7f3d0; }
+        .status-select.cancelled { background: #fee2e2; color: #dc2626; border-color: #fecaca; }
+        
+        .order-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #334155;
+            text-decoration: none;
+            margin-left: 4px;
+            transition: all 0.2s;
+        }
+        .order-action-btn:hover { background: #2563eb; color: #fff; }
+        .order-action-btn.invoice-btn:hover { background: #10b981; }
+    </style>
 </head>
 <body>
     <header>
         <div class="container">
             <div class="logo">
-                <a href="../index.html">متجر الإلكتروني</a>
+                <a href="../index.html">المتجر الإلكتروني</a>
             </div>
             <nav>
                 <ul>
                     <li><a href="../index.html">الموقع</a></li>
-                    <li><a href="index.html">لوحة التحكم</a></li>
+                    <li><a href="index.html">الإحصائيات</a></li>
                     <li><a href="orders.html" class="active">الطلبات</a></li>
+                    <li><a href="products.html">المنتجات</a></li>
                 </ul>
             </nav>
         </div>
@@ -27,92 +61,171 @@
     <div class="admin-dashboard">
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>مرحباً، أحمد</h2>
+                <h2>لوحة الإدارة</h2>
                 <p>مدير المتجر</p>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i>لوحة التحكم</a></li>
-                <li><a href="products.html"><i class="fas fa-box"></i>المنتجات</a></li>
-                <li><a href="orders.html" class="active"><i class="fas fa-shopping-bag"></i>الطلبات</a></li>
-                <li><a href="#"><i class="fas fa-users"></i>العملاء</a></li>
-                <li><a href="#"><i class="fas fa-chart-bar"></i>التقارير</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i>الإعدادات</a></li>
-                <li><a href="#"><i class="fas fa-sign-out-alt"></i>تسجيل الخروج</a></li>
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
+                <li><a href="orders.html" class="active"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
+                <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
             </ul>
         </div>
 
         <div class="main-content">
-            <div class="dashboard-header">
-                <h1>إدارة الطلبات</h1>
+            <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>إدارة وتجهيز الطلبات</h1>
+                <div>
+                    <span id="ordersCountBadge" style="background: #2563eb; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">0 طلب</span>
+                </div>
             </div>
 
-            <div class="orders-container">
-                <h2>قائمة الطلبات</h2>
-                <table>
+            <div class="orders-container" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2 style="margin: 0; font-size: 1.25rem;">سجل الطلبات الواردة</h2>
+                    <input type="text" id="orderSearchInput" oninput="filterOrders()" placeholder="بحث برقم الطلب، اسم العميل، الهاتف..." style="padding: 8px 15px; border: 1px solid #cbd5e1; border-radius: 6px; width: 300px;">
+                </div>
+
+                <table style="width: 100%; border-collapse: collapse;">
                     <thead>
-                        <tr>
-                            <th>رقم الطلب</th>
-                            <th>العميل</th>
-                            <th>الإجمالي</th>
-                            <th>التاريخ</th>
-                            <th>الحالة</th>
-                            <th>إجراءات</th>
+                        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: right;">
+                            <th style="padding: 12px 10px;">رقم الطلب</th>
+                            <th style="padding: 12px 10px;">العميل والهاتف</th>
+                            <th style="padding: 12px 10px;">الولاية والتوصيل</th>
+                            <th style="padding: 12px 10px;">الإجمالي</th>
+                            <th style="padding: 12px 10px;">طريقة الدفع</th>
+                            <th style="padding: 12px 10px;">التاريخ</th>
+                            <th style="padding: 12px 10px; width: 170px;">حالة الطلب والتجهيز</th>
+                            <th style="padding: 12px 10px; text-align: center;">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="admin-orders-tbody">
-                        <!-- Dynamic content loaded via JS -->
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">جاري جلب قائمة الطلبات...</td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
+    <script src="../js/api-client.js"></script>
     <script>
+        let cachedOrders = [];
+
         async function loadAdminOrders() {
             try {
                 const response = await fetch('/api/orders');
-                if (!response.ok) return;
-                const orders = await response.json();
-
-                const tbody = document.getElementById('admin-orders-tbody');
-                if (!tbody) return;
-
-                if (orders.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 20px;">لا توجد طلبات حالياً</td></tr>';
-                    return;
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        alert('يرجى تسجيل الدخول بحساب مسؤول لعرض الطلبات');
+                        window.location.href = '../account.html';
+                        return;
+                    }
+                    throw new Error('خطأ في جلب الطلبات');
                 }
 
-                tbody.innerHTML = orders.map(order => `
-                    <tr>
-                        <td>#${order.id}</td>
-                        <td>${order.shippingInfo ? order.shippingInfo.fullName || 'عميل المتجر' : 'عميل #' + order.user_id}</td>
-                        <td class="order-total">${Number(order.total).toLocaleString()} دج</td>
-                        <td>${new Date(order.created_at).toLocaleDateString('ar-SA')}</td>
-                        <td><span class="status ${order.status}">${getStatusText(order.status)}</span></td>
-                        <td class="order-actions">
-                            <a href="../order-confirmation.html?id=${order.id}" target="_blank" class="btn-view" title="معاينة"><i class="fas fa-eye"></i></a>
-                        </td>
-                    </tr>
-                `).join('');
+                cachedOrders = await response.json();
+                document.getElementById('ordersCountBadge').textContent = `${cachedOrders.length} طلب`;
+                renderOrdersTable(cachedOrders);
             } catch (error) {
-
+                document.getElementById('admin-orders-tbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: red;">فشل في جلب الطلبات: ${error.message}</td></tr>`;
             }
         }
 
-        function getStatusText(status) {
-            const map = {
-                'pending': 'قيد المعالجة',
-                'processing': 'قيد الشحن',
-                'shipped': 'مرسل',
-                'delivered': 'مكتمل',
-                'cancelled': 'ملغي'
-            };
-            return map[status] || status;
+        function renderOrdersTable(orders) {
+            const tbody = document.getElementById('admin-orders-tbody');
+            if (!tbody) return;
+
+            if (orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: #64748b;">لا توجد طلبات مسجلة حتى الآن</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = orders.map(order => `
+                <tr style="border-bottom: 1px solid #f1f5f9;">
+                    <td style="padding: 12px 10px; font-weight: bold; color: #2563eb;">
+                        ${order.order_number || '#' + order.id}
+                    </td>
+                    <td style="padding: 12px 10px;">
+                        <strong style="display: block; color: #1e293b;">${order.shipping_full_name || 'عميل #' + (order.user_id || 'ضيف')}</strong>
+                        <span style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-phone"></i> ${order.phone || '-'}</span>
+                    </td>
+                    <td style="padding: 12px 10px;">
+                        <strong style="display: block;">${order.wilaya_name || order.city || 'الجزائر'}</strong>
+                        <span style="font-size: 0.85rem; color: #64748b;">${order.delivery_type === 'desk' ? 'استلام مكتب' : 'توصيل منزلي'}</span>
+                    </td>
+                    <td style="padding: 12px 10px; font-weight: bold; color: #059669;">
+                        ${Number(order.total).toLocaleString()} دج
+                    </td>
+                    <td style="padding: 12px 10px;">
+                        <span style="font-size: 0.85rem; background: #f1f5f9; padding: 3px 8px; border-radius: 4px;">
+                            ${order.payment_method === 'chargily' ? '💳 بطاقة ذهبية/CIB' : '💵 الدفع عند الاستلام'}
+                        </span>
+                    </td>
+                    <td style="padding: 12px 10px; font-size: 0.9rem; color: #64748b;">
+                        ${new Date(order.created_at).toLocaleDateString('ar-DZ')}
+                    </td>
+                    <td style="padding: 12px 10px;">
+                        <select class="status-select ${order.status}" onchange="changeOrderStatus(${order.id}, this.value, this)">
+                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>قيد المراجعة</option>
+                            <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>قيد التجهيز</option>
+                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>تم الشحن</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>تم التسليم</option>
+                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>ملغي</option>
+                        </select>
+                    </td>
+                    <td style="padding: 12px 10px; text-align: center;">
+                        <a href="../invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn invoice-btn" title="عرض الفاتورة"><i class="fas fa-file-invoice"></i></a>
+                        <a href="../track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn" title="تتبع الطلب"><i class="fas fa-truck"></i></a>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        async function changeOrderStatus(orderId, newStatus, selectEl) {
+            try {
+                selectEl.disabled = true;
+                const response = await fetch(`/api/orders/${orderId}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+
+                if (!response.ok) {
+                    const data = await response.json();
+                    throw new Error(data.error || 'فشل تحديث الحالة');
+                }
+
+                selectEl.className = `status-select ${newStatus}`;
+                // Update cached order status
+                const item = cachedOrders.find(o => o.id === orderId);
+                if (item) item.status = newStatus;
+            } catch (err) {
+                alert('خطأ: ' + err.message);
+                loadAdminOrders(); // reload
+            } finally {
+                selectEl.disabled = false;
+            }
+        }
+
+        function filterOrders() {
+            const query = (document.getElementById('orderSearchInput').value || '').trim().toLowerCase();
+            if (!query) {
+                renderOrdersTable(cachedOrders);
+                return;
+            }
+            const filtered = cachedOrders.filter(o => 
+                String(o.id).includes(query) ||
+                String(o.order_number || '').toLowerCase().includes(query) ||
+                String(o.shipping_full_name || '').toLowerCase().includes(query) ||
+                String(o.phone || '').includes(query) ||
+                String(o.wilaya_name || '').toLowerCase().includes(query)
+            );
+            renderOrdersTable(filtered);
         }
 
         document.addEventListener('DOMContentLoaded', loadAdminOrders);
     </script>
-    <script src="../js/api-client.js"></script>
-    <script src="../js/main.js"></script>
 </body>
 </html>

@@ -90,12 +90,44 @@ class StoreService {
     return this.repository.getOrderById(id);
   }
 
+  async getOrderByNumber(orderNumber) {
+    return this.repository.getOrderByNumber(orderNumber);
+  }
+
+  async getOrderByTracking(orderIdOrNumber, phone) {
+    return this.repository.getOrderByTracking(orderIdOrNumber, phone);
+  }
+
+  async updateOrderStatus(orderId, status) {
+    return this.repository.updateOrderStatus(orderId, status);
+  }
+
+  async updateOrderPaymentStatus(orderId, paymentStatus, paymentMethod = null) {
+    return this.repository.updateOrderPaymentStatus(orderId, paymentStatus, paymentMethod);
+  }
+
   async getOrderItems(orderId) {
     return this.repository.getOrderItems(orderId);
   }
 
   async getOrders(userId = null) {
     return this.repository.getOrders(userId);
+  }
+
+  async getWilayas() {
+    return this.repository.getWilayas();
+  }
+
+  async getWilayaById(id) {
+    return this.repository.getWilayaById(id);
+  }
+
+  async updateWilayaPrice(id, data) {
+    return this.repository.updateWilayaPrice(id, data);
+  }
+
+  async getAdminDashboardStats() {
+    return this.repository.getAdminDashboardStats();
   }
 }
 

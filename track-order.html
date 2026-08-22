@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تتبع طلبي - المتجر الإلكتروني</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .track-hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: #fff;
+            padding: 50px 0 35px;
+            text-align: center;
+        }
+        .track-hero h1 { margin: 0 0 10px 0; font-size: 2.2rem; }
+        .track-hero p { margin: 0; opacity: 0.9; font-size: 1.1rem; }
+        
+        .track-container {
+            max-width: 850px;
+            margin: -30px auto 50px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 30px;
+        }
+        .track-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 25px;
+        }
+        @media (max-width: 768px) {
+            .track-form-grid { grid-template-columns: 1fr; }
+        }
+        .form-field { display: flex; flex-direction: column; text-align: right; }
+        .form-field label { font-weight: bold; margin-bottom: 8px; color: #334155; }
+        .form-field input {
+            padding: 12px 15px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .form-field input:focus { border-color: #2563eb; }
+        .btn-track {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 13px 28px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-track:hover { background: #1d4ed8; }
+        
+        /* Timeline Stepper */
+        .timeline-stepper {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 45px 0 35px;
+        }
+        .timeline-stepper::before {
+            content: '';
+            position: absolute;
+            top: 22px;
+            right: 40px;
+            left: 40px;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .timeline-progress-bar {
+            position: absolute;
+            top: 22px;
+            right: 40px;
+            height: 4px;
+            background: #10b981;
+            z-index: 2;
+            transition: width 0.4s ease;
+            width: 0%;
+        }
+        .step-node {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            flex: 1;
+        }
+        .step-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: #64748b;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+        }
+        .step-node.completed .step-icon {
+            background: #10b981;
+            border-color: #10b981;
+            color: #fff;
+        }
+        .step-node.active .step-icon {
+            background: #2563eb;
+            border-color: #2563eb;
+            color: #fff;
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.2);
+        }
+        .step-label { font-size: 0.9rem; font-weight: bold; color: #64748b; }
+        .step-node.completed .step-label { color: #10b981; }
+        .step-node.active .step-label { color: #2563eb; }
+
+        /* Order Details Card */
+        .order-result-box { display: none; margin-top: 30px; border-top: 1px solid #f1f5f9; padding-top: 25px; }
+        .order-header-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background: #f8fafc;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+        .order-info-item span { display: block; font-size: 0.85rem; color: #64748b; }
+        .order-info-item strong { font-size: 1.05rem; color: #1e293b; }
+        
+        .order-items-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        .order-items-table th { background: #f8fafc; padding: 12px; text-align: right; color: #475569; border-bottom: 1px solid #e2e8f0; }
+        .order-items-table td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
+        .product-cell { display: flex; align-items: center; gap: 12px; }
+        .product-cell img { width: 48px; height: 48px; border-radius: 6px; object-fit: cover; }
+        
+        .order-actions-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1.5px solid #cbd5e1;
+            border-radius: 6px;
+            color: #334155;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .btn-outline:hover { background: #f1f5f9; }
+
+        .status-badge-custom {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+        .status-pending { background: #fef3c7; color: #d97706; }
+        .status-processing { background: #e0f2fe; color: #0284c7; }
+        .status-shipped { background: #ede9fe; color: #7c3aed; }
+        .status-delivered { background: #d1fae5; color: #059669; }
+        .status-cancelled { background: #fee2e2; color: #dc2626; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="index.html">المتجر الإلكتروني</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">الرئيسية</a></li>
+                    <li><a href="shop.html">التسوق</a></li>
+                    <li><a href="cart.html">عربة التسوق</a></li>
+                    <li><a href="track-order.html" class="active">تتبع طلبي</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">0</span>
+                </a>
+                <a href="account.html" class="user-icon" title="حسابي">
+                    <i class="fas fa-user"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Track Hero -->
+    <section class="track-hero">
+        <div class="container">
+            <h1>تتبّع مسار شحنتك</h1>
+            <p>أدخل رقم الطلب ورقم هاتفك للاطلاع على آخر مستجدات حالة الطلب وموعد التوصيل</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="container">
+        <div class="track-container">
+            <form id="trackingForm" onsubmit="event.preventDefault(); submitTrack();">
+                <div class="track-form-grid">
+                    <div class="form-field">
+                        <label for="orderInput">رقم الطلب (Order ID / DZ-xxxx)</label>
+                        <input type="text" id="orderInput" placeholder="مثال: DZ-2026-12345 أو 1001" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="phoneInput">رقم الهاتف المسجل في الطلب</label>
+                        <input type="tel" id="phoneInput" placeholder="مثال: 0550000000" required>
+                    </div>
+                    <button type="submit" class="btn-track" id="trackSubmitBtn">
+                        <i class="fas fa-search"></i> تتبع الطلب
+                    </button>
+                </div>
+            </form>
+
+            <div id="trackingMessage" style="display: none; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;"></div>
+
+            <!-- Order Result Box -->
+            <div class="order-result-box" id="orderResultBox">
+                <!-- Timeline Stepper -->
+                <div class="timeline-stepper">
+                    <div class="timeline-progress-bar" id="timelineProgressBar"></div>
+                    <div class="step-node" id="stepNode1">
+                        <div class="step-icon"><i class="fas fa-file-invoice"></i></div>
+                        <div class="step-label">تم استلام الطلب</div>
+                    </div>
+                    <div class="step-node" id="stepNode2">
+                        <div class="step-icon"><i class="fas fa-box-open"></i></div>
+                        <div class="step-label">قيد التجهيز والتأكيد</div>
+                    </div>
+                    <div class="step-node" id="stepNode3">
+                        <div class="step-icon"><i class="fas fa-shipping-fast"></i></div>
+                        <div class="step-label">تم الشحن للتوصيل</div>
+                    </div>
+                    <div class="step-node" id="stepNode4">
+                        <div class="step-icon"><i class="fas fa-check-circle"></i></div>
+                        <div class="step-label">تم التسليم بنجاح</div>
+                    </div>
+                </div>
+
+                <!-- Order Header Info -->
+                <div class="order-header-info">
+                    <div class="order-info-item">
+                        <span>رقم الطلب</span>
+                        <strong id="resOrderNumber">-</strong>
+                    </div>
+                    <div class="order-info-item">
+                        <span>تاريخ الطلب</span>
+                        <strong id="resOrderDate">-</strong>
+                    </div>
+                    <div class="order-info-item">
+                        <span>الولاية والعنوان</span>
+                        <strong id="resWilaya">-</strong>
+                    </div>
+                    <div class="order-info-item">
+                        <span>طريقة الدفع</span>
+                        <strong id="resPaymentMethod">-</strong>
+                    </div>
+                    <div class="order-info-item">
+                        <span>حالة الطلب</span>
+                        <span id="resStatusBadge" class="status-badge-custom status-pending">-</span>
+                    </div>
+                </div>
+
+                <!-- Items Table -->
+                <table class="order-items-table">
+                    <thead>
+                        <tr>
+                            <th>المنتج</th>
+                            <th style="text-align: center;">الكمية</th>
+                            <th style="text-align: left;">السعر الإجمالي</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resOrderItemsBody">
+                        <!-- Filled by JS -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="2" style="font-weight: bold; text-align: right; padding-top: 15px;">المبلغ الإجمالي (شامل التوصيل):</td>
+                            <td style="font-weight: bold; text-align: left; color: #2563eb; font-size: 1.15rem; padding-top: 15px;" id="resOrderTotal">0 دج</td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+                <div class="order-actions-bar">
+                    <a href="#" id="viewInvoiceBtn" target="_blank" class="btn-outline">
+                        <i class="fas fa-file-pdf"></i> فتح الفاتورة
+                    </a>
+                    <a href="shop.html" class="btn-outline">
+                        <i class="fas fa-shopping-bag"></i> مواصلة التسوق
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-bottom">
+                <p>&copy; 2026 المتجر الإلكتروني - جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/api-client.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        async function submitTrack() {
+            const orderId = document.getElementById('orderInput').value.trim();
+            const phone = document.getElementById('phoneInput').value.trim();
+            const msgBox = document.getElementById('trackingMessage');
+            const resBox = document.getElementById('orderResultBox');
+            const submitBtn = document.getElementById('trackSubmitBtn');
+
+            if (!orderId || !phone) return;
+
+            msgBox.style.display = 'none';
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
+
+            try {
+                const response = await fetch(`/api/orders/track?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    msgBox.className = 'status-cancelled';
+                    msgBox.textContent = data.error || 'لم يتم العثور على طلب مطابق للبيانات المدخلة.';
+                    msgBox.style.display = 'block';
+                    resBox.style.display = 'none';
+                    return;
+                }
+
+                const order = data.order;
+                const items = data.items || [];
+
+                // Fill UI
+                document.getElementById('resOrderNumber').textContent = order.order_number || `#${order.id}`;
+                document.getElementById('resOrderDate').textContent = new Date(order.created_at).toLocaleDateString('ar-DZ');
+                document.getElementById('resWilaya').textContent = `${order.wilaya_name || order.city || 'الجزائر'} (${order.delivery_type === 'desk' ? 'استلام من المكتب' : 'توصيل للمنزل'})`;
+                document.getElementById('resPaymentMethod').textContent = order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : 'الدفع عند الاستلام (COD)';
+                document.getElementById('resOrderTotal').textContent = `${Number(order.total).toLocaleString()} دج`;
+
+                // Status Badge & Stepper
+                renderOrderStatus(order.status);
+
+                // Items list
+                const tbody = document.getElementById('resOrderItemsBody');
+                tbody.innerHTML = items.map(item => `
+                    <tr>
+                        <td>
+                            <div class="product-cell">
+                                <img src="${item.image_url || '/images/product-placeholder.jpg'}" alt="${item.name}">
+                                <span>${item.name}</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">${item.quantity}</td>
+                        <td style="text-align: left; font-weight: bold;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</td>
+                    </tr>
+                `).join('');
+
+                // Invoice button link
+                document.getElementById('viewInvoiceBtn').href = `invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone)}`;
+
+                resBox.style.display = 'block';
+            } catch (err) {
+                msgBox.className = 'status-cancelled';
+                msgBox.textContent = 'حدث خطأ في الاتصال بالخادم، يرجى المحاولة مرة أخرى.';
+                msgBox.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-search"></i> تتبع الطلب';
+            }
+        }
+
+        function renderOrderStatus(status) {
+            const badge = document.getElementById('resStatusBadge');
+            const progressBar = document.getElementById('timelineProgressBar');
+            const s1 = document.getElementById('stepNode1');
+            const s2 = document.getElementById('stepNode2');
+            const s3 = document.getElementById('stepNode3');
+            const s4 = document.getElementById('stepNode4');
+
+            [s1, s2, s3, s4].forEach(s => { s.className = 'step-node'; });
+
+            const statusMap = {
+                'pending': { text: 'قيد المراجعة', class: 'status-pending', width: '15%', activeNode: s1 },
+                'processing': { text: 'قيد التجهيز والتأكيد', class: 'status-processing', width: '45%', completedNodes: [s1], activeNode: s2 },
+                'shipped': { text: 'تم الشحن مع الموزع 🚚', class: 'status-shipped', width: '75%', completedNodes: [s1, s2], activeNode: s3 },
+                'delivered': { text: 'تم التسليم بنجاح ✅', class: 'status-delivered', width: '100%', completedNodes: [s1, s2, s3, s4], activeNode: null },
+                'cancelled': { text: 'ملغي ❌', class: 'status-cancelled', width: '0%', activeNode: null }
+            };
+
+            const current = statusMap[status] || statusMap['pending'];
+            badge.textContent = current.text;
+            badge.className = `status-badge-custom ${current.class}`;
+            progressBar.style.width = current.width;
+
+            if (current.completedNodes) {
+                current.completedNodes.forEach(node => node.classList.add('completed'));
+            }
+            if (current.activeNode) {
+                current.activeNode.classList.add('active');
+            }
+        }
+
+        // Auto load if parameters exist
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orderId = urlParams.get('orderId') || urlParams.get('id');
+            const phone = urlParams.get('phone');
+            if (orderId && phone) {
+                document.getElementById('orderInput').value = orderId;
+                document.getElementById('phoneInput').value = phone;
+                submitTrack();
+            }
+        });
+    </script>
+</body>
+</html>

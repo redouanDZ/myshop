@@ -276,6 +276,13 @@ async function loadProducts() {
             tbody.innerHTML = '';
             
             products.forEach(product => {
+                const stockNum = Number(product.stock);
+                const stockHtml = stockNum === 0 
+                    ? `<span style="background:#fee2e2; color:#dc2626; padding:3px 8px; border-radius:4px; font-weight:bold; font-size:0.85rem;">نفد المخزون (0)</span>`
+                    : stockNum <= 3
+                    ? `<span style="background:#fef3c7; color:#d97706; padding:3px 8px; border-radius:4px; font-weight:bold; font-size:0.85rem;">${stockNum} (منخفض)</span>`
+                    : `<span style="font-weight:bold;">${stockNum} قطعة</span>`;
+
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>
@@ -284,18 +291,18 @@ async function loadProducts() {
                             <span>${product.name}</span>
                         </div>
                     </td>
-                    <td>${product.price.toFixed(2)} دج</td>
-                    <td>${product.stock}</td>
+                    <td>${Number(product.price).toLocaleString()} دج</td>
+                    <td>${stockHtml}</td>
                     <td>
                         <span class="status-badge ${product.status === 'active' ? 'active' : 'inactive'}">
                             ${product.status === 'active' ? 'نشط' : 'غير نشط'}
                         </span>
                     </td>
                     <td>
-                        <button class="action-btn edit" onclick="editProduct(${product.id})">
+                        <button class="action-btn edit" onclick="editProduct(${product.id})" title="تعديل">
                             <i class="fas fa-edit"></i>
                         </button>
-                        <button class="action-btn delete" onclick="deleteProduct(${product.id})">
+                        <button class="action-btn delete" onclick="deleteProduct(${product.id})" title="حذف">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>

@@ -15,7 +15,7 @@
     <header>
         <div class="container">
             <div class="logo"><a href="index.html">متجر الإلكتروني</a></div>
-            <nav><ul><li><a href="index.html">الرئيسية</a></li><li><a href="shop.html">التسوق</a></li><li><a href="cart.html">عربة التسوق</a></li><li><a href="checkout.html">الدفع</a></li></ul></nav>
+            <nav><ul><li><a href="index.html">الرئيسية</a></li><li><a href="shop.html">التسوق</a></li><li><a href="cart.html">عربة التسوق</a></li><li><a href="track-order.html">تتبع طلبي</a></li></ul></nav>
             <div class="user-actions"><a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a><a href="account.html" class="user-icon" title="حسابي"><i class="fas fa-user"></i></a></div>
         </div>
     </header>
@@ -86,20 +86,37 @@
                 document.getElementById('product-title').textContent = currentProduct.name;
                 document.getElementById('product-breadcrumb').textContent = currentProduct.name;
                 document.getElementById('product-name').textContent = currentProduct.name;
-                document.getElementById('product-price').textContent = `${currentProduct.price.toLocaleString()} دج`;
+                document.getElementById('product-price').textContent = `${Number(currentProduct.price).toLocaleString()} دج`;
                 document.getElementById('product-description').innerHTML = `<p>${currentProduct.description || 'وصف غير متوفر'}</p>`;
                 updateStars(currentProduct.rating || 4.0);
 
+                // Check stock
+                const stockNum = Number(currentProduct.stock || 0);
+                const addBtn = document.querySelector('.add-to-cart');
+                if (stockNum <= 0) {
+                    if (addBtn) {
+                        addBtn.disabled = true;
+                        addBtn.style.background = '#94a3b8';
+                        addBtn.style.cursor = 'not-allowed';
+                        addBtn.textContent = 'نفد المخزون حالياً';
+                    }
+                } else if (stockNum <= 3) {
+                    const priceBox = document.querySelector('.product-price');
+                    const warning = document.createElement('span');
+                    warning.style.cssText = 'display:block; color:#d97706; font-size:0.9rem; font-weight:bold; margin-top:5px;';
+                    warning.textContent = `⚠️ سارع بالطلب! متبقي ${stockNum} قطع فقط في المخزون`;
+                    priceBox.appendChild(warning);
+                }
+
                 const thumbnails = document.getElementById('thumbnail-images');
                 const mainImage = document.getElementById('main-image');
-                const images = [currentProduct.image_url || 'images/product-main.jpg', 'images/product-thumb2.jpg', 'images/product-thumb3.jpg', 'images/product-thumb4.jpg'];
+                const images = [currentProduct.image_url || 'images/product-placeholder.jpg'];
                 thumbnails.innerHTML = images.map((img, index) => `<img src="${img}" alt="صورة ${index + 1}" class="${index === 0 ? 'active' : ''}" onclick="switchImage(${index})">`).join('');
                 mainImage.src = images[0];
 
                 loadProductOptions(currentProduct);
                 loadSimilarProducts(currentProduct.category);
             } catch (error) {
-
                 alert('خطأ في تحميل المنتج');
             }
         }

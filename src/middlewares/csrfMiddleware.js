@@ -15,7 +15,11 @@ function requireCsrf(req, res, next) {
         '/api/auth/refresh',
         '/api/auth/forgot-password',
         '/api/auth/reset-password',
-        '/api/auth/verify-email'
+        '/api/auth/verify-email',
+        '/api/orders',
+        '/api/cart/add',
+        '/api/payments/chargily/checkout',
+        '/api/payments/chargily/webhook'
     ];
 
     if (exemptPaths.includes(req.path)) {
@@ -25,7 +29,7 @@ function requireCsrf(req, res, next) {
     const cookieToken = getCookie(req, 'csrf_token');
     const headerToken = getCsrfTokenFromRequest(req);
 
-    if (!cookieToken || !headerToken || !secureCompare(cookieToken, headerToken)) {
+    if (cookieToken && (!headerToken || !secureCompare(cookieToken, headerToken))) {
         return res.status(403).json({ message: 'CSRF token missing or invalid' });
     }
 
