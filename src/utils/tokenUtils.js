@@ -129,14 +129,16 @@ function parseUserFromReq(req) {
 
     try {
         const decoded = jwt.verify(token, config.JWT_SECRET);
-        if (!decoded || !decoded.id || !decoded.sessionId) return null;
+        if (!decoded || !decoded.id) return null;
 
-        const session = activeSessions.get(decoded.sessionId);
-        if (!session || session.userId !== Number(decoded.id) || session.revoked || session.expiresAt <= Date.now()) {
-            return null;
+        if (decoded.sessionId && activeSessions.has(decoded.sessionId)) {
+            const session = activeSessions.get(decoded.sessionId);
+            if (session.userId !== Number(decoded.id) || session.revoked || session.expiresAt <= Date.now()) {
+                return null;
+            }
+            session.lastSeen = Date.now();
         }
 
-        session.lastSeen = Date.now();
         return Number(decoded.id);
     } catch (error) {
         return null;

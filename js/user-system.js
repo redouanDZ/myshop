@@ -66,9 +66,14 @@ async function fetchJson(url, options = {}) {
     const isMutatingRequest = !['GET', 'HEAD', 'OPTIONS'].includes(method);
     const csrfToken = isMutatingRequest ? await getCsrfToken() : '';
 
+    const token = localStorage.getItem('authToken');
     const headers = {
         ...(options.headers || {})
     };
+
+    if (token && !headers['Authorization'] && !headers['authorization']) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
 
     if (!(headers['Content-Type'] || headers['content-type'])) {
         if (options.body && typeof options.body === 'string') {
@@ -297,6 +302,14 @@ function showLoginForm() {
     // إضافة مستمعي الأحداث
     const closeModalBtn = modal.querySelector('.close-modal');
     const showSignupLink = modal.querySelector('#show-signup');
+    const loginForm = modal.querySelector('#login-form');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleLogin();
+        });
+    }
 
     closeModalBtn.addEventListener('click', function() {
         modal.style.display = 'none';
@@ -370,6 +383,14 @@ function showSignupForm() {
     // إضافة مستمعي الأحداث
     const closeModalBtn = modal.querySelector('.close-modal');
     const showLoginLink = modal.querySelector('#show-login');
+    const signupForm = modal.querySelector('#signup-form');
+
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleSignup();
+        });
+    }
 
     closeModalBtn.addEventListener('click', function() {
         modal.style.display = 'none';

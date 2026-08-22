@@ -639,7 +639,8 @@
         document.addEventListener('DOMContentLoaded', async () => {
             // Check auth
             const token = localStorage.getItem('authToken');
-            if (!token) {
+            const currentUser = localStorage.getItem('currentUser');
+            if (!token && !currentUser) {
                 // Prompt login modal or notice
                 if (window.showLoginForm) {
                     window.showLoginForm();
