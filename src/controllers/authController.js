@@ -109,7 +109,8 @@ async function login(req, res) {
         res.json({
             message: 'تم تسجيل الدخول بنجاح!',
             user: userWithoutPass,
-            sessionId
+            sessionId,
+            token: accessToken
         });
     } catch (error) {
         console.error('Login error:', error);

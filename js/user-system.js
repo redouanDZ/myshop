@@ -405,25 +405,36 @@ async function handleLogin() {
 
         if (response.ok) {
             saveSessionUser(data.user);
+            localStorage.setItem('currentUser', JSON.stringify(data.user));
+            if (data.token) {
+                localStorage.setItem('authToken', data.token);
+            }
             if (rememberMe) {
                 localStorage.setItem('rememberedUser', JSON.stringify(data.user));
             }
 
-            document.getElementById('auth-modal').style.display = 'none';
+            const authModal = document.getElementById('auth-modal');
+            if (authModal) authModal.style.display = 'none';
             updateUIForLoggedInUser(data.user);
-            showNotification(data.message || 'Login successful!');
+            showNotification(data.message || 'تم تسجيل الدخول بنجاح! 🎉', 'success');
             updateCartUI();
 
             setTimeout(() => {
-                const redirectUrl = localStorage.getItem('redirectAfterLogin') || '../index.html';
-                localStorage.removeItem('redirectAfterLogin');
-                window.location.href = redirectUrl;
-            }, 1500);
+                const savedRedirect = localStorage.getItem('redirectAfterLogin');
+                if (savedRedirect) {
+                    localStorage.removeItem('redirectAfterLogin');
+                    window.location.href = savedRedirect;
+                } else if (data.user && data.user.role === 'admin') {
+                    window.location.href = 'admin/index.html';
+                } else {
+                    window.location.href = 'account.html';
+                }
+            }, 800);
         } else {
-            showNotification(data.message || 'Email or password is incorrect', 'error');
+            showNotification(data.message || 'البريد الإلكتروني أو كلمة المرور غير صحيحة', 'error');
         }
     } catch (error) {
-        showNotification('An error occurred during login. Please try again.', 'error');
+        showNotification('حدث خطأ أثناء محاولة تسجيل الدخول. يرجى المحاولة لاحقاً.', 'error');
     }
 }
 

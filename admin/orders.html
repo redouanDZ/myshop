@@ -115,7 +115,9 @@
 
         async function loadAdminOrders() {
             try {
-                const response = await fetch('/api/orders');
+                const token = localStorage.getItem('authToken');
+                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const response = await fetch('/api/orders', { headers });
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
                         alert('يرجى تسجيل الدخول بحساب مسؤول لعرض الطلبات');

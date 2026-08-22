@@ -140,7 +140,9 @@
             document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('ar-DZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
             try {
-                const res = await fetch('/api/admin/dashboard-stats');
+                const token = localStorage.getItem('authToken');
+                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const res = await fetch('/api/admin/dashboard-stats', { headers });
                 if (!res.ok) {
                     if (res.status === 401 || res.status === 403) {
                         alert('يرجى تسجيل الدخول بحساب مسؤول للوصول إلى لوحة التحكم');
