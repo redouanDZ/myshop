@@ -7,10 +7,82 @@ const path = require('path');
 const mysql = require('mysql2/promise');
 
 function splitSqlStatements(sql) {
-  return sql
-    .split(';')
-    .map(statement => statement.trim())
-    .filter(Boolean);
+  const statements = [];
+  let current = '';
+  let inSingleQuote = false;
+  let inDoubleQuote = false;
+  let inBacktick = false;
+  let inLineComment = false;
+  let inBlockComment = false;
+
+  for (let i = 0; i < sql.length; i++) {
+    const char = sql[i];
+    const prevChar = i > 0 ? sql[i - 1] : '';
+    const nextChar = i < sql.length - 1 ? sql[i + 1] : '';
+
+    // Handle line comments: -- ... \n
+    if (inLineComment) {
+      if (char === '\n') inLineComment = false;
+      current += char;
+      continue;
+    }
+
+    // Handle block comments: /* ... */
+    if (inBlockComment) {
+      if (prevChar === '*' && char === '/') inBlockComment = false;
+      current += char;
+      continue;
+    }
+
+    // Check for comment starts when not in string
+    if (!inSingleQuote && !inDoubleQuote && !inBacktick) {
+      if (char === '-' && nextChar === '-') {
+        inLineComment = true;
+        current += char;
+        continue;
+      }
+      if (char === '/' && nextChar === '*') {
+        inBlockComment = true;
+        current += char;
+        continue;
+      }
+    }
+
+    // Handle quotes (respecting escape backslash)
+    if (char === "'" && !inDoubleQuote && !inBacktick && prevChar !== '\\') {
+      inSingleQuote = !inSingleQuote;
+      current += char;
+      continue;
+    }
+    if (char === '"' && !inSingleQuote && !inBacktick && prevChar !== '\\') {
+      inDoubleQuote = !inDoubleQuote;
+      current += char;
+      continue;
+    }
+    if (char === '`' && !inSingleQuote && !inDoubleQuote && prevChar !== '\\') {
+      inBacktick = !inBacktick;
+      current += char;
+      continue;
+    }
+
+    // Statement terminator outside quotes and comments
+    if (char === ';' && !inSingleQuote && !inDoubleQuote && !inBacktick) {
+      const trimmed = current.trim();
+      if (trimmed) {
+        statements.push(trimmed);
+      }
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+
+  const remainder = current.trim();
+  if (remainder) {
+    statements.push(remainder);
+  }
+
+  return statements;
 }
 
 async function runMigrations() {
@@ -56,13 +128,19 @@ async function runMigrations() {
 
         if (sql.trim()) {
           const connection = await pool.getConnection();
+          const createdTablesInFile = [];
           try {
             await connection.beginTransaction();
 
             const statements = splitSqlStatements(sql);
             for (const statement of statements) {
               try {
+                // Track table creation for clean rollback on subsequent error
+                const createMatch = statement.match(/^\s*CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?[`'"]?([a-zA-Z0-9_]+)/i);
                 await connection.query(statement);
+                if (createMatch && createMatch[1]) {
+                  createdTablesInFile.push(createMatch[1]);
+                }
               } catch (stmtErr) {
                 const ignorableCodes = [
                   'ER_DUP_FIELDNAME',
@@ -88,6 +166,13 @@ async function runMigrations() {
             count++;
           } catch (err) {
             await connection.rollback();
+            // Roll back any tables created in this failed migration batch
+            for (const tbl of createdTablesInFile) {
+              try {
+                await connection.query(`DROP TABLE IF EXISTS \`${tbl}\``);
+                console.log(`   🧹 [تراجع تلقائي]: تم حذف الجدول المنشأ جزئياً: ${tbl}`);
+              } catch (cleanErr) {}
+            }
             console.error(`❌ فشل الترحيل في الملف [${file}]:`, err.message);
             throw err;
           } finally {
