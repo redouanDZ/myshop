@@ -72,7 +72,6 @@
 
     <script>
         let currentProduct = null;
-        var currentUserId = window.currentUserId || 1; // افتراضي، يجب استبداله بمعرف المستخدم الحالي (مثل من الجلسة)
 
         async function loadProductDetails() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -160,23 +159,30 @@
             if (!currentProduct) return;
             const quantity = parseInt(document.getElementById('quantity').value, 10) || 1;
             
-            if (window.addToCart) {
+            if (typeof window.addToCart === 'function') {
                 await window.addToCart(currentProduct, quantity);
             } else {
                 try {
-                    const response = await fetch('/api/cart/add', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ userId: currentUserId || 1, productId: currentProduct.id, quantity })
-                    });
-                    if (!response.ok) throw new Error('خطأ في الإضافة');
+                    let cart = [];
+                    try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
+                    const existing = cart.find(item => item.id === currentProduct.id);
+                    if (existing) {
+                        existing.quantity = Math.min(20, existing.quantity + quantity);
+                    } else {
+                        cart.push({
+                            id: currentProduct.id,
+                            name: currentProduct.name,
+                            price: Number(currentProduct.price) || 0,
+                            image: currentProduct.image || currentProduct.image_url || '/images/product-placeholder.jpg',
+                            quantity
+                        });
+                    }
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    window.cart = cart;
                     if (window.showToast) {
                         window.showToast('تمت إضافة المنتج إلى السلة بنجاح! 🛒', 'success');
-                    } else {
-                        alert('تم الإضافة إلى العربة');
                     }
                 } catch (error) {
-
                     if (window.showToast) {
                         window.showToast('حدث خطأ أثناء إضافة المنتج', 'error');
                     }
@@ -257,22 +263,30 @@
 
         async function loadSimilarProducts(category) {
             try {
-                const response = await fetch(`/api/products?category=${category}`);
+                const response = await fetch(`/api/products?category=${encodeURIComponent(category || '')}`);
                 if (!response.ok) throw new Error('خطأ في جلب المنتجات');
-                const allProducts = await response.json();
+                const data = await response.json();
+                const allProducts = Array.isArray(data) ? data : (Array.isArray(data && data.products) ? data.products : []);
                 const similar = allProducts.filter(p => p.id !== currentProduct.id).slice(0, 4);
                 const container = document.getElementById('similar-products');
+                if (!container) return;
+                if (!similar.length) {
+                    container.innerHTML = '<p style="color: #64748b; padding: 15px;">لا توجد منتجات مشابهة حالياً</p>';
+                    return;
+                }
                 container.innerHTML = similar.map(p => `
                     <div class="similar-product">
-                        <img src="${p.image_url}" alt="${p.name}">
+                        <img src="${p.image_url || 'images/product-placeholder.jpg'}" alt="${p.name}">
                         <h3>${p.name}</h3>
-                        <p class="price">${p.price.toLocaleString()} دج</p>
+                        <p class="price">${Number(p.price).toLocaleString()} دج</p>
                         <a href="product.html?id=${p.id}">عرض التفاصيل</a>
                     </div>
                 `).join('');
             } catch (error) {
-
-                document.getElementById('similar-products').innerHTML = '<p>لا توجد منتجات مشابهة</p>';
+                const container = document.getElementById('similar-products');
+                if (container) {
+                    container.innerHTML = '<p style="color: #64748b; padding: 15px;">لا توجد منتجات مشابهة</p>';
+                }
             }
         }
 
