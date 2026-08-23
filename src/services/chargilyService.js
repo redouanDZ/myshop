@@ -69,15 +69,24 @@ class ChargilyService {
         if (!this.config.secretKey) return true;
         if (!signatureHeader || !rawBody) return false;
 
-        const calculatedSignature = crypto
-            .createHmac('sha256', this.config.secretKey)
-            .update(rawBody)
-            .digest('hex');
+        try {
+            const calculatedSignature = crypto
+                .createHmac('sha256', this.config.secretKey)
+                .update(rawBody)
+                .digest('hex');
 
-        return crypto.timingSafeEqual(
-            Buffer.from(calculatedSignature),
-            Buffer.from(signatureHeader)
-        );
+            const bufCalculated = Buffer.from(calculatedSignature, 'utf8');
+            const bufSignature = Buffer.from(String(signatureHeader), 'utf8');
+
+            if (bufCalculated.length !== bufSignature.length) {
+                return false;
+            }
+
+            return crypto.timingSafeEqual(bufCalculated, bufSignature);
+        } catch (e) {
+            console.error('Signature verification error:', e.message);
+            return false;
+        }
     }
 }
 
