@@ -2,9 +2,9 @@
  * Production Validation & Syntax Check Script
  * Executes full static syntax verification, config checks, and file integrity validation.
  */
-const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const vm = require('vm');
 
 function getAllJsFiles(dir) {
     let results = [];
@@ -27,21 +27,25 @@ function getAllJsFiles(dir) {
 function runValidation() {
     console.log('--- 🔍 Starting Production Validation & Integrity Check ---');
 
-    // 1. Syntax Check with node --check
-    console.log('1. Checking JavaScript syntax with `node --check`...');
+    // 1. Syntax Check with vm.Script (in-memory AST syntax parsing)
+    console.log('1. Checking JavaScript syntax with Node parser...');
     const rootFiles = ['server.js', 'eslint.config.js'];
-    const targetDirs = ['src', 'database', 'test'];
-    const allFiles = [...rootFiles.map(f => path.join(__dirname, '..', f)), ...targetDirs.flatMap(d => getAllJsFiles(path.join(__dirname, '..', d)))];
+    const targetDirs = ['src', 'database', 'test', 'scripts'];
+    const allFiles = [
+        ...rootFiles.map(f => path.join(__dirname, '..', f)),
+        ...targetDirs.flatMap(d => getAllJsFiles(path.join(__dirname, '..', d)))
+    ];
 
     let checkedCount = 0;
     for (const filePath of allFiles) {
         if (fs.existsSync(filePath)) {
             try {
-                execSync(`node --check "${filePath}"`, { stdio: 'pipe' });
+                const code = fs.readFileSync(filePath, 'utf8');
+                new vm.Script(code, { filename: filePath });
                 checkedCount++;
             } catch (err) {
                 console.error(`❌ Syntax error in file: ${filePath}`);
-                console.error(err.stderr ? err.stderr.toString() : err.message);
+                console.error(err.stack || err.message);
                 process.exit(1);
             }
         }

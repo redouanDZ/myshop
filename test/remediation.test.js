@@ -33,15 +33,15 @@ test.before(async () => {
     // Setup User B
     let userB = await db.findUserByEmail('user_b@example.com');
     if (!userB) {
-        const newId = await db.createUser({
+        const created = await db.createUser({
             username: 'مستخدم ب',
             email: 'user_b@example.com',
             phone: '0559998877',
             password: 'password123',
             role: 'customer'
         });
-        userBId = newId;
-        userB = { id: userBId, email: 'user_b@example.com', role: 'customer' };
+        userB = (created && typeof created === 'object') ? created : await db.findUserByEmail('user_b@example.com');
+        userBId = userB.id;
     } else {
         userBId = userB.id;
     }

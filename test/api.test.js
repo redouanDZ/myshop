@@ -1,8 +1,12 @@
 const test = require('node:test');
 const assert = require('node:assert');
+const db = require('../src/data/db-connection.js');
+
+test.before(async () => {
+    await db.initializeDatabase();
+});
 
 test('Product Search and Filters Logic Test', async () => {
-    const db = require('../src/data/db-connection.js');
     
     // 1. Search term
     const searchRes = await db.getProducts({ search: 'حاسوب' });

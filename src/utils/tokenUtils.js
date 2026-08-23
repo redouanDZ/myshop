@@ -91,6 +91,9 @@ function createRefreshToken(user, sessionId) {
 const db = require('../data/db-connection.js');
 
 async function issueSession(user, req) {
+    const userId = Number(user && (user.id || user.userId));
+    if (!userId) throw new Error('معرف المستخدم غير صالح للجلسة');
+
     const sessionId = randomToken();
     const userAgent = (req.headers && req.headers['user-agent']) || 'unknown';
     const ip = req.ip || (req.connection && req.connection.remoteAddress) || 'unknown';
@@ -98,7 +101,7 @@ async function issueSession(user, req) {
     const expiresAt = now + SESSION_TTL;
 
     const sessionRecord = {
-        userId: Number(user.id),
+        userId,
         sessionId,
         userAgent: String(userAgent).substring(0, 255),
         ip: String(ip).substring(0, 64),
@@ -112,7 +115,7 @@ async function issueSession(user, req) {
     try {
         await db.createSession({
             sessionId,
-            userId: Number(user.id),
+            userId,
             userAgent,
             ip,
             expiresAt,

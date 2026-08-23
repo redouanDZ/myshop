@@ -6,6 +6,13 @@ const fs = require('fs');
 const path = require('path');
 const mysql = require('mysql2/promise');
 
+function splitSqlStatements(sql) {
+  return sql
+    .split(';')
+    .map(statement => statement.trim())
+    .filter(Boolean);
+}
+
 async function runMigrations() {
   const env = process.env.NODE_ENV || 'development';
   const dbConfig = require('../src/config/database.js').getConfig();
@@ -51,7 +58,30 @@ async function runMigrations() {
           const connection = await pool.getConnection();
           try {
             await connection.beginTransaction();
-            await connection.query(sql);
+
+            const statements = splitSqlStatements(sql);
+            for (const statement of statements) {
+              try {
+                await connection.query(statement);
+              } catch (stmtErr) {
+                const ignorableCodes = [
+                  'ER_DUP_FIELDNAME',
+                  'ER_DUP_KEYNAME',
+                  'ER_TABLE_EXISTS_ERROR',
+                  'ER_CANT_DROP_FIELD_OR_KEY'
+                ];
+                const ignorableErrnos = [1060, 1061, 1050, 1091];
+
+                if (ignorableCodes.includes(stmtErr.code) || ignorableErrnos.includes(stmtErr.errno)) {
+                  // Idempotent schema condition (e.g., column/index/table already exists during upgrade or fresh run)
+                  console.log(`   ℹ️ [تجاوز آمن]: ${stmtErr.message}`);
+                } else {
+                  console.error(`❌ خطأ في تنفيذ عبارة SQL [${statement.slice(0, 100)}...]:`, stmtErr.message);
+                  throw stmtErr;
+                }
+              }
+            }
+
             await connection.query('INSERT INTO schema_migrations (version) VALUES (?)', [file]);
             await connection.commit();
             console.log(`✅ تم تنفيذ الترحيل بنجاح: ${file}`);

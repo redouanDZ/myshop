@@ -259,7 +259,7 @@ class MysqlRepository {
         if (adminEmail && adminPassword) {
           const adminHash = await bcrypt.hash(adminPassword, 12);
           await this.pool.query(
-            'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
+            'INSERT IGNORE INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
             ['مدير النظام', adminEmail.toLowerCase().trim(), '0550000000', adminHash, 'admin']
           );
           console.log(`✅ [Production Init] Initialized admin user from environment (${adminEmail}).`);
@@ -270,7 +270,7 @@ class MysqlRepository {
         const customerHash = await bcrypt.hash('password123', 10);
         const adminHash = await bcrypt.hash('adminpassword', 10);
         await this.pool.query(
-          'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)',
+          'INSERT IGNORE INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)',
           ['مستخدم تجريبي', 'user@example.com', '0550000000', customerHash, 'customer', 'مدير النظام', 'admin@example.com', '0660000000', adminHash, 'admin']
         );
       }
@@ -282,7 +282,7 @@ class MysqlRepository {
       const customer = userRows.find(row => row.email === 'user@example.com');
       if (customer) {
         await this.pool.query(
-          'INSERT INTO user_addresses (user_id, title, full_name, phone, city, address, is_default) VALUES (?, ?, ?, ?, ?, ?, ?)',
+          'INSERT IGNORE INTO user_addresses (user_id, title, full_name, phone, city, address, is_default) VALUES (?, ?, ?, ?, ?, ?, ?)',
           [customer.id, 'المنزل', 'مستخدم تجريبي', '0550000000', 'الجزائر العاصمة', 'شارع ديدوش مراد رقم 12', 1]
         );
       }
