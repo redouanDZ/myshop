@@ -66,7 +66,7 @@ app.use('/api/register', authRateLimiter);
 app.use('/api', apiRateLimiter);
 
 // CORS Config
-app.use(cors({
+const corsOptions = {
     origin: (origin, callback) => {
         if (!origin || config.ALLOWED_ORIGINS.includes(origin)) {
             callback(null, true);
@@ -77,17 +77,18 @@ app.use(cors({
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
-}));
+};
 
-app.options('*', cors({
-    origin: true,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
-}));
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 
-// Body Parsers & Path Guard
-app.use(express.json({ limit: '1mb' }));
+// Body Parsers & Path Guard (Capturing rawBody for webhook HMAC verification)
+app.use(express.json({
+    limit: '1mb',
+    verify: (req, res, buf) => {
+        req.rawBody = buf;
+    }
+}));
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 app.use((req, res, next) => {
     const requestPath = req.originalUrl || req.url || '';
@@ -144,7 +145,8 @@ app.get('/', (req, res) => {
 // API Routes
 app.use('/api', apiRoutes);
 
-// Error handling middlewares
+// 404 & Error handling middlewares
+app.use(notFoundHandler);
 app.use(errorHandler);
 
 module.exports = app;

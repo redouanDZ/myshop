@@ -1,25 +1,30 @@
 const db = require('../data/db-connection.js');
-const { parseUserFromReq } = require('../utils/tokenUtils');
+const { validatePositiveInteger, validateId } = require('../utils/helpers');
 
 async function addToCart(req, res) {
     try {
-        const authUserId = await parseUserFromReq(req);
-        const requestedUserId = Number(req.body.userId);
-        if (!authUserId && requestedUserId) {
-            return res.status(400).json({ error: 'يجب تسجيل الدخول لتحديد مستخدم آخر' });
+        const userId = req.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'يجب تسجيل الدخول لإضافة منتجات إلى السلة' });
         }
-        if (authUserId && requestedUserId && authUserId !== requestedUserId) {
-            return res.status(403).json({ error: 'لا يمكنك تعديل سلة مستخدم آخر' });
-        }
-        const userId = authUserId || requestedUserId || 1;
-        const { productId, quantity = 1 } = req.body;
 
+        const productId = validateId(req.body.productId);
         if (!productId) {
-            return res.status(400).json({ error: 'معرّف المنتج مطلوب' });
+            return res.status(400).json({ error: 'معرّف المنتج غير صالح' });
         }
 
-        const sanitizedQty = Number(quantity);
-        const cartItemId = await db.addToCart(userId, productId, Number.isFinite(sanitizedQty) && sanitizedQty > 0 ? sanitizedQty : 1);
+        const quantity = validatePositiveInteger(req.body.quantity, 1, 100);
+        if (!quantity) {
+            return res.status(400).json({ error: 'الكمية غير صالحة (يجب أن تكون عدداً صحيحاً بين 1 و 100)' });
+        }
+
+        // Verify product exists and is active
+        const product = await db.getProductById(productId);
+        if (!product || product.status !== 'active') {
+            return res.status(404).json({ error: 'المنتج غير متوفر أو غير موجود' });
+        }
+
+        const cartItemId = await db.addToCart(userId, productId, quantity);
         res.status(201).json({ id: cartItemId, message: 'تم الإضافة إلى العربة بنجاح' });
     } catch (error) {
         console.error('Error adding to cart:', error);
@@ -29,15 +34,20 @@ async function addToCart(req, res) {
 
 async function getCartItems(req, res) {
     try {
-        const authUserId = await parseUserFromReq(req);
-        const requestedUserId = Number(req.params.userId);
-        const targetUserId = authUserId || requestedUserId || 1;
-
-        if (authUserId && requestedUserId && authUserId !== requestedUserId) {
-            return res.status(403).json({ error: 'لا يمكنك عرض سلة مستخدم آخر' });
+        const userId = req.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'يجب تسجيل الدخول لعرض السلة' });
         }
 
-        const cartItems = await db.getCartItems(targetUserId);
+        // Prevent IDOR: If userId is provided in params, ensure it matches req.userId or user is admin
+        if (req.params.userId) {
+            const requestedId = Number(req.params.userId);
+            if (requestedId !== userId && req.userRole !== 'admin') {
+                return res.status(403).json({ error: 'غير مصرح لك بعرض سلة مستخدم آخر' });
+            }
+        }
+
+        const cartItems = await db.getCartItems(userId);
         res.json(cartItems);
     } catch (error) {
         console.error('Error fetching cart:', error);
@@ -47,13 +57,23 @@ async function getCartItems(req, res) {
 
 async function updateCartItem(req, res) {
     try {
-        const cartItems = await db.getCartItems(req.userId);
-        const cartItemId = Number(req.params.cartItemId);
+        const userId = req.userId;
+        const cartItemId = validateId(req.params.cartItemId);
+        if (!cartItemId) {
+            return res.status(400).json({ error: 'معرّف عنصر السلة غير صالح' });
+        }
+
+        const quantity = validatePositiveInteger(req.body.quantity, 1, 100);
+        if (!quantity) {
+            return res.status(400).json({ error: 'الكمية غير صالحة (يجب أن تكون عدداً صحيحاً بين 1 و 100)' });
+        }
+
+        const cartItems = await db.getCartItems(userId);
         if (!cartItems.some(item => item.id === cartItemId)) {
             return res.status(403).json({ error: 'لا يمكنك تعديل عنصر في سلة مستخدم آخر' });
         }
 
-        const success = await db.updateCartItem(cartItemId, req.body.quantity);
+        const success = await db.updateCartItem(cartItemId, quantity);
         if (!success) return res.status(404).json({ error: 'العنصر غير موجود في العربة' });
         res.json({ message: 'تم تحديث العربة بنجاح' });
     } catch (error) {
@@ -64,8 +84,13 @@ async function updateCartItem(req, res) {
 
 async function removeCartItem(req, res) {
     try {
-        const cartItems = await db.getCartItems(req.userId);
-        const cartItemId = Number(req.params.cartItemId);
+        const userId = req.userId;
+        const cartItemId = validateId(req.params.cartItemId);
+        if (!cartItemId) {
+            return res.status(400).json({ error: 'معرّف عنصر السلة غير صالح' });
+        }
+
+        const cartItems = await db.getCartItems(userId);
         if (!cartItems.some(item => item.id === cartItemId)) {
             return res.status(403).json({ error: 'لا يمكنك حذف عنصر من سلة مستخدم آخر' });
         }

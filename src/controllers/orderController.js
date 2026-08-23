@@ -1,5 +1,6 @@
 const db = require('../data/db-connection.js');
 const { parseUserFromReq } = require('../utils/tokenUtils');
+const { validateId } = require('../utils/helpers');
 const mailService = require('../services/mailService');
 
 async function createOrder(req, res) {
@@ -9,30 +10,22 @@ async function createOrder(req, res) {
         const requestedUserId = orderData.userId ? Number(orderData.userId) : null;
 
         if (!authUserId && requestedUserId) {
-            return res.status(400).json({ error: 'يجب تسجيل الدخول لتحديد مستخدم آخر' });
+            return res.status(400).json({ error: 'يجب تسجيل الدخول لربط الطلب بحساب مستخدم' });
         }
 
         if (authUserId && requestedUserId && authUserId !== requestedUserId) {
             return res.status(403).json({ error: 'لا يمكنك إنشاء طلب باسم مستخدم آخر' });
         }
 
-        if (authUserId) {
-            orderData.userId = authUserId;
-        } else {
-            // Guest Checkout
-            orderData.userId = null;
-        }
-
-        if (!orderData.cart && !orderData.total) {
-            return res.status(400).json({ error: 'السلة أو الإجمالي مطلوب' });
-        }
+        orderData.userId = authUserId || null;
 
         const result = await db.createOrder(orderData);
         const orderId = typeof result === 'object' ? result.id : result;
         const orderNumber = (typeof result === 'object' && result.orderNumber) || `DZ-${new Date().getFullYear()}-${orderId}`;
         const trackingToken = (typeof result === 'object' && result.trackingToken) || null;
+        const finalTotal = (typeof result === 'object' && result.total) || null;
 
-        // Fetch created order and items for notifications
+        // Post-order notification (async)
         try {
             const order = await db.getOrderById(orderId);
             const items = await db.getOrderItems(orderId);
@@ -48,6 +41,7 @@ async function createOrder(req, res) {
             id: orderId,
             orderNumber,
             trackingToken,
+            total: finalTotal,
             message: 'تم إنشاء الطلب بنجاح'
         });
     } catch (error) {
@@ -58,13 +52,18 @@ async function createOrder(req, res) {
 
 async function getOrders(req, res) {
     try {
-        const user = await db.findUserById(req.userId);
+        const userId = req.userId;
+        if (!userId) {
+            return res.status(401).json({ error: 'يجب تسجيل الدخول لعرض الطلبات' });
+        }
+
+        const user = await db.findUserById(userId);
         if (user && user.role === 'admin') {
             const allOrders = await db.getOrders();
             return res.json(allOrders);
         }
 
-        const orders = await db.getOrders(req.userId);
+        const orders = await db.getOrders(userId);
         res.json(orders);
     } catch (error) {
         console.error('Error fetching orders:', error);
@@ -72,37 +71,52 @@ async function getOrders(req, res) {
     }
 }
 
+async function checkOrderAuthorization(req, order) {
+    const authUserId = await parseUserFromReq(req);
+
+    if (authUserId) {
+        const user = await db.findUserById(authUserId);
+        if (user && (user.role === 'admin' || Number(order.user_id) === Number(authUserId))) {
+            return true;
+        }
+    }
+
+    // Guest Order Verification: Tracking token or phone verification
+    const token = req.query.token || req.headers['x-tracking-token'];
+    const phone = req.query.phone;
+
+    if (token && order.tracking_token && token === order.tracking_token) {
+        return true;
+    }
+
+    if (phone && order.phone && order.user_id === null) {
+        const cleanReqPhone = String(phone).replace(/[\s-]/g, '');
+        const cleanOrderPhone = String(order.phone).replace(/[\s-]/g, '');
+        if (cleanReqPhone && cleanReqPhone === cleanOrderPhone) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 async function getOrderById(req, res) {
     try {
-        const order = await db.getOrderById(req.params.id);
+        const orderId = validateId(req.params.id);
+        if (!orderId) {
+            return res.status(400).json({ error: 'معرّف الطلب غير صالح' });
+        }
+
+        const order = await db.getOrderById(orderId);
         if (!order) return res.status(404).json({ error: 'الطلب غير موجود' });
 
-        const authUserId = await parseUserFromReq(req);
-        let isAuthorized = false;
-
-        if (authUserId) {
-            const user = await db.findUserById(authUserId);
-            if (user && (user.role === 'admin' || Number(order.user_id) === Number(authUserId))) {
-                isAuthorized = true;
-            }
+        const isAuthorized = await checkOrderAuthorization(req, order);
+        if (!isAuthorized) {
+            return res.status(403).json({ error: 'غير مصرح لك بالوصول إلى بيانات هذا الطلب' });
         }
 
-        // Guest token or phone verification
-        const token = req.query.token || req.headers['x-tracking-token'];
-        const phone = req.query.phone;
-        if (token && order.tracking_token === token) {
-            isAuthorized = true;
-        } else if (phone && order.phone && order.phone.replace(/[\s-]/g, '') === String(phone).replace(/[\s-]/g, '')) {
-            isAuthorized = true;
-        }
-
-        // Allow if accessed directly without restricted auth (or if guest created it)
-        if (!order.user_id || isAuthorized) {
-            const items = await db.getOrderItems(order.id);
-            return res.json({ ...order, items });
-        }
-
-        return res.status(403).json({ error: 'غير مصرح لك بالوصول إلى هذا الطلب' });
+        const items = await db.getOrderItems(order.id);
+        res.json({ ...order, items });
     } catch (error) {
         console.error('Error fetching order:', error);
         res.status(500).json({ error: 'خطأ في جلب الطلب' });
@@ -111,10 +125,20 @@ async function getOrderById(req, res) {
 
 async function getOrderItems(req, res) {
     try {
-        const order = await db.getOrderById(req.params.orderId);
+        const orderId = validateId(req.params.orderId);
+        if (!orderId) {
+            return res.status(400).json({ error: 'معرّف الطلب غير صالح' });
+        }
+
+        const order = await db.getOrderById(orderId);
         if (!order) return res.status(404).json({ error: 'الطلب غير موجود' });
 
-        const items = await db.getOrderItems(req.params.orderId);
+        const isAuthorized = await checkOrderAuthorization(req, order);
+        if (!isAuthorized) {
+            return res.status(403).json({ error: 'غير مصرح لك بالوصول إلى عناصر هذا الطلب' });
+        }
+
+        const items = await db.getOrderItems(order.id);
         res.json(items);
     } catch (error) {
         console.error('Error fetching order items:', error);
@@ -124,16 +148,25 @@ async function getOrderItems(req, res) {
 
 async function trackOrder(req, res) {
     try {
-        const { orderId, orderNumber, phone } = req.query;
+        const { orderId, orderNumber, phone, token } = req.query;
         const searchId = orderId || orderNumber;
 
-        if (!searchId || !phone) {
-            return res.status(400).json({ error: 'يرجى إدخال رقم الطلب ورقم الهاتف للتتبع' });
+        if (!searchId || (!phone && !token)) {
+            return res.status(400).json({ error: 'يرجى إدخال رقم الطلب ورقم الهاتف أو رمز التتبع' });
         }
 
-        const order = await db.getOrderByTracking(searchId, phone);
+        let order = null;
+        if (phone) {
+            order = await db.getOrderByTracking(searchId, phone);
+        } else if (token) {
+            const raw = validateId(searchId) ? await db.getOrderById(searchId) : await db.getOrderByNumber(searchId);
+            if (raw && raw.tracking_token === token) {
+                order = raw;
+            }
+        }
+
         if (!order) {
-            return res.status(404).json({ error: 'لم يتم العثور على طلب يطابق هذا الرقم ورقم الهاتف المدخل' });
+            return res.status(404).json({ error: 'لم يتم العثور على طلب يطابق البيانات المدخلة' });
         }
 
         const items = await db.getOrderItems(order.id);
@@ -170,10 +203,15 @@ async function updateOrderStatus(req, res) {
             return res.status(400).json({ error: 'حالة الطلب غير صالحة' });
         }
 
-        const order = await db.getOrderById(req.params.id);
+        const orderId = validateId(req.params.id);
+        if (!orderId) {
+            return res.status(400).json({ error: 'معرّف الطلب غير صالح' });
+        }
+
+        const order = await db.getOrderById(orderId);
         if (!order) return res.status(404).json({ error: 'الطلب غير موجود' });
 
-        const success = await db.updateOrderStatus(req.params.id, status);
+        const success = await db.updateOrderStatus(orderId, status);
         if (!success) return res.status(500).json({ error: 'فشل في تحديث حالة الطلب' });
 
         // Notify customer via email

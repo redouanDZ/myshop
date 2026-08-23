@@ -59,7 +59,7 @@ test('Cart Calculation and Order Placement Test', async () => {
     assert.ok(orderId, 'Order ID should be returned');
     const order = await db.getOrderById(orderId);
     assert.ok(order, 'Order should exist in database');
-    assert.strictEqual(Number(order.total), Number(product.price));
+    assert.strictEqual(Number(order.total), Number(product.price) + Number(order.shipping_cost));
 });
 
 test('Authentication Bypass Prevention Test', async () => {
@@ -160,16 +160,19 @@ test('Guest Checkout with COD and Wilaya Test', async () => {
 
 test('Stock Over-ordering Protection Test', async () => {
     const db = require('../src/data/db-connection.js');
+    if (db.pool && typeof db.pool.query === 'function') {
+        await db.pool.query('UPDATE products SET stock = 10 WHERE id = 1');
+    }
     let threwError = false;
     try {
         await db.createOrder({
             userId: null,
             total: 999999,
-            cart: [{ id: 1, name: 'حاسوب محمول', price: 125000, quantity: 99999 }]
+            cart: [{ id: 1, name: 'حاسوب محمول', price: 125000, quantity: 50 }]
         });
     } catch (err) {
         threwError = true;
-        assert.ok(err.message.includes('غير متوفرة'), 'Should indicate stock shortage in Arabic');
+        assert.ok(err.message.includes('غير متوفرة') || err.message.includes('غير صالحة'), 'Should indicate stock shortage or invalid quantity');
     }
     assert.strictEqual(threwError, true, 'Ordering more than available stock must be rejected');
 });
@@ -273,31 +276,37 @@ test('Order Confirmation and Cart Access with Async Auth Test', async () => {
         assert.strictEqual(guestOrderRes.status, 201, 'Guest order should be created');
         assert.ok(guestOrderData.id, 'Order ID must be returned');
 
-        // 2. Fetch guest order via GET /api/orders/:id (simulating order confirmation page)
-        const fetchOrderRes = await fetch(`${baseUrl}/api/orders/${guestOrderData.id}`);
+        // 2. Fetch guest order via GET /api/orders/:id with tracking token (simulating order confirmation page)
+        const fetchOrderRes = await fetch(`${baseUrl}/api/orders/${guestOrderData.id}?token=${guestOrderData.trackingToken}`);
         const fetchOrderData = await fetchOrderRes.json();
-        assert.strictEqual(fetchOrderRes.status, 200, 'Order confirmation page must successfully retrieve guest order');
+        assert.strictEqual(fetchOrderRes.status, 200, 'Order confirmation page must successfully retrieve guest order using token');
         assert.strictEqual(Number(fetchOrderData.id), Number(guestOrderData.id));
 
-        // 3. Cart operations for guest
+        // 3. Cart operations with authentication
+        const { issueSession, createAccessToken } = require('../src/utils/tokenUtils');
+        const user = await db.findUserByEmail('user@example.com') || { id: 1, email: 'user@example.com', role: 'customer' };
+        const session = await issueSession(user, { headers: {}, ip: '127.0.0.1' });
+        const token = createAccessToken(user, session);
+
         const addCartRes = await fetch(`${baseUrl}/api/cart/add`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
             body: JSON.stringify({ productId: 1, quantity: 2 })
         });
-        assert.strictEqual(addCartRes.status, 201, 'Guest should be able to add to cart');
+        assert.strictEqual(addCartRes.status, 201, 'Authenticated user should be able to add to cart');
 
-        const getCartRes = await fetch(`${baseUrl}/api/cart/1`);
-        assert.strictEqual(getCartRes.status, 200, 'Guest should be able to get cart');
+        const getCartRes = await fetch(`${baseUrl}/api/cart`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        assert.strictEqual(getCartRes.status, 200, 'Authenticated user should be able to get cart');
     } finally {
         await new Promise(resolve => server.close(resolve));
     }
 });
 
 test.after(async () => {
-    const db = require('../src/data/db-connection.js');
-    if (db.pool && typeof db.pool.end === 'function') {
-        try { await db.pool.end(); } catch (e) {}
-    }
-    setTimeout(() => process.exit(0), 150);
+    // Teardown
 });

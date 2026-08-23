@@ -10,7 +10,8 @@
     "lint": "node -e \"console.log('No lint issues')\"",
     "dev:node": "node server.js",
     "migrate": "node database/migrate.js",
-    "test": "node --test"
+    "create-admin": "node src/scripts/create-admin.js",
+    "test": "node --test test/all.test.js"
   },
   "keywords": [
     "ecommerce",

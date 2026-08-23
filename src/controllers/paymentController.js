@@ -1,17 +1,47 @@
 const db = require('../data/db-connection.js');
 const chargilyService = require('../services/chargilyService');
 const mailService = require('../services/mailService');
+const { parseUserFromReq } = require('../utils/tokenUtils');
+const { validateId } = require('../utils/helpers');
 
 async function createChargilyCheckout(req, res) {
     try {
-        const { orderId } = req.body;
+        const orderId = validateId(req.body.orderId);
         if (!orderId) {
-            return res.status(400).json({ error: 'معرف الطلب مطلوب' });
+            return res.status(400).json({ error: 'معرف الطلب غير صالح' });
         }
 
         const order = await db.getOrderById(orderId);
         if (!order) {
             return res.status(404).json({ error: 'الطلب غير موجود' });
+        }
+
+        // Authorization check before creating payment checkout
+        const authUserId = await parseUserFromReq(req);
+        let isAuthorized = false;
+
+        if (authUserId) {
+            const user = await db.findUserById(authUserId);
+            if (user && (user.role === 'admin' || Number(order.user_id) === Number(authUserId))) {
+                isAuthorized = true;
+            }
+        }
+
+        // Guest authorization via token or phone
+        const token = req.body.token || req.headers['x-tracking-token'];
+        const phone = req.body.phone;
+        if (token && order.tracking_token === token) {
+            isAuthorized = true;
+        } else if (phone && order.phone && order.user_id === null) {
+            const cleanReq = String(phone).replace(/[\s-]/g, '');
+            const cleanOrder = String(order.phone).replace(/[\s-]/g, '');
+            if (cleanReq && cleanReq === cleanOrder) {
+                isAuthorized = true;
+            }
+        }
+
+        if (!isAuthorized) {
+            return res.status(403).json({ error: 'غير مصرح لك بإنشاء جلسة دفع لهذا الطلب' });
         }
 
         const checkout = await chargilyService.createCheckout({
@@ -33,9 +63,9 @@ async function createChargilyCheckout(req, res) {
 async function handleChargilyWebhook(req, res) {
     try {
         const signature = req.headers['signature'] || '';
-        const rawBody = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+        const payloadToVerify = req.rawBody || req.body;
 
-        const isValid = chargilyService.verifyWebhookSignature(rawBody, signature);
+        const isValid = chargilyService.verifyWebhookSignature(payloadToVerify, signature);
         if (!isValid) {
             return res.status(403).json({ error: 'توقيع Webhook غير صالح' });
         }
@@ -43,16 +73,26 @@ async function handleChargilyWebhook(req, res) {
         const event = req.body;
         if (event && event.type === 'checkout.paid') {
             const checkoutData = event.data;
-            const orderId = checkoutData.metadata && checkoutData.metadata.order_id;
+            const rawOrderId = checkoutData.metadata && checkoutData.metadata.order_id;
+            const orderId = validateId(rawOrderId);
 
             if (orderId) {
+                const order = await db.getOrderById(orderId);
+                if (!order) {
+                    return res.status(404).json({ error: 'الطلب المشار إليه غير موجود' });
+                }
+
+                // Idempotency: Do not process twice if already marked paid
+                if (order.payment_status === 'paid') {
+                    return res.json({ received: true, message: 'الطلب مدفوع مسبقاً' });
+                }
+
                 await db.updateOrderPaymentStatus(orderId, 'paid', 'chargily');
                 await db.updateOrderStatus(orderId, 'processing');
 
-                const order = await db.getOrderById(orderId);
-                if (order) {
-                    mailService.sendOrderStatusUpdate(order, 'processing').catch(e => {});
-                }
+                try {
+                    mailService.sendOrderStatusUpdate(order, 'processing').catch(() => {});
+                } catch (e) {}
             }
         }
 

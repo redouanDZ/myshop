@@ -35,15 +35,11 @@ function buildProxy(methodName) {
     };
 }
 
-Object.defineProperty(module.exports, 'pool', {
-    get() {
-        return poolInstance;
-    },
-    enumerable: true
-});
-
 module.exports = {
     initializeDatabase,
+    get pool() {
+        return poolInstance;
+    },
     getProductById: buildProxy('getProductById'),
     getProducts: buildProxy('getProducts'),
     createProduct: buildProxy('createProduct'),

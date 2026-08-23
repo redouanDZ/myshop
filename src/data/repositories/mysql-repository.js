@@ -232,7 +232,16 @@ class MysqlRepository {
         try {
           await this.pool.query(statement);
         } catch (e) {
-          // Continue on duplicate keys or already applied columns
+          const ignorableCodes = [
+            'ER_TABLE_EXISTS_ERROR',
+            'ER_DUP_KEYNAME',
+            'ER_DUP_FIELDNAME',
+            'ER_CANT_DROP_FIELD_OR_KEY'
+          ];
+          if (!ignorableCodes.includes(e.code) && !e.message.includes('already exists') && !e.message.includes('Duplicate')) {
+            console.error(`❌ Migration error in SQL statement [${statement.slice(0, 100)}...]:`, e.message);
+            throw e;
+          }
         }
       }
     }
@@ -240,18 +249,35 @@ class MysqlRepository {
   }
 
   async seedDefaultData() {
+    const isProduction = process.env.NODE_ENV === 'production';
+
     const [userCountRow] = await this.pool.query('SELECT COUNT(*) AS total FROM users');
     if (Number(userCountRow[0].total) === 0) {
-      const customerHash = await bcrypt.hash('password123', 10);
-      const adminHash = await bcrypt.hash('adminpassword', 10);
-      await this.pool.query(
-        'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)',
-        ['مستخدم تجريبي', 'user@example.com', '0550000000', customerHash, 'customer', 'مدير النظام', 'admin@example.com', '0660000000', adminHash, 'admin']
-      );
+      if (isProduction) {
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPassword = process.env.ADMIN_PASSWORD;
+        if (adminEmail && adminPassword) {
+          const adminHash = await bcrypt.hash(adminPassword, 12);
+          await this.pool.query(
+            'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
+            ['مدير النظام', adminEmail.toLowerCase().trim(), '0550000000', adminHash, 'admin']
+          );
+          console.log(`✅ [Production Init] Initialized admin user from environment (${adminEmail}).`);
+        } else {
+          console.log('ℹ️ [Production Init] No initial admin seeded. Use "npm run create-admin" to create administrator account.');
+        }
+      } else {
+        const customerHash = await bcrypt.hash('password123', 10);
+        const adminHash = await bcrypt.hash('adminpassword', 10);
+        await this.pool.query(
+          'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)',
+          ['مستخدم تجريبي', 'user@example.com', '0550000000', customerHash, 'customer', 'مدير النظام', 'admin@example.com', '0660000000', adminHash, 'admin']
+        );
+      }
     }
 
     const [addressCountRow] = await this.pool.query('SELECT COUNT(*) AS total FROM user_addresses');
-    if (Number(addressCountRow[0].total) === 0) {
+    if (Number(addressCountRow[0].total) === 0 && !isProduction) {
       const [userRows] = await this.pool.query('SELECT id, email FROM users');
       const customer = userRows.find(row => row.email === 'user@example.com');
       if (customer) {
@@ -671,69 +697,104 @@ class MysqlRepository {
   }
 
   async createOrder(orderData) {
-    const userId = orderData.user_id || orderData.userId ? Number(orderData.user_id || orderData.userId) : null;
+    const rawUserId = orderData.user_id || orderData.userId;
+    const userId = (rawUserId !== null && rawUserId !== undefined && rawUserId !== '') ? Number(rawUserId) : null;
     const shippingInfo = orderData.shippingInfo || {};
     const cartInput = Array.isArray(orderData.cart) ? orderData.cart : null;
-    const total = Number(orderData.total || 0);
 
     const connection = await this.pool.getConnection();
     try {
       await connection.beginTransaction();
 
-      let cartItems = [];
+      let requestedItems = [];
       if (cartInput && cartInput.length > 0) {
-        cartItems = cartInput.map(item => ({
-          product_id: Number(item.id || item.product_id),
-          quantity: Number(item.quantity) || 1,
-          name: item.name || 'منتج',
-          price: Number(item.price) || 0,
-          image_url: item.image || item.image_url || '/images/product-placeholder.jpg'
-        }));
+        for (const item of cartInput) {
+          const pid = Number(item.id || item.product_id);
+          const qty = Number(item.quantity);
+          if (!Number.isInteger(pid) || pid <= 0) {
+            throw new Error('معرف المنتج غير صالح في بيانات السلة');
+          }
+          if (!Number.isInteger(qty) || qty < 1 || qty > 100) {
+            throw new Error('الكمية المطلوبة غير صالحة (يجب أن تكون عدداً صحيحاً بين 1 و 100)');
+          }
+          requestedItems.push({ product_id: pid, quantity: qty });
+        }
       } else if (userId) {
         const [rows] = await connection.query(
-          'SELECT ci.id, ci.product_id, ci.quantity, p.name, p.price, p.image_url FROM cart_items ci INNER JOIN products p ON p.id = ci.product_id WHERE ci.user_id = ? AND ci.processed = 0',
+          'SELECT ci.product_id, ci.quantity FROM cart_items ci WHERE ci.user_id = ?',
           [userId]
         );
-        cartItems = rows.map(row => ({
-          product_id: Number(row.product_id),
-          quantity: Number(row.quantity),
-          name: row.name,
-          price: Number(row.price),
-          image_url: row.image_url
-        }));
+        for (const row of rows) {
+          requestedItems.push({ product_id: Number(row.product_id), quantity: Number(row.quantity) });
+        }
       }
 
-      if (!cartItems.length && total <= 0) {
+      if (!requestedItems.length) {
         throw new Error('السلة فارغة، يتعذر إنشاء الطلب');
       }
 
-      // 1. Stock Check Guard: Verify stock availability inside transaction
-      for (const item of cartItems) {
-        if (!item.product_id) continue;
-        const [prodRows] = await connection.query('SELECT id, name, stock FROM products WHERE id = ? FOR UPDATE', [item.product_id]);
-        if (!prodRows[0]) {
-          throw new Error(`المنتج "${item.name}" غير متوفر في المتجر`);
+      // 1. Lock rows, verify stock & calculate true prices directly from Database
+      let itemsSubtotal = 0;
+      const orderItemsToInsert = [];
+
+      for (const item of requestedItems) {
+        const [prodRows] = await connection.query(
+          'SELECT id, name, price, stock, status, image_url FROM products WHERE id = ? FOR UPDATE',
+          [item.product_id]
+        );
+
+        if (!prodRows[0] || prodRows[0].status !== 'active') {
+          throw new Error(`المنتج #${item.product_id} غير متوفر حالياً`);
         }
-        if (Number(prodRows[0].stock) < Number(item.quantity)) {
-          throw new Error(`الكمية المطلوبة من "${prodRows[0].name}" غير متوفرة (المتبقي في المخزون: ${prodRows[0].stock})`);
+
+        const prod = prodRows[0];
+        const availableStock = Number(prod.stock);
+        if (availableStock < item.quantity) {
+          throw new Error(`الكمية المطلوبة من "${prod.name}" غير متوفرة (المتبقي في المخزون: ${availableStock})`);
+        }
+
+        const realUnitPrice = Number(prod.price);
+        const itemTotal = realUnitPrice * item.quantity;
+        itemsSubtotal += itemTotal;
+
+        orderItemsToInsert.push({
+          product_id: Number(prod.id),
+          name: prod.name,
+          price: realUnitPrice,
+          quantity: item.quantity,
+          image_url: prod.image_url || '/images/product-placeholder.jpg'
+        });
+      }
+
+      // 2. Server-side Shipping calculation from Database
+      const rawWilayaId = shippingInfo.wilayaId;
+      const wilayaId = (rawWilayaId !== null && rawWilayaId !== undefined && rawWilayaId !== '') ? Number(rawWilayaId) : null;
+      const deliveryType = (shippingInfo.deliveryType === 'desk') ? 'desk' : 'home';
+      let serverShippingCost = 500; // default standard delivery
+      let finalWilayaName = shippingInfo.wilayaName || shippingInfo.city || 'الجزائر';
+
+      if (wilayaId && Number.isInteger(wilayaId) && wilayaId >= 1 && wilayaId <= 58) {
+        const [wilayaRows] = await connection.query(
+          'SELECT id, name_ar, home_delivery_price, desk_delivery_price FROM wilayas WHERE id = ? LIMIT 1',
+          [wilayaId]
+        );
+        if (wilayaRows[0]) {
+          finalWilayaName = wilayaRows[0].name_ar;
+          serverShippingCost = deliveryType === 'desk' 
+            ? Number(wilayaRows[0].desk_delivery_price) 
+            : Number(wilayaRows[0].home_delivery_price);
         }
       }
 
-      let computedTotal = total;
-      if (computedTotal <= 0) {
-        computedTotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      }
+      // 3. Server-computed Grand Total (Never trusting client total/prices)
+      const computedGrandTotal = itemsSubtotal + serverShippingCost;
 
       const randomSuffix = Math.floor(10000 + Math.random() * 90000);
       const orderNumber = `DZ-${new Date().getFullYear()}-${randomSuffix}`;
-      const trackingToken = crypto.randomBytes(16).toString('hex');
+      const trackingToken = crypto.randomBytes(24).toString('hex');
 
-      const paymentMethod = orderData.paymentMethod || shippingInfo.paymentMethod || 'cod';
-      const paymentStatus = orderData.paymentStatus || 'pending';
-      const wilayaId = shippingInfo.wilayaId ? Number(shippingInfo.wilayaId) : null;
-      const wilayaName = shippingInfo.wilayaName || shippingInfo.city || '';
-      const deliveryType = shippingInfo.deliveryType || 'home';
-      const shippingCost = Number(shippingInfo.shippingCost || 0);
+      const paymentMethod = (shippingInfo.paymentMethod === 'chargily' || orderData.paymentMethod === 'chargily') ? 'chargily' : 'cod';
+      const paymentStatus = 'pending'; // MUST ALWAYS BE PENDING ON CREATION
 
       const [orderResult] = await connection.query(
         `INSERT INTO orders 
@@ -742,38 +803,38 @@ class MysqlRepository {
         [
           orderNumber,
           userId,
-          Number(computedTotal),
+          computedGrandTotal,
           'pending',
           paymentMethod,
           paymentStatus,
-          shippingInfo.fullName || '',
-          shippingInfo.phone || '',
-          shippingInfo.email || '',
-          shippingInfo.address || '',
-          shippingInfo.city || wilayaName,
+          String(shippingInfo.fullName || '').trim().slice(0, 150),
+          String(shippingInfo.phone || '').trim().slice(0, 30),
+          String(shippingInfo.email || '').trim().slice(0, 180),
+          String(shippingInfo.address || '').trim(),
+          String(shippingInfo.city || finalWilayaName).trim().slice(0, 120),
           wilayaId,
-          wilayaName,
+          finalWilayaName,
           deliveryType,
-          shippingCost,
-          shippingInfo.postalCode || '',
-          shippingInfo.notes || '',
-          shippingInfo.shippingMethod || 'standard',
+          serverShippingCost,
+          String(shippingInfo.postalCode || '').trim().slice(0, 20),
+          String(shippingInfo.notes || '').trim().slice(0, 500),
+          String(shippingInfo.shippingMethod || 'standard').trim().slice(0, 50),
           trackingToken
         ]
       );
 
       const orderId = Number(orderResult.insertId);
-      for (const item of cartItems) {
-        if (!item.product_id) continue;
+
+      // 4. Insert order items & atomically decrement stock
+      for (const item of orderItemsToInsert) {
         await connection.query(
           'INSERT INTO order_items (order_id, product_id, name, price, quantity, image_url) VALUES (?, ?, ?, ?, ?, ?)',
-          [orderId, item.product_id, item.name, Number(item.price), Number(item.quantity), item.image_url || '/images/product-placeholder.jpg']
+          [orderId, item.product_id, item.name, item.price, item.quantity, item.image_url]
         );
 
-        // 2. Decrement stock
         await connection.query(
           'UPDATE products SET stock = GREATEST(0, stock - ?) WHERE id = ?',
-          [Number(item.quantity) || 1, item.product_id]
+          [item.quantity, item.product_id]
         );
       }
 
@@ -782,7 +843,7 @@ class MysqlRepository {
       }
 
       await connection.commit();
-      return { id: orderId, orderNumber, trackingToken };
+      return { id: orderId, orderNumber, trackingToken, total: computedGrandTotal };
     } catch (error) {
       await connection.rollback();
       throw error;
