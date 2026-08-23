@@ -14,9 +14,20 @@
     <!-- رأس الموقع -->
     <header>
         <div class="container">
-            <div class="logo"><a href="index.html">متجر الإلكتروني</a></div>
-            <nav><ul><li><a href="index.html">الرئيسية</a></li><li><a href="shop.html">التسوق</a></li><li><a href="cart.html">عربة التسوق</a></li><li><a href="track-order.html">تتبع طلبي</a></li></ul></nav>
-            <div class="user-actions"><a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a><a href="account.html" class="user-icon" title="حسابي"><i class="fas fa-user"></i></a></div>
+            <div class="logo"><a href="index.html" data-i18n="common.store_name">المتجر الإلكتروني</a></div>
+            <nav>
+                <ul>
+                    <li><a href="index.html" data-i18n="nav.home">الرئيسية</a></li>
+                    <li><a href="shop.html" data-i18n="nav.shop">التسوق</a></li>
+                    <li><a href="cart.html" data-i18n="nav.cart">عربة التسوق</a></li>
+                    <li><a href="wishlist.html" data-i18n="nav.wishlist">المفضلة</a></li>
+                    <li><a href="track-order.html" data-i18n="nav.track_order">تتبع طلبي</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i><span class="cart-count">0</span></a>
+                <a href="account.html" class="user-icon" title="حسابي"><i class="fas fa-user"></i></a>
+            </div>
         </div>
     </header>
 
@@ -45,21 +56,26 @@
                     </div>
                     <div class="product-actions">
                         <div class="quantity"><button class="quantity-btn decrease" onclick="changeQuantity(-1)">-</button><input type="number" id="quantity" value="1" min="1" max="10"><button class="quantity-btn increase" onclick="changeQuantity(1)">+</button></div>
-                        <button class="add-to-cart" onclick="addToCartFromProduct()">أضف إلى السلة</button>
+                        <button class="add-to-cart" onclick="addToCartFromProduct()" data-i18n="common.add_to_cart">أضف إلى السلة</button>
                         <button class="add-to-wishlist" onclick="addToWishlist()"><i class="far fa-heart"></i></button>
                     </div>
                 </div>
             </div>
             <div class="product-tabs">
-                <div class="tabs-header"><button class="tab-btn active" data-tab="description">الوصف</button><button class="tab-btn" data-tab="specifications">المواصفات</button><button class="tab-btn" data-tab="reviews">المراجعات</button><button class="tab-btn" data-tab="shipping">الشحن والتوصيل</button></div>
+                <div class="tabs-header">
+                    <button class="tab-btn active" data-tab="description" data-i18n="product.desc_tab">الوصف</button>
+                    <button class="tab-btn" data-tab="specifications" data-i18n="product.specs_tab">المواصفات</button>
+                    <button class="tab-btn" data-tab="reviews" data-i18n="product.reviews_tab">المراجعات</button>
+                    <button class="tab-btn" data-tab="shipping" data-i18n="cart.shipping">الشحن والتوصيل</button>
+                </div>
                 <div class="tabs-content">
-                    <div class="tab-panel active" id="description"><h3>وصف المنتج</h3><div id="description-content"><p>وصف المنتج...</p></div></div>
-                    <div class="tab-panel" id="specifications"><h3>مواصفات المنتج</h3><table class="spec-table" id="spec-table"><tr><td>العلامة التجارية</td><td>اسم العلامة</td></tr><tr><td>المادة</td><td>100% قطن</td></tr></table></div>
-                    <div class="tab-panel" id="reviews"><h3>المراجعات</h3><div class="reviews-container" id="reviews-container"></div><div class="add-review"><h4>أضف مراجعة</h4><div class="review-form"><div class="rating-input"><span>التقييم:</span><div class="stars" id="review-stars"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i><i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i></div><input type="hidden" id="review-rating" value="0"></div><div class="comment-input"><textarea id="review-comment" placeholder="اكتب مراجعتك هنا..."></textarea></div><button class="submit-review" onclick="submitReview()">إرسال المراجعة</button></div></div></div>
-                    <div class="tab-panel" id="shipping"><h3>سياسة الشحن والتوصيل</h3><p>شحن خلال 1-2 يوم...</p></div>
+                    <div class="tab-panel active" id="description"><h3 data-i18n="product.desc_tab">وصف المنتج</h3><div id="description-content"><p>وصف المنتج...</p></div></div>
+                    <div class="tab-panel" id="specifications"><h3 data-i18n="product.specs_tab">مواصفات المنتج</h3><table class="spec-table" id="spec-table"><tr><td>العلامة التجارية</td><td>اسم العلامة</td></tr><tr><td>المادة</td><td>100% قطن</td></tr></table></div>
+                    <div class="tab-panel" id="reviews"><h3 data-i18n="product.reviews_tab">المراجعات</h3><div class="reviews-container" id="reviews-container"></div><div class="add-review"><h4 data-i18n="product.add_review">أضف مراجعة</h4><div class="review-form"><div class="rating-input"><span data-i18n="product.rating_label">التقييم:</span><div class="stars" id="review-stars"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i><i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i></div><input type="hidden" id="review-rating" value="0"></div><div class="comment-input"><textarea id="review-comment" placeholder="اكتب مراجعتك هنا..." data-i18n-placeholder="product.comment_placeholder"></textarea></div><button class="submit-review" onclick="submitReview()" data-i18n="product.submit_review">إرسال المراجعة</button></div></div></div>
+                    <div class="tab-panel" id="shipping"><h3 data-i18n="cart.shipping">سياسة الشحن والتوصيل</h3><p>توصيل سريع إلى كافة ولايات الجزائر (58 ولاية).</p></div>
                 </div>
             </div>
-            <div class="similar-products"><h2>منتجات مشابهة</h2><div class="products-grid" id="similar-products"></div></div>
+            <div class="similar-products"><h2 data-i18n="product.similar_products">منتجات مشابهة</h2><div class="products-grid" id="similar-products"></div></div>
         </div>
     </section>
 
@@ -87,6 +103,10 @@
                 document.getElementById('product-name').textContent = currentProduct.name;
                 document.getElementById('product-price').textContent = `${Number(currentProduct.price).toLocaleString()} دج`;
                 document.getElementById('product-description').innerHTML = `<p>${currentProduct.description || 'وصف غير متوفر'}</p>`;
+                document.title = `${currentProduct.name} - المتجر الإلكتروني`;
+                const metaDesc = document.querySelector('meta[name="description"]');
+                if (metaDesc && currentProduct.description) metaDesc.content = currentProduct.description.substring(0, 160);
+                
                 updateStars(currentProduct.rating || 4.0);
 
                 // Check stock

@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ais-dev-fblkevvx4dd35lavei73x2-144989767545.europe-west2.run.app/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <loc>https://myshop.dz/</loc>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://ais-dev-fblkevvx4dd35lavei73x2-144989767545.europe-west2.run.app/shop.html</loc>
-    <lastmod>2026-08-01</lastmod>
+    <loc>https://myshop.dz/shop.html</loc>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://ais-dev-fblkevvx4dd35lavei73x2-144989767545.europe-west2.run.app/product.html</loc>
-    <lastmod>2026-08-01</lastmod>
+    <loc>https://myshop.dz/product.html</loc>
+    <lastmod>2026-08-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://myshop.dz/track-order.html</loc>
+    <lastmod>2026-08-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

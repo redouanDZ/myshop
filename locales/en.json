@@ -97,5 +97,57 @@
   "pwa": {
     "offline_notice": "You are currently offline (browsing mode). Internet connection is required to complete orders.",
     "online_restored": "Internet connection restored successfully!"
+  },
+  "auth": {
+    "login_title": "Sign In",
+    "register_title": "Create an Account",
+    "email": "Email Address",
+    "password": "Password",
+    "username": "Username",
+    "phone": "Phone Number",
+    "login_btn": "Sign In",
+    "register_btn": "Create Account",
+    "no_account": "Don't have an account?",
+    "have_account": "Already have an account?",
+    "create_account": "Register now",
+    "sign_in": "Sign in now",
+    "logout": "Sign Out",
+    "admin_badge": "Admin Dashboard"
+  },
+  "product": {
+    "specs_tab": "Specifications",
+    "reviews_tab": "Customer Reviews",
+    "desc_tab": "Product Description",
+    "similar_products": "Similar Products You May Like",
+    "buy_now": "Buy Now",
+    "add_review": "Write a Review",
+    "submit_review": "Submit Review",
+    "rating_label": "Your Rating:",
+    "comment_placeholder": "Write your honest feedback about this product...",
+    "quantity": "Quantity:",
+    "no_reviews": "No reviews for this product yet. Be the first to leave a review!"
+  },
+  "account": {
+    "title": "My Account",
+    "profile": "Personal Profile",
+    "orders": "Order History",
+    "addresses": "Shipping Addresses",
+    "settings": "Account Settings",
+    "welcome": "Welcome",
+    "total_orders": "Total Orders",
+    "add_address": "Add New Address"
+  },
+  "admin": {
+    "dashboard": "Dashboard",
+    "orders": "Orders Management",
+    "products": "Products & Stock",
+    "customers": "Customers",
+    "coupons": "Discount Coupons",
+    "reviews": "Product Reviews",
+    "visit_store": "Visit Store",
+    "stats": "General Statistics",
+    "total_revenue": "Total Revenue",
+    "total_orders": "Total Orders",
+    "new_orders": "Pending Orders"
   }
 }

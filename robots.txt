@@ -1,8 +1,9 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /api/admin/
 Disallow: /account.html
 Disallow: /cart.html
 Disallow: /checkout.html
 
-Sitemap: https://ais-dev-fblkevvx4dd35lavei73x2-144989767545.europe-west2.run.app/sitemap.xml
+Sitemap: /sitemap.xml

@@ -1,115 +1,99 @@
-# متجر إلكتروني — E-commerce Store (Full-Stack)
+# متجر إلكتروني — E-Commerce Store (Full-Stack & Production-Ready)
 
-مشروع متجر إلكتروني عربي كامل (Full-Stack)، يدعم اللغة العربية بالكامل (RTL) مع باكند حقيقي (Node.js/Express/MySQL) — وليس مجرد واجهة بـ LocalStorage.
-
-## 🌟 الميزات
-
-- واجهة مستخدم عربية بالكامل (RTL) وتصميم متجاوب
-- نظام مصادقة كامل (تسجيل/دخول) عبر JWT
-- سلة تسوق، صفحة دفع (Checkout)، تأكيد طلب
-- نظام تقييمات ومراجعات للمنتجات (Reviews)
-- نظام كوبونات خصم (Coupons)
-- **لوحة تحكم أدمن فعلية** (إدارة المنتجات، إدارة الطلبات) — وليست "قادمة قريباً"
-- حماية أمنية: Helmet, CORS, Rate Limiting, CSRF protection, bcrypt لتشفير كلمات المرور
-- Service Worker (`sw.js`) و PWA manifest
-
-## 🛠️ التقنيات المستخدمة
-
-### الواجهة (Frontend)
-- HTML5 / CSS3 (متغيرات CSS مخصصة، بدون إطار عمل CSS خارجي)
-- JavaScript (Vanilla، بدون React/Vue) — ملفات منظَّمة في `js/`
-- Font Awesome للأيقونات
-
-### الخادم (Backend)
-- **Node.js + Express** — بنية MVC منظَّمة (`src/controllers`, `src/routes`, `src/middlewares`)
-- **MySQL** (عبر `mysql2`) — نظام migrations خاص (`database/migrate.js`)
-- **JWT** (`jsonwebtoken`) للمصادقة
-- **bcryptjs** لتشفير كلمات المرور
-- **Multer** لرفع الملفات/الصور
-- **Helmet + CORS + express-rate-limit** للحماية
-
-## 📁 هيكل المشروع الحقيقي
-
-```
-myshop/
-├── admin/                  # لوحة تحكم الأدمن (منتجات، طلبات) — HTML مستقل
-├── config/
-│   └── database.js         # إعداد الاتصال بقاعدة البيانات (نسخة legacy)
-├── database/
-│   ├── migrate.js          # سكربت تشغيل الـ migrations
-│   ├── migrations/         # ملفات SQL للـ migrations (schema + reviews/coupons)
-│   └── schema/              # مخطط قاعدة البيانات الكامل
-├── src/                     # الباكند الفعلي (بنية MVC)
-│   ├── app.js               # نقطة تجميع Express app
-│   ├── config/database.js   # إعداد الاتصال (النسخة المستخدمة فعلياً)
-│   ├── controllers/         # منطق الأعمال (auth, cart, order, product, user)
-│   ├── middlewares/         # auth, admin, csrf, upload, error handling
-│   └── routes/               # تعريف المسارات API
-├── js/                      # كود الفرونت إند (cart, checkout, products, search...)
-├── css/style.css            # التصميم الرئيسي
-├── images/                  # صور المنتجات
-├── server.js                # نقطة تشغيل الخادم
-├── test/                    # اختبارات (Node.js built-in test runner)
-└── *.html                   # صفحات الموقع (index, shop, product, cart, checkout...)
-```
-
-> ⚠️ ملاحظة: يوجد مجلدان لإعداد قاعدة البيانات (`config/database.js` و `src/config/database.js`) — الفعلي المُستخدَم من `server.js` هو `src/config/database.js`. `config/database.js` على الأرجح ملف قديم من مرحلة تطوير سابقة، يستحق مراجعة لاحقة لتوحيدهما أو حذف غير المُستخدَم.
-
-## 🚀 التثبيت والتشغيل
-
-### المتطلبات
-- [Node.js](https://nodejs.org/) v18 أو أحدث
-- [MySQL](https://www.mysql.com/) v8.0 أو أحدث
-
-### الخطوات
-
-1. استنسخ المشروع وثبّت الحزم:
-   ```bash
-   git clone https://github.com/redouanDZ/myshop.git
-   cd myshop
-   npm install
-   ```
-
-2. انسخ ملف البيئة:
-   ```bash
-   cp .env.example .env
-   ```
-3. عدّل `.env` بمعلوماتك الخاصة — **لا تستخدم القيم الموجودة في `.env.example` كما هي**، خاصة `JWT_SECRET` و `COOKIE_SECRET`. ولّد قيماً عشوائية خاصة بك:
-   ```bash
-   node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
-   ```
-
-4. أنشئ قاعدة بيانات MySQL فارغة، ثم شغّل الـ migrations لإنشاء كل الجداول تلقائياً:
-   ```bash
-   npm run migrate
-   ```
-
-5. شغّل الخادم:
-   ```bash
-   npm run dev
-   ```
-   (أو `npm start` للتشغيل بدون إعادة تحميل تلقائي)
-
-6. افتح [http://localhost:3000](http://localhost:3000) — الموقع والباكند يعملان معاً من نفس الخادم.
-
-7. للوصول للوحة تحكم الأدمن، افتح `admin/index.html` (يتطلب حساب أدمن).
-
-## 🧪 الاختبارات
-
-```bash
-npm test
-```
-
-## 🛡️ ملاحظات أمنية مهمة قبل النشر الفعلي
-
-- **غيّر `JWT_SECRET` و `COOKIE_SECRET` و `DB_PASSWORD`** لقيم فريدة خاصة بك دائماً — لا تنشر المشروع أبداً بالقيم الموجودة في `.env.example`
-- تأكد أن `.env` (وليس `.env.example`) مُستثنى من Git (موجود بالفعل في `.gitignore`)
-- راجع `src/middlewares/adminMiddleware.js` للتأكد من أن مسارات الأدمن محمية بشكل صحيح قبل أي نشر عام
-
-## 📄 الترخيص
-
-راجع ملف `LICENSE` للتفاصيل.
+مشروع متجر إلكتروني متكامل وعالي الأمان مبني بأحدث معايير الويب والتجارة الإلكترونية في الجزائر، يدعم 3 لغات (العربية RTL، الفرنسية، الإنجليزية) مع باكند قوي (Node.js / Express / MySQL 8.0).
 
 ---
 
-آخر تحديث للتوثيق: أوت 2026
+## 🌟 الميزات الرئيسية
+
+- **دعم متعدد اللغات والاتجاهات**: تبديل سلس بين العربية (RTL)، الفرنسية (LTR)، والإنجليزية (LTR).
+- **نظام حسابات وجلسات آمن**: تسجيل، تسجيل دخول، إدارة عناوين، وتتبع الجلسات مع إمكانية إلغاء الجلسات النشطة.
+- **إدارة عربة التسوق والمفضلة**: دعم عربة الضيوف (Guest Cart) والمستخدمين المسجلين مع مزامنة فورية.
+- **توصيل مخصص لـ 58 ولاية جزائرية**: حساب تلقائي دقيق لتكاليف التوصيل للمنزل أو المكتب (Stop Desk).
+- **بوابة دفع إلكتروني متكاملة**: دعم الدفع عند الاستلام (COD) والدفع الإلكتروني بالبطاقة الذهبية / CIB عبر بوابة **Chargily Pay V2**.
+- **لوحة تحكم إدارية شاملة ومحمية (Admin Suite)**:
+  - 📊 الإحصائيات العامة والمبيعات
+  - 📦 إدارة المنتجات والمخزون
+  - 🛒 إدارة وتجهيز الطلبات
+  - 👥 إدارة العملاء والمستخدمين
+  - 🎟️ إدارة قسائم الخصم والكوبونات
+  - ⭐ إدارة ومراقبة تقييمات المنتجات
+- **حماية أمنية صارمة**:
+  - حماية من ثغرات IDOR، وحقن SQL، و CSRF
+  - حساب الأسعار والمجاميع من جهة الخادم حصراً
+  - حماية التنافس على المخزون (Atomic Stock Locking)
+  - التحقق من توقيع Webhook الخاص بـ Chargily عبر HMAC-SHA256
+  - سياسة أمان محتوى صارمة (CSP) و Rate Limiting لمنع الهجمات
+- **جاهز للتشغيل عبر Docker**: دعم كامل لـ `Dockerfile` و `docker-compose.yml` مع استمرارية البيانات لـ MySQL.
+
+---
+
+## 🛠️ التقنيات المستخدمة
+
+* **Frontend**: HTML5, Modern CSS3 (Grid & Flexbox), Vanilla JavaScript, Font Awesome.
+* **Backend**: Node.js, Express.js (MVC Architecture).
+* **Database**: MySQL 8.0 مع نظام Migrations ذكي ومتوافق (`database/migrate.js`).
+* **Security & Auth**: JWT, bcryptjs, Helmet, CORS, Express-Rate-Limit, CSRF Tokens.
+* **DevOps**: Docker, Docker Compose, Alpine Linux.
+
+---
+
+## 🚀 التثبيت والتشغيل السريع
+
+### 1. عبر Docker (موصى به للإنتاج)
+
+```bash
+# نسخ ملف الإعدادات
+cp .env.example .env
+
+# بناء وتشغيل الحاويات
+docker compose up --build -d
+```
+
+### 2. التثبيت المحلي المباشر
+
+#### المتطلبات:
+- Node.js v18+
+- MySQL Server 8.0+
+
+#### الخطوات:
+```bash
+# 1. تثبيت الاعتماديات
+npm install
+
+# 2. إعداد ملف البيئة
+cp .env.example .env
+# قم بتعديل .env بمعلومات قاعدة البيانات والمفاتيح السرية
+
+# 3. تشغيل الـ Migrations وتهيئة الجداول
+npm run migrate
+
+# 4. تشغيل خادم التطبيق
+npm start
+```
+
+افتح المتصفح على: `http://localhost:3000`
+
+---
+
+## 🧪 أوامر الاختبار والتحقق من الجودة
+
+```bash
+# تشغيل كامل حزمة الاختبارات الآلية (30 اختبار)
+npm test
+
+# فحص جودة الكود والمعايير (ESLint)
+npm run lint
+
+# فحص سلامة ملفات الإنتاج والترجمات والـ Migrations
+npm run build
+
+# فحص الثغرات الأمنية للحزم
+npm audit
+```
+
+---
+
+## 📄 الترخيص (License)
+
+حقوق الملكية الفكرية محفوظة لمالك المشروع. يرجى التواصل مع مالك المستودع لتحديد الترخيص التجاري المناسب.

@@ -1,97 +1,88 @@
-# إعداد وتشغيل متجر الإلكتروني
+# دليل التثبيت والتهيئة (SETUP & DEPLOYMENT GUIDE)
 
-## المتطلبات الأساسية
+---
 
-- Node.js (الإصدار 14 أو أحدث)
-- MySQL (الإصدار 5.7 أو أحدث)
-- npm أو yarn
+## 📋 المتطلبات الأساسية
 
-## إعداد قاعدة البيانات
+* **Node.js**: الإصدار 18.x أو 20.x LTS
+* **MySQL**: الإصدار 8.0+
+* **Docker & Docker Compose** (اختياري للتشغيل بالحاويات)
 
-1. قم بإنشاء قاعدة بيانات جديدة باسم `ecommerce_store`:
-   ```sql
-   CREATE DATABASE ecommerce_store CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-   ```
+---
 
-2. قم بتشغيل الخادم:
-   ```bash
-   npm install
-   npm run dev
-   ```
+## ⚙️ متغيرات البيئة (Environment Variables)
 
-3. افتح المتصفح وانتقل إلى `http://localhost:3000`
+قم بإنشاء ملف `.env` انطلاقاً من `.env.example`:
 
-## إعدادات البيئة
+| المتغير | الوصف | القيمة الافتراضية / مثال |
+|---|---|---|
+| `PORT` | منفذ تشغيل خادم التطبيق | `3000` |
+| `NODE_ENV` | بيئة التشغيل (`development` أو `production`) | `production` |
+| `DB_HOST` | عنوان مضيف MySQL | `127.0.0.1` أو `mysql` (داخل دوكر) |
+| `DB_PORT` | منفذ MySQL | `3306` |
+| `DB_NAME` | اسم قاعدة البيانات | `myshop_db` |
+| `DB_USER` | اسم مستخدم قاعدة البيانات | `myshop_user` |
+| `DB_PASSWORD` | كلمة مرور قاعدة البيانات | `your_secure_password` |
+| `JWT_SECRET` | مفتاح تشفير التوكن (32 حرفاً عشوائياً على الأقل) | *قيمة عشوائية سرية* |
+| `COOKIE_SECRET` | مفتاح تشفير الكوكيز والجلسات | *قيمة عشوائية سرية* |
+| `CHARGILY_PUBLIC_KEY` | المفتاح العام لبوابة Chargily Pay | `test_pk_...` |
+| `CHARGILY_SECRET_KEY` | المفتاح السري لبوابة Chargily Pay | `test_sk_...` |
+| `CHARGILY_MODE` | وضع التشغيل لبوابة الدفع (`test` أو `live`) | `test` |
+| `BASE_URL` | الرابط الأساسي للمتجر | `http://localhost:3000` |
 
-1. انسخ ملف `.env.example` إلى `.env`:
+---
+
+## 🚀 خيارات النشر والتشغيل
+
+### الخيار 1: التشغيل عبر Docker Compose
+
+1. قم بتهيئة ملف `.env`:
    ```bash
    cp .env.example .env
    ```
-
-2. قم بتعديل ملف `.env` مع إعدادات قاعدة البيانات الخاصة بك:
+2. شغّل الحاويات:
+   ```bash
+   docker compose up --build -d
    ```
-   DB_HOST=localhost
-   DB_USER=your_mysql_user
-   DB_PASSWORD=your_mysql_password
-   DB_NAME=ecommerce_store
-   JWT_SECRET=your-super-secret-jwt-key
-   PORT=3000
-   NODE_ENV=development
+3. للتحقق من جاهزية التطبيق:
+   ```bash
+   curl http://localhost:3000/health
+   # النتيجة المتوقعة: {"status":"UP"}
    ```
 
-## اختبار الاتصال بقاعدة البيانات
+---
 
-1. افتح المتصفح وانتقل إلى `http://localhost:3000/test-db-connection.html`
-2. اضغط على أزرار الاختبار للتحقق من الاتصال:
-   - اختبار الاتصال المباشر
-   - اختبار الاتصال عبر الخادم
-   - اختبار استعلام المنتجات
-   - اختبار استعلام المستخدمين
+### الخيار 2: التشغيل المباشر على الخادم المحلي أو VPS
 
-## تشغيل المشروع
+1. تثبيت الحزم:
+   ```bash
+   npm install
+   ```
+2. تشغيل الـ Migrations:
+   ```bash
+   npm run migrate
+   ```
+3. تشغيل الخادم للإنتاج:
+   ```bash
+   npm start
+   ```
 
-### بيئة التطوير
+---
+
+## 🧪 التحقق من الاختبارات والإنتاج
+
+قبل الإطلاق في بيئة الإنتاج، تأكد من تنفيذ الفحوصات التالية:
+
 ```bash
-npm run dev
+# 1. اختبارات الوحدة والمسارات (30/30)
+npm test
+
+# 2. فحص الأخطاء النحوية والأسلوب (ESLint)
+npm run lint
+
+# 3. فحص ملفات الإنتاج والـ Migrations
+npm run build
+
+# 4. تدقيق أمان الحزم
+npm audit
 ```
-
-### بيئة الإنتاج
-```bash
-npm start
-```
-
-## الهيكل الجديد للمشروع
-
-- `server.js`: الخادم الرئيسي للبرنامج
-- `config/database.js`: إعدادات قاعدة البيانات
-- `.env`: متغيرات البيئة (يجب نسخه من .env.example)
-- `test-db-connection.html`: صفحة لاختبار الاتصال بقاعدة البيانات
-- `js/`: ملفات الواجهة الأمامية
-  - `db-connection.js`: واجهة الاتصال بقاعدة البيانات
-  - `user-system.js`: نظام إدارة المستخدمين
-  - `cart-new.js`: نظام عربة التسوق
-  - `products.js`: نظام إدارة المنتجات
-  - `checkout.js`: نظام الدفع والطلبات
-- `admin/`: لوحة تحكم المدير
-
-## ميزات الأمان الجديدة
-
-1. تشفير كلمات المرور باستخدام bcrypt
-2. مصادقة المستخدمين باستخدام JWT
-3. حماية نقاط النهاية باستخدام Middleware
-4. تقييد معدل الطلبات (Rate Limiting)
-5. حماية HTTP headers باستخدام Helmet
-6. تمكين CORS لطلاب عبر النطاقات
-
-## تحسينات الأداء
-
-1. استخدام connection pooling لقاعدة البيانات
-2. تحسين استعلامات قاعدة البيانات
-3. تخزين مؤقت (Caching) للجلسات
-4. تحسين تحميل الموارد
-
-## ملاحظات هامة
-
-- تأكد من تحديث ملف `.env` مع بيانات قاعدة البيانات الخاصة بك
-- قم بتغيير مفتاح JWT_SECRET في بيئة الإنتاج
-- تأكد من منح صلاحيات قاعدة البيانات المناسبة

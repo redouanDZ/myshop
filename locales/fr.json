@@ -97,5 +97,57 @@
   "pwa": {
     "offline_notice": "Vous êtes actuellement hors-ligne (mode navigation). Une connexion est requise pour valider vos commandes.",
     "online_restored": "Connexion Internet rétablie avec succès !"
+  },
+  "auth": {
+    "login_title": "Connexion",
+    "register_title": "Créer un compte",
+    "email": "Adresse E-mail",
+    "password": "Mot de passe",
+    "username": "Nom d'utilisateur",
+    "phone": "Numéro de téléphone",
+    "login_btn": "Se connecter",
+    "register_btn": "Créer mon compte",
+    "no_account": "Pas encore de compte ?",
+    "have_account": "Vous avez déjà un compte ?",
+    "create_account": "Créer un nouveau compte",
+    "sign_in": "Connectez-vous",
+    "logout": "Déconnexion",
+    "admin_badge": "Administration"
+  },
+  "product": {
+    "specs_tab": "Fiche technique",
+    "reviews_tab": "Avis & Évaluations",
+    "desc_tab": "Description détaillée",
+    "similar_products": "Produits similaires",
+    "buy_now": "Acheter maintenant",
+    "add_review": "Donner votre avis",
+    "submit_review": "Envoyer l'évaluation",
+    "rating_label": "Votre note :",
+    "comment_placeholder": "Rédigez votre avis honnête sur ce produit...",
+    "quantity": "Quantité souhaitée :",
+    "no_reviews": "Aucun avis pour ce produit pour le moment. Soyez le premier à donner votre avis !"
+  },
+  "account": {
+    "title": "Mon Compte",
+    "profile": "Profil personnel",
+    "orders": "Historique des commandes",
+    "addresses": "Mes adresses de livraison",
+    "settings": "Paramètres",
+    "welcome": "Bienvenue",
+    "total_orders": "Total des commandes",
+    "add_address": "Ajouter une adresse"
+  },
+  "admin": {
+    "dashboard": "Tableau de bord",
+    "orders": "Gestion des commandes",
+    "products": "Gestion des produits",
+    "customers": "Gestion des clients",
+    "coupons": "Codes promo",
+    "reviews": "Modération des avis",
+    "visit_store": "Visiter la boutique",
+    "stats": "Statistiques",
+    "total_revenue": "Chiffre d'affaires total",
+    "total_orders": "Commandes totales",
+    "new_orders": "Nouvelles commandes"
   }
 }
