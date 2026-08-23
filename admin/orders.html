@@ -175,6 +175,10 @@
         let cachedOrders = [];
         let currentStatusFilter = 'all';
 
+        // Theme Initialization
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
         document.addEventListener('DOMContentLoaded', () => {
             // Load logged in admin name
             try {

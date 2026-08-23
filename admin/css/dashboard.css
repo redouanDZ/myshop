@@ -933,3 +933,97 @@
 .upload-btn:hover {
     background-color: #2980b9;
 }
+
+/* ========================================================
+   Admin Dashboard - Dark Mode Theme Overrides
+   ======================================================== */
+[data-theme="dark"] .admin-dashboard {
+    background-color: #0b0f19;
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .sidebar {
+    background-color: #111827;
+    border-left: 1px solid #1f2937;
+}
+
+[data-theme="dark"] .sidebar-menu a {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .sidebar-menu a:hover,
+[data-theme="dark"] .sidebar-menu a.active {
+    background-color: #1f2937;
+    color: #818cf8;
+}
+
+[data-theme="dark"] .main-content {
+    background-color: #090d16;
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .dashboard-header h1,
+[data-theme="dark"] .page-header h1 {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .chart-box,
+[data-theme="dark"] .orders-container,
+[data-theme="dark"] .products-container,
+[data-theme="dark"] .modal-content {
+    background-color: #111827 !important;
+    border-color: #1f2937 !important;
+    color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .stat-info h3,
+[data-theme="dark"] .stat-info p,
+[data-theme="dark"] .chart-box h2,
+[data-theme="dark"] h2,
+[data-theme="dark"] h3,
+[data-theme="dark"] strong {
+    color: #f1f5f9;
+}
+
+[data-theme="dark"] table thead tr {
+    background-color: #1a2234 !important;
+    border-color: #1f2937 !important;
+    color: #94a3b8;
+}
+
+[data-theme="dark"] table tbody tr {
+    border-color: #1f2937 !important;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .status-tab-btn {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .status-tab-btn.active {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+    color: #fff;
+}
+
+[data-theme="dark"] .page-btn {
+    background-color: #1f2937 !important;
+    border-color: #374151 !important;
+    color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .order-action-btn,
+[data-theme="dark"] .product-action-btn {
+    background-color: #1f2937;
+    color: #cbd5e1;
+}

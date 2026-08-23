@@ -44,6 +44,9 @@
                 <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
                 <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
                 <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
+                <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                </li>
             </ul>
         </div>
 
@@ -136,13 +139,47 @@
         let ordersChartInstance = null;
         let statusChartInstance = null;
 
+        // Theme Initialization
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+
         async function loadAdminDashboard() {
             document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('ar-DZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+            // Admin Name
+            try {
+                const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+                if (user && user.username) {
+                    const tag = document.getElementById('adminUserTag');
+                    if (tag) tag.textContent = user.username;
+                }
+            } catch(e) {}
+
+            // Admin Logout Handler
+            const logoutBtn = document.getElementById('adminLogoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    if (confirm('هل ترغب في تسجيل الخروج من لوحة الإدارة؟')) {
+                        try {
+                            const token = localStorage.getItem('authToken');
+                            await fetch('/api/logout', {
+                                method: 'POST',
+                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                            });
+                        } catch(err) {}
+                        localStorage.removeItem('authToken');
+                        localStorage.removeItem('currentUser');
+                        sessionStorage.removeItem('currentUser');
+                        window.location.href = '../account.html';
+                    }
+                });
+            }
 
             try {
                 const token = localStorage.getItem('authToken');
                 const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-                const res = await fetch('/api/admin/dashboard-stats', { headers });
+                const res = await fetch('/api/admin/dashboard-stats', { credentials: 'include', headers });
                 if (!res.ok) {
                     if (res.status === 401 || res.status === 403) {
                         alert('يرجى تسجيل الدخول بحساب مسؤول للوصول إلى لوحة التحكم');
@@ -177,18 +214,31 @@
 
         function renderMonthlyChart(trends) {
             const ctx = document.getElementById('ordersChart').getContext('2d');
-            const labels = trends.map(t => t.month);
-            const revenues = trends.map(t => Number(t.revenue || 0));
+            let labels = [];
+            let revenues = [];
+
+            if (trends && trends.length > 0) {
+                labels = trends.map(t => t.month);
+                revenues = trends.map(t => Number(t.revenue || 0));
+            } else {
+                const months = ['جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان', 'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+                const now = new Date();
+                for (let i = 5; i >= 0; i--) {
+                    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    labels.push(months[d.getMonth()] + ' ' + d.getFullYear());
+                    revenues.push(0);
+                }
+            }
 
             if (ordersChartInstance) ordersChartInstance.destroy();
 
             ordersChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: labels.length ? labels : ['مارس', 'أفريل', 'ماي', 'جوان', 'جويلية', 'أوت'],
+                    labels: labels,
                     datasets: [{
                         label: 'إجمالي المبيعات (دج)',
-                        data: revenues.length ? revenues : [150000, 230000, 380000, 490000, 680000, 850000],
+                        data: revenues,
                         backgroundColor: 'rgba(37, 99, 235, 0.75)',
                         borderColor: '#2563eb',
                         borderRadius: 6
@@ -229,7 +279,7 @@
 
         function renderLowStockList(products) {
             const container = document.getElementById('lowStockItemsList');
-            if (!products.length) {
+            if (!products || !products.length) {
                 container.innerHTML = '<p style="color: #10b981;">✅ جميع المنتجات متوفرة بمخزون كافٍ ولا توجد نواقص.</p>';
                 return;
             }
@@ -254,7 +304,7 @@
 
         function renderTopProductsList(products) {
             const container = document.getElementById('topSoldItemsList');
-            if (!products.length) {
+            if (!products || !products.length) {
                 container.innerHTML = '<p style="color: #64748b;">لا توجد مبيعات مسجلة حتى الآن.</p>';
                 return;
             }
