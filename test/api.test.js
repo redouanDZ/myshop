@@ -247,19 +247,26 @@ test('Order Confirmation and Cart Access with Async Auth Test', async () => {
     const baseUrl = `http://127.0.0.1:${port}`;
 
     try {
+        const db = require('../src/data/db-connection.js');
+        const prodRes = await db.getProducts({ inStock: true });
+        const product = (prodRes.products && prodRes.products[0]) || { id: 1, name: 'حاسوب محمول', price: 25000 };
+        if (db.pool && typeof db.pool.query === 'function') {
+            await db.pool.query('UPDATE products SET stock = 100 WHERE id = ?', [product.id]);
+        }
+
         // 1. Create guest order
         const guestOrderRes = await fetch(`${baseUrl}/api/orders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 paymentMethod: 'cod',
-                total: 25000,
+                total: Number(product.price),
                 shippingInfo: {
                     fullName: 'ضيف تجريبي',
                     phone: '0551112233',
                     city: 'الجزائر'
                 },
-                cart: [{ id: 1, name: 'حاسوب محمول', price: 25000, quantity: 1 }]
+                cart: [{ id: product.id, name: product.name, price: Number(product.price), quantity: 1 }]
             })
         });
         const guestOrderData = await guestOrderRes.json();

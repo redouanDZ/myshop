@@ -318,12 +318,26 @@ async function placeOrderNow() {
     };
 
     try {
+        const token = localStorage.getItem('authToken') || (currentUser && currentUser.token) || '';
+        const headers = { 'Content-Type': 'application/json' };
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
+        try {
+            const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+            if (csrfRes.ok) {
+                const csrfData = await csrfRes.json();
+                if (csrfData && csrfData.csrfToken) {
+                    headers['X-CSRF-Token'] = csrfData.csrfToken;
+                }
+            }
+        } catch (e) {}
+
         const response = await fetch('/api/orders', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': currentUser && currentUser.token ? `Bearer ${currentUser.token}` : ''
-            },
+            credentials: 'include',
+            headers,
             body: JSON.stringify(orderPayload)
         });
 
