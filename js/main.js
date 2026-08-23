@@ -1,5 +1,4 @@
-// Global variables
-var currentUserId = window.currentUserId || 1;
+// Global variables and initialization
 
 /**
  * Dark / Light Theme Manager

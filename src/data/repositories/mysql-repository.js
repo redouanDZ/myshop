@@ -594,7 +594,10 @@ class MysqlRepository {
   }
 
   async addToCart(userId, productId, quantity = 1) {
-    const uId = Number(userId) || 1;
+    const uId = Number(userId);
+    if (!uId || isNaN(uId) || uId <= 0) {
+      throw new Error('معرف المستخدم مطلوب للسلة');
+    }
     const pId = Number(productId);
     const qty = Math.max(1, Number(quantity) || 1);
 
@@ -617,7 +620,10 @@ class MysqlRepository {
   }
 
   async getCartItems(userId) {
-    const uId = Number(userId) || 1;
+    const uId = Number(userId);
+    if (!uId || isNaN(uId) || uId <= 0) {
+      return [];
+    }
     const [rows] = await this.pool.query(
       `SELECT ci.id, ci.product_id, ci.quantity, p.name, c.name AS category, p.price, p.image_url, p.stock
        FROM cart_items ci
