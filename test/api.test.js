@@ -69,8 +69,56 @@ test('Authentication Bypass Prevention Test', async () => {
             cookie: 'access_token=token_user_1'
         }
     };
-    const userId = parseUserFromReq(mockReq);
+    const userId = await parseUserFromReq(mockReq);
     assert.strictEqual(userId, null, 'Legacy token_user_ pattern must be rejected and return null');
+});
+
+test('Session Lifecycle and Strict Revocation Security Test', async () => {
+    const jwt = require('jsonwebtoken');
+    const config = require('../src/config/database');
+    const {
+        issueSession,
+        revokeSession,
+        createAccessToken,
+        parseUserFromReq,
+        activeSessions
+    } = require('../src/utils/tokenUtils.js');
+
+    // 1. Issue a valid session and token
+    const sessionId = await issueSession(
+        { id: 1, email: 'user@example.com', role: 'customer' },
+        { headers: { 'user-agent': 'TestRunner/1.0' }, ip: '127.0.0.1' }
+    );
+    assert.ok(sessionId, 'Session ID must be issued');
+    const token = createAccessToken({ id: 1, email: 'user@example.com', role: 'customer' }, sessionId);
+
+    // 2. Validate session works
+    const userId = await parseUserFromReq({ headers: { authorization: `Bearer ${token}` } });
+    assert.strictEqual(userId, 1, 'Valid session should return user ID 1');
+
+    // 3. Simulate server restart / in-memory cache wipe
+    activeSessions.clear();
+    const userAfterRestart = await parseUserFromReq({ headers: { authorization: `Bearer ${token}` } });
+    assert.strictEqual(userAfterRestart, 1, 'Valid session should persist and survive in-memory cache wipe via DB');
+
+    // 4. Test valid JWT signature with non-existent session ID
+    const fakeToken = jwt.sign(
+        { id: 1, email: 'user@example.com', role: 'customer', sessionId: 'fake_non_existent_session_123', type: 'access' },
+        config.JWT_SECRET,
+        { expiresIn: '15m' }
+    );
+    const fakeResult = await parseUserFromReq({ headers: { authorization: `Bearer ${fakeToken}` } });
+    assert.strictEqual(fakeResult, null, 'Valid JWT signature with non-existent session MUST be strictly rejected');
+
+    // 5. Revoke session (e.g. logout) and test rejection
+    await revokeSession(sessionId);
+    const revokedResult = await parseUserFromReq({ headers: { authorization: `Bearer ${token}` } });
+    assert.strictEqual(revokedResult, null, 'Revoked session MUST be strictly rejected');
+
+    // 6. Test revoked session survives cache wipe and remains rejected in DB
+    activeSessions.clear();
+    const revokedAfterRestart = await parseUserFromReq({ headers: { authorization: `Bearer ${token}` } });
+    assert.strictEqual(revokedAfterRestart, null, 'Revoked session in DB MUST remain strictly rejected after restart');
 });
 
 test('Guest Checkout with COD and Wilaya Test', async () => {

@@ -145,6 +145,30 @@ class StoreService {
   async isInWishlist(userId, productId) {
     return this.repository.isInWishlist(userId, productId);
   }
+
+  async createSession(sessionData) {
+    return this.repository.createSession(sessionData);
+  }
+
+  async getSession(sessionId) {
+    return this.repository.getSession(sessionId);
+  }
+
+  async touchSession(sessionId, lastSeen) {
+    return this.repository.touchSession(sessionId, lastSeen);
+  }
+
+  async revokeSession(sessionId) {
+    return this.repository.revokeSession(sessionId);
+  }
+
+  async getUserSessions(userId) {
+    return this.repository.getUserSessions(userId);
+  }
+
+  async revokeAllUserSessions(userId) {
+    return this.repository.revokeAllUserSessions(userId);
+  }
 }
 
 module.exports = {

@@ -96,7 +96,7 @@ async function login(req, res) {
         }
 
         clearLoginFailure(lockKey);
-        const sessionId = issueSession(user, req);
+        const sessionId = await issueSession(user, req);
         const accessToken = createAccessToken(user, sessionId);
         const refreshToken = createRefreshToken(user, sessionId);
         const csrfToken = randomToken();
@@ -221,13 +221,13 @@ async function refreshSession(req, res) {
             return res.status(404).json({ message: 'المستخدم غير موجود' });
         }
 
-        const newSessionId = issueSession(user, req);
+        const newSessionId = await issueSession(user, req);
         const newAccessToken = createAccessToken(user, newSessionId);
         const newRefreshToken = createRefreshToken(user, newSessionId);
         const csrfToken = randomToken();
 
         refreshTokens.delete(hashToken(refreshTokenValue));
-        revokeSession(tokenRecord.sessionId);
+        await revokeSession(tokenRecord.sessionId);
 
         setCookie(res, 'access_token', newAccessToken, { httpOnly: true, sameSite: 'lax', secure: config.isProduction, maxAge: 15 * 60 * 1000 });
         setCookie(res, 'refresh_token', newRefreshToken, { httpOnly: true, sameSite: 'lax', secure: config.isProduction, maxAge: 7 * 24 * 60 * 60 * 1000 });
@@ -255,15 +255,7 @@ async function getSession(req, res) {
 
 async function listSessions(req, res) {
     try {
-        const sessions = Array.from(activeSessions.values())
-            .filter(session => session.userId === req.userId && session.expiresAt > Date.now() && !session.revoked)
-            .map(session => ({
-                sessionId: session.sessionId,
-                userAgent: session.userAgent,
-                ip: session.ip,
-                createdAt: session.createdAt,
-                lastSeen: new Date(session.lastSeen).toISOString()
-            }));
+        const sessions = await db.getUserSessions(req.userId);
         res.json({ sessions });
     } catch (error) {
         console.error('Session listing error:', error);
@@ -273,11 +265,11 @@ async function listSessions(req, res) {
 
 async function revokeUserSession(req, res) {
     try {
-        const session = activeSessions.get(req.params.sessionId);
+        const session = await db.getSession(req.params.sessionId);
         if (!session || session.userId !== req.userId) {
             return res.status(404).json({ message: 'الجلسة غير موجودة' });
         }
-        revokeSession(req.params.sessionId);
+        await revokeSession(req.params.sessionId);
         res.json({ message: 'تم إلغاء الجلسة بنجاح.' });
     } catch (error) {
         console.error('Revoke session error:', error);
@@ -285,10 +277,10 @@ async function revokeUserSession(req, res) {
     }
 }
 
-function logout(req, res) {
+async function logout(req, res) {
     const sessionId = req.sessionId || null;
     if (sessionId) {
-        revokeSession(sessionId);
+        await revokeSession(sessionId);
     }
     const refreshTokenValue = getCookie(req, 'refresh_token');
     if (refreshTokenValue) {

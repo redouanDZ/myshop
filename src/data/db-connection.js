@@ -75,5 +75,11 @@ module.exports = {
     addToWishlist: buildProxy('addToWishlist'),
     removeFromWishlist: buildProxy('removeFromWishlist'),
     getWishlist: buildProxy('getWishlist'),
-    isInWishlist: buildProxy('isInWishlist')
+    isInWishlist: buildProxy('isInWishlist'),
+    createSession: buildProxy('createSession'),
+    getSession: buildProxy('getSession'),
+    touchSession: buildProxy('touchSession'),
+    revokeSession: buildProxy('revokeSession'),
+    getUserSessions: buildProxy('getUserSessions'),
+    revokeAllUserSessions: buildProxy('revokeAllUserSessions')
 };

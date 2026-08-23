@@ -947,6 +947,67 @@ class MysqlRepository {
     );
     return rows.length > 0;
   }
+
+  async createSession(sessionData) {
+    const { sessionId, userId, userAgent = 'unknown', ip = 'unknown', expiresAt, lastSeen } = sessionData;
+    await this.pool.query(
+      'INSERT INTO sessions (session_id, user_id, user_agent, ip, revoked, expires_at, last_seen) VALUES (?, ?, ?, ?, 0, ?, ?)',
+      [
+        String(sessionId),
+        Number(userId),
+        String(userAgent || 'unknown').substring(0, 255),
+        String(ip || 'unknown').substring(0, 64),
+        Number(expiresAt),
+        Number(lastSeen || Date.now())
+      ]
+    );
+    return true;
+  }
+
+  async getSession(sessionId) {
+    const [rows] = await this.pool.query('SELECT * FROM sessions WHERE session_id = ? LIMIT 1', [String(sessionId)]);
+    if (!rows[0]) return null;
+    const row = rows[0];
+    return {
+      sessionId: row.session_id,
+      userId: Number(row.user_id),
+      userAgent: row.user_agent,
+      ip: row.ip,
+      revoked: Boolean(row.revoked),
+      expiresAt: Number(row.expires_at),
+      lastSeen: Number(row.last_seen),
+      createdAt: row.created_at
+    };
+  }
+
+  async touchSession(sessionId, lastSeen = Date.now()) {
+    await this.pool.query('UPDATE sessions SET last_seen = ? WHERE session_id = ?', [Number(lastSeen), String(sessionId)]);
+    return true;
+  }
+
+  async revokeSession(sessionId) {
+    const [result] = await this.pool.query('UPDATE sessions SET revoked = 1 WHERE session_id = ?', [String(sessionId)]);
+    return result.affectedRows > 0;
+  }
+
+  async getUserSessions(userId) {
+    const [rows] = await this.pool.query(
+      'SELECT * FROM sessions WHERE user_id = ? AND revoked = 0 AND expires_at > ? ORDER BY last_seen DESC',
+      [Number(userId), Date.now()]
+    );
+    return rows.map(row => ({
+      sessionId: row.session_id,
+      userAgent: row.user_agent,
+      ip: row.ip,
+      createdAt: row.created_at,
+      lastSeen: new Date(Number(row.last_seen)).toISOString()
+    }));
+  }
+
+  async revokeAllUserSessions(userId) {
+    await this.pool.query('UPDATE sessions SET revoked = 1 WHERE user_id = ?', [Number(userId)]);
+    return true;
+  }
 }
 
 function createMysqlRepository(pool) {
@@ -1317,6 +1378,60 @@ function createFallbackRepository() {
     async isInWishlist(userId, productId) {
       if (!state.wishlist) state.wishlist = [];
       return state.wishlist.some(w => w.userId === Number(userId) && w.productId === Number(productId));
+    },
+    async createSession(sessionData) {
+      if (!state.sessions) state.sessions = [];
+      const session = {
+        sessionId: String(sessionData.sessionId),
+        userId: Number(sessionData.userId),
+        userAgent: String(sessionData.userAgent || 'unknown'),
+        ip: String(sessionData.ip || 'unknown'),
+        revoked: false,
+        expiresAt: Number(sessionData.expiresAt),
+        lastSeen: Number(sessionData.lastSeen || Date.now()),
+        createdAt: new Date().toISOString()
+      };
+      state.sessions.push(session);
+      return true;
+    },
+    async getSession(sessionId) {
+      if (!state.sessions) state.sessions = [];
+      const session = state.sessions.find(s => s.sessionId === String(sessionId));
+      if (!session) return null;
+      return { ...session };
+    },
+    async touchSession(sessionId, lastSeen = Date.now()) {
+      if (!state.sessions) state.sessions = [];
+      const session = state.sessions.find(s => s.sessionId === String(sessionId));
+      if (session) session.lastSeen = Number(lastSeen);
+      return true;
+    },
+    async revokeSession(sessionId) {
+      if (!state.sessions) state.sessions = [];
+      const session = state.sessions.find(s => s.sessionId === String(sessionId));
+      if (!session) return false;
+      session.revoked = true;
+      return true;
+    },
+    async getUserSessions(userId) {
+      if (!state.sessions) state.sessions = [];
+      const now = Date.now();
+      return state.sessions
+        .filter(s => s.userId === Number(userId) && !s.revoked && s.expiresAt > now)
+        .map(s => ({
+          sessionId: s.sessionId,
+          userAgent: s.userAgent,
+          ip: s.ip,
+          createdAt: s.createdAt,
+          lastSeen: new Date(Number(s.lastSeen)).toISOString()
+        }));
+    },
+    async revokeAllUserSessions(userId) {
+      if (!state.sessions) state.sessions = [];
+      state.sessions.forEach(s => {
+        if (s.userId === Number(userId)) s.revoked = true;
+      });
+      return true;
     }
   };
   return repo;

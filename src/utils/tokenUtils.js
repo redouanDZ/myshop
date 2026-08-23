@@ -88,28 +88,55 @@ function createRefreshToken(user, sessionId) {
     return tokenValue;
 }
 
-function issueSession(user, req) {
+const db = require('../data/db-connection.js');
+
+async function issueSession(user, req) {
     const sessionId = randomToken();
+    const userAgent = (req.headers && req.headers['user-agent']) || 'unknown';
+    const ip = req.ip || (req.connection && req.connection.remoteAddress) || 'unknown';
+    const now = Date.now();
+    const expiresAt = now + SESSION_TTL;
+
     const sessionRecord = {
         userId: Number(user.id),
         sessionId,
-        userAgent: (req.headers && req.headers['user-agent']) || 'unknown',
-        ip: req.ip || 'unknown',
+        userAgent: String(userAgent).substring(0, 255),
+        ip: String(ip).substring(0, 64),
         createdAt: new Date().toISOString(),
-        lastSeen: Date.now(),
+        lastSeen: now,
         revoked: false,
-        expiresAt: Date.now() + SESSION_TTL
+        expiresAt
     };
     activeSessions.set(sessionId, sessionRecord);
+
+    try {
+        await db.createSession({
+            sessionId,
+            userId: Number(user.id),
+            userAgent,
+            ip,
+            expiresAt,
+            lastSeen: now
+        });
+    } catch (err) {
+        console.error('Failed to persist session to database:', err.message);
+    }
+
     return sessionId;
 }
 
-function revokeSession(sessionId) {
+async function revokeSession(sessionId) {
     if (!sessionId) return false;
     const session = activeSessions.get(sessionId);
-    if (!session) return false;
-    session.revoked = true;
-    activeSessions.delete(sessionId);
+    if (session) {
+        session.revoked = true;
+        activeSessions.delete(sessionId);
+    }
+    try {
+        await db.revokeSession(sessionId);
+    } catch (err) {
+        console.error('Failed to revoke session in database:', err.message);
+    }
     return true;
 }
 
@@ -123,21 +150,33 @@ function getAccessTokenFromRequest(req) {
     return null;
 }
 
-function parseUserFromReq(req) {
+async function parseUserFromReq(req) {
     const token = getAccessTokenFromRequest(req);
     if (!token) return null;
 
     try {
         const decoded = jwt.verify(token, config.JWT_SECRET);
-        if (!decoded || !decoded.id) return null;
+        if (!decoded || !decoded.id || !decoded.sessionId) return null;
 
-        if (decoded.sessionId && activeSessions.has(decoded.sessionId)) {
-            const session = activeSessions.get(decoded.sessionId);
-            if (session.userId !== Number(decoded.id) || session.revoked || session.expiresAt <= Date.now()) {
-                return null;
+        let session = activeSessions.get(decoded.sessionId);
+        if (!session) {
+            try {
+                session = await db.getSession(decoded.sessionId);
+                if (session) {
+                    activeSessions.set(decoded.sessionId, session);
+                }
+            } catch (err) {
+                console.error('Failed to fetch session from database:', err.message);
             }
-            session.lastSeen = Date.now();
         }
+
+        // Strict session check: session must exist, match user, not revoked, and not expired
+        if (!session || session.userId !== Number(decoded.id) || session.revoked || session.expiresAt <= Date.now()) {
+            return null;
+        }
+
+        session.lastSeen = Date.now();
+        db.touchSession(decoded.sessionId, session.lastSeen).catch(() => {});
 
         return Number(decoded.id);
     } catch (error) {
