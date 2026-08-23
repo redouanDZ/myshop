@@ -278,18 +278,40 @@ async function revokeUserSession(req, res) {
 }
 
 async function logout(req, res) {
-    const sessionId = req.sessionId || null;
-    if (sessionId) {
-        await revokeSession(sessionId);
+    try {
+        let sessionId = req.sessionId || null;
+        if (!sessionId) {
+            const token = getAccessTokenFromRequest(req);
+            if (token) {
+                try {
+                    const decoded = jwt.verify(token, config.JWT_SECRET, { ignoreExpiration: true });
+                    if (decoded && decoded.sessionId) {
+                        sessionId = decoded.sessionId;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        if (sessionId) {
+            await revokeSession(sessionId);
+        }
+
+        const refreshTokenValue = getCookie(req, 'refresh_token');
+        if (refreshTokenValue) {
+            refreshTokens.delete(hashToken(refreshTokenValue));
+        }
+
+        clearCookie(res, 'access_token');
+        clearCookie(res, 'refresh_token');
+        clearCookie(res, 'csrf_token');
+        res.json({ message: 'تم تسجيل الخروج بنجاح' });
+    } catch (err) {
+        console.error('Logout error:', err);
+        clearCookie(res, 'access_token');
+        clearCookie(res, 'refresh_token');
+        clearCookie(res, 'csrf_token');
+        res.json({ message: 'تم تسجيل الخروج بنجاح' });
     }
-    const refreshTokenValue = getCookie(req, 'refresh_token');
-    if (refreshTokenValue) {
-        refreshTokens.delete(hashToken(refreshTokenValue));
-    }
-    clearCookie(res, 'access_token');
-    clearCookie(res, 'refresh_token');
-    clearCookie(res, 'csrf_token');
-    res.json({ message: 'تم تسجيل الخروج بنجاح' });
 }
 
 module.exports = {

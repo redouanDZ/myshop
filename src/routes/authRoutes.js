@@ -5,7 +5,7 @@ const { requireAuth } = require('../middlewares/authMiddleware');
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
-router.post('/logout', requireAuth, authController.logout);
+router.post('/logout', authController.logout);
 router.get('/csrf-token', authController.getCsrfToken);
 router.post('/auth/verify-email', authController.verifyEmail);
 router.post('/auth/forgot-password', authController.forgotPassword);
