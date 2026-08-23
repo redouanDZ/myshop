@@ -4,7 +4,7 @@ const mailService = require('../services/mailService');
 
 async function createOrder(req, res) {
     try {
-        const authUserId = parseUserFromReq(req);
+        const authUserId = await parseUserFromReq(req);
         const orderData = req.body || {};
         const requestedUserId = orderData.userId ? Number(orderData.userId) : null;
 
@@ -77,7 +77,7 @@ async function getOrderById(req, res) {
         const order = await db.getOrderById(req.params.id);
         if (!order) return res.status(404).json({ error: 'الطلب غير موجود' });
 
-        const authUserId = parseUserFromReq(req);
+        const authUserId = await parseUserFromReq(req);
         let isAuthorized = false;
 
         if (authUserId) {

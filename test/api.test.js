@@ -124,10 +124,12 @@ test('Session Lifecycle and Strict Revocation Security Test', async () => {
 test('Guest Checkout with COD and Wilaya Test', async () => {
     const db = require('../src/data/db-connection.js');
     const guestPhone = '0555123456';
+    const prodRes = await db.getProducts({ inStock: true });
+    const product = (prodRes.products && prodRes.products[0]) || { id: 1, price: 18500, name: 'منتج تجريبي' };
     const orderRes = await db.createOrder({
         userId: null,
         paymentMethod: 'cod',
-        total: 18500,
+        total: Number(product.price),
         shippingInfo: {
             fullName: 'عميل زائر',
             phone: guestPhone,
@@ -139,7 +141,7 @@ test('Guest Checkout with COD and Wilaya Test', async () => {
             deliveryType: 'home',
             shippingCost: 550
         },
-        cart: [{ id: 2, name: 'ذاكرة سامسونج', price: 18500, quantity: 1 }]
+        cart: [{ id: product.id, name: product.name, price: Number(product.price), quantity: 1 }]
     });
 
     const orderId = typeof orderRes === 'object' ? orderRes.id : orderRes;
@@ -234,6 +236,55 @@ test('Multi-language AR/FR/EN Localization Files Test', async () => {
     assert.ok(ar.nav && ar.common && ar.cart && ar.checkout, 'Arabic dictionary must have core sections');
     assert.ok(fr.nav && fr.common && fr.cart && fr.checkout, 'French dictionary must have core sections');
     assert.ok(en.nav && en.common && en.cart && en.checkout, 'English dictionary must have core sections');
+});
+
+test('Order Confirmation and Cart Access with Async Auth Test', async () => {
+    const app = require('../src/app');
+    const http = require('http');
+    const server = http.createServer(app);
+    await new Promise(resolve => server.listen(0, resolve));
+    const port = server.address().port;
+    const baseUrl = `http://127.0.0.1:${port}`;
+
+    try {
+        // 1. Create guest order
+        const guestOrderRes = await fetch(`${baseUrl}/api/orders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                paymentMethod: 'cod',
+                total: 25000,
+                shippingInfo: {
+                    fullName: 'ضيف تجريبي',
+                    phone: '0551112233',
+                    city: 'الجزائر'
+                },
+                cart: [{ id: 1, name: 'حاسوب محمول', price: 25000, quantity: 1 }]
+            })
+        });
+        const guestOrderData = await guestOrderRes.json();
+        assert.strictEqual(guestOrderRes.status, 201, 'Guest order should be created');
+        assert.ok(guestOrderData.id, 'Order ID must be returned');
+
+        // 2. Fetch guest order via GET /api/orders/:id (simulating order confirmation page)
+        const fetchOrderRes = await fetch(`${baseUrl}/api/orders/${guestOrderData.id}`);
+        const fetchOrderData = await fetchOrderRes.json();
+        assert.strictEqual(fetchOrderRes.status, 200, 'Order confirmation page must successfully retrieve guest order');
+        assert.strictEqual(Number(fetchOrderData.id), Number(guestOrderData.id));
+
+        // 3. Cart operations for guest
+        const addCartRes = await fetch(`${baseUrl}/api/cart/add`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: 1, quantity: 2 })
+        });
+        assert.strictEqual(addCartRes.status, 201, 'Guest should be able to add to cart');
+
+        const getCartRes = await fetch(`${baseUrl}/api/cart/1`);
+        assert.strictEqual(getCartRes.status, 200, 'Guest should be able to get cart');
+    } finally {
+        await new Promise(resolve => server.close(resolve));
+    }
 });
 
 test.after(async () => {

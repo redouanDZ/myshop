@@ -3,7 +3,7 @@ const { parseUserFromReq } = require('../utils/tokenUtils');
 
 async function addToCart(req, res) {
     try {
-        const authUserId = parseUserFromReq(req);
+        const authUserId = await parseUserFromReq(req);
         const requestedUserId = Number(req.body.userId);
         if (!authUserId && requestedUserId) {
             return res.status(400).json({ error: 'يجب تسجيل الدخول لتحديد مستخدم آخر' });
@@ -29,7 +29,7 @@ async function addToCart(req, res) {
 
 async function getCartItems(req, res) {
     try {
-        const authUserId = parseUserFromReq(req);
+        const authUserId = await parseUserFromReq(req);
         const requestedUserId = Number(req.params.userId);
         const targetUserId = authUserId || requestedUserId || 1;
 
