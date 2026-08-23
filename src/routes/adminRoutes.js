@@ -6,4 +6,19 @@ const { requireAdmin } = require('../middlewares/adminMiddleware');
 router.get('/dashboard-stats', requireAdmin, adminController.getDashboardStats);
 router.get('/store-config', adminController.getPublicConfig);
 
+// Customers Management
+router.get('/users', requireAdmin, adminController.getAdminUsers);
+router.get('/users/:id', requireAdmin, adminController.getAdminUserById);
+
+// Coupons Management
+router.get('/coupons', requireAdmin, adminController.getAdminCoupons);
+router.post('/coupons', requireAdmin, adminController.createCoupon);
+router.put('/coupons/:id', requireAdmin, adminController.updateCoupon);
+router.delete('/coupons/:id', requireAdmin, adminController.deleteCoupon);
+
+// Reviews Moderation
+router.get('/reviews', requireAdmin, adminController.getAdminReviews);
+router.put('/reviews/:id/status', requireAdmin, adminController.updateReviewStatus);
+router.delete('/reviews/:id', requireAdmin, adminController.deleteReview);
+
 module.exports = router;

@@ -149,6 +149,47 @@ async function recommendations(req, res) {
     }
 }
 
+async function getProductReviews(req, res) {
+    try {
+        const productId = parseInt(req.params.id, 10);
+        if (isNaN(productId)) return res.status(400).json({ error: 'معرف المنتج غير صالح' });
+        const reviews = await db.getProductReviews(productId);
+        res.json(reviews);
+    } catch (error) {
+        console.error('Error fetching product reviews:', error);
+        res.status(500).json({ error: 'خطأ في جلب تقييمات المنتج' });
+    }
+}
+
+async function addProductReview(req, res) {
+    try {
+        const productId = parseInt(req.params.id, 10);
+        if (isNaN(productId)) return res.status(400).json({ error: 'معرف المنتج غير صالح' });
+        const userId = req.userId;
+        if (!userId) return res.status(401).json({ error: 'يجب تسجيل الدخول لإضافة تقييم' });
+
+        const rating = parseInt(req.body.rating, 10);
+        const comment = sanitizeString(req.body.comment || '', '');
+
+        if (isNaN(rating) || rating < 1 || rating > 5) {
+            return res.status(400).json({ error: 'التقييم يجب أن يكون بين 1 و 5 نجوم' });
+        }
+
+        const id = await db.createProductReview({
+            productId,
+            userId,
+            rating,
+            comment,
+            status: 'approved'
+        });
+
+        res.status(201).json({ message: 'تمت إضافة تقييمك بنجاح! ⭐', id });
+    } catch (error) {
+        console.error('Error adding product review:', error);
+        res.status(500).json({ error: 'خطأ في إضافة التقييم' });
+    }
+}
+
 module.exports = {
     createProduct,
     getProducts,
@@ -156,5 +197,7 @@ module.exports = {
     updateProduct,
     deleteProduct,
     autocomplete,
-    recommendations
+    recommendations,
+    getProductReviews,
+    addProductReview
 };

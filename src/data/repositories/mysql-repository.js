@@ -1069,6 +1069,278 @@ class MysqlRepository {
     await this.pool.query('UPDATE sessions SET revoked = 1 WHERE user_id = ?', [Number(userId)]);
     return true;
   }
+
+  // --- Admin Customers Management ---
+  async getAdminUsers(options = {}) {
+    const { search, page = 1, limit = 20 } = options;
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.max(1, Math.min(100, Number(limit) || 20));
+    const offset = (pageNum - 1) * limitNum;
+    const queryParams = [];
+    let whereClause = ' WHERE 1 = 1';
+
+    if (search) {
+      whereClause += ' AND (LOWER(u.username) LIKE ? OR LOWER(u.email) LIKE ? OR u.phone LIKE ?)';
+      const term = `%${String(search).trim().toLowerCase()}%`;
+      queryParams.push(term, term, term);
+    }
+
+    const countSql = `SELECT COUNT(*) as total FROM users u ${whereClause}`;
+    const [countRows] = await this.pool.query(countSql, queryParams);
+    const total = Number(countRows[0]?.total || 0);
+
+    const usersSql = `
+      SELECT u.id, u.username, u.email, u.phone, u.role, u.created_at,
+             COUNT(DISTINCT o.id) AS orders_count,
+             COALESCE(SUM(CASE WHEN o.status != 'cancelled' THEN o.total ELSE 0 END), 0) AS total_spent
+      FROM users u
+      LEFT JOIN orders o ON o.user_id = u.id
+      ${whereClause}
+      GROUP BY u.id, u.username, u.email, u.phone, u.role, u.created_at
+      ORDER BY u.created_at DESC
+      LIMIT ? OFFSET ?
+    `;
+    const [rows] = await this.pool.query(usersSql, [...queryParams, limitNum, offset]);
+    return {
+      users: rows.map(r => ({
+        id: Number(r.id),
+        username: r.username,
+        email: r.email,
+        phone: r.phone,
+        role: r.role,
+        created_at: r.created_at,
+        orders_count: Number(r.orders_count || 0),
+        total_spent: Number(r.total_spent || 0)
+      })),
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum) || 1
+    };
+  }
+
+  async getAdminUserById(userId) {
+    const user = await this.findUserById(userId);
+    if (!user) return null;
+    const { password: _, ...safeUser } = user;
+    const orders = await this.getOrders(userId);
+    return {
+      ...safeUser,
+      orders
+    };
+  }
+
+  // --- Coupons Management ---
+  async getCoupons(options = {}) {
+    const { search, status } = options;
+    let sql = 'SELECT * FROM coupons WHERE 1 = 1';
+    const params = [];
+    if (status && status !== 'all') {
+      sql += ' AND status = ?';
+      params.push(status);
+    }
+    if (search) {
+      sql += ' AND LOWER(code) LIKE ?';
+      params.push(`%${String(search).trim().toLowerCase()}%`);
+    }
+    sql += ' ORDER BY created_at DESC';
+    const [rows] = await this.pool.query(sql, params);
+    return rows.map(r => ({
+      id: Number(r.id),
+      code: r.code,
+      discount_percent: Number(r.discount_percent),
+      discount_amount: Number(r.discount_amount),
+      min_order_amount: Number(r.min_order_amount),
+      max_uses: Number(r.max_uses),
+      uses_count: Number(r.uses_count),
+      status: r.status,
+      expires_at: r.expires_at,
+      created_at: r.created_at
+    }));
+  }
+
+  async getCouponByCode(code) {
+    if (!code) return null;
+    const [rows] = await this.pool.query('SELECT * FROM coupons WHERE LOWER(code) = LOWER(?) LIMIT 1', [String(code).trim()]);
+    if (!rows[0]) return null;
+    const r = rows[0];
+    return {
+      id: Number(r.id),
+      code: r.code,
+      discount_percent: Number(r.discount_percent),
+      discount_amount: Number(r.discount_amount),
+      min_order_amount: Number(r.min_order_amount),
+      max_uses: Number(r.max_uses),
+      uses_count: Number(r.uses_count),
+      status: r.status,
+      expires_at: r.expires_at,
+      created_at: r.created_at
+    };
+  }
+
+  async createCoupon(data) {
+    const code = String(data.code || '').trim().toUpperCase();
+    if (!code) throw new Error('رمز الكوبون مطلوب');
+    const [result] = await this.pool.query(
+      'INSERT INTO coupons (code, discount_percent, discount_amount, min_order_amount, max_uses, status, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [
+        code,
+        Math.max(0, Math.min(100, Number(data.discountPercent || data.discount_percent || 0))),
+        Math.max(0, Number(data.discountAmount || data.discount_amount || 0)),
+        Math.max(0, Number(data.minOrderAmount || data.min_order_amount || 0)),
+        Math.max(1, Number(data.maxUses || data.max_uses || 100)),
+        data.status || 'active',
+        data.expiresAt || data.expires_at || null
+      ]
+    );
+    return Number(result.insertId);
+  }
+
+  async updateCoupon(id, data) {
+    const updates = [];
+    const params = [];
+    if (data.status) {
+      updates.push('status = ?');
+      params.push(data.status);
+    }
+    if (data.max_uses !== undefined || data.maxUses !== undefined) {
+      updates.push('max_uses = ?');
+      params.push(Number(data.max_uses || data.maxUses));
+    }
+    if (data.discount_percent !== undefined || data.discountPercent !== undefined) {
+      updates.push('discount_percent = ?');
+      params.push(Number(data.discount_percent || data.discountPercent));
+    }
+    if (data.discount_amount !== undefined || data.discountAmount !== undefined) {
+      updates.push('discount_amount = ?');
+      params.push(Number(data.discount_amount || data.discountAmount));
+    }
+    if (data.min_order_amount !== undefined || data.minOrderAmount !== undefined) {
+      updates.push('min_order_amount = ?');
+      params.push(Number(data.min_order_amount || data.minOrderAmount));
+    }
+    if (data.expires_at !== undefined || data.expiresAt !== undefined) {
+      updates.push('expires_at = ?');
+      params.push(data.expires_at || data.expiresAt || null);
+    }
+    if (!updates.length) return true;
+    params.push(Number(id));
+    const [result] = await this.pool.query(`UPDATE coupons SET ${updates.join(', ')} WHERE id = ?`, params);
+    return result.affectedRows > 0;
+  }
+
+  async deleteCoupon(id) {
+    const [result] = await this.pool.query('DELETE FROM coupons WHERE id = ?', [Number(id)]);
+    return result.affectedRows > 0;
+  }
+
+  async incrementCouponUsage(code) {
+    if (!code) return;
+    await this.pool.query('UPDATE coupons SET uses_count = uses_count + 1 WHERE LOWER(code) = LOWER(?)', [String(code).trim()]);
+  }
+
+  // --- Product Reviews Management ---
+  async getProductReviews(productId) {
+    const [rows] = await this.pool.query(
+      `SELECT r.id, r.product_id, r.user_id, r.rating, r.comment, r.status, r.created_at, u.username
+       FROM product_reviews r
+       JOIN users u ON u.id = r.user_id
+       WHERE r.product_id = ? AND r.status = 'approved'
+       ORDER BY r.created_at DESC`,
+      [Number(productId)]
+    );
+    return rows.map(r => ({
+      id: Number(r.id),
+      productId: Number(r.product_id),
+      userId: Number(r.user_id),
+      username: r.username,
+      rating: Number(r.rating),
+      comment: r.comment,
+      status: r.status,
+      created_at: r.created_at
+    }));
+  }
+
+  async createProductReview(data) {
+    const [result] = await this.pool.query(
+      'INSERT INTO product_reviews (product_id, user_id, rating, comment, status) VALUES (?, ?, ?, ?, ?)',
+      [
+        Number(data.productId),
+        Number(data.userId),
+        Math.max(1, Math.min(5, Math.trunc(Number(data.rating) || 5))),
+        String(data.comment || '').trim().substring(0, 1000),
+        data.status || 'approved'
+      ]
+    );
+    return Number(result.insertId);
+  }
+
+  async getAdminReviews(options = {}) {
+    const { status, productId, search, page = 1, limit = 20 } = options;
+    const pageNum = Math.max(1, Number(page) || 1);
+    const limitNum = Math.max(1, Math.min(100, Number(limit) || 20));
+    const offset = (pageNum - 1) * limitNum;
+    const queryParams = [];
+    let whereClause = ' WHERE 1 = 1';
+    if (status && status !== 'all') {
+      whereClause += ' AND r.status = ?';
+      queryParams.push(status);
+    }
+    if (productId) {
+      whereClause += ' AND r.product_id = ?';
+      queryParams.push(Number(productId));
+    }
+    if (search) {
+      whereClause += ' AND (LOWER(p.name) LIKE ? OR LOWER(u.username) LIKE ? OR LOWER(r.comment) LIKE ?)';
+      const term = `%${String(search).trim().toLowerCase()}%`;
+      queryParams.push(term, term, term);
+    }
+
+    const countSql = `SELECT COUNT(*) as total FROM product_reviews r JOIN products p ON p.id = r.product_id JOIN users u ON u.id = r.user_id ${whereClause}`;
+    const [countRows] = await this.pool.query(countSql, queryParams);
+    const total = Number(countRows[0]?.total || 0);
+
+    const reviewsSql = `
+      SELECT r.id, r.product_id, r.user_id, r.rating, r.comment, r.status, r.created_at,
+             p.name AS product_name, p.image_url AS product_image, u.username, u.email
+      FROM product_reviews r
+      JOIN products p ON p.id = r.product_id
+      JOIN users u ON u.id = r.user_id
+      ${whereClause}
+      ORDER BY r.created_at DESC
+      LIMIT ? OFFSET ?
+    `;
+    const [rows] = await this.pool.query(reviewsSql, [...queryParams, limitNum, offset]);
+    return {
+      reviews: rows.map(r => ({
+        id: Number(r.id),
+        productId: Number(r.product_id),
+        productName: r.product_name,
+        productImage: r.product_image,
+        userId: Number(r.user_id),
+        username: r.username,
+        email: r.email,
+        rating: Number(r.rating),
+        comment: r.comment,
+        status: r.status,
+        created_at: r.created_at
+      })),
+      total,
+      page: pageNum,
+      totalPages: Math.ceil(total / limitNum) || 1
+    };
+  }
+
+  async updateReviewStatus(id, status) {
+    const allowed = ['approved', 'pending', 'rejected'];
+    if (!allowed.includes(status)) throw new Error('حالة المراجعة غير صالحة');
+    const [result] = await this.pool.query('UPDATE product_reviews SET status = ? WHERE id = ?', [status, Number(id)]);
+    return result.affectedRows > 0;
+  }
+
+  async deleteReview(id) {
+    const [result] = await this.pool.query('DELETE FROM product_reviews WHERE id = ?', [Number(id)]);
+    return result.affectedRows > 0;
+  }
 }
 
 function createMysqlRepository(pool) {
@@ -1500,6 +1772,242 @@ function createFallbackRepository() {
       state.sessions.forEach(s => {
         if (s.userId === Number(userId)) s.revoked = true;
       });
+      return true;
+    },
+
+    // --- In-Memory Admin Customers ---
+    async getAdminUsers(options = {}) {
+      const { search, page = 1, limit = 20 } = options;
+      let list = state.users.map(u => {
+        const userOrders = (state.orders || []).filter(o => Number(o.user_id) === Number(u.id));
+        const totalSpent = userOrders.reduce((sum, o) => o.status !== 'cancelled' ? sum + Number(o.total || 0) : sum, 0);
+        return {
+          id: Number(u.id),
+          username: u.username,
+          email: u.email,
+          phone: u.phone,
+          role: u.role,
+          created_at: u.created_at || new Date().toISOString(),
+          orders_count: userOrders.length,
+          total_spent: totalSpent
+        };
+      });
+
+      if (search) {
+        const q = String(search).toLowerCase();
+        list = list.filter(u => u.username.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || (u.phone && u.phone.includes(q)));
+      }
+
+      const total = list.length;
+      const pageNum = Math.max(1, Number(page) || 1);
+      const limitNum = Math.max(1, Number(limit) || 20);
+      const offset = (pageNum - 1) * limitNum;
+
+      return {
+        users: list.slice(offset, offset + limitNum),
+        total,
+        page: pageNum,
+        totalPages: Math.ceil(total / limitNum) || 1
+      };
+    },
+
+    async getAdminUserById(userId) {
+      const user = state.users.find(u => Number(u.id) === Number(userId));
+      if (!user) return null;
+      const { password: _, ...safeUser } = user;
+      const addresses = (user.addresses || []).map(a => ({ ...a }));
+      const orders = (state.orders || []).filter(o => Number(o.user_id) === Number(userId));
+      return {
+        ...safeUser,
+        addresses,
+        orders
+      };
+    },
+
+    // --- In-Memory Coupons ---
+    async getCoupons(options = {}) {
+      if (!state.coupons) {
+        state.coupons = [
+          { id: 1, code: 'SAVE10', discount_percent: 10, discount_amount: 0, min_order_amount: 1000, max_uses: 500, uses_count: 5, status: 'active', expires_at: null, created_at: new Date().toISOString() },
+          { id: 2, code: 'SAVE20', discount_percent: 20, discount_amount: 0, min_order_amount: 3000, max_uses: 200, uses_count: 12, status: 'active', expires_at: null, created_at: new Date().toISOString() },
+          { id: 3, code: 'RAMADAN500', discount_percent: 0, discount_amount: 500, min_order_amount: 5000, max_uses: 100, uses_count: 35, status: 'active', expires_at: null, created_at: new Date().toISOString() }
+        ];
+      }
+      let list = [...state.coupons];
+      if (options.status && options.status !== 'all') {
+        list = list.filter(c => c.status === options.status);
+      }
+      if (options.search) {
+        const q = String(options.search).toUpperCase();
+        list = list.filter(c => c.code.includes(q));
+      }
+      return list;
+    },
+
+    async getCouponByCode(code) {
+      if (!state.coupons) {
+        state.coupons = [
+          { id: 1, code: 'SAVE10', discount_percent: 10, discount_amount: 0, min_order_amount: 1000, max_uses: 500, uses_count: 5, status: 'active', expires_at: null, created_at: new Date().toISOString() },
+          { id: 2, code: 'SAVE20', discount_percent: 20, discount_amount: 0, min_order_amount: 3000, max_uses: 200, uses_count: 12, status: 'active', expires_at: null, created_at: new Date().toISOString() }
+        ];
+      }
+      const c = state.coupons.find(item => item.code.toUpperCase() === String(code).trim().toUpperCase());
+      return c ? { ...c } : null;
+    },
+
+    async createCoupon(data) {
+      if (!state.coupons) state.coupons = [];
+      const code = String(data.code || '').trim().toUpperCase();
+      if (!code) throw new Error('رمز الكوبون مطلوب');
+      if (state.coupons.some(c => c.code === code)) {
+        throw new Error('رمز الكوبون مستخدم مسبقاً');
+      }
+      const id = state.coupons.length + 1;
+      const newCoupon = {
+        id,
+        code,
+        discount_percent: Number(data.discountPercent || data.discount_percent || 0),
+        discount_amount: Number(data.discountAmount || data.discount_amount || 0),
+        min_order_amount: Number(data.minOrderAmount || data.min_order_amount || 0),
+        max_uses: Number(data.maxUses || data.max_uses || 100),
+        uses_count: 0,
+        status: data.status || 'active',
+        expires_at: data.expiresAt || data.expires_at || null,
+        created_at: new Date().toISOString()
+      };
+      state.coupons.push(newCoupon);
+      return id;
+    },
+
+    async updateCoupon(id, data) {
+      if (!state.coupons) state.coupons = [];
+      const c = state.coupons.find(item => item.id === Number(id));
+      if (!c) return false;
+      if (data.status) c.status = data.status;
+      if (data.max_uses !== undefined || data.maxUses !== undefined) c.max_uses = Number(data.max_uses || data.maxUses);
+      if (data.discount_percent !== undefined || data.discountPercent !== undefined) c.discount_percent = Number(data.discount_percent || data.discountPercent);
+      if (data.discount_amount !== undefined || data.discountAmount !== undefined) c.discount_amount = Number(data.discount_amount || data.discountAmount);
+      if (data.min_order_amount !== undefined || data.minOrderAmount !== undefined) c.min_order_amount = Number(data.min_order_amount || data.minOrderAmount);
+      if (data.expires_at !== undefined || data.expiresAt !== undefined) c.expires_at = data.expires_at || data.expiresAt;
+      return true;
+    },
+
+    async deleteCoupon(id) {
+      if (!state.coupons) state.coupons = [];
+      const idx = state.coupons.findIndex(c => c.id === Number(id));
+      if (idx === -1) return false;
+      state.coupons.splice(idx, 1);
+      return true;
+    },
+
+    async incrementCouponUsage(code) {
+      if (!state.coupons) return;
+      const c = state.coupons.find(item => item.code.toUpperCase() === String(code).trim().toUpperCase());
+      if (c) c.uses_count = (c.uses_count || 0) + 1;
+    },
+
+    // --- In-Memory Product Reviews ---
+    async getProductReviews(productId) {
+      if (!state.reviews) {
+        state.reviews = [
+          { id: 1, product_id: 1, user_id: 1, username: 'أحمد بن علي', rating: 5, comment: 'منتج رائع جداً وجودة ممتازة، أنصح به بشدة!', status: 'approved', created_at: new Date().toISOString() },
+          { id: 2, product_id: 1, user_id: 2, username: 'سارة مراد', rating: 4, comment: 'توصيل سريع وتغليف احترافي، شكراً لكم.', status: 'approved', created_at: new Date().toISOString() }
+        ];
+      }
+      return state.reviews
+        .filter(r => Number(r.product_id) === Number(productId) && r.status === 'approved')
+        .map(r => ({
+          id: r.id,
+          productId: r.product_id,
+          userId: r.user_id,
+          username: r.username,
+          rating: r.rating,
+          comment: r.comment,
+          status: r.status,
+          created_at: r.created_at
+        }));
+    },
+
+    async createProductReview(data) {
+      if (!state.reviews) state.reviews = [];
+      const user = state.users.find(u => Number(u.id) === Number(data.userId));
+      const id = state.reviews.length + 1;
+      const review = {
+        id,
+        product_id: Number(data.productId),
+        user_id: Number(data.userId),
+        username: user ? user.username : 'مستخدم',
+        rating: Math.max(1, Math.min(5, Math.trunc(Number(data.rating) || 5))),
+        comment: String(data.comment || '').trim(),
+        status: data.status || 'approved',
+        created_at: new Date().toISOString()
+      };
+      state.reviews.push(review);
+      return id;
+    },
+
+    async getAdminReviews(options = {}) {
+      if (!state.reviews) {
+        state.reviews = [
+          { id: 1, product_id: 1, user_id: 1, username: 'أحمد بن علي', rating: 5, comment: 'منتج ممتاز، أنصح به', status: 'approved', created_at: new Date().toISOString() },
+          { id: 2, product_id: 2, user_id: 1, username: 'أحمد بن علي', rating: 4, comment: 'جيد جداً والتوصيل سريع', status: 'approved', created_at: new Date().toISOString() }
+        ];
+      }
+      let list = state.reviews.map(r => {
+        const prod = state.products.find(p => Number(p.id) === Number(r.product_id));
+        const user = state.users.find(u => Number(u.id) === Number(r.user_id));
+        return {
+          id: r.id,
+          productId: r.product_id,
+          productName: prod ? prod.name : 'منتج',
+          productImage: prod ? (prod.image_url || prod.image) : '/images/product-placeholder.jpg',
+          userId: r.user_id,
+          username: r.username || (user ? user.username : 'مستخدم'),
+          email: user ? user.email : '',
+          rating: r.rating,
+          comment: r.comment,
+          status: r.status,
+          created_at: r.created_at
+        };
+      });
+
+      if (options.status && options.status !== 'all') {
+        list = list.filter(r => r.status === options.status);
+      }
+      if (options.productId) {
+        list = list.filter(r => Number(r.productId) === Number(options.productId));
+      }
+      if (options.search) {
+        const q = String(options.search).toLowerCase();
+        list = list.filter(r => r.productName.toLowerCase().includes(q) || r.username.toLowerCase().includes(q) || r.comment.toLowerCase().includes(q));
+      }
+
+      const total = list.length;
+      const pageNum = Math.max(1, Number(options.page) || 1);
+      const limitNum = Math.max(1, Number(options.limit) || 20);
+      const offset = (pageNum - 1) * limitNum;
+
+      return {
+        reviews: list.slice(offset, offset + limitNum),
+        total,
+        page: pageNum,
+        totalPages: Math.ceil(total / limitNum) || 1
+      };
+    },
+
+    async updateReviewStatus(id, status) {
+      if (!state.reviews) return false;
+      const r = state.reviews.find(item => item.id === Number(id));
+      if (!r) return false;
+      r.status = status;
+      return true;
+    },
+
+    async deleteReview(id) {
+      if (!state.reviews) return false;
+      const idx = state.reviews.findIndex(item => item.id === Number(id));
+      if (idx === -1) return false;
+      state.reviews.splice(idx, 1);
       return true;
     }
   };

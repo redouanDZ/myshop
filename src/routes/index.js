@@ -10,6 +10,7 @@ const wilayaRoutes = require('./wilayaRoutes');
 const adminRoutes = require('./adminRoutes');
 const paymentRoutes = require('./paymentRoutes');
 const wishlistRoutes = require('./wishlistRoutes');
+const couponRoutes = require('./couponRoutes');
 
 // Mount routes
 router.use('/', authRoutes);
@@ -21,5 +22,6 @@ router.use('/wilayas', wilayaRoutes);
 router.use('/admin', adminRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/wishlist', wishlistRoutes);
+router.use('/coupons', couponRoutes);
 
 module.exports = router;

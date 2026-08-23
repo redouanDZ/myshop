@@ -360,15 +360,27 @@ async function placeOrderNow() {
         // If Chargily Pay selected: Redirect to payment gateway
         if (paymentMethod === 'chargily') {
             try {
+                const token = localStorage.getItem('authToken');
+                const headers = { 'Content-Type': 'application/json' };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+                if (trackingToken) headers['X-Tracking-Token'] = trackingToken;
+
                 const payRes = await fetch('/api/payments/chargily/checkout', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ orderId })
+                    credentials: 'include',
+                    headers,
+                    body: JSON.stringify({ 
+                        orderId,
+                        token: trackingToken,
+                        phone
+                    })
                 });
                 const payData = await payRes.json();
                 if (payRes.ok && payData.checkoutUrl) {
                     window.location.href = payData.checkoutUrl;
                     return;
+                } else if (!payRes.ok) {
+                    console.error('Chargily checkout creation failed:', payData.error);
                 }
             } catch (payErr) {
                 console.error('Chargily redirect error:', payErr);

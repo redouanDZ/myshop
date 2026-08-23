@@ -115,9 +115,36 @@
 
                 loadProductOptions(currentProduct);
                 loadSimilarProducts(currentProduct.category);
+                loadProductReviews(currentProduct.id);
             } catch (error) {
                 alert('خطأ في تحميل المنتج');
             }
+        }
+
+        async function loadProductReviews(productId) {
+            const container = document.getElementById('reviews-container');
+            if (!container) return;
+            try {
+                const res = await fetch(`/api/products/${productId}/reviews`);
+                if (!res.ok) return;
+                const reviews = await res.json();
+                if (!reviews || !reviews.length) {
+                    container.innerHTML = '<p style="color:#64748b; padding:15px;">لا توجد تقييمات لهذا المنتج بعد. كن أول من يقيّم هذا المنتج!</p>';
+                    return;
+                }
+                container.innerHTML = reviews.map(r => `
+                    <div class="review-item" style="border-bottom: 1px solid #f1f5f9; padding: 12px 0;">
+                        <div class="review-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                            <div class="reviewer-info">
+                                <strong class="reviewer-name">${r.username || 'عميل المتجر'}</strong>
+                                <span class="review-date" style="color: #64748b; font-size: 0.85rem; margin-right: 8px;">${new Date(r.created_at || Date.now()).toLocaleDateString('ar-DZ')}</span>
+                            </div>
+                            <div class="review-rating" style="color: #f59e0b;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+                        </div>
+                        <div class="review-content"><p style="margin: 0; color: #334155;">${r.comment || ''}</p></div>
+                    </div>
+                `).join('');
+            } catch (e) {}
         }
 
         function switchImage(index) {
@@ -220,36 +247,45 @@
             }));
         }
 
-        function submitReview() {
-            const rating = document.getElementById('review-rating').value;
+        async function submitReview() {
+            if (!currentProduct) return;
+            const rating = parseInt(document.getElementById('review-rating').value, 10);
             const comment = document.getElementById('review-comment').value.trim();
-            if (rating < 1 || !comment) {
-                if (window.showToast) {
-                    window.showToast('يرجى إضافة تقييم وتعليق', 'warning');
-                } else {
-                    alert('يرجى إضافة تقييم وتعليق');
-                }
+            if (isNaN(rating) || rating < 1 || !comment) {
+                if (window.showToast) window.showToast('يرجى اختيار التقييم بالنجوم وكتابة تعليقك', 'warning');
+                else alert('يرجى اختيار التقييم بالنجوم وكتابة تعليقك');
                 return;
             }
-            // يمكن إضافة POST /api/reviews لاحقًا
-            const reviewsContainer = document.getElementById('reviews-container');
-            const newReview = document.createElement('div');
-            newReview.className = 'review-item';
-            newReview.innerHTML = `
-                <div class="review-header">
-                    <div class="reviewer-info"><div class="reviewer-name">مستخدم ${currentUserId}</div><div class="review-date">${new Date().toLocaleDateString('ar-SA')}</div></div>
-                    <div class="review-rating">${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}</div>
-                </div>
-                <div class="review-content"><p>${comment}</p></div>
-            `;
-            reviewsContainer.insertBefore(newReview, reviewsContainer.firstChild);
-            document.getElementById('review-comment').value = '';
-            document.getElementById('review-rating').value = 0;
-            updateStars(0);
-            if (window.showToast) {
-                window.showToast('تم إضافة المراجعة بنجاح! ⭐', 'success');
-            } else {
-                alert('تم إضافة المراجعة بنجاح');
+
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                if (window.showToast) window.showToast('يرجى تسجيل الدخول أولاً لإضافة تقييمك ⭐', 'warning');
+                else alert('يرجى تسجيل الدخول أولاً لإضافة تقييمك');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/products/${currentProduct.id}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ rating, comment })
+                });
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'فشل إرسال التقييم');
+
+                if (window.showToast) window.showToast(data.message || 'تمت إضافة تقييمك بنجاح! ⭐', 'success');
+                else alert(data.message || 'تمت إضافة تقييمك بنجاح! ⭐');
+
+                document.getElementById('review-comment').value = '';
+                document.getElementById('review-rating').value = 0;
+                updateStars(0);
+                loadProductReviews(currentProduct.id);
+            } catch (err) {
+                if (window.showToast) window.showToast(err.message, 'error');
+                else alert(err.message);
             }
         }
 

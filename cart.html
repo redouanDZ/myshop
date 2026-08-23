@@ -330,18 +330,28 @@
       summaryBox.style.display = 'block';
 
       const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const shippingCost = subtotal > 5000 || subtotal === 0 ? 0 : 300;
       const discount = Math.round(subtotal * discountRate);
-      const total = subtotal + shippingCost - discount;
+      const estimatedTotal = Math.max(0, subtotal - discount);
 
       summaryBox.innerHTML = `
         <h2>ملخص الطلب</h2>
-        <div class="summary-item"><span>المجموع الفرعي</span><span>${subtotal.toLocaleString()} دج</span></div>
-        <div class="summary-item"><span>الشحن ${subtotal > 5000 ? '<small style="color:#2ecc71;">(مجاني)</small>' : ''}</span><span>${shippingCost === 0 ? 'مجاني' : shippingCost.toLocaleString() + ' دج'}</span></div>
+        <div class="summary-item"><span>المجموع الفرعي</span><strong style="color:#1e293b;">${subtotal.toLocaleString()} دج</strong></div>
+        <div class="summary-item" style="border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;">
+          <span>مصاريف الشحن</span>
+          <span style="font-size: 0.88rem; color: #2563eb; font-weight: bold;">
+            <i class="fas fa-truck" style="margin-left: 4px;"></i> تُحسب حسب الولاية عند الدفع
+          </span>
+        </div>
         ${discount > 0 ? `<div class="summary-item discount" style="color:#2ecc71;"><span>الخصم</span><span>-${discount.toLocaleString()} دج</span></div>` : ''}
-        <div class="summary-total"><span>الإجمالي النهائي</span><span>${total.toLocaleString()} دج</span></div>
+        <div class="summary-total">
+          <span>المجموع (قبل الشحن)</span>
+          <strong style="color: #e74c3c; font-size: 1.25rem;">${estimatedTotal.toLocaleString()} دج</strong>
+        </div>
+        <p style="font-size: 0.82rem; color: #64748b; margin: 8px 0 14px; line-height: 1.4;">
+          * سيتم احتساب تكلفة التوصيل الدقيقة (400 - 900 دج) وإضافتها للإجمالي النهائي بعد اختيار ولايتك في صفحة الدفع.
+        </p>
         
-        <div class="promo-code" style="margin-top: 15px;">
+        <div class="promo-code" style="margin-top: 10px;">
           <input type="text" id="promo-code" placeholder="رمز الخصم (مثال: SAVE10)" value="${discountRate === 0.1 ? 'SAVE10' : discountRate === 0.2 ? 'SAVE20' : ''}">
           <button type="button" class="apply-promo" onclick="applyPromoCode()">تطبيق</button>
         </div>
@@ -351,23 +361,58 @@
     }
 
     // تطبيق كود الخصم
-    function applyPromoCode() {
+    async function applyPromoCode() {
       const codeInput = document.getElementById('promo-code');
       if (!codeInput) return;
 
       const code = codeInput.value.trim().toUpperCase();
-      if (code === 'SAVE10') {
-        discountRate = 0.1;
-        if (window.showToast) window.showToast('تم تطبيق خصم 10% بنجاح! 🎉', 'success');
-        else alert('تم تطبيق خصم 10% بنجاح! 🎉');
-      } else if (code === 'SAVE20') {
-        discountRate = 0.2;
-        if (window.showToast) window.showToast('تم تطبيق خصم 20% بنجاح! 🎉', 'success');
-        else alert('تم تطبيق خصم 20% بنجاح! 🎉');
-      } else {
+      if (!code) {
         discountRate = 0;
-        if (window.showToast) window.showToast('رمز الخصم غير صحيح. جرب SAVE10 أو SAVE20', 'error');
-        else alert('رمز الخصم غير صحيح. جرب SAVE10 أو SAVE20');
+        updateSummary();
+        return;
+      }
+
+      const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      try {
+        const response = await fetch('/api/coupons/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, orderAmount: subtotal })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.valid) {
+          if (data.discountPercent > 0) {
+            discountRate = data.discountPercent / 100;
+          } else if (data.calculatedDiscount > 0 && subtotal > 0) {
+            discountRate = data.calculatedDiscount / subtotal;
+          } else {
+            discountRate = 0.1;
+          }
+          if (window.showToast) window.showToast(data.message || 'تم تطبيق الخصم بنجاح! 🎉', 'success');
+          else alert('تم تطبيق الخصم بنجاح! 🎉');
+        } else {
+          // Fallback to static codes for offline/demo
+          if (code === 'SAVE10') {
+            discountRate = 0.1;
+            if (window.showToast) window.showToast('تم تطبيق خصم 10% بنجاح! 🎉', 'success');
+            else alert('تم تطبيق خصم 10% بنجاح! 🎉');
+          } else if (code === 'SAVE20') {
+            discountRate = 0.2;
+            if (window.showToast) window.showToast('تم تطبيق خصم 20% بنجاح! 🎉', 'success');
+            else alert('تم تطبيق خصم 20% بنجاح! 🎉');
+          } else {
+            discountRate = 0;
+            const errMsg = data.error || 'رمز الخصم غير صالح';
+            if (window.showToast) window.showToast(errMsg, 'error');
+            else alert(errMsg);
+          }
+        }
+      } catch (err) {
+        if (code === 'SAVE10') discountRate = 0.1;
+        else if (code === 'SAVE20') discountRate = 0.2;
+        else discountRate = 0;
       }
       updateSummary();
     }

@@ -77,5 +77,18 @@ module.exports = {
     touchSession: buildProxy('touchSession'),
     revokeSession: buildProxy('revokeSession'),
     getUserSessions: buildProxy('getUserSessions'),
-    revokeAllUserSessions: buildProxy('revokeAllUserSessions')
+    revokeAllUserSessions: buildProxy('revokeAllUserSessions'),
+    getAdminUsers: buildProxy('getAdminUsers'),
+    getAdminUserById: buildProxy('getAdminUserById'),
+    getCoupons: buildProxy('getCoupons'),
+    getCouponByCode: buildProxy('getCouponByCode'),
+    createCoupon: buildProxy('createCoupon'),
+    updateCoupon: buildProxy('updateCoupon'),
+    deleteCoupon: buildProxy('deleteCoupon'),
+    incrementCouponUsage: buildProxy('incrementCouponUsage'),
+    getProductReviews: buildProxy('getProductReviews'),
+    createProductReview: buildProxy('createProductReview'),
+    getAdminReviews: buildProxy('getAdminReviews'),
+    updateReviewStatus: buildProxy('updateReviewStatus'),
+    deleteReview: buildProxy('deleteReview')
 };

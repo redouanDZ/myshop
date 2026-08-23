@@ -489,3 +489,177 @@ test('Phase 11: Non-existent API route returns 404 JSON', async () => {
     const data = await res.json();
     assert.strictEqual(data.message, 'المسار غير موجود');
 });
+
+test('Phase 2 — Commercial Readiness: Admin Customers Management', async () => {
+    // 1. Unauthenticated /api/admin/users must return 401
+    const unauthRes = await fetch(`${baseUrl}/api/admin/users`);
+    assert.strictEqual(unauthRes.status, 401);
+
+    // 2. Non-admin user /api/admin/users must return 403
+    const forbiddenRes = await fetch(`${baseUrl}/api/admin/users`, {
+        headers: { 'Authorization': `Bearer ${userAToken}` }
+    });
+    assert.strictEqual(forbiddenRes.status, 403);
+
+    // 3. Admin user /api/admin/users must return 200 with list of users
+    const adminRes = await fetch(`${baseUrl}/api/admin/users`, {
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(adminRes.status, 200);
+    const data = await adminRes.json();
+    assert.ok(Array.isArray(data.users), 'Expected users array');
+    assert.ok(data.users.length > 0);
+    // Verify no password hash is exposed
+    assert.strictEqual(data.users[0].password, undefined);
+
+    // 4. Admin fetch user by ID
+    const userDetailRes = await fetch(`${baseUrl}/api/admin/users/${userAId}`, {
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(userDetailRes.status, 200);
+    const userDetail = await userDetailRes.json();
+    assert.strictEqual(userDetail.password, undefined);
+    assert.ok(Array.isArray(userDetail.addresses));
+});
+
+test('Phase 2 — Commercial Readiness: Coupons Management & Public Validation', async () => {
+    const testCode = 'SUMMERTEST' + Math.floor(Math.random() * 10000);
+
+    // 1. Admin creates coupon
+    const createRes = await fetch(`${baseUrl}/api/admin/coupons`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+            code: testCode,
+            discountPercent: 15,
+            minOrderAmount: 1000,
+            maxUses: 50,
+            status: 'active'
+        })
+    });
+    assert.strictEqual(createRes.status, 201);
+    const created = await createRes.json();
+    const couponId = created.id;
+
+    // 2. Validate coupon with valid amount
+    const valRes = await fetch(`${baseUrl}/api/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: testCode, orderAmount: 2000 })
+    });
+    assert.strictEqual(valRes.status, 200);
+    const valData = await valRes.json();
+    assert.strictEqual(valData.valid, true);
+    assert.strictEqual(valData.calculatedDiscount, 300);
+
+    // 3. Validate coupon below min order amount
+    const minOrderRes = await fetch(`${baseUrl}/api/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: testCode, orderAmount: 500 })
+    });
+    assert.strictEqual(minOrderRes.status, 400);
+
+    // 4. Admin toggles coupon status to inactive
+    const toggleRes = await fetch(`${baseUrl}/api/admin/coupons/${couponId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({ status: 'inactive' })
+    });
+    assert.strictEqual(toggleRes.status, 200);
+
+    // 5. Inactive coupon should fail validation
+    const inactiveVal = await fetch(`${baseUrl}/api/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: testCode, orderAmount: 2000 })
+    });
+    assert.strictEqual(inactiveVal.status, 400);
+});
+
+test('Phase 2 — Commercial Readiness: Product Reviews Management & Moderation', async () => {
+    // 1. Unauthenticated add review returns 401
+    const unauthRev = await fetch(`${baseUrl}/api/products/1/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating: 5, comment: 'Great product' })
+    });
+    assert.strictEqual(unauthRev.status, 401);
+
+    // 2. Authenticated user adds review
+    const authRev = await fetch(`${baseUrl}/api/products/1/reviews`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAToken}`
+        },
+        body: JSON.stringify({ rating: 5, comment: 'تقييم ممتاز للمنتج رقم 1' })
+    });
+    assert.strictEqual(authRev.status, 201);
+    const revData = await authRev.json();
+    const reviewId = revData.id;
+
+    // 3. Public get approved reviews for product 1
+    const publicRevRes = await fetch(`${baseUrl}/api/products/1/reviews`);
+    assert.strictEqual(publicRevRes.status, 200);
+    const pubReviews = await publicRevRes.json();
+    assert.ok(Array.isArray(pubReviews));
+
+    // 4. Admin reviews list
+    const adminRevRes = await fetch(`${baseUrl}/api/admin/reviews`, {
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(adminRevRes.status, 200);
+    const adminRevData = await adminRevRes.json();
+    assert.ok(Array.isArray(adminRevData.reviews));
+
+    // 5. Admin updates review status to rejected
+    const rejectRes = await fetch(`${baseUrl}/api/admin/reviews/${reviewId}/status`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({ status: 'rejected' })
+    });
+    assert.strictEqual(rejectRes.status, 200);
+});
+
+test('Phase 2 — Commercial Readiness: Chargily Checkout Authorization Protection', async () => {
+    await ensureStock();
+
+    // 1. User A creates an order
+    const orderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAToken}`
+        },
+        body: JSON.stringify({
+            userId: userAId,
+            shippingInfo: { fullName: 'المستخدم أ', phone: '0550000000', wilayaId: 16 },
+            cart: [{ id: 1, quantity: 1 }]
+        })
+    });
+    assert.strictEqual(orderRes.status, 201);
+    const orderData = await orderRes.json();
+    const userAOrderId = orderData.id;
+
+    // 2. User B attempting to pay for User A's order must be rejected with 403
+    const crossPayRes = await fetch(`${baseUrl}/api/payments/chargily/checkout`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userBToken}`
+        },
+        body: JSON.stringify({ orderId: userAOrderId })
+    });
+    assert.strictEqual(crossPayRes.status, 403, 'Cross-user payment attempt must be rejected with 403');
+});
+

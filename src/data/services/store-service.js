@@ -169,6 +169,58 @@ class StoreService {
   async revokeAllUserSessions(userId) {
     return this.repository.revokeAllUserSessions(userId);
   }
+
+  async getAdminUsers(options) {
+    return this.repository.getAdminUsers(options);
+  }
+
+  async getAdminUserById(userId) {
+    return this.repository.getAdminUserById(userId);
+  }
+
+  async getCoupons(options) {
+    return this.repository.getCoupons(options);
+  }
+
+  async getCouponByCode(code) {
+    return this.repository.getCouponByCode(code);
+  }
+
+  async createCoupon(data) {
+    return this.repository.createCoupon(data);
+  }
+
+  async updateCoupon(id, data) {
+    return this.repository.updateCoupon(id, data);
+  }
+
+  async deleteCoupon(id) {
+    return this.repository.deleteCoupon(id);
+  }
+
+  async incrementCouponUsage(code) {
+    return this.repository.incrementCouponUsage(code);
+  }
+
+  async getProductReviews(productId) {
+    return this.repository.getProductReviews(productId);
+  }
+
+  async createProductReview(data) {
+    return this.repository.createProductReview(data);
+  }
+
+  async getAdminReviews(options) {
+    return this.repository.getAdminReviews(options);
+  }
+
+  async updateReviewStatus(id, status) {
+    return this.repository.updateReviewStatus(id, status);
+  }
+
+  async deleteReview(id) {
+    return this.repository.deleteReview(id);
+  }
 }
 
 module.exports = {

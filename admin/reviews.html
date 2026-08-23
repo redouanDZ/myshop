@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة ومراجعة تقييمات المنتجات - لوحة التحكم</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .review-action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: #f1f5f9;
+            color: #334155;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 4px;
+            transition: all 0.2s;
+        }
+        .review-action-btn.approve-btn:hover { background: #10b981; color: #fff; }
+        .review-action-btn.reject-btn:hover { background: #f59e0b; color: #fff; }
+        .review-action-btn.delete-btn:hover { background: #dc2626; color: #fff; }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        .status-approved { background: #d1fae5; color: #065f46; }
+        .status-pending { background: #fef3c7; color: #92400e; }
+        .status-rejected { background: #fee2e2; color: #991b1b; }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .stars-gold { color: #f59e0b; }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">المتجر الإلكتروني</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">زيارة المتجر</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
+                    <li><a href="orders.html">الطلبات</a></li>
+                    <li><a href="products.html">المنتجات</a></li>
+                    <li><a href="customers.html">العملاء</a></li>
+                    <li><a href="coupons.html">الكوبونات</a></li>
+                    <li><a href="reviews.html" class="active">التقييمات</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="../account.html" class="user-icon" title="حساب الأدمن">
+                    <i class="fas fa-user-shield"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>لوحة الإدارة</h2>
+                <p id="adminUserTag">مدير النظام</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
+                <li><a href="customers.html"><i class="fas fa-users"></i> إدارة العملاء</a></li>
+                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
+                <li><a href="reviews.html" class="active"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
+                <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
+                <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <h1>إدارة ومراقبة تقييمات العملاء</h1>
+                <div>
+                    <span id="reviewsCountDisplay" style="font-weight: bold; color: #2563eb;"></span>
+                </div>
+            </div>
+
+            <!-- Filters Bar -->
+            <div class="filters-bar" style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                <div style="flex: 1; min-width: 200px;">
+                    <input type="text" id="searchInput" placeholder="البحث باسم المنتج، العميل أو التعليق..." style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
+                </div>
+                <div>
+                    <select id="statusFilter" style="padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
+                        <option value="all">جميع الحالات</option>
+                        <option value="approved">موافق عليه</option>
+                        <option value="pending">قيد المراجعة</option>
+                        <option value="rejected">مرفوض</option>
+                    </select>
+                </div>
+                <div>
+                    <button onclick="loadAdminReviews(1)" class="btn" style="background: #2563eb; color: #fff; padding: 9px 18px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold;">
+                        <i class="fas fa-filter"></i> تصفية
+                    </button>
+                </div>
+            </div>
+
+            <!-- Reviews Table -->
+            <div class="table-responsive">
+                <table class="data-table" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: right;">
+                            <th style="padding: 12px 15px;">#</th>
+                            <th style="padding: 12px 15px;">المنتج</th>
+                            <th style="padding: 12px 15px;">العميل</th>
+                            <th style="padding: 12px 15px; text-align: center;">التقييم</th>
+                            <th style="padding: 12px 15px;">التعليق والملاحظات</th>
+                            <th style="padding: 12px 15px; text-align: center;">التاريخ</th>
+                            <th style="padding: 12px 15px; text-align: center;">الحالة</th>
+                            <th style="padding: 12px 15px; text-align: center;">إجراءات المراقبة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reviews-tbody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">
+                                <i class="fas fa-spinner fa-spin"></i> جاري تحميل التقييمات...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination" style="display: flex; justify-content: center; gap: 8px; margin-top: 20px;"></div>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+
+        async function verifyAdminAuth() {
+            const token = localStorage.getItem('authToken');
+            try {
+                const res = await fetch('/api/user/profile', {
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                if (!res.ok) throw new Error('Not authorized');
+                const user = await res.json();
+                if (user.role !== 'admin') window.location.href = '../index.html';
+                const userTag = document.getElementById('adminUserTag');
+                if (userTag) userTag.textContent = user.username || 'مدير النظام';
+            } catch (e) {
+                window.location.href = '../index.html';
+            }
+        }
+
+        async function loadAdminReviews(page = 1) {
+            currentPage = page;
+            const search = (document.getElementById('searchInput').value || '').trim();
+            const status = document.getElementById('statusFilter').value;
+            const token = localStorage.getItem('authToken');
+            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+
+            let url = `/api/admin/reviews?page=${page}&limit=15&status=${status}`;
+            if (search) url += `&search=${encodeURIComponent(search)}`;
+
+            try {
+                const res = await fetch(url, { headers });
+                if (!res.ok) throw new Error('فشل جلب التقييمات');
+                const data = await res.json();
+
+                const reviews = data.reviews || [];
+                totalPages = data.totalPages || 1;
+                document.getElementById('reviewsCountDisplay').textContent = `إجمالي التقييمات: ${data.total || reviews.length}`;
+
+                renderReviewsTable(reviews);
+                renderPagination(currentPage, totalPages);
+            } catch (err) {
+                const tbody = document.getElementById('reviews-tbody');
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">خطأ: ${err.message}</td></tr>`;
+            }
+        }
+
+        function renderReviewsTable(reviews) {
+            const tbody = document.getElementById('reviews-tbody');
+            if (!reviews || !reviews.length) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">لا توجد تقييمات مطابقة</td></tr>';
+                return;
+            }
+
+            const statusLabels = { 'approved': 'موافق عليه ✅', 'pending': 'قيد المراجعة ⏳', 'rejected': 'مرفوض ❌' };
+
+            tbody.innerHTML = reviews.map(r => {
+                const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                return `
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 12px 15px; font-weight: bold;">${r.id}</td>
+                        <td style="padding: 12px 15px;">
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <img src="${r.productImage || '../images/product-placeholder.jpg'}" style="width: 36px; height: 36px; border-radius: 4px; object-fit: cover;">
+                                <strong>${r.productName}</strong>
+                            </div>
+                        </td>
+                        <td style="padding: 12px 15px;">
+                            <strong>${r.username}</strong>
+                            <div style="font-size: 0.8rem; color: #64748b;">${r.email || ''}</div>
+                        </td>
+                        <td style="padding: 12px 15px; text-align: center; font-size: 1.1rem;" class="stars-gold">${stars}</td>
+                        <td style="padding: 12px 15px; max-width: 250px; font-size: 0.9rem; color: #334155;">${r.comment || '<span style="color:#94a3b8;">بدون تعليق نصي</span>'}</td>
+                        <td style="padding: 12px 15px; text-align: center; color: #64748b; font-size: 0.85rem;">${new Date(r.created_at).toLocaleDateString('ar-DZ')}</td>
+                        <td style="padding: 12px 15px; text-align: center;"><span class="status-badge status-${r.status}">${statusLabels[r.status] || r.status}</span></td>
+                        <td style="padding: 12px 15px; text-align: center;">
+                            ${r.status !== 'approved' ? `<button class="review-action-btn approve-btn" onclick="updateReviewStatus(${r.id}, 'approved')" title="الموافقة على النشر"><i class="fas fa-check"></i></button>` : ''}
+                            ${r.status !== 'rejected' ? `<button class="review-action-btn reject-btn" onclick="updateReviewStatus(${r.id}, 'rejected')" title="رفض وحجب"><i class="fas fa-ban"></i></button>` : ''}
+                            <button class="review-action-btn delete-btn" onclick="deleteReview(${r.id})" title="حذف نهائي"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderPagination(current, total) {
+            const container = document.getElementById('pagination');
+            if (total <= 1) { container.innerHTML = ''; return; }
+            let html = '';
+            for (let i = 1; i <= total; i++) {
+                html += `<button class="btn" style="padding: 6px 12px; border-radius: 4px; border: 1px solid #cbd5e1; background: ${i === current ? '#2563eb' : '#fff'}; color: ${i === current ? '#fff' : '#334155'}; font-weight: bold; cursor: pointer;" onclick="loadAdminReviews(${i})">${i}</button>`;
+            }
+            container.innerHTML = html;
+        }
+
+        async function updateReviewStatus(id, newStatus) {
+            try {
+                const token = localStorage.getItem('authToken');
+                const res = await fetch(`/api/admin/reviews/${id}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                if (!res.ok) throw new Error('فشل تحديث الحالة');
+                loadAdminReviews(currentPage);
+            } catch (err) {
+                alert('خطأ: ' + err.message);
+            }
+        }
+
+        async function deleteReview(id) {
+            if (!confirm('هل أنت متأكد من رغبتك في حذف هذا التقييم نهائياً؟')) return;
+            try {
+                const token = localStorage.getItem('authToken');
+                const res = await fetch(`/api/admin/reviews/${id}`, {
+                    method: 'DELETE',
+                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                });
+                if (!res.ok) throw new Error('فشل حذف التقييم');
+                alert('تم حذف التقييم بنجاح');
+                loadAdminReviews(currentPage);
+            } catch (err) {
+                alert('خطأ: ' + err.message);
+            }
+        }
+
+        document.getElementById('adminLogoutBtn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            window.location.href = '../index.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await verifyAdminAuth();
+            loadAdminReviews(1);
+        });
+    </script>
+</body>
+</html>
