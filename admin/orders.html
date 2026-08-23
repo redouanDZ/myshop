@@ -17,6 +17,7 @@
             border: 1.5px solid #cbd5e1;
             background: #fff;
             outline: none;
+            transition: all 0.2s ease;
         }
         .status-select.pending { background: #fef3c7; color: #d97706; border-color: #fde68a; }
         .status-select.processing { background: #e0f2fe; color: #0284c7; border-color: #bae6fd; }
@@ -34,14 +35,35 @@
             background: #f1f5f9;
             color: #334155;
             text-decoration: none;
+            border: none;
+            cursor: pointer;
             margin-left: 4px;
             transition: all 0.2s;
         }
         .order-action-btn:hover { background: #2563eb; color: #fff; }
-        .order-action-btn.invoice-btn:hover { background: #10b981; }
+        .order-action-btn.view-btn:hover { background: #0284c7; color: #fff; }
+        .order-action-btn.invoice-btn:hover { background: #10b981; color: #fff; }
+        
+        .status-tab-btn {
+            padding: 6px 14px;
+            border: 1px solid #cbd5e1;
+            background: #fff;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-weight: 500;
+            color: #475569;
+            transition: all 0.2s;
+        }
+        .status-tab-btn.active {
+            background: #2563eb;
+            color: #fff;
+            border-color: #2563eb;
+        }
     </style>
 </head>
 <body>
+    <!-- Header -->
     <header>
         <div class="container">
             <div class="logo">
@@ -49,31 +71,42 @@
             </div>
             <nav>
                 <ul>
-                    <li><a href="../index.html">الموقع</a></li>
-                    <li><a href="index.html">الإحصائيات</a></li>
+                    <li><a href="../index.html">زيارة المتجر</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
                     <li><a href="orders.html" class="active">الطلبات</a></li>
                     <li><a href="products.html">المنتجات</a></li>
                 </ul>
             </nav>
+            <div class="user-actions">
+                <a href="../account.html" class="user-icon" title="حساب الأدمن">
+                    <i class="fas fa-user-shield"></i>
+                </a>
+            </div>
         </div>
     </header>
 
+    <!-- Admin Dashboard -->
     <div class="admin-dashboard">
+        <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
                 <h2>لوحة الإدارة</h2>
-                <p>مدير المتجر</p>
+                <p id="adminUserTag">مدير النظام</p>
             </div>
             <ul class="sidebar-menu">
                 <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
                 <li><a href="orders.html" class="active"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
                 <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
                 <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
+                <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                </li>
             </ul>
         </div>
 
+        <!-- Main Content -->
         <div class="main-content">
-            <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
                 <h1>إدارة وتجهيز الطلبات</h1>
                 <div>
                     <span id="ordersCountBadge" style="background: #2563eb; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">0 طلب</span>
@@ -81,9 +114,19 @@
             </div>
 
             <div class="orders-container" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h2 style="margin: 0; font-size: 1.25rem;">سجل الطلبات الواردة</h2>
-                    <input type="text" id="orderSearchInput" oninput="filterOrders()" placeholder="بحث برقم الطلب، اسم العميل، الهاتف..." style="padding: 8px 15px; border: 1px solid #cbd5e1; border-radius: 6px; width: 300px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button class="status-tab-btn active" onclick="filterByStatus('all', this)">الكل</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('pending', this)">قيد المراجعة</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('processing', this)">قيد التجهيز</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('shipped', this)">تم الشحن</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('delivered', this)">تم التسليم</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('cancelled', this)">ملغي</button>
+                    </div>
+                    <div style="position: relative; min-width: 280px;">
+                        <input type="text" id="orderSearchInput" oninput="filterOrders()" placeholder="بحث برقم الطلب، العميل، الهاتف، الولاية..." style="width: 100%; padding: 8px 15px 8px 35px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
+                        <i class="fas fa-search" style="position: absolute; left: 12px; top: 11px; color: #94a3b8;"></i>
+                    </div>
                 </div>
 
                 <table style="width: 100%; border-collapse: collapse;">
@@ -109,15 +152,68 @@
         </div>
     </div>
 
+    <!-- نافذة منبثقة لتفاصيل ومحتويات الطلب -->
+    <div class="modal" id="orderDetailsModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color: #fefefe; margin: 40px auto; padding: 25px; border-radius: 8px; width: 90%; max-width: 700px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
+                <h2 id="modalOrderTitle" style="margin: 0; font-size: 1.3rem; color: #1e293b;">تفاصيل الطلب</h2>
+                <button class="close-modal" onclick="closeOrderDetailsModal()" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #64748b;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalOrderContent">
+                <p style="text-align: center; padding: 20px; color: #64748b;">جاري جلب بيانات الطلب...</p>
+            </div>
+            <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #e2e8f0; padding-top: 15px; margin-top: 20px;">
+                <button type="button" class="btn" onclick="closeOrderDetailsModal()" style="background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">إغلاق</button>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/api-client.js"></script>
     <script>
         let cachedOrders = [];
+        let currentStatusFilter = 'all';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load logged in admin name
+            try {
+                const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
+                if (user && user.username) {
+                    const tag = document.getElementById('adminUserTag');
+                    if (tag) tag.textContent = user.username;
+                }
+            } catch(e) {}
+
+            // Admin Logout Handler
+            const logoutBtn = document.getElementById('adminLogoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    if (confirm('هل ترغب في تسجيل الخروج من لوحة الإدارة؟')) {
+                        try {
+                            const token = localStorage.getItem('authToken');
+                            await fetch('/api/logout', {
+                                method: 'POST',
+                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                            });
+                        } catch(err) {}
+                        localStorage.removeItem('authToken');
+                        localStorage.removeItem('currentUser');
+                        sessionStorage.removeItem('currentUser');
+                        window.location.href = '../account.html';
+                    }
+                });
+            }
+
+            loadAdminOrders();
+        });
 
         async function loadAdminOrders() {
             try {
                 const token = localStorage.getItem('authToken');
                 const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-                const response = await fetch('/api/orders', { headers });
+                const response = await fetch('/api/orders', { credentials: 'include', headers });
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
                         alert('يرجى تسجيل الدخول بحساب مسؤول لعرض الطلبات');
@@ -129,18 +225,46 @@
 
                 cachedOrders = await response.json();
                 document.getElementById('ordersCountBadge').textContent = `${cachedOrders.length} طلب`;
-                renderOrdersTable(cachedOrders);
+                filterOrders();
             } catch (error) {
                 document.getElementById('admin-orders-tbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: red;">فشل في جلب الطلبات: ${error.message}</td></tr>`;
             }
+        }
+
+        function filterByStatus(status, btn) {
+            currentStatusFilter = status;
+            document.querySelectorAll('.status-tab-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            filterOrders();
+        }
+
+        function filterOrders() {
+            const query = (document.getElementById('orderSearchInput').value || '').trim().toLowerCase();
+            let filtered = cachedOrders;
+
+            if (currentStatusFilter !== 'all') {
+                filtered = filtered.filter(o => o.status === currentStatusFilter);
+            }
+
+            if (query) {
+                filtered = filtered.filter(o => 
+                    String(o.id).includes(query) ||
+                    String(o.order_number || '').toLowerCase().includes(query) ||
+                    String(o.shipping_full_name || '').toLowerCase().includes(query) ||
+                    String(o.phone || '').includes(query) ||
+                    String(o.wilaya_name || '').toLowerCase().includes(query)
+                );
+            }
+
+            renderOrdersTable(filtered);
         }
 
         function renderOrdersTable(orders) {
             const tbody = document.getElementById('admin-orders-tbody');
             if (!tbody) return;
 
-            if (orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: #64748b;">لا توجد طلبات مسجلة حتى الآن</td></tr>';
+            if (!orders || orders.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: #64748b;">لا توجد طلبات مطابقة لخيارات الفرز الحالية</td></tr>';
                 return;
             }
 
@@ -178,8 +302,9 @@
                         </select>
                     </td>
                     <td style="padding: 12px 10px; text-align: center;">
-                        <a href="../invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn invoice-btn" title="عرض الفاتورة"><i class="fas fa-file-invoice"></i></a>
-                        <a href="../track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn" title="تتبع الطلب"><i class="fas fa-truck"></i></a>
+                        <button class="order-action-btn view-btn" onclick="viewOrderDetails(${order.id})" title="معاينة تفاصيل ومحتويات الطلب"><i class="fas fa-eye"></i></button>
+                        <a href="../invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn invoice-btn" title="طباعة الفاتورة"><i class="fas fa-file-invoice"></i></a>
+                        <a href="../track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn" title="تتبع الشحنة"><i class="fas fa-truck"></i></a>
                     </td>
                 </tr>
             `).join('');
@@ -187,47 +312,112 @@
 
         async function changeOrderStatus(orderId, newStatus, selectEl) {
             try {
-                selectEl.disabled = true;
+                if (selectEl) selectEl.disabled = true;
+                const token = localStorage.getItem('authToken');
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+
                 const response = await fetch(`/api/orders/${orderId}/status`, {
                     method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    headers,
                     body: JSON.stringify({ status: newStatus })
                 });
 
                 if (!response.ok) {
-                    const data = await response.json();
+                    const data = await response.json().catch(() => ({}));
                     throw new Error(data.error || 'فشل تحديث الحالة');
                 }
 
-                selectEl.className = `status-select ${newStatus}`;
-                // Update cached order status
+                if (selectEl) selectEl.className = `status-select ${newStatus}`;
                 const item = cachedOrders.find(o => o.id === orderId);
                 if (item) item.status = newStatus;
             } catch (err) {
                 alert('خطأ: ' + err.message);
-                loadAdminOrders(); // reload
+                loadAdminOrders();
             } finally {
-                selectEl.disabled = false;
+                if (selectEl) selectEl.disabled = false;
             }
         }
 
-        function filterOrders() {
-            const query = (document.getElementById('orderSearchInput').value || '').trim().toLowerCase();
-            if (!query) {
-                renderOrdersTable(cachedOrders);
-                return;
+        async function viewOrderDetails(orderId) {
+            const modal = document.getElementById('orderDetailsModal');
+            const content = document.getElementById('modalOrderContent');
+            const title = document.getElementById('modalOrderTitle');
+
+            modal.style.display = 'block';
+            content.innerHTML = '<p style="text-align:center; padding: 30px; color:#64748b;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل تفاصيل الطلب...</p>';
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const res = await fetch(`/api/orders/${orderId}`, { credentials: 'include', headers });
+                if (!res.ok) throw new Error('فشل جلب تفاصيل الطلب');
+
+                const order = await res.json();
+                title.textContent = `تفاصيل الطلب: ${order.order_number || '#' + order.id}`;
+
+                const items = order.items || [];
+                const itemsHtml = items.map(item => `
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 10px; display: flex; align-items: center; gap: 10px;">
+                            <img src="${item.image_url || '../images/product-placeholder.jpg'}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;">
+                            <strong>${item.name}</strong>
+                        </td>
+                        <td style="padding: 10px; text-align: center;">${Number(item.price).toLocaleString()} دج</td>
+                        <td style="padding: 10px; text-align: center;">${item.quantity}</td>
+                        <td style="padding: 10px; text-align: left; font-weight: bold; color: #059669;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</td>
+                    </tr>
+                `).join('');
+
+                content.innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 0.95rem;">
+                        <div>
+                            <p style="margin: 4px 0;"><strong>اسم العميل:</strong> ${order.shipping_full_name || 'ضيف'}</p>
+                            <p style="margin: 4px 0;"><strong>رقم الهاتف:</strong> ${order.phone || '-'}</p>
+                            <p style="margin: 4px 0;"><strong>البريد الإلكتروني:</strong> ${order.email || '-'}</p>
+                        </div>
+                        <div>
+                            <p style="margin: 4px 0;"><strong>الولاية والمدينة:</strong> ${order.wilaya_name || order.city || 'الجزائر'}</p>
+                            <p style="margin: 4px 0;"><strong>العنوان التفصيلي:</strong> ${order.address || '-'}</p>
+                            <p style="margin: 4px 0;"><strong>نوع التوصيل:</strong> ${order.delivery_type === 'desk' ? 'استلام من المكتب' : 'توصيل منزلي'}</p>
+                        </div>
+                    </div>
+
+                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">عناصر الطلب</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
+                        <thead>
+                            <tr style="background: #f1f5f9; text-align: right; font-size: 0.9rem;">
+                                <th style="padding: 8px 10px;">المنتج</th>
+                                <th style="padding: 8px 10px; text-align: center;">السعر الفردي</th>
+                                <th style="padding: 8px 10px; text-align: center;">الكمية</th>
+                                <th style="padding: 8px 10px; text-align: left;">المجموع</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml || '<tr><td colspan="4" style="text-align:center; padding: 15px;">لا توجد عناصر</td></tr>'}
+                        </tbody>
+                    </table>
+
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #ecfdf5; padding: 12px 15px; border-radius: 6px; border: 1px solid #a7f3d0;">
+                        <div>
+                            <span style="font-size: 0.9rem; color: #065f46;"><strong>طريقة الدفع:</strong> ${order.payment_method === 'chargily' ? 'بطاقة بنكية (Chargily)' : 'الدفع عند الاستلام (COD)'}</span>
+                        </div>
+                        <div>
+                            <strong style="font-size: 1.15rem; color: #047857;">الإجمالي الكلي: ${Number(order.total).toLocaleString()} دج</strong>
+                        </div>
+                    </div>
+                `;
+            } catch(err) {
+                content.innerHTML = `<p style="text-align:center; padding: 20px; color: red;">فشل جلب تفاصيل الطلب: ${err.message}</p>`;
             }
-            const filtered = cachedOrders.filter(o => 
-                String(o.id).includes(query) ||
-                String(o.order_number || '').toLowerCase().includes(query) ||
-                String(o.shipping_full_name || '').toLowerCase().includes(query) ||
-                String(o.phone || '').includes(query) ||
-                String(o.wilaya_name || '').toLowerCase().includes(query)
-            );
-            renderOrdersTable(filtered);
         }
 
-        document.addEventListener('DOMContentLoaded', loadAdminOrders);
+        function closeOrderDetailsModal() {
+            document.getElementById('orderDetailsModal').style.display = 'none';
+        }
     </script>
 </body>
 </html>
