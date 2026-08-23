@@ -9,7 +9,7 @@ router.get('/recommendations', productController.recommendations);
 router.get('/', productController.getProducts);
 router.get('/:id', productController.getProductById);
 router.post('/', requireAdmin, upload.single('image'), productController.createProduct);
-router.put('/:id', requireAdmin, productController.updateProduct);
+router.put('/:id', requireAdmin, upload.single('image'), productController.updateProduct);
 router.delete('/:id', requireAdmin, productController.deleteProduct);
 
 module.exports = router;

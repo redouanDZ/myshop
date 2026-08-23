@@ -778,7 +778,7 @@ class MysqlRepository {
       }
 
       if (userId) {
-        await connection.query('UPDATE cart_items SET processed = 1 WHERE user_id = ? AND processed = 0', [userId]);
+        await connection.query('DELETE FROM cart_items WHERE user_id = ?', [userId]);
       }
 
       await connection.commit();

@@ -72,9 +72,34 @@ async function getProductById(req, res) {
 
 async function updateProduct(req, res) {
     try {
-        const success = await db.updateProduct(req.params.id, req.body);
+        const updateData = { ...req.body };
+        if (req.file) {
+            updateData.image_url = `/images/${req.file.filename}`;
+        }
+        if (updateData.price !== undefined && updateData.price !== '') {
+            updateData.price = Number(updateData.price);
+        }
+        if (updateData.stock !== undefined && updateData.stock !== '') {
+            updateData.stock = Number(updateData.stock);
+        }
+        if (updateData.name) {
+            updateData.name = sanitizeString(updateData.name);
+        }
+        if (updateData.category) {
+            updateData.category = sanitizeString(updateData.category);
+        }
+        if (updateData.description !== undefined) {
+            updateData.description = sanitizeString(updateData.description, '');
+        }
+        if (updateData.status) {
+            updateData.status = sanitizeString(updateData.status);
+        }
+
+        const success = await db.updateProduct(req.params.id, updateData);
         if (!success) return res.status(404).json({ error: 'المنتج غير موجود' });
-        res.json({ message: 'تم تحديث المنتج بنجاح' });
+        
+        const updatedProduct = await db.getProductById(req.params.id);
+        res.json({ message: 'تم تحديث المنتج بنجاح', product: updatedProduct });
     } catch (error) {
         console.error('Error updating product:', error);
         res.status(500).json({ error: 'خطأ في تحديث المنتج' });
