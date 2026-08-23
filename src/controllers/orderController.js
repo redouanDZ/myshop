@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const db = require('../data/db-connection.js');
 const { parseUserFromReq } = require('../utils/tokenUtils');
 const { validateId } = require('../utils/helpers');
@@ -72,29 +73,58 @@ async function getOrders(req, res) {
 }
 
 async function checkOrderAuthorization(req, order) {
+    if (!order) return false;
+
     const authUserId = await parseUserFromReq(req);
 
-    if (authUserId) {
+    // 1. Registered Customer Order (order.user_id !== null)
+    if (order.user_id !== null && order.user_id !== undefined) {
+        if (!authUserId) return false;
         const user = await db.findUserById(authUserId);
-        if (user && (user.role === 'admin' || Number(order.user_id) === Number(authUserId))) {
+        if (!user) return false;
+        if (user.role === 'admin' || Number(order.user_id) === Number(authUserId)) {
             return true;
         }
+        return false;
     }
 
-    // Guest Order Verification: Tracking token or phone verification
-    const token = req.query.token || req.headers['x-tracking-token'];
-    const phone = req.query.phone;
-
-    if (token && order.tracking_token && token === order.tracking_token) {
-        return true;
-    }
-
-    if (phone && order.phone && order.user_id === null) {
-        const cleanReqPhone = String(phone).replace(/[\s-]/g, '');
-        const cleanOrderPhone = String(order.phone).replace(/[\s-]/g, '');
-        if (cleanReqPhone && cleanReqPhone === cleanOrderPhone) {
-            return true;
+    // 2. Guest Order (order.user_id === null)
+    if (order.user_id === null) {
+        // Admin authorization
+        if (authUserId) {
+            const user = await db.findUserById(authUserId);
+            if (user && user.role === 'admin') {
+                return true;
+            }
         }
+
+        // Tracking Token Verification (Header 'x-tracking-token', query 'token', or body 'token')
+        const token = req.headers['x-tracking-token'] || (req.query && req.query.token) || (req.body && req.body.token);
+        if (token && order.tracking_token) {
+            const cleanToken = String(token).trim();
+            const cleanOrderToken = String(order.tracking_token).trim();
+            if (cleanToken.length === cleanOrderToken.length) {
+                try {
+                    const bufA = Buffer.from(cleanToken, 'utf8');
+                    const bufB = Buffer.from(cleanOrderToken, 'utf8');
+                    if (bufA.length === bufB.length && crypto.timingSafeEqual(bufA, bufB)) {
+                        return true;
+                    }
+                } catch (e) {}
+            }
+        }
+
+        // Phone Verification (for guest orders only)
+        const phone = (req.query && req.query.phone) || (req.body && req.body.phone) || req.headers['x-verification-phone'];
+        if (phone && order.phone) {
+            const cleanReqPhone = String(phone).replace(/[\s-]/g, '');
+            const cleanOrderPhone = String(order.phone).replace(/[\s-]/g, '');
+            if (cleanReqPhone && cleanReqPhone.length >= 8 && cleanReqPhone === cleanOrderPhone) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     return false;

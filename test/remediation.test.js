@@ -371,8 +371,118 @@ test('Phase 8: Chargily Webhook Signature Verification and Idempotency', async (
 });
 
 // ==========================================
-// PHASE 11 & 12 — 404 & CORS HARDENING
+// MANDATORY SECOND-PASS REGRESSION TESTS (A - E)
 // ==========================================
+test('Test A: Create guest order, then GET /api/orders/{guestOrderId} without token or phone -> 403', async () => {
+    await ensureStock();
+    const guestOrderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            shippingInfo: { fullName: 'اختبار أ', phone: '0551113344', wilayaId: 16 },
+            cart: [{ id: 1, quantity: 1 }]
+        })
+    });
+    assert.strictEqual(guestOrderRes.status, 201);
+    const guestData = await guestOrderRes.json();
+    const guestOrderId = guestData.id;
+
+    // Fetching without token or phone must fail with 403
+    const unauthorizedFetch = await fetch(`${baseUrl}/api/orders/${guestOrderId}`);
+    assert.strictEqual(unauthorizedFetch.status, 403, 'Guest order access without credentials must return 403');
+});
+
+test('Test B: Create guest order, then GET /api/order-items/{guestOrderId} without token/phone -> 403', async () => {
+    await ensureStock();
+    const guestOrderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            shippingInfo: { fullName: 'اختبار ب', phone: '0552224455', wilayaId: 16 },
+            cart: [{ id: 1, quantity: 1 }]
+        })
+    });
+    assert.strictEqual(guestOrderRes.status, 201);
+    const guestData = await guestOrderRes.json();
+    const guestOrderId = guestData.id;
+
+    // Fetching order items without token or phone must fail with 403
+    const unauthorizedItemsFetch = await fetch(`${baseUrl}/api/order-items/${guestOrderId}`);
+    assert.strictEqual(unauthorizedItemsFetch.status, 403, 'Guest order items access without credentials must return 403');
+});
+
+test('Test C: Create User A order, User B requests GET /api/order-items/{userAOrderId} -> 403', async () => {
+    await ensureStock();
+    const orderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAToken}`
+        },
+        body: JSON.stringify({
+            userId: userAId,
+            shippingInfo: { fullName: 'المستخدم أ', phone: '0550000000', wilayaId: 16 },
+            cart: [{ id: 1, quantity: 1 }]
+        })
+    });
+    assert.strictEqual(orderRes.status, 201);
+    const orderData = await orderRes.json();
+    const userAOrderId = orderData.id;
+
+    // User B attempts to access User A's order items
+    const userBItemsRes = await fetch(`${baseUrl}/api/order-items/${userAOrderId}`, {
+        headers: { 'Authorization': `Bearer ${userBToken}` }
+    });
+    assert.strictEqual(userBItemsRes.status, 403, 'User B accessing User A order items must return 403');
+});
+
+test('Test D: Authenticated User A requests GET /api/order-items/{userAOrderId} -> 200', async () => {
+    await ensureStock();
+    const orderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${userAToken}`
+        },
+        body: JSON.stringify({
+            userId: userAId,
+            shippingInfo: { fullName: 'المستخدم أ', phone: '0550000000', wilayaId: 16 },
+            cart: [{ id: 1, quantity: 1 }]
+        })
+    });
+    assert.strictEqual(orderRes.status, 201);
+    const orderData = await orderRes.json();
+    const userAOrderId = orderData.id;
+
+    // Authenticated User A accesses their own order items
+    const userAItemsRes = await fetch(`${baseUrl}/api/order-items/${userAOrderId}`, {
+        headers: { 'Authorization': `Bearer ${userAToken}` }
+    });
+    assert.strictEqual(userAItemsRes.status, 200, 'Authenticated User A accessing own order items must return 200');
+    const items = await userAItemsRes.json();
+    assert.ok(Array.isArray(items) && items.length > 0);
+});
+
+test('Test E: Remove all Cart fallback behavior. Confirm no request can resolve to userId = 1', async () => {
+    // 1. Unauthenticated request to /api/cart/add with or without { userId: 1 } must fail with 401
+    const unauthAdd = await fetch(`${baseUrl}/api/cart/add`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: 1, productId: 1, quantity: 1 })
+    });
+    assert.strictEqual(unauthAdd.status, 401, 'Unauthenticated add to cart must return 401');
+
+    // 2. Unauthenticated request to /api/cart/1 must fail with 401
+    const unauthGet = await fetch(`${baseUrl}/api/cart/1`);
+    assert.strictEqual(unauthGet.status, 401, 'Unauthenticated get cart must return 401');
+
+    // 3. Authenticated User B requesting /api/cart/1 must be rejected with 403 Forbidden
+    const crossUserGet = await fetch(`${baseUrl}/api/cart/1`, {
+        headers: { 'Authorization': `Bearer ${userBToken}` }
+    });
+    assert.strictEqual(crossUserGet.status, 403, 'User B requesting cart for user 1 must return 403');
+});
+
 test('Phase 11: Non-existent API route returns 404 JSON', async () => {
     const res = await fetch(`${baseUrl}/api/non_existent_endpoint_123`);
     assert.strictEqual(res.status, 404);

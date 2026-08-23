@@ -1076,10 +1076,15 @@ function createMysqlRepository(pool) {
 }
 
 function createFallbackRepository() {
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('In-memory fallback repository is strictly disabled in production. A MySQL database connection is required.');
+  }
+
+  const isDev = process.env.NODE_ENV !== 'production';
   const state = {
     products: [...DEFAULT_PRODUCTS],
     wilayas: [...DEFAULT_WILAYAS],
-    users: [
+    users: isDev ? [
       {
         id: 1,
         username: 'مستخدم تجريبي',
@@ -1100,7 +1105,7 @@ function createFallbackRepository() {
         addresses: [],
         created_at: new Date().toISOString()
       }
-    ],
+    ] : [],
     cartItems: [],
     orders: [],
     orderItems: [],
@@ -1233,7 +1238,8 @@ function createFallbackRepository() {
       return state.products.length < before;
     },
     async addToCart(userId, productId, quantity = 1) {
-      const uId = Number(userId) || 1;
+      const uId = Number(userId);
+      if (!uId) throw new Error('معرف المستخدم مطلوب للسلة');
       const pId = Number(productId);
       const qty = Math.max(1, Number(quantity) || 1);
       const item = state.cartItems.find(entry => Number(entry.user_id) === uId && Number(entry.product_id) === pId && !entry.processed);
@@ -1246,7 +1252,9 @@ function createFallbackRepository() {
       return entry.id;
     },
     async getCartItems(userId) {
-      return state.cartItems.filter(entry => Number(entry.user_id) === Number(userId) && !entry.processed).map(entry => {
+      const uId = Number(userId);
+      if (!uId) return [];
+      return state.cartItems.filter(entry => Number(entry.user_id) === uId && !entry.processed).map(entry => {
         const product = state.products.find(item => Number(item.id) === Number(entry.product_id)) || {};
         return { id: entry.id, product_id: entry.product_id, name: product.name || 'منتج', category: product.category || '', price: Number(product.price) || 0, quantity: entry.quantity, stock: Number(product.stock || 0), image_url: product.image_url || '/images/product-placeholder.jpg' };
       });

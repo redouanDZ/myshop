@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken');
 const db = require('../data/db-connection.js');
 const config = require('../config/database');
 const {
@@ -15,7 +16,8 @@ const {
     revokeSession,
     activeSessions,
     refreshTokens,
-    loginAttempts
+    loginAttempts,
+    getAccessTokenFromRequest
 } = require('../utils/tokenUtils');
 const { sanitizeString } = require('../utils/helpers');
 
