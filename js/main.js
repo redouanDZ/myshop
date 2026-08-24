@@ -320,10 +320,124 @@ function registerPwaServiceWorker() {
   }
 }
 
+/**
+ * Mobile Navigation Drawer Manager
+ */
+function initMobileNavigation() {
+  const header = document.querySelector('header');
+  if (!header) return;
+
+  const container = header.querySelector('.container');
+  if (!container) return;
+
+  // Check or create mobile hamburger button
+  let menuBtn = container.querySelector('.mobile-menu-btn');
+  if (!menuBtn) {
+    menuBtn = document.createElement('button');
+    menuBtn.type = 'button';
+    menuBtn.className = 'mobile-menu-btn';
+    menuBtn.setAttribute('aria-label', 'فتح القائمة الرئيسية');
+    menuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+    container.appendChild(menuBtn);
+  }
+
+  // Create overlay & drawer if not present
+  let overlay = document.getElementById('mobile-nav-overlay');
+  let drawer = document.getElementById('mobile-nav-drawer');
+
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'mobile-nav-overlay';
+    overlay.className = 'mobile-nav-overlay';
+    document.body.appendChild(overlay);
+  }
+
+  if (!drawer) {
+    drawer = document.createElement('div');
+    drawer.id = 'mobile-nav-drawer';
+    drawer.className = 'mobile-nav-drawer';
+    
+    // Copy nav items from current header nav if exists
+    const currentNavLinks = container.querySelectorAll('nav ul li a');
+    let linksHtml = '';
+    
+    if (currentNavLinks.length > 0) {
+      currentNavLinks.forEach(link => {
+        const href = link.getAttribute('href') || '#';
+        const text = link.textContent.trim();
+        const active = link.classList.contains('active') ? 'active' : '';
+        const i18n = link.getAttribute('data-i18n') ? `data-i18n="${link.getAttribute('data-i18n')}"` : '';
+        
+        let icon = 'fas fa-chevron-left';
+        if (href.includes('index.html') || href === '/') icon = 'fas fa-home';
+        else if (href.includes('shop.html')) icon = 'fas fa-shopping-bag';
+        else if (href.includes('cart.html')) icon = 'fas fa-shopping-cart';
+        else if (href.includes('wishlist.html')) icon = 'fas fa-heart';
+        else if (href.includes('track-order.html')) icon = 'fas fa-truck';
+        else if (href.includes('account.html')) icon = 'fas fa-user';
+        
+        linksHtml += `<li><a href="${href}" class="${active}" ${i18n}><i class="${icon}"></i> <span>${text}</span></a></li>`;
+      });
+    } else {
+      linksHtml = `
+        <li><a href="index.html" data-i18n="nav.home"><i class="fas fa-home"></i> <span>الرئيسية</span></a></li>
+        <li><a href="shop.html" data-i18n="nav.shop"><i class="fas fa-shopping-bag"></i> <span>التسوق</span></a></li>
+        <li><a href="cart.html" data-i18n="nav.cart"><i class="fas fa-shopping-cart"></i> <span>عربة التسوق</span></a></li>
+        <li><a href="wishlist.html" data-i18n="nav.wishlist"><i class="fas fa-heart"></i> <span>المفضلة</span></a></li>
+        <li><a href="track-order.html" data-i18n="nav.track_order"><i class="fas fa-truck"></i> <span>تتبع طلبي</span></a></li>
+        <li><a href="account.html" data-i18n="nav.account"><i class="fas fa-user"></i> <span>حسابي</span></a></li>
+      `;
+    }
+
+    drawer.innerHTML = `
+      <div class="mobile-drawer-header">
+        <div class="drawer-logo">
+          <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+        </div>
+        <button type="button" class="mobile-drawer-close" aria-label="إغلاق القائمة">&times;</button>
+      </div>
+      <ul class="mobile-drawer-links">
+        ${linksHtml}
+      </ul>
+      <div class="mobile-drawer-footer">
+        <a href="account.html" class="btn btn-outline" style="width: 100%; justify-content: center; font-size: 0.92rem; padding: 10px;">
+          <i class="fas fa-user-circle"></i> حسابي الشخصي
+        </a>
+      </div>
+    `;
+    document.body.appendChild(drawer);
+  }
+
+  function openDrawer() {
+    overlay.classList.add('active');
+    drawer.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDrawer() {
+    overlay.classList.remove('active');
+    drawer.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  menuBtn.addEventListener('click', openDrawer);
+  overlay.addEventListener('click', closeDrawer);
+  
+  const closeBtn = drawer.querySelector('.mobile-drawer-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawer.classList.contains('active')) {
+      closeDrawer();
+    }
+  });
+}
+
 // Page Initialization
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   setupThemeToggleButtons();
+  initMobileNavigation();
   initBackToTop();
   initNewsletter();
   updateWishlistUI();
@@ -331,4 +445,5 @@ document.addEventListener('DOMContentLoaded', () => {
   initNetworkStatusWatcher();
   registerPwaServiceWorker();
 });
+
 

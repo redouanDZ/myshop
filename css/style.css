@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
 
-/* إعدادات عامة ونظام الألوان الحديث */
+/* ========================================================
+   MYSHOP Unified Design System Tokens
+   ======================================================== */
 :root {
+    /* Color Palette */
     --primary-color: #4f46e5;
     --primary-hover: #4338ca;
     --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #6366f1 50%, #8b5cf6 100%);
@@ -17,13 +20,40 @@
     --success-color: #10b981;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
+    --info-color: #3b82f6;
     --text-color: #1e293b;
     --light-text: #64748b;
+    --muted-text: #94a3b8;
+
+    /* Spacing System */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
     --border-radius: 16px;
     --border-radius-sm: 10px;
+
+    /* Elevation & Shadows */
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+    --shadow-modal: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     --box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08);
     --box-shadow-hover: 0 20px 40px -12px rgba(79, 70, 229, 0.22);
-    --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Animation & Transitions */
+    --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-fast: all 0.15s ease;
 }
 
 [data-theme="dark"] {
@@ -37,8 +67,18 @@
     --glass-border: rgba(31, 41, 55, 0.6);
     --text-color: #f1f5f9;
     --light-text: #94a3b8;
+    --muted-text: #64748b;
     --box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
     --box-shadow-hover: 0 20px 40px -12px rgba(99, 102, 241, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 * {
@@ -49,6 +89,11 @@
 
 html {
     scroll-behavior: smooth;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 3px;
 }
 
 body {
@@ -174,17 +219,19 @@ header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 0;
+    padding: 14px 0;
+    gap: 16px;
 }
 
 .logo a {
-    font-size: 26px;
-    font-weight: 800;
+    font-size: 24px;
+    font-weight: 900;
     color: var(--dark-color);
     letter-spacing: -0.5px;
     display: flex;
     align-items: center;
     gap: 8px;
+    white-space: nowrap;
 }
 
 .logo a span {
@@ -195,55 +242,63 @@ header .container {
     color: var(--primary-color);
 }
 
-nav ul {
+nav.main-nav ul {
     display: flex;
-    gap: 28px;
+    gap: 18px;
+    align-items: center;
 }
 
-nav ul li a {
+nav.main-nav ul li a {
     color: var(--dark-color);
     font-weight: 600;
     font-size: 15px;
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 8px 14px;
+    border-radius: var(--border-radius-sm, 10px);
     transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
-nav ul li a:hover, nav ul li a.active {
+nav.main-nav ul li a:hover, nav.main-nav ul li a.active {
     color: var(--primary-color);
-    background-color: rgba(37, 99, 235, 0.06);
+    background-color: rgba(79, 70, 229, 0.08);
 }
 
 .user-actions {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
 }
 
-.cart-icon, .user-icon {
+.cart-icon, .user-icon, .wishlist-icon, .theme-toggle-btn {
     position: relative;
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: #f1f5f9;
+    border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
+    font-size: 17px;
     color: var(--dark-color);
+    cursor: pointer;
     transition: var(--transition);
 }
 
-.cart-icon:hover, .user-icon:hover {
+.cart-icon:hover, .user-icon:hover, .wishlist-icon:hover, .theme-toggle-btn:hover {
     background-color: var(--primary-color);
-    color: white;
+    color: white !important;
+    border-color: var(--primary-color);
     transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.25);
 }
 
-.cart-count {
+.cart-count, .wishlist-count {
     position: absolute;
     top: -4px;
-    left: -4px;
+    inset-inline-start: -4px;
     background: linear-gradient(135deg, var(--danger-color), #dc2626);
     color: white;
     border-radius: 50%;
@@ -255,6 +310,142 @@ nav ul li a:hover, nav ul li a.active {
     font-size: 11px;
     font-weight: 800;
     box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);
+}
+
+/* زر القائمة للشاشات الصغيرة */
+.mobile-menu-btn {
+    display: none;
+    background: #f1f5f9;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--dark-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mobile-menu-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* القائمة الجانبية المنبثقة للشاشات الصغيرة (Mobile Drawer) */
+.mobile-nav-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 9998;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.mobile-nav-drawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    inset-inline-start: -320px;
+    width: 300px;
+    max-width: 85vw;
+    background: var(--card-bg, #ffffff);
+    z-index: 9999;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    padding: 24px 20px;
+    transition: inset-inline-start 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow-y: auto;
+}
+
+.mobile-nav-drawer.active {
+    inset-inline-start: 0;
+}
+
+.mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mobile-drawer-header .drawer-logo {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--dark-color);
+}
+
+.mobile-drawer-close {
+    background: #f1f5f9;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--light-text);
+    transition: var(--transition);
+}
+
+.mobile-drawer-close:hover {
+    background: var(--danger-color);
+    color: white;
+}
+
+.mobile-drawer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+    margin: 0 0 24px 0;
+}
+
+.mobile-drawer-links li a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: var(--border-radius-sm, 10px);
+    color: var(--dark-color);
+    font-weight: 600;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.mobile-drawer-links li a i {
+    width: 22px;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.mobile-drawer-links li a:hover,
+.mobile-drawer-links li a.active {
+    background: rgba(79, 70, 229, 0.08);
+    color: var(--primary-color);
+}
+
+.mobile-drawer-footer {
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 /* شريط البحث المطور المباشر */
@@ -357,57 +548,234 @@ nav ul li a:hover, nav ul li a.active {
     opacity: 0.6;
 }
 
-/* قسم البانر البصري الفاخر */
+/* قسم البانر البصري الفاخر (Hero Section) */
 .banner {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.88), rgba(79, 70, 229, 0.85)), url('../images/christopher-gower-m_HRfLhgABo-unsplash.jpg');
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(79, 70, 229, 0.88)), url('../images/christopher-gower-m_HRfLhgABo-unsplash.jpg');
     background-size: cover;
     background-position: center;
-    border-radius: 28px;
-    min-height: 420px;
+    border-radius: 24px;
+    min-height: 440px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: white;
-    margin: 24px 0 48px;
-    padding: 50px 28px;
-    box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.3);
+    margin: 24px 0 36px;
+    padding: 56px 24px;
+    box-shadow: 0 20px 40px -15px rgba(15, 23, 42, 0.25);
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.banner h1 {
-    font-size: 48px;
-    font-weight: 900;
+.hero-badge-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #f8fafc;
+    padding: 6px 16px;
+    border-radius: 30px;
+    font-size: 0.88rem;
+    font-weight: 700;
     margin-bottom: 20px;
+}
+
+.banner h1 {
+    font-size: 44px;
+    font-weight: 900;
+    margin-bottom: 18px;
     color: white;
     letter-spacing: -0.03em;
     text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    line-height: 1.25;
 }
 
 .banner p {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 500;
-    margin-bottom: 32px;
+    margin-bottom: 30px;
     color: #e2e8f0;
     max-width: 650px;
     margin-left: auto;
     margin-right: auto;
 }
 
-.banner .btn {
+.hero-cta-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.banner .btn-hero-primary {
     background: white;
     color: var(--primary-color);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-    font-size: 17px;
-    padding: 14px 36px;
+    font-size: 16px;
+    padding: 14px 32px;
+    font-weight: 800;
+    border-radius: var(--border-radius-sm, 12px);
 }
 
-.banner .btn:hover {
+.banner .btn-hero-primary:hover {
     background: #f8fafc;
     color: var(--primary-hover);
-    transform: translateY(-4px) scale(1.02);
+    transform: translateY(-3px) scale(1.02);
+}
+
+.banner .btn-hero-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    border: 1.5px solid rgba(255, 255, 255, 0.5);
+    color: white;
+    font-size: 16px;
+    padding: 14px 28px;
+    font-weight: 700;
+    border-radius: var(--border-radius-sm, 12px);
+}
+
+.banner .btn-hero-secondary:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    transform: translateY(-3px);
+}
+
+/* بطاقات الموثوقية والمزايا التجارية (Trust Features Bar) */
+.trust-section {
+    margin-bottom: 48px;
+}
+
+.trust-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.trust-card {
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: var(--border-radius-sm, 12px);
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+}
+
+.trust-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow-hover);
+    border-color: var(--primary-color);
+}
+
+.trust-icon-box {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: rgba(79, 70, 229, 0.08);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    transition: var(--transition);
+}
+
+.trust-card:hover .trust-icon-box {
+    background: var(--primary-gradient);
+    color: white;
+}
+
+.trust-info h3 {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--dark-color);
+}
+
+.trust-info p {
+    font-size: 0.86rem;
+    color: var(--light-text);
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* شريط تصنيفات الأقسام السريع (Category Pills) */
+.category-pills-wrap {
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+}
+
+.category-pill {
+    padding: 8px 20px;
+    background: var(--card-bg, #ffffff);
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 30px;
+    color: var(--dark-color, #1e293b);
+    font-size: 0.92rem;
+    font-weight: 700;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.category-pill:hover, .category-pill.active {
+    background: var(--primary-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+}
+
+/* مكون الحالات الفارغة (Empty State Component) */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: var(--card-bg, #ffffff);
+    border: 1px dashed var(--border-color, #cbd5e1);
+    border-radius: var(--border-radius, 16px);
+    margin: 30px 0;
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: rgba(79, 70, 229, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    color: var(--primary-color);
+}
+
+.empty-state-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--dark-color);
+    margin-bottom: 8px;
+}
+
+.empty-state-desc {
+    font-size: 0.95rem;
+    color: var(--light-text);
+    max-width: 480px;
+    margin: 0 auto 24px;
+    line-height: 1.5;
 }
 
 /* المنتجات المميزة */

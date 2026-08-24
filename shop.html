@@ -469,32 +469,61 @@
 
       const container = document.getElementById('products-container');
       if (pageProducts.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:40px; color:#64748b; grid-column:1/-1;"><i class="fas fa-search fa-3x" style="margin-bottom:10px; opacity:0.5;"></i><p>لا توجد منتجات مطابقة لخيارات الفلترة الحالية.</p></div>';
+        container.innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <div class="empty-state-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <h3 class="empty-state-title">لم نجد منتجات مطابقة لخيارات البحث</h3>
+            <p class="empty-state-desc">جرب استخدام كلمات بحث مختلفة أو قم بتوسيع نطاق السعر والتصنيفات المختارة.</p>
+            <button type="button" class="btn btn-primary" onclick="resetFilters()">
+              <i class="fas fa-redo-alt"></i> إعادة تعيين الفلاتر
+            </button>
+          </div>
+        `;
         return;
       }
 
-      container.innerHTML = pageProducts.map(product => `
-        <div class="product-card" style="position: relative;">
-          <button onclick="toggleWishlistShop(${product.id})" class="wishlist-toggle-btn" title="إضافة للمفضلة" style="position: absolute; top: 10px; left: 10px; background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #ef4444; box-shadow: 0 2px 5px rgba(0,0,0,0.1); z-index: 5;">
-            <i class="far fa-heart"></i>
+      const wishlistIds = window.getWishlist ? window.getWishlist() : [];
+
+      container.innerHTML = pageProducts.map(product => {
+        const isFav = wishlistIds.includes(product.id);
+        const stockNum = Number(product.stock) || 0;
+        return `
+        <div class="product-card" id="shop-product-${product.id}">
+          <span class="product-badge">${product.category || 'متوفر'}</span>
+          <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${product.id}" onclick="toggleWishlist(${product.id}, '${product.name.replace(/'/g, "\\'")}')" aria-label="المفضلة">
+            <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
           </button>
-          <img src="${product.image_url}" alt="${product.name}" class="product-image">
-          <h3 class="product-name">${product.name}</h3>
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span class="product-category">${product.category}</span>
-            <span style="font-size:0.85rem; color:#f59e0b; font-weight:bold;"><i class="fas fa-star"></i> ${product.rating || '5.0'}</span>
+          <a href="product.html?id=${product.id}" class="product-image">
+            <img src="${product.image_url || '/images/product-placeholder.jpg'}" alt="${product.name}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+          </a>
+          <div class="product-info">
+            <span class="product-category">${product.category || 'عام'}</span>
+            <h3 class="product-name">
+              <a href="product.html?id=${product.id}">${product.name}</a>
+            </h3>
+            <div class="product-rating">
+              <div class="rating-stars" style="color: #f59e0b; font-size: 0.85rem;">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+              </div>
+              <span class="rating-count" style="font-size: 0.8rem; color: var(--light-text); margin-inline-start: 6px;">(${product.rating || '4.5'})</span>
+            </div>
+            <div class="product-price-row" style="display: flex; justify-content: space-between; align-items: baseline; margin: 10px 0 14px;">
+              <span class="product-price">${Number(product.price).toLocaleString()} <small style="font-size: 0.85rem; font-weight: 600;">دج</small></span>
+              <span style="font-size: 0.8rem; color: ${stockNum > 3 ? 'var(--success-color)' : stockNum > 0 ? 'var(--warning-color)' : 'var(--danger-color)'}; font-weight: 600;">
+                <i class="fas fa-box"></i> ${stockNum > 0 ? `متوفر (${stockNum})` : 'نفد المخزون'}
+              </span>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: auto;">
+              <a href="product.html?id=${product.id}" class="btn btn-secondary" style="flex: 1; padding: 9px; font-size: 0.88rem; text-align: center; justify-content: center;">التفاصيل</a>
+              <button type="button" onclick="handleAddToCart(${product.id})" class="btn" style="flex: 1.3; padding: 9px; font-size: 0.88rem; justify-content: center;" ${stockNum <= 0 ? 'disabled' : ''}>
+                <i class="fas fa-cart-plus"></i> أضف للسلة
+              </button>
+            </div>
           </div>
-          <p class="product-price">${Number(product.price).toLocaleString()} دج</p>
-          <p class="product-stock ${product.stock == 0 ? 'out-of-stock' : product.stock < 5 ? 'low-stock' : 'in-stock'}">
-            ${product.stock == 0 ? 'نفد المخزون' : 'الكمية: ' + product.stock}
-          </p>
-          <span class="status-badge ${product.status === 'active' ? 'active' : 'inactive'}">${product.status === 'active' ? 'نشط' : 'غير نشط'}</span>
-          <button onclick="handleAddToCart(${product.id})" class="add-to-cart" ${product.stock == 0 ? 'disabled style="background:#94a3b8; cursor:not-allowed;"' : ''}>
-            ${product.stock == 0 ? 'غير متوفر' : 'إضافة إلى العربة'}
-          </button>
-          <a href="product.html?id=${product.id}" class="view-details">عرض التفاصيل</a>
         </div>
-      `).join('');
+      `}).join('');
     }
 
     function renderPagination() {

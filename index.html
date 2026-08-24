@@ -44,24 +44,28 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="index.html" data-i18n="common.store_name">المتجر الإلكتروني</a>
+                <a href="index.html">
+                    <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
+                    <span data-i18n="common.store_name">المتجر الإلكتروني</span>
+                </a>
             </div>
-            <nav>
+            <nav class="main-nav">
                 <ul>
-                    <li><a href="index.html" class="active" data-i18n="nav.home">الرئيسية</a></li>
-                    <li><a href="shop.html" data-i18n="nav.shop">التسوق</a></li>
-                    <li><a href="cart.html" data-i18n="nav.cart">عربة التسوق</a></li>
-                    <li><a href="track-order.html" data-i18n="nav.track_order">تتبع طلبي</a></li>
+                    <li><a href="index.html" class="active" data-i18n="nav.home"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="shop.html" data-i18n="nav.shop"><i class="fas fa-shopping-bag"></i> التسوق</a></li>
+                    <li><a href="cart.html" data-i18n="nav.cart"><i class="fas fa-shopping-cart"></i> عربة التسوق</a></li>
+                    <li><a href="wishlist.html" data-i18n="nav.wishlist"><i class="fas fa-heart"></i> المفضلة</a></li>
+                    <li><a href="track-order.html" data-i18n="nav.track_order"><i class="fas fa-truck"></i> تتبع طلبي</a></li>
                 </ul>
             </nav>
             <div class="user-actions">
                 <!-- Wishlist -->
-                <a href="wishlist.html" class="wishlist-icon" title="المفضلة" style="position: relative; margin-left: 12px; color: #ef4444; font-size: 1.15rem;">
-                    <i class="fas fa-heart"></i>
-                    <span class="wishlist-count" id="wishlist-count" style="position: absolute; top: -8px; right: -10px; background: #ef4444; color: #fff; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: bold;">0</span>
+                <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+                    <i class="fas fa-heart" style="color: var(--danger-color);"></i>
+                    <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
                 <!-- Shopping Cart -->
-                <a href="cart.html" class="cart-icon">
+                <a href="cart.html" class="cart-icon" title="السلة">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
@@ -76,26 +80,101 @@
     <!-- ===== Search Bar ===== -->
     <div class="search-bar">
         <div class="container">
-            <form>
-                <input type="text" placeholder="ابحث عن منتج...">
-                <button type="submit"><i class="fas fa-search"></i></button>
+            <form action="shop.html" method="GET">
+                <input type="text" name="search" placeholder="ابحث عن هاتف، حاسوب، ملحقات تقنية..." data-i18n-placeholder="common.search_placeholder">
+                <button type="submit"><i class="fas fa-search"></i> <span data-i18n="common.search">بحث</span></button>
             </form>
         </div>
     </div>
 
-    <!-- ===== Banner Section ===== -->
-    <section class="banner">
-        <div class="container">
-            <h1>مرحباً بكم في متجرنا الإلكتروني</h1>
-            <p>اكتشف أحدث المنتجات والعروض الخاصة</p>
-            <a href="shop.html" class="btn">ابدأ التسوق</a>
-        </div>
-    </section>
+    <!-- ===== Main Container Content ===== -->
+    <main class="container">
+        <!-- ===== Hero Banner Section ===== -->
+        <section class="banner">
+            <div style="max-width: 800px; margin: 0 auto; z-index: 2;">
+                <div class="hero-badge-pill">
+                    <span>🇩🇿 المتجر الإلكتروني الموثوق في الجزائر</span>
+                </div>
+                <h1>تسوق أفضل الأجهزة والمنتجات التقنية بأسعار منافسة</h1>
+                <p>توصيل سريع وموثوق إلى 58 ولاية مع إمكانية الدفع عند الاستلام وضمان الجودة وأصالة المنتجات 100%.</p>
+                <div class="hero-cta-group">
+                    <a href="shop.html" class="btn btn-hero-primary">
+                        <i class="fas fa-shopping-bag"></i> ابدأ التسوق الآن
+                    </a>
+                    <a href="track-order.html" class="btn btn-hero-secondary">
+                        <i class="fas fa-truck"></i> تتبع طلبك الحالي
+                    </a>
+                </div>
+            </div>
+        </section>
 
-    <!-- ===== Featured Products ===== -->
-    <section class="featured-products">
-        <div class="container">
-            <h2>المنتجات المميزة</h2>
+        <!-- ===== Trust Indicators Bar ===== -->
+        <section class="trust-section">
+            <div class="trust-grid">
+                <div class="trust-card">
+                    <div class="trust-icon-box">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="trust-info">
+                        <h3>الدفع عند الاستلام</h3>
+                        <p>ادفع براحة وأمان بعد استلام وفحص طلبك في منزلك</p>
+                    </div>
+                </div>
+
+                <div class="trust-card">
+                    <div class="trust-icon-box">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <div class="trust-info">
+                        <h3>توصيل لكافة 58 ولاية</h3>
+                        <p>شحن سريع إلى باب منزلك أو أقرب مكتب استلام</p>
+                    </div>
+                </div>
+
+                <div class="trust-card">
+                    <div class="trust-icon-box">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="trust-info">
+                        <h3>منتجات أصلية 100%</h3>
+                        <p>ضمان رسمي وجودة عالية مفحوصة بدقة</p>
+                    </div>
+                </div>
+
+                <div class="trust-card">
+                    <div class="trust-icon-box">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="trust-info">
+                        <h3>دعم عملاء ومتابعة</h3>
+                        <p>فريق متخصص لمساعدتك ومتابعة الشحنة حتى وصولها</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== Category Pills Bar ===== -->
+        <div class="category-pills-wrap">
+            <a href="shop.html" class="category-pill active"><i class="fas fa-th-large"></i> جميع المنتجات</a>
+            <a href="shop.html?category=إلكترونيات" class="category-pill"><i class="fas fa-laptop"></i> إلكترونيات</a>
+            <a href="shop.html?category=هواتف" class="category-pill"><i class="fas fa-mobile-alt"></i> هواتف وملحقات</a>
+            <a href="shop.html?category=صوتيات" class="category-pill"><i class="fas fa-headphones"></i> صوتيات وسماعات</a>
+            <a href="shop.html?category=ملابس" class="category-pill"><i class="fas fa-tshirt"></i> أزياء وملابس</a>
+            <a href="shop.html?category=كتب" class="category-pill"><i class="fas fa-book"></i> كتب ومراجع</a>
+        </div>
+
+        <!-- ===== Featured Products Section ===== -->
+        <section class="featured-products">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h2 style="font-size: 1.8rem; font-weight: 900; margin: 0; color: var(--dark-color);">المنتجات المميزة</h2>
+                    <p style="margin: 4px 0 0; color: var(--light-text); font-size: 0.95rem;">اخترنا لك أفضل المنتجات ذات التقييمات العالية</p>
+                </div>
+                <a href="shop.html" style="font-weight: 700; color: var(--primary-color); display: inline-flex; align-items: center; gap: 6px;">
+                    عرض كل المنتجات <i class="fas fa-chevron-left" style="font-size: 0.8rem;"></i>
+                </a>
+            </div>
+
             <div class="products-grid" id="featured-products">
                 <div class="product-skeleton-card">
                     <div class="skeleton skeleton-image"></div>
@@ -134,82 +213,111 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- ===== Special Offers ===== -->
-    <section class="special-offers">
-        <div class="container">
-            <h2>العروض الخاصة</h2>
-            <div class="offers-grid" id="special-offers" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+        <!-- ===== Special Offers Section ===== -->
+        <section class="special-offers" style="margin-bottom: 60px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
+                <div>
+                    <h2 style="font-size: 1.8rem; font-weight: 900; margin: 0; color: var(--dark-color);">عروض وتخفيضات خاصة 🔥</h2>
+                    <p style="margin: 4px 0 0; color: var(--light-text); font-size: 0.95rem;">خصومات حصرية لفترة محدودة على تشكيلة مختارة</p>
+                </div>
+                <a href="shop.html" style="font-weight: 700; color: var(--primary-color); display: inline-flex; align-items: center; gap: 6px;">
+                    اكتشف جميع العروض <i class="fas fa-chevron-left" style="font-size: 0.8rem;"></i>
+                </a>
+            </div>
+
+            <div class="offers-grid" id="special-offers" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;">
                 <div class="product-skeleton-card">
                     <div class="skeleton skeleton-image"></div>
                     <div class="skeleton skeleton-title"></div>
                     <div class="skeleton skeleton-price"></div>
-                    <div class="skeleton skeleton-btn" style="height: 38px;"></div>
+                    <div class="skeleton-btn" style="height: 38px;"></div>
                 </div>
                 <div class="product-skeleton-card">
                     <div class="skeleton skeleton-image"></div>
                     <div class="skeleton skeleton-title"></div>
                     <div class="skeleton skeleton-price"></div>
-                    <div class="skeleton skeleton-btn" style="height: 38px;"></div>
+                    <div class="skeleton-btn" style="height: 38px;"></div>
                 </div>
                 <div class="product-skeleton-card">
                     <div class="skeleton skeleton-image"></div>
                     <div class="skeleton skeleton-title"></div>
                     <div class="skeleton skeleton-price"></div>
-                    <div class="skeleton skeleton-btn" style="height: 38px;"></div>
+                    <div class="skeleton-btn" style="height: 38px;"></div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- ===== Footer ===== -->
+    <!-- ===== Modern Standardized Footer ===== -->
     <footer>
         <div class="container">
             <div class="footer-grid">
                 <!-- About Store -->
                 <div class="footer-col">
-                    <h3>عن المتجر</h3>
-                    <p>نحن متجر إلكتروني متخصص في بيع المنتجات عالية الجودة بأسعار منافسة.</p>
+                    <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+                    </div>
+                    <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
+                        وجهتك الأولى الموثوقة للتسوق الإلكتروني في الجزائر. نقدم منتجات تقنية أصلية بأفضل الأسعار مع توصيل سريع لـ 58 ولاية ودفع آمن عند الاستلام.
+                    </p>
+                    <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-truck"></i> 58 ولاية</span>
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-shield-alt"></i> ضمان 100%</span>
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-hand-holding-usd"></i> الدفع عند الاستلام</span>
+                    </div>
                 </div>
+
                 <!-- Quick Links -->
                 <div class="footer-col">
                     <h3>روابط سريعة</h3>
                     <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="shop.html">التسوق</a></li>
-                        <li><a href="#">من نحن</a></li>
-                        <li><a href="#">اتصل بنا</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> الرئيسية</a></li>
+                        <li><a href="shop.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> متجر المنتجات</a></li>
+                        <li><a href="cart.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> سلة التسوق</a></li>
+                        <li><a href="wishlist.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> قائمة المفضلة</a></li>
+                        <li><a href="track-order.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> تتبع طلبيتك</a></li>
                     </ul>
                 </div>
-                <!-- Contact Info -->
+
+                <!-- Customer Support -->
                 <div class="footer-col">
-                    <h3>تواصل معنا</h3>
+                    <h3>خدمة العملاء والتواصل</h3>
                     <ul>
-                        <li><i class="fas fa-phone"></i> 123-456-7890</li>
-                        <li><i class="fas fa-envelope"></i> info@myshop.com</li>
-                        <li><i class="fas fa-map-marker-alt"></i> عنوان المتجر</li>
+                        <li><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-left: 8px;"></i> الجزائر العاصمة، الجزائر</li>
+                        <li><i class="fas fa-phone-alt" style="color: var(--primary-color); margin-left: 8px;"></i> 0550 00 00 00 / 0660 00 00 00</li>
+                        <li><i class="fas fa-envelope" style="color: var(--primary-color); margin-left: 8px;"></i> contact@myshop.dz</li>
+                        <li><i class="fas fa-clock" style="color: var(--primary-color); margin-left: 8px;"></i> السبت - الخميس: 9:00 ص - 6:00 م</li>
                     </ul>
                 </div>
-                <!-- Social Media -->
+
+                <!-- Payment Methods & Social -->
                 <div class="footer-col">
-                    <h3>تابعنا</h3>
+                    <h3>طرق الدفع والشحن</h3>
+                    <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 12px;">نقبل الدفع الآمن عند الاستلام أو عبر البطاقات الإلكترونية الجزائرية:</p>
+                    <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;">
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave" style="color: var(--success-color);"></i> COD نقداً</span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card" style="color: var(--secondary-color);"></i> EDAHABIA / CIB</span>
+                    </div>
+                    <h3>تابعنا على الشبكات</h3>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 متجر الإلكتروني. جميع الحقوق محفوظة.</p>
+
+            <div class="footer-bottom" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-top: 30px;">
+                <p style="margin: 0; font-size: 0.88rem; color: #94a3b8;">&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+                <p style="margin: 0; font-size: 0.88rem; color: #94a3b8;">صُمم بأعلى معايير الأمان والتجارة الإلكترونية في الجزائر 🇩🇿</p>
             </div>
         </div>
     </footer>
 
-    <!-- Main JavaScript -->
+    <!-- Main JavaScript Logic -->
     <script>
         async function loadHomeProducts() {
             try {
@@ -222,37 +330,78 @@
                 const offersContainer = document.getElementById('special-offers');
 
                 if (featuredContainer && Array.isArray(products) && products.length > 0) {
-                    featuredContainer.innerHTML = products.map(p => `
-                        <div class="product-card" style="background: var(--card-bg, white); border: 1px solid var(--border-color, #edf2f7); padding: 18px; border-radius: var(--border-radius, 12px); box-shadow: var(--box-shadow); text-align: right; transition: var(--transition); position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--box-shadow-hover)'" onmouseout="this.style.transform='none';this.style.boxShadow='var(--box-shadow)'">
-                            <span style="position: absolute; top: 10px; right: 10px; background: var(--secondary-color); color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">${p.category || 'متوفر'}</span>
-                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 190px; object-fit: cover; border-radius: var(--border-radius-sm, 8px); margin-bottom: 14px;">
-                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: var(--dark-color, #1e293b); height: 48px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${p.name}</h3>
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                                <p style="font-size: 1.15rem; font-weight: 800; color: var(--primary-color); margin: 0;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem; font-weight: 600;">دج</span></p>
-                                <span style="font-size: 0.8rem; color: var(--light-text, #64748b);"><i class="fas fa-box" style="margin-left: 4px;"></i>المخزون: ${p.stock}</span>
-                            </div>
-                            <div style="display: flex; gap: 8px;">
-                                <a href="product.html?id=${p.id}" class="btn" style="flex: 1; background: var(--light-color, #f8fafc); color: var(--text-color, #334155); border: 1px solid var(--border-color, #e2e8f0); padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; text-decoration: none; text-align: center; font-weight: 600; transition: var(--transition);">التفاصيل</a>
-                                <button onclick="quickAddToCart(${p.id})" class="btn" style="flex: 1.2; background: var(--primary-gradient); color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; border: none; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; transition: var(--transition);"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                    const wishlistIds = window.getWishlist ? window.getWishlist() : [];
+                    featuredContainer.innerHTML = products.map(p => {
+                        const isFav = wishlistIds.includes(p.id);
+                        return `
+                        <div class="product-card" id="product-card-${p.id}">
+                            <span class="product-badge">${p.category || 'متوفر'}</span>
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="toggleWishlist(${p.id}, '${p.name.replace(/'/g, "\\'")}')" aria-label="المفضلة">
+                                <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
+                            </button>
+                            <a href="product.html?id=${p.id}" class="product-image">
+                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${p.name}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+                            </a>
+                            <div class="product-info">
+                                <span class="product-category">${p.category || 'عام'}</span>
+                                <h3 class="product-name">
+                                    <a href="product.html?id=${p.id}">${p.name}</a>
+                                </h3>
+                                <div class="product-rating">
+                                    <div class="rating-stars" style="color: #f59e0b; font-size: 0.85rem;">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                    </div>
+                                    <span class="rating-count" style="font-size: 0.8rem; color: var(--light-text); margin-inline-start: 6px;">(4.5)</span>
+                                </div>
+                                <div class="product-price-row" style="display: flex; justify-content: space-between; align-items: baseline; margin: 10px 0 14px;">
+                                    <span class="product-price">${Number(p.price).toLocaleString()} <small style="font-size: 0.85rem; font-weight: 600;">دج</small></span>
+                                    <span style="font-size: 0.8rem; color: ${p.stock > 3 ? 'var(--success-color)' : 'var(--warning-color)'}; font-weight: 600;">
+                                        <i class="fas fa-box"></i> ${p.stock > 0 ? `متوفر (${p.stock})` : 'نفد المخزون'}
+                                    </span>
+                                </div>
+                                <div style="display: flex; gap: 8px; margin-top: auto;">
+                                    <a href="product.html?id=${p.id}" class="btn btn-secondary" style="flex: 1; padding: 10px; font-size: 0.88rem;">التفاصيل</a>
+                                    <button type="button" onclick="quickAddToCart(${p.id})" class="btn" style="flex: 1.3; padding: 10px; font-size: 0.88rem;" ${p.stock <= 0 ? 'disabled' : ''}>
+                                        <i class="fas fa-cart-plus"></i> أضف للسلة
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    `).join('');
+                    `}).join('');
                 }
 
-                if (offersContainer) {
-                    const specialOffers = products.slice(0, 3);
-                    offersContainer.innerHTML = specialOffers.map(p => `
-                        <div class="offer-card" style="background: var(--card-bg, white); border: 1px solid var(--border-color, #feebc8); padding: 18px; border-radius: var(--border-radius, 12px); box-shadow: var(--box-shadow); text-align: right; transition: var(--transition); position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--box-shadow-hover)'" onmouseout="this.style.transform='none';this.style.boxShadow='var(--box-shadow)'">
-                            <span style="position: absolute; top: 10px; right: 10px; background: var(--accent-gradient); color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">عرض خاص 🔥</span>
-                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 170px; object-fit: cover; border-radius: var(--border-radius-sm, 8px); margin-bottom: 12px;">
-                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: var(--dark-color, #1e293b);">${p.name}</h3>
-                            <p style="color: var(--primary-color); font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem;">دج</span></p>
-                            <a href="product.html?id=${p.id}" class="btn" style="display: block; width: 100%; background: var(--primary-gradient); color: white; padding: 9px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: 700; transition: var(--transition);">احصل عليه الآن</a>
+                if (offersContainer && Array.isArray(products) && products.length > 0) {
+                    const specialOffers = products.slice(0, 4);
+                    const wishlistIds = window.getWishlist ? window.getWishlist() : [];
+                    offersContainer.innerHTML = specialOffers.map(p => {
+                        const isFav = wishlistIds.includes(p.id);
+                        return `
+                        <div class="product-card" id="offer-card-${p.id}">
+                            <span class="product-badge" style="background: var(--accent-gradient);">تخفيض خاص 🔥</span>
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="toggleWishlist(${p.id}, '${p.name.replace(/'/g, "\\'")}')" aria-label="المفضلة">
+                                <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
+                            </button>
+                            <a href="product.html?id=${p.id}" class="product-image">
+                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${p.name}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+                            </a>
+                            <div class="product-info">
+                                <span class="product-category">${p.category || 'عرض حصري'}</span>
+                                <h3 class="product-name">
+                                    <a href="product.html?id=${p.id}">${p.name}</a>
+                                </h3>
+                                <div class="product-price-row" style="display: flex; justify-content: space-between; align-items: baseline; margin: 10px 0 14px;">
+                                    <span class="product-price" style="color: var(--primary-color);">${Number(p.price).toLocaleString()} <small style="font-size: 0.85rem;">دج</small></span>
+                                    <span class="product-old-price" style="text-decoration: line-through; color: var(--light-text); font-size: 0.88rem;">${Number(p.price * 1.25).toLocaleString()} دج</span>
+                                </div>
+                                <button type="button" onclick="quickAddToCart(${p.id})" class="btn" style="width: 100%; padding: 11px; font-size: 0.92rem;" ${p.stock <= 0 ? 'disabled' : ''}>
+                                    <i class="fas fa-bolt"></i> اطلب الآن بالعرض
+                                </button>
+                            </div>
                         </div>
-                    `).join('');
+                    `}).join('');
                 }
             } catch (error) {
-
+                // Silent error handling
             }
         }
 
@@ -268,7 +417,9 @@
                     }
                 }
             } catch (err) {
-
+                if (window.showToast) {
+                    window.showToast('حدث خطأ أثناء إضافة المنتج', 'error');
+                }
             }
         }
 

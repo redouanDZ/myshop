@@ -164,21 +164,24 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="index.html">المتجر الإلكتروني</a>
+                <a href="index.html">
+                    <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
+                    <span data-i18n="common.store_name">المتجر الإلكتروني</span>
+                </a>
             </div>
-            <nav>
+            <nav class="main-nav">
                 <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="shop.html">التسوق</a></li>
-                    <li><a href="cart.html">عربة التسوق</a></li>
-                    <li><a href="wishlist.html" class="active">المفضلة</a></li>
-                    <li><a href="track-order.html">تتبع طلبي</a></li>
+                    <li><a href="index.html" data-i18n="nav.home"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="shop.html" data-i18n="nav.shop"><i class="fas fa-shopping-bag"></i> التسوق</a></li>
+                    <li><a href="cart.html" data-i18n="nav.cart"><i class="fas fa-shopping-cart"></i> عربة التسوق</a></li>
+                    <li><a href="wishlist.html" class="active" data-i18n="nav.wishlist"><i class="fas fa-heart"></i> المفضلة</a></li>
+                    <li><a href="track-order.html" data-i18n="nav.track_order"><i class="fas fa-truck"></i> تتبع طلبي</a></li>
                 </ul>
             </nav>
             <div class="user-actions">
-                <a href="wishlist.html" class="wishlist-icon" title="المفضلة" style="position: relative; margin-left: 15px; color: #ef4444; font-size: 1.2rem;">
-                    <i class="fas fa-heart"></i>
-                    <span class="wishlist-count" id="wishlist-count" style="position: absolute; top: -8px; right: -10px; background: #ef4444; color: #fff; border-radius: 50%; padding: 2px 6px; font-size: 0.75rem; font-weight: bold;">0</span>
+                <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+                    <i class="fas fa-heart" style="color: var(--danger-color);"></i>
+                    <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
                 <a href="cart.html" class="cart-icon">
                     <i class="fas fa-shopping-cart"></i>
@@ -218,11 +221,45 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Modern Footer -->
     <footer>
         <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+                    </div>
+                    <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
+                        احفظ منتجاتك المفضلة وتتبع توفرها وعروضها الخاصة في أي وقت.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h3>روابط هامة</h3>
+                    <ul>
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="shop.html">التسوق</a></li>
+                        <li><a href="cart.html">عربة التسوق</a></li>
+                        <li><a href="track-order.html">تتبع طلبي</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>خدمة العملاء</h3>
+                    <ul>
+                        <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
+                        <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
+                        <li><i class="fas fa-shield-alt"></i> تجربة تسوق موثوقة 100%</li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>طرق الدفع</h3>
+                    <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
+                    </div>
+                </div>
+            </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 المتجر الإلكتروني - جميع الحقوق محفوظة.</p>
+                <p>&copy; 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>

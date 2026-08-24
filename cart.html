@@ -58,6 +58,10 @@
         </ul>
       </nav>
       <div class="user-actions">
+        <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+          <i class="fas fa-heart" style="color: var(--danger-color);"></i>
+          <span class="wishlist-count" id="wishlist-count">0</span>
+        </a>
         <a href="cart.html" class="cart-icon">
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-count" id="cart-count">0</span>
@@ -88,11 +92,15 @@
           <div class="cart-items-grid" id="cart-items-grid">
             <!-- سيتم ملؤها ديناميكيًا من MySQL عبر API -->
           </div>
-          <div class="empty-cart" id="empty-cart" style="display: none;">
-            <i class="fas fa-shopping-cart"></i>
-            <h3>عربة التسوق فارغة</h3>
-            <p>لم تقم بإضافة أي منتجات بعد.</p>
-            <a href="shop.html" class="continue-shopping">ابدأ التسوق الآن</a>
+          <div class="empty-state" id="empty-cart" style="display: none;">
+            <div class="empty-state-icon">
+              <i class="fas fa-shopping-cart"></i>
+            </div>
+            <h3 class="empty-state-title">عربة التسوق فارغة حالياً</h3>
+            <p class="empty-state-desc">لم تقم بإضافة أي منتجات إلى سلتك بعد. استكشف تشكيلتنا الواسعة وابدأ التسوق الآن.</p>
+            <a href="shop.html" class="btn btn-primary">
+              <i class="fas fa-shopping-bag"></i> تصفح متجر المنتجات
+            </a>
           </div>
         </div>
 
@@ -103,43 +111,45 @@
     </div>
   </section>
 
-  <!-- التذييل -->
+  <!-- التذييل المطور -->
   <footer>
     <div class="container">
       <div class="footer-grid">
         <div class="footer-col">
-          <h3>عن المتجر</h3>
-          <p>نحن متجر إلكتروني متخصص في بيع المنتجات عالية الجودة بأسعار منافسة.</p>
+          <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+          </div>
+          <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
+            وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.
+          </p>
         </div>
         <div class="footer-col">
           <h3>روابط سريعة</h3>
           <ul>
             <li><a href="index.html">الرئيسية</a></li>
             <li><a href="shop.html">التسوق</a></li>
-            <li><a href="#">من نحن</a></li>
-            <li><a href="#">اتصل بنا</a></li>
+            <li><a href="cart.html">عربة التسوق</a></li>
+            <li><a href="track-order.html">تتبع طلبي</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h3>تواصل معنا</h3>
           <ul>
-            <li><i class="fas fa-phone"></i> 123-456-7890</li>
-            <li><i class="fas fa-envelope"></i> info@myshop.com</li>
-            <li><i class="fas fa-map-marker-alt"></i> عنوان المتجر</li>
+            <li><i class="fas fa-map-marker-alt"></i> الجزائر العاصمة، الجزائر</li>
+            <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
+            <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3>تابعنا</h3>
-          <div class="social-links">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
+          <h3>طرق الدفع</h3>
+          <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
+            <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+            <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2025 متجر الإلكتروني. جميع الحقوق محفوظة.</p>
+        <p>&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
       </div>
     </div>
   </footer>
