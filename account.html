@@ -43,25 +43,25 @@
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #3498db, #2980b9);
+            background: var(--primary-gradient);
             color: #ffffff;
             font-size: 2.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 12px;
-            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+            box-shadow: var(--box-shadow-hover);
         }
 
         .user-card-header h3 {
             font-size: 1.2rem;
             margin: 0 0 4px;
-            color: var(--dark-color, #2c3e50);
+            color: var(--dark-color, #1e293b);
         }
 
         .user-card-header p {
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: var(--light-text, #64748b);
             margin: 0;
         }
 
@@ -83,29 +83,29 @@
             padding: 12px 16px;
             background: transparent;
             border: none;
-            border-radius: 8px;
-            color: #555555;
+            border-radius: var(--border-radius-sm, 8px);
+            color: var(--text-color, #1e293b);
             font-size: 0.98rem;
             font-weight: 500;
             text-align: right;
             cursor: pointer;
-            transition: all 0.25s ease;
+            transition: var(--transition);
         }
 
         .account-nav-btn i {
             font-size: 1.1rem;
             width: 20px;
-            color: #7f8c8d;
+            color: var(--light-text, #64748b);
             transition: color 0.25s ease;
         }
 
         .account-nav-btn:hover {
-            background-color: rgba(52, 152, 219, 0.08);
-            color: #3498db;
+            background-color: rgba(79, 70, 229, 0.08);
+            color: var(--primary-color);
         }
 
         .account-nav-btn.active {
-            background-color: #3498db;
+            background: var(--primary-gradient);
             color: #ffffff;
         }
 
@@ -182,8 +182,8 @@
         }
 
         .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.15);
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
         }
 
         /* Address Cards Grid */
@@ -195,22 +195,22 @@
         }
 
         .address-card {
-            border: 1px solid #e1e8ed;
-            border-radius: 10px;
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: var(--border-radius-sm, 10px);
             padding: 20px;
             position: relative;
-            background: #fafbfc;
-            transition: all 0.2s ease;
+            background: var(--card-bg, #ffffff);
+            transition: var(--transition);
         }
 
         .address-card.default-address {
-            border-color: #3498db;
-            background: rgba(52, 152, 219, 0.03);
+            border-color: var(--primary-color);
+            background: rgba(79, 70, 229, 0.03);
         }
 
         .address-badge {
             display: inline-block;
-            background: #3498db;
+            background: var(--primary-gradient);
             color: #fff;
             font-size: 0.75rem;
             padding: 3px 8px;
@@ -225,7 +225,7 @@
 
         .address-card p {
             margin: 4px 0;
-            color: #666;
+            color: var(--light-text, #64748b);
             font-size: 0.9rem;
         }
 
@@ -236,13 +236,18 @@
         }
 
         .btn-sm-danger {
-            background: #e74c3c;
+            background: var(--danger-color);
             color: #fff;
             border: none;
             padding: 6px 12px;
             border-radius: 6px;
             font-size: 0.85rem;
             cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .btn-sm-danger:hover {
+            opacity: 0.9;
         }
 
         /* Orders Table */
@@ -253,13 +258,13 @@
         }
 
         .order-item-card {
-            border: 1px solid #e1e8ed;
-            border-radius: 10px;
+            border: 1px solid var(--border-color, #e2e8f0);
+            border-radius: var(--border-radius-sm, 10px);
             padding: 18px 22px;
             display: flex;
             flex-direction: column;
             gap: 12px;
-            background: #ffffff;
+            background: var(--card-bg, #ffffff);
         }
 
         .order-header-row {
@@ -269,13 +274,13 @@
             flex-wrap: wrap;
             gap: 10px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #f0f0f0;
+            border-bottom: 1px solid var(--border-color, #f0f0f0);
         }
 
         .order-id-tag {
             font-weight: bold;
             font-size: 1.05rem;
-            color: #2c3e50;
+            color: var(--dark-color, #1e293b);
         }
 
         .order-status-badge {
@@ -285,10 +290,10 @@
             font-weight: bold;
         }
 
-        .status-pending { background: #f39c12; color: #fff; }
-        .status-processing { background: #3498db; color: #fff; }
-        .status-shipped { background: #9b59b6; color: #fff; }
-        .status-delivered { background: #2ecc71; color: #fff; }
+        .status-pending { background: var(--warning-color); color: #fff; }
+        .status-processing { background: var(--secondary-color); color: #fff; }
+        .status-shipped { background: var(--primary-color); color: #fff; }
+        .status-delivered { background: var(--success-color); color: #fff; }
 
         .order-details-btn {
             background: #f1f2f6;
@@ -472,8 +477,8 @@
                     </button>
                 </li>
                 <li style="margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 15px;">
-                    <button type="button" class="account-nav-btn" id="logout-sidebar-btn" style="color: #e74c3c;">
-                        <i class="fas fa-sign-out-alt" style="color: #e74c3c;"></i>
+                    <button type="button" class="account-nav-btn" id="logout-sidebar-btn" style="color: var(--danger-color);">
+                        <i class="fas fa-sign-out-alt" style="color: var(--danger-color);"></i>
                         <span>تسجيل الخروج</span>
                     </button>
                 </li>
@@ -485,7 +490,7 @@
             <!-- TAB 1: Profile -->
             <div class="tab-section active" id="tab-profile">
                 <div class="section-title">
-                    <span><i class="fas fa-user-edit" style="color: #3498db; margin-left: 8px;"></i>بيانات الملف الشخصي</span>
+                    <span><i class="fas fa-user-edit" style="color: var(--primary-color); margin-left: 8px;"></i>بيانات الملف الشخصي</span>
                 </div>
 
                 <form id="profile-update-form">
@@ -530,7 +535,7 @@
             <!-- TAB 2: Addresses -->
             <div class="tab-section" id="tab-addresses">
                 <div class="section-title">
-                    <span><i class="fas fa-map-marked-alt" style="color: #3498db; margin-left: 8px;"></i>عناوين الشحن المكتوبة</span>
+                    <span><i class="fas fa-map-marked-alt" style="color: var(--primary-color); margin-left: 8px;"></i>عناوين الشحن المكتوبة</span>
                     <button type="button" class="btn" id="open-add-address-btn" style="font-size: 0.88rem; padding: 8px 16px;">
                         <i class="fas fa-plus" style="margin-left: 6px;"></i>إضافة عنوان جديد
                     </button>
@@ -544,7 +549,7 @@
             <!-- TAB 3: Orders -->
             <div class="tab-section" id="tab-orders">
                 <div class="section-title">
-                    <span><i class="fas fa-shopping-bag" style="color: #3498db; margin-left: 8px;"></i>سجل الطلبات</span>
+                    <span><i class="fas fa-shopping-bag" style="color: var(--primary-color); margin-left: 8px;"></i>سجل الطلبات</span>
                 </div>
 
                 <div class="order-history-list" id="orders-container">
@@ -555,7 +560,7 @@
             <!-- TAB 4: Wishlist -->
             <div class="tab-section" id="tab-wishlist">
                 <div class="section-title">
-                    <span><i class="fas fa-heart" style="color: #e74c3c; margin-left: 8px;"></i>قائمة المفضلة</span>
+                    <span><i class="fas fa-heart" style="color: var(--danger-color); margin-left: 8px;"></i>قائمة المفضلة</span>
                 </div>
 
                 <div class="products-grid" id="wishlist-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
@@ -569,7 +574,7 @@
     <div class="account-modal" id="add-address-modal">
         <div class="account-modal-content">
             <button class="close-modal-btn" id="close-address-modal">&times;</button>
-            <h3 style="margin-bottom: 20px;"><i class="fas fa-map-marker-alt" style="color:#3498db; margin-left:8px;"></i>إضافة عنوان شحن جديد</h3>
+            <h3 style="margin-bottom: 20px;"><i class="fas fa-map-marker-alt" style="color:var(--primary-color); margin-left:8px;"></i>إضافة عنوان شحن جديد</h3>
             <form id="add-address-form">
                 <div class="form-group">
                     <label for="addr-title">اسم العنوان (مثال: المنزل، العمل)</label>
@@ -871,7 +876,7 @@
                                     </div>
                                     <div>
                                         <span class="order-status-badge status-${ord.status}">${getStatusLabel(ord.status)}</span>
-                                        <strong style="margin-right: 15px; font-size: 1.1rem; color: #27ae60;">${ord.total ? ord.total.toLocaleString() : '0'} د.ج</strong>
+                                        <strong style="margin-right: 15px; font-size: 1.1rem; color: var(--success-color);">${ord.total ? ord.total.toLocaleString() : '0'} د.ج</strong>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
@@ -923,11 +928,11 @@
                         }
 
                         container.innerHTML = favoritedProducts.map(p => `
-                            <div class="product-card" style="border: 1px solid #e1e8ed; border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+                            <div class="product-card" style="border: 1px solid var(--border-color, #e1e8ed); border-radius: var(--border-radius-sm, 8px); padding: 12px; display: flex; flex-direction: column; justify-content: space-between; background: var(--card-bg, #fff);">
                                 <div>
                                     <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
                                     <h4 style="font-size: 0.95rem; margin-bottom: 8px;">${p.name}</h4>
-                                    <p style="font-weight: bold; color: #27ae60; margin-bottom: 12px;">${p.price.toLocaleString()} د.ج</p>
+                                    <p style="font-weight: bold; color: var(--primary-color); margin-bottom: 12px;">${p.price.toLocaleString()} د.ج</p>
                                 </div>
                                 <div style="display: flex; gap: 8px;">
                                     <button class="btn" style="flex: 1; font-size: 0.8rem; padding: 6px;" onclick="addToCart(${p.id})">

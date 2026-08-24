@@ -8,34 +8,36 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet"> <!-- خط عربي للدعم RTL -->
   <style>
-    /* CSS محسن لصفحة العربة (RTL، grid، تفاعلية، متجاوب) */
-    body { font-family: 'Amiri', sans-serif; direction: rtl; text-align: right; }
+    /* CSS محسن لصفحة العربة مع نظام التصميم الموحد */
     .cart-section { padding: 40px 0; }
     .cart-container { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; margin: 40px 0; }
-    .cart-items h2 { margin-bottom: 20px; color: #2c3e50; }
+    .cart-items h2 { margin-bottom: 20px; color: var(--dark-color, #1e293b); }
     .cart-items-grid { display: flex; flex-direction: column; gap: 15px; }
-    .cart-item { display: grid; grid-template-columns: 100px 1fr auto auto auto; gap: 15px; align-items: center; border: 1px solid #eee; padding: 15px; border-radius: 8px; transition: box-shadow 0.3s; }
-    .cart-item:hover { box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-    .cart-item img { width: 100px; height: 100px; object-fit: cover; border-radius: 5px; }
-    .item-details h3 { margin: 0 0 5px 0; color: #2c3e50; }
-    .item-price { font-weight: bold; color: #e74c3c; }
+    .cart-item { display: grid; grid-template-columns: 100px 1fr auto auto auto; gap: 15px; align-items: center; border: 1px solid var(--border-color, #e2e8f0); padding: 15px; border-radius: var(--border-radius-sm, 10px); background: var(--card-bg, #fff); transition: var(--transition); }
+    .cart-item:hover { box-shadow: var(--box-shadow); }
+    .cart-item img { width: 100px; height: 100px; object-fit: cover; border-radius: var(--border-radius-sm, 8px); }
+    .item-details h3 { margin: 0 0 5px 0; color: var(--dark-color, #1e293b); }
+    .item-price { font-weight: 700; color: var(--primary-color); }
     .item-quantity { display: flex; align-items: center; gap: 10px; }
-    .quantity-btn { width: 30px; height: 30px; border: 1px solid #ddd; background: white; cursor: pointer; border-radius: 3px; }
-    .quantity-btn:hover { background: #f8f9fa; }
-    .remove-item { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 3px; cursor: pointer; }
-    .remove-item:hover { background: #c0392b; }
-    .cart-summary { background: #f8f9fa; padding: 20px; border-radius: 8px; }
-    .cart-summary h2 { margin-bottom: 20px; color: #2c3e50; }
-    .summary-item { display: flex; justify-content: space-between; margin-bottom: 10px; }
-    .summary-total { font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px; }
+    .quantity-btn { width: 32px; height: 32px; border: 1px solid var(--border-color, #cbd5e1); background: var(--card-bg, #fff); cursor: pointer; border-radius: 6px; font-weight: bold; transition: var(--transition); }
+    .quantity-btn:hover { background: var(--light-color, #f8fafc); border-color: var(--primary-color); }
+    .remove-item { background: var(--danger-color); color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: opacity 0.2s; }
+    .remove-item:hover { opacity: 0.85; }
+    .cart-summary { background: var(--card-bg, #fff); padding: 24px; border-radius: var(--border-radius-sm, 12px); border: 1px solid var(--border-color, #e2e8f0); box-shadow: var(--box-shadow); }
+    .cart-summary h2 { margin-bottom: 20px; color: var(--dark-color, #1e293b); }
+    .summary-item { display: flex; justify-content: space-between; margin-bottom: 12px; color: var(--text-color, #1e293b); }
+    .summary-total { font-weight: 800; border-top: 1px solid var(--border-color, #e2e8f0); padding-top: 14px; margin-top: 14px; }
     .promo-code { display: flex; gap: 10px; margin-bottom: 20px; }
-    .promo-code input { flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; }
-    .apply-promo { background: #3498db; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-    .checkout-btn { width: 100%; background: #2ecc71; color: white; border: none; padding: 15px; border-radius: 5px; cursor: pointer; font-size: 1.1rem; margin-bottom: 10px; }
-    .checkout-btn:hover { background: #27ae60; }
-    .continue-shopping { text-align: center; color: #3498db; text-decoration: none; }
-    .empty-cart { text-align: center; padding: 50px; color: #7f8c8d; }
-    .empty-cart i { font-size: 4rem; margin-bottom: 20px; color: #bdc3c7; }
+    .promo-code input { flex: 1; padding: 10px 14px; border: 1px solid var(--border-color, #cbd5e1); border-radius: var(--border-radius-sm, 8px); outline: none; }
+    .promo-code input:focus { border-color: var(--primary-color); }
+    .apply-promo { background: var(--primary-gradient); color: white; border: none; padding: 10px 18px; border-radius: var(--border-radius-sm, 8px); cursor: pointer; font-weight: 600; transition: var(--transition); }
+    .apply-promo:hover { background: var(--primary-hover-gradient); }
+    .checkout-btn { width: 100%; background: var(--primary-gradient); color: white; border: none; padding: 15px; border-radius: var(--border-radius-sm, 8px); cursor: pointer; font-size: 1.1rem; margin-bottom: 10px; font-weight: 700; transition: var(--transition); }
+    .checkout-btn:hover { background: var(--primary-hover-gradient); transform: translateY(-2px); box-shadow: var(--box-shadow-hover); }
+    .continue-shopping { text-align: center; color: var(--primary-color); text-decoration: none; font-weight: 600; }
+    .continue-shopping:hover { text-decoration: underline; color: var(--primary-hover); }
+    .empty-cart { text-align: center; padding: 50px; color: var(--light-text, #64748b); }
+    .empty-cart i { font-size: 4rem; margin-bottom: 20px; color: var(--border-color, #cbd5e1); }
     @media (max-width: 768px) { .cart-container { grid-template-columns: 1fr; gap: 20px; } .cart-item { grid-template-columns: 80px 1fr; gap: 10px; } }
   </style>
 </head>
@@ -242,15 +244,15 @@
           <img src="${item.image_url}" alt="${item.name}">
           <div class="item-details">
             <h3>${item.name}</h3>
-            <p style="color: #7f8c8d; font-size: 0.85rem; margin-top: 2px;">${item.category}</p>
-            <p class="item-price" style="font-weight: 700; color: #e74c3c; margin-top: 5px;">${item.price.toLocaleString()} دج</p>
+            <p style="color: var(--light-text, #64748b); font-size: 0.85rem; margin-top: 2px;">${item.category}</p>
+            <p class="item-price" style="font-weight: 700; color: var(--primary-color); margin-top: 5px;">${item.price.toLocaleString()} دج</p>
           </div>
           <div class="item-quantity">
             <button type="button" class="quantity-btn decrease" onclick="changeQuantity(${item.id}, -1)">-</button>
             <input type="number" id="input-qty-${item.id}" value="${item.quantity}" min="1" max="99" onchange="handleQtyInputChange(${item.id}, this.value)">
             <button type="button" class="quantity-btn increase" onclick="changeQuantity(${item.id}, 1)">+</button>
           </div>
-          <div class="item-total" id="total-${item.id}" style="font-weight: 800; color: #2c3e50;">${(item.price * item.quantity).toLocaleString()} دج</div>
+          <div class="item-total" id="total-${item.id}" style="font-weight: 800; color: var(--dark-color, #1e293b);">${(item.price * item.quantity).toLocaleString()} دج</div>
           <button type="button" class="remove-item" onclick="removeFromCart(${item.id})" title="حذف المنتج">
             <i class="fas fa-trash-alt"></i>
           </button>
@@ -342,19 +344,19 @@
 
       summaryBox.innerHTML = `
         <h2>ملخص الطلب</h2>
-        <div class="summary-item"><span>المجموع الفرعي</span><strong style="color:#1e293b;">${subtotal.toLocaleString()} دج</strong></div>
-        <div class="summary-item" style="border-bottom: 1px dashed #e2e8f0; padding-bottom: 8px;">
+        <div class="summary-item"><span>المجموع الفرعي</span><strong style="color:var(--dark-color, #1e293b);">${subtotal.toLocaleString()} دج</strong></div>
+        <div class="summary-item" style="border-bottom: 1px dashed var(--border-color, #e2e8f0); padding-bottom: 8px;">
           <span>مصاريف الشحن</span>
-          <span style="font-size: 0.88rem; color: #2563eb; font-weight: bold;">
+          <span style="font-size: 0.88rem; color: var(--primary-color); font-weight: bold;">
             <i class="fas fa-truck" style="margin-left: 4px;"></i> تُحسب حسب الولاية عند الدفع
           </span>
         </div>
-        ${discount > 0 ? `<div class="summary-item discount" style="color:#2ecc71;"><span>الخصم</span><span>-${discount.toLocaleString()} دج</span></div>` : ''}
+        ${discount > 0 ? `<div class="summary-item discount" style="color:var(--success-color);"><span>الخصم</span><span>-${discount.toLocaleString()} دج</span></div>` : ''}
         <div class="summary-total">
           <span>المجموع (قبل الشحن)</span>
-          <strong style="color: #e74c3c; font-size: 1.25rem;">${estimatedTotal.toLocaleString()} دج</strong>
+          <strong style="color: var(--primary-color); font-size: 1.25rem;">${estimatedTotal.toLocaleString()} دج</strong>
         </div>
-        <p style="font-size: 0.82rem; color: #64748b; margin: 8px 0 14px; line-height: 1.4;">
+        <p style="font-size: 0.82rem; color: var(--light-text, #64748b); margin: 8px 0 14px; line-height: 1.4;">
           * سيتم احتساب تكلفة التوصيل الدقيقة (400 - 900 دج) وإضافتها للإجمالي النهائي بعد اختيار ولايتك في صفحة الدفع.
         </p>
         

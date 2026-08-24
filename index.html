@@ -223,17 +223,17 @@
 
                 if (featuredContainer && Array.isArray(products) && products.length > 0) {
                     featuredContainer.innerHTML = products.map(p => `
-                        <div class="product-card" style="background: white; border: 1px solid #edf2f7; padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: right; transition: transform 0.2s, box-shadow 0.2s; position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 20px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)'">
-                            <span style="position: absolute; top: 10px; right: 10px; background: #3498db; color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">${p.category || 'متوفر'}</span>
-                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 190px; object-fit: cover; border-radius: 8px; margin-bottom: 14px;">
-                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #1a202c; height: 48px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${p.name}</h3>
+                        <div class="product-card" style="background: var(--card-bg, white); border: 1px solid var(--border-color, #edf2f7); padding: 18px; border-radius: var(--border-radius, 12px); box-shadow: var(--box-shadow); text-align: right; transition: var(--transition); position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--box-shadow-hover)'" onmouseout="this.style.transform='none';this.style.boxShadow='var(--box-shadow)'">
+                            <span style="position: absolute; top: 10px; right: 10px; background: var(--secondary-color); color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">${p.category || 'متوفر'}</span>
+                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 190px; object-fit: cover; border-radius: var(--border-radius-sm, 8px); margin-bottom: 14px;">
+                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: var(--dark-color, #1e293b); height: 48px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${p.name}</h3>
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                                <p style="font-size: 1.15rem; font-weight: 800; color: #e74c3c; margin: 0;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem; font-weight: 600;">دج</span></p>
-                                <span style="font-size: 0.8rem; color: #718096;"><i class="fas fa-box" style="margin-left: 4px;"></i>المخزون: ${p.stock}</span>
+                                <p style="font-size: 1.15rem; font-weight: 800; color: var(--primary-color); margin: 0;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem; font-weight: 600;">دج</span></p>
+                                <span style="font-size: 0.8rem; color: var(--light-text, #64748b);"><i class="fas fa-box" style="margin-left: 4px;"></i>المخزون: ${p.stock}</span>
                             </div>
                             <div style="display: flex; gap: 8px;">
-                                <a href="product.html?id=${p.id}" class="btn" style="flex: 1; background: #edf2f7; color: #2d3748; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; text-decoration: none; text-align: center; font-weight: 600; transition: background 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#edf2f7'">التفاصيل</a>
-                                <button onclick="quickAddToCart(${p.id})" class="btn" style="flex: 1.2; background: #2ecc71; color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; border: none; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s;" onmouseover="this.style.background='#27ae60'" onmouseout="this.style.background='#2ecc71'"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
+                                <a href="product.html?id=${p.id}" class="btn" style="flex: 1; background: var(--light-color, #f8fafc); color: var(--text-color, #334155); border: 1px solid var(--border-color, #e2e8f0); padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; text-decoration: none; text-align: center; font-weight: 600; transition: var(--transition);">التفاصيل</a>
+                                <button onclick="quickAddToCart(${p.id})" class="btn" style="flex: 1.2; background: var(--primary-gradient); color: white; padding: 8px 12px; border-radius: 6px; font-size: 0.9rem; border: none; cursor: pointer; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; transition: var(--transition);"><i class="fas fa-cart-plus"></i> أضف للسلة</button>
                             </div>
                         </div>
                     `).join('');
@@ -242,12 +242,12 @@
                 if (offersContainer) {
                     const specialOffers = products.slice(0, 3);
                     offersContainer.innerHTML = specialOffers.map(p => `
-                        <div class="offer-card" style="background: white; border: 1px solid #feebc8; padding: 18px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); text-align: right; transition: transform 0.2s, box-shadow 0.2s; position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 10px 20px rgba(0,0,0,0.08)'" onmouseout="this.style.transform='none';this.style.boxShadow='0 4px 12px rgba(0,0,0,0.03)'">
-                            <span style="position: absolute; top: 10px; right: 10px; background: #dd6b20; color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">عرض خاص 🔥</span>
-                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 170px; object-fit: cover; border-radius: 8px; margin-bottom: 12px;">
-                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: #1a202c;">${p.name}</h3>
-                            <p style="color: #dd6b20; font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem;">دج</span></p>
-                            <a href="product.html?id=${p.id}" class="btn" style="display: block; width: 100%; background: #dd6b20; color: white; padding: 9px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: 700;" onmouseover="this.style.background='#c05621'" onmouseout="this.style.background='#dd6b20'">احصل عليه الآن</a>
+                        <div class="offer-card" style="background: var(--card-bg, white); border: 1px solid var(--border-color, #feebc8); padding: 18px; border-radius: var(--border-radius, 12px); box-shadow: var(--box-shadow); text-align: right; transition: var(--transition); position: relative;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='var(--box-shadow-hover)'" onmouseout="this.style.transform='none';this.style.boxShadow='var(--box-shadow)'">
+                            <span style="position: absolute; top: 10px; right: 10px; background: var(--accent-gradient); color: white; font-size: 0.75rem; font-weight: 700; padding: 3px 8px; border-radius: 20px;">عرض خاص 🔥</span>
+                            <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 170px; object-fit: cover; border-radius: var(--border-radius-sm, 8px); margin-bottom: 12px;">
+                            <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; color: var(--dark-color, #1e293b);">${p.name}</h3>
+                            <p style="color: var(--primary-color); font-weight: 800; font-size: 1.1rem; margin-bottom: 12px;">${Number(p.price).toLocaleString()} <span style="font-size: 0.85rem;">دج</span></p>
+                            <a href="product.html?id=${p.id}" class="btn" style="display: block; width: 100%; background: var(--primary-gradient); color: white; padding: 9px; border-radius: 6px; text-decoration: none; text-align: center; font-weight: 700; transition: var(--transition);">احصل عليه الآن</a>
                         </div>
                     `).join('');
                 }
