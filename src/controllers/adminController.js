@@ -188,6 +188,23 @@ async function updateStoreSettings(req, res) {
     }
 }
 
+async function uploadMedia(req, res) {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'لم يتم رفع أي ملف' });
+        }
+        const fileUrl = req.file.url || `/images/${req.file.filename}`;
+        res.status(201).json({
+            message: 'تم رفع الملف بنجاح',
+            url: fileUrl,
+            storageProvider: req.file.storageProvider || 'local'
+        });
+    } catch (error) {
+        console.error('Error uploading media:', error);
+        res.status(500).json({ error: 'خطأ أثناء رفع الملف' });
+    }
+}
+
 module.exports = {
     getDashboardStats,
     getPublicConfig,
@@ -201,5 +218,6 @@ module.exports = {
     updateReviewStatus,
     deleteReview,
     getStoreSettings,
-    updateStoreSettings
+    updateStoreSettings,
+    uploadMedia
 };

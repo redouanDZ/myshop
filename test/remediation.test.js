@@ -1183,6 +1183,84 @@ test('Phase 4 — Commercial Readiness: Shipping Label Printing & Order CSV Expo
     assert.ok(csvBody.includes('المجموع الكلي (دج)'), 'CSV header must include total in Arabic');
 });
 
+test('Phase 5 — General Store Customization (Branding, Policies, Social Links, Payment Toggles)', async () => {
+    // 1. Admin updates comprehensive general settings
+    const updateRes = await fetch(`${baseUrl}/api/admin/settings`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+            store_name: 'متجر الجزائر بريميوم',
+            store_logo: 'https://res.cloudinary.com/myshop/image/upload/logo.png',
+            store_favicon: 'https://res.cloudinary.com/myshop/image/upload/favicon.ico',
+            store_phone: '0555123456',
+            store_whatsapp: '213555123456',
+            store_email: 'support@algeria-shop.dz',
+            store_address: 'حي الرياض، وهران',
+            facebook_url: 'https://facebook.com/myshopdz',
+            instagram_url: 'https://instagram.com/myshopdz',
+            tiktok_url: 'https://tiktok.com/@myshopdz',
+            shipping_policy: 'شحن مضمون خلال 24 ساعة لـ 58 ولاية',
+            return_policy: 'إرجاع مجاني خلال 3 أيام',
+            warranty_policy: 'ضمان سنة كاملة ضد عيوب الصناعة',
+            enable_cod: 'true',
+            enable_chargily: 'false',
+            announcement_bar_text: 'تخفيضات كبرى بمناسبة الافتتاح!'
+        })
+    });
+    assert.strictEqual(updateRes.status, 200);
+
+    // 2. Verify all settings are served on the public endpoint
+    const publicRes = await fetch(`${baseUrl}/api/settings`);
+    assert.strictEqual(publicRes.status, 200);
+    const settings = await publicRes.json();
+
+    assert.strictEqual(settings.store_name, 'متجر الجزائر بريميوم');
+    assert.strictEqual(settings.store_logo, 'https://res.cloudinary.com/myshop/image/upload/logo.png');
+    assert.strictEqual(settings.facebook_url, 'https://facebook.com/myshopdz');
+    assert.strictEqual(settings.enable_chargily, 'false');
+    assert.strictEqual(settings.shipping_policy, 'شحن مضمون خلال 24 ساعة لـ 58 ولاية');
+});
+
+test('Phase 5 — Cloud Media Storage & Image Upload Pipeline (Magic Bytes & Provider Processing)', async () => {
+    const { getStorageProvider, processUploadedFile } = require('../src/utils/cloudStorage');
+
+    // 1. Storage provider detection
+    const provider = getStorageProvider();
+    assert.ok(['local', 'cloudinary', 's3'].includes(provider), 'Provider must be local, cloudinary, or s3');
+
+    // 2. Test valid PNG upload to /api/admin/upload-media
+    const validPngBuffer = Buffer.from([
+        0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG Magic bytes
+        0x00, 0x00, 0x00, 0x0D, 0x49, 0x48, 0x44, 0x52,
+        0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+        0x08, 0x06, 0x00, 0x00, 0x00, 0x1F, 0x15, 0xC4,
+        0x89, 0x00, 0x00, 0x00, 0x0A, 0x49, 0x44, 0x41,
+        0x54, 0x78, 0x9C, 0x63, 0x00, 0x01, 0x00, 0x00,
+        0x05, 0x00, 0x01, 0x0D, 0x0A, 0x2D, 0xB4, 0x00,
+        0x00, 0x00, 0x00, 0x49, 0x45, 0x4E, 0x44, 0xAE,
+        0x42, 0x60, 0x82
+    ]);
+
+    const formData = new FormData();
+    const blob = new Blob([validPngBuffer], { type: 'image/png' });
+    formData.append('file', blob, 'store-logo.png');
+
+    const uploadRes = await fetch(`${baseUrl}/api/admin/upload-media`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminToken}` },
+        body: formData
+    });
+
+    assert.strictEqual(uploadRes.status, 201, 'Valid PNG upload must succeed with 201');
+    const uploadData = await uploadRes.json();
+    assert.ok(uploadData.url, 'Uploaded file URL must be returned');
+    assert.ok(uploadData.storageProvider, 'Storage provider must be returned');
+});
+
+
 
 
 

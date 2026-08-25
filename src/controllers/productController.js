@@ -21,7 +21,7 @@ async function createProduct(req, res) {
             stock: Math.trunc(stock),
             status,
             description,
-            image_url: req.file ? `/images/${req.file.filename}` : '/images/product-placeholder.jpg'
+            image_url: req.file ? (req.file.url || `/images/${req.file.filename}`) : '/images/product-placeholder.jpg'
         };
 
         const id = await db.createProduct(productData);
@@ -77,7 +77,7 @@ async function updateProduct(req, res) {
     try {
         const updateData = { ...req.body };
         if (req.file) {
-            updateData.image_url = `/images/${req.file.filename}`;
+            updateData.image_url = req.file.url || `/images/${req.file.filename}`;
         }
         if (updateData.price !== undefined && updateData.price !== '') {
             updateData.price = Number(updateData.price);
@@ -219,7 +219,7 @@ async function createProductVariant(req, res) {
             sku: sku ? sanitizeString(sku, '', 100) : null,
             priceModifier: Number(priceModifier) || 0,
             stock: Number(stock) || 0,
-            imageUrl: req.file ? `/images/${req.file.filename}` : null,
+            imageUrl: req.file ? (req.file.url || `/images/${req.file.filename}`) : null,
             status: status || 'active'
         });
         res.status(201).json({ message: 'تم إنشاء خيار المنتج بنجاح', id });
@@ -238,7 +238,7 @@ async function updateProductVariant(req, res) {
         if (updateData.sku) updateData.sku = sanitizeString(updateData.sku, '', 100);
         if (updateData.priceModifier !== undefined) updateData.priceModifier = Number(updateData.priceModifier);
         if (updateData.stock !== undefined) updateData.stock = Number(updateData.stock);
-        if (req.file) updateData.imageUrl = `/images/${req.file.filename}`;
+        if (req.file) updateData.imageUrl = req.file.url || `/images/${req.file.filename}`;
 
         const success = await db.updateProductVariant(variantId, updateData);
         if (!success) return res.status(404).json({ error: 'الخيار غير موجود' });

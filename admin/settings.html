@@ -3,10 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إعدادات المتجر والبكسلات - لوحة الإدارة</title>
+    <title>إعدادات المتجر العامة والتخزين السحابي - لوحة الإدارة</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
+    <style>
+        .settings-section-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 24px;
+        }
+        .settings-section-card h3 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #334155;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            padding: 10px 14px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+        }
+        .upload-field-row {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .upload-btn {
+            background: #f1f5f9;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            font-weight: 600;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .upload-btn:hover {
+            background: #e2e8f0;
+        }
+        .media-preview-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+            object-fit: contain;
+            background: #f8fafc;
+            display: none;
+        }
+        .toggle-switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            padding: 14px 18px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 26px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1;
+            transition: .3s;
+            border-radius: 26px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #10b981;
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+    </style>
 </head>
 <body>
     <!-- Header -->
@@ -61,88 +185,181 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="dashboard-header" style="margin-bottom: 25px;">
-                <h1>⚙️ إعدادات المتجر وبكسلات التتبع الإعلاني</h1>
-                <p style="color: #64748b; margin-top: 5px;">خصص معلومات متجرك واربط بكسلات Facebook و TikTok و Google Analytics لتتبع الحملات والمبيعات.</p>
+                <h1>⚙️ التخصيص العام وإدارة المتجر والسحابة</h1>
+                <p style="color: #64748b; margin-top: 5px;">تحكم بهوية متجرك، الشعار، أرقام التواصل، روابط الشبكات الاجتماعية، السياسات، بكسلات التتبع الإعلاني، والتخزين السحابي للوسائط.</p>
             </div>
 
-            <form id="settingsForm" onsubmit="saveSettings(event)" style="display: grid; gap: 24px; max-width: 900px;">
-                <!-- General Info Card -->
-                <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
-                    <h3 style="margin-top: 0; margin-bottom: 18px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-store" style="color: var(--primary-color);"></i> معلومات وهوية المتجر
-                    </h3>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-                        <div>
-                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">اسم المتجر</label>
-                            <input type="text" id="setting_store_name" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
+            <form id="settingsForm" onsubmit="saveSettings(event)" style="max-width: 950px;">
+                <!-- 1. Identity & Branding -->
+                <div class="settings-section-card">
+                    <h3><i class="fas fa-palette" style="color: #3b82f6;"></i> هوية وشعار المتجر (Branding & Logo)</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>اسم المتجر الرسمي</label>
+                            <input type="text" id="setting_store_name" placeholder="مثال: متجر الهواتف الذكية">
                         </div>
-                        <div>
-                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">رقم هاتف خدمة العملاء</label>
-                            <input type="text" id="setting_store_phone" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        <div class="form-group">
+                            <label>رمز العملة المعروضة</label>
+                            <input type="text" id="setting_store_currency" placeholder="دج">
                         </div>
-                        <div>
-                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">رقم الواتساب (للتواصل المباشر)</label>
-                            <input type="text" id="setting_store_whatsapp" placeholder="مثال: 213550000000" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                    </div>
+
+                    <div class="form-grid" style="margin-top: 16px;">
+                        <!-- Logo Upload -->
+                        <div class="form-group">
+                            <label>شعار المتجر الرئيسي (Logo)</label>
+                            <div class="upload-field-row">
+                                <img id="logoPreview" class="media-preview-box" alt="Logo Preview">
+                                <input type="text" id="setting_store_logo" placeholder="/images/logo.png أو رابط CDN" style="flex: 1;">
+                                <label class="upload-btn">
+                                    <i class="fas fa-cloud-upload-alt"></i> رفع شعار
+                                    <input type="file" id="logoFileInput" accept="image/*" style="display: none;" onchange="uploadSingleMedia(this, 'setting_store_logo', 'logoPreview')">
+                                </label>
+                            </div>
                         </div>
-                        <div>
-                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">البريد الإلكتروني الرسمي</label>
-                            <input type="email" id="setting_store_email" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">عنوان ومقر المتجر</label>
-                            <input type="text" id="setting_store_address" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
-                        </div>
-                        <div>
-                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">نص شريط الإعلانات العلوي</label>
-                            <input type="text" id="setting_announcement_bar_text" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
+
+                        <!-- Favicon Upload -->
+                        <div class="form-group">
+                            <label>أيقونة المتصفح المصغرة (Favicon)</label>
+                            <div class="upload-field-row">
+                                <img id="faviconPreview" class="media-preview-box" alt="Favicon Preview">
+                                <input type="text" id="setting_store_favicon" placeholder="/favicon.ico أو رابط CDN" style="flex: 1;">
+                                <label class="upload-btn">
+                                    <i class="fas fa-cloud-upload-alt"></i> رفع أيقونة
+                                    <input type="file" id="faviconFileInput" accept="image/*" style="display: none;" onchange="uploadSingleMedia(this, 'setting_store_favicon', 'faviconPreview')">
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Marketing Pixels Card -->
-                <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
-                    <h3 style="margin-top: 0; margin-bottom: 18px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-bullhorn" style="color: #f59e0b;"></i> بكسلات التتبع الإعلاني (Marketing & Ad Pixels)
+                <!-- 2. Contact & Social Links -->
+                <div class="settings-section-card">
+                    <h3><i class="fas fa-headset" style="color: #10b981;"></i> معلومات التواصل والشبكات الاجتماعية</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-phone-alt"></i> هاتف خدمة العملاء</label>
+                            <input type="text" id="setting_store_phone" placeholder="0550000000" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-whatsapp" style="color: #25d366;"></i> رقم الواتساب المباشر (مع كود الدولة)</label>
+                            <input type="text" id="setting_store_whatsapp" placeholder="213550000000" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-envelope"></i> البريد الإلكتروني الرسمي</label>
+                            <input type="email" id="setting_store_email" placeholder="contact@myshop.dz" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-map-marker-alt"></i> عنوان ومقر المتجر</label>
+                            <input type="text" id="setting_store_address" placeholder="الجزائر العاصمة، الجزائر">
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="margin-top: 16px;">
+                        <div class="form-group">
+                            <label><i class="fab fa-facebook" style="color: #1877f2;"></i> رابط صفحة الفيسبوك</label>
+                            <input type="url" id="setting_facebook_url" placeholder="https://facebook.com/yourpage" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-instagram" style="color: #e1306c;"></i> رابط حساب الإنستغرام</label>
+                            <input type="url" id="setting_instagram_url" placeholder="https://instagram.com/yourprofile" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-tiktok"></i> رابط حساب التيك توك</label>
+                            <input type="url" id="setting_tiktok_url" placeholder="https://tiktok.com/@youraccount" dir="ltr">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Store Policies & Announcement Bar -->
+                <div class="settings-section-card">
+                    <h3><i class="fas fa-shield-alt" style="color: #8b5cf6;"></i> سياسات المتجر وشريط الإعلانات</h3>
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label><i class="fas fa-bullhorn" style="color: #f59e0b;"></i> نص شريط الإعلانات العلوي (Announcement Bar)</label>
+                        <input type="text" id="setting_announcement_bar_text" placeholder="توصيل سريع لـ 58 ولاية والدفع عند الاستلام!">
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-truck"></i> سياسة الشحن والتوصيل (Shipping Policy)</label>
+                            <textarea id="setting_shipping_policy" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-undo"></i> سياسة الاسترجاع والاستبدال (Return Policy)</label>
+                            <textarea id="setting_return_policy" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-certificate"></i> سياسة الضمان والجودة (Warranty Policy)</label>
+                            <textarea id="setting_warranty_policy" rows="3"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Payment Gateways Control -->
+                <div class="settings-section-card">
+                    <h3><i class="fas fa-credit-card" style="color: #f59e0b;"></i> تفعيل / تعطيل بوابات وطرق الدفع</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+                        <div class="toggle-switch-container">
+                            <div>
+                                <strong style="display: block; color: #1e293b;"><i class="fas fa-money-bill-wave" style="color: #10b981;"></i> الدفع عند الاستلام (COD)</strong>
+                                <small style="color: #64748b;">تمكين الزبائن من الدفع نقداً عند استلام الطرد</small>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="setting_enable_cod" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="toggle-switch-container">
+                            <div>
+                                <strong style="display: block; color: #1e293b;"><i class="fas fa-credit-card" style="color: #2563eb;"></i> الدفع الإلكتروني (Chargily Pay)</strong>
+                                <small style="color: #64748b;">الدفع بالبطاقة الذهبية وبطاقات CIB البنكية</small>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="setting_enable_chargily" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. Marketing & Analytics Pixels -->
+                <div class="settings-section-card">
+                    <h3><i class="fas fa-chart-line" style="color: #ec4899;"></i> بكسلات التتبع الإعلاني (Marketing & Ad Pixels)</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fab fa-facebook" style="color: #1877f2;"></i> Meta / Facebook Pixel ID</label>
+                            <input type="text" id="setting_facebook_pixel_id" placeholder="مثال: 123456789012345" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-tiktok"></i> TikTok Pixel ID</label>
+                            <input type="text" id="setting_tiktok_pixel_id" placeholder="مثال: C6XXXXXXXXXXXXX" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-google" style="color: #ea4335;"></i> Google Analytics 4 (GA4 ID)</label>
+                            <input type="text" id="setting_google_analytics_id" placeholder="مثال: G-XXXXXXXXXX" dir="ltr">
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fab fa-snapchat-ghost" style="color: #eab308;"></i> Snapchat Pixel ID</label>
+                            <input type="text" id="setting_snapchat_pixel_id" placeholder="مثال: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" dir="ltr">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. Cloud Media Storage Info -->
+                <div class="settings-section-card" style="background: #f0fdf4; border-color: #bbf7d0;">
+                    <h3 style="border-bottom: none; margin-bottom: 8px; color: #166534;">
+                        <i class="fas fa-cloud" style="color: #16a34a;"></i> حالة التخزين السحابي للوسائط (Cloud Media Storage)
                     </h3>
-                    <p style="color: #64748b; font-size: 0.88rem; margin-top: -10px; margin-bottom: 16px;">
-                        أدخل معرفات البكسل (Pixel IDs) فقط، وسيتم حقن أكواد التتبع وتتبع أحداث المشاهدة وإضافة السلة والشراء تلقائياً.
+                    <p style="color: #15803d; font-size: 0.9rem; line-height: 1.6; margin: 0;">
+                        ☁️ <strong>جاهز للنشر السحابي:</strong> يدعم المتجر تلقائياً التخزين السحابي الدائم لصور المنتجات والشعارات عبر <strong>Cloudinary</strong> و <strong>AWS S3 / Cloudflare R2</strong>. عند توفير متغيرات البيئة <code>CLOUDINARY_CLOUD_NAME</code> و <code>CLOUDINARY_API_KEY</code> و <code>CLOUDINARY_API_SECRET</code> في الخادم السحابي، سيتم رفع الصور مباشرة إلى شبكة CDN السحابية لضمان بقائها وعدم فقدانها عند إعادة تشغيل الخادم.
                     </p>
-
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
-                        <div>
-                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #1877f2; margin-bottom: 6px;">
-                                <i class="fab fa-facebook"></i> Facebook / Meta Pixel ID
-                            </label>
-                            <input type="text" id="setting_facebook_pixel_id" placeholder="مثال: 123456789012345" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
-                        </div>
-
-                        <div>
-                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #000; margin-bottom: 6px;">
-                                <i class="fab fa-tiktok"></i> TikTok Pixel ID
-                            </label>
-                            <input type="text" id="setting_tiktok_pixel_id" placeholder="مثال: C6XXXXXXXXXXXXX" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
-                        </div>
-
-                        <div>
-                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #ea4335; margin-bottom: 6px;">
-                                <i class="fab fa-google"></i> Google Analytics 4 (GA4 ID)
-                            </label>
-                            <input type="text" id="setting_google_analytics_id" placeholder="مثال: G-XXXXXXXXXX" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
-                        </div>
-
-                        <div>
-                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #fffc00; background: #334155; padding: 2px 6px; border-radius: 4px; display: inline-flex; margin-bottom: 6px;">
-                                <i class="fab fa-snapchat-ghost"></i> Snapchat Pixel ID
-                            </label>
-                            <input type="text" id="setting_snapchat_pixel_id" placeholder="مثال: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
-                        </div>
-                    </div>
                 </div>
 
-                <!-- Submit Button -->
-                <div>
-                    <button type="submit" id="saveSettingsBtn" style="background: var(--primary-color, #2563eb); color: #fff; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-save"></i> حفظ كافة الإعدادات
+                <!-- Save Button -->
+                <div style="margin-top: 10px; margin-bottom: 40px;">
+                    <button type="submit" id="saveSettingsBtn" style="background: var(--primary-color, #2563eb); color: #fff; border: none; padding: 14px 32px; border-radius: 8px; font-size: 1.05rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(37,99,235,0.25);">
+                        <i class="fas fa-save"></i> حفظ كافة التغييرات والإعدادات
                     </button>
                 </div>
             </form>
@@ -164,11 +381,73 @@
                 if (settings) {
                     for (const [k, v] of Object.entries(settings)) {
                         const input = document.getElementById(`setting_${k}`);
-                        if (input) input.value = v || '';
+                        if (input) {
+                            if (input.type === 'checkbox') {
+                                input.checked = (v === 'true' || v === true);
+                            } else {
+                                input.value = v || '';
+                            }
+                        }
+                    }
+
+                    if (settings.store_logo) {
+                        const preview = document.getElementById('logoPreview');
+                        preview.src = settings.store_logo;
+                        preview.style.display = 'block';
+                    }
+                    if (settings.store_favicon) {
+                        const preview = document.getElementById('faviconPreview');
+                        preview.src = settings.store_favicon;
+                        preview.style.display = 'block';
                     }
                 }
             } catch (err) {
                 console.error('Error loading settings:', err);
+            }
+        }
+
+        async function uploadSingleMedia(fileInput, targetInputId, previewImgId) {
+            const file = fileInput.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                let csrfToken = '';
+                try {
+                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                    if (csrfRes.ok) {
+                        const csrfData = await csrfRes.json();
+                        csrfToken = csrfData.csrfToken || '';
+                    }
+                } catch (e) {}
+
+                const headers = {};
+                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+
+                const res = await fetch('/api/admin/upload-media', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers,
+                    body: formData
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'فشل رفع الملف');
+
+                document.getElementById(targetInputId).value = data.url;
+                const preview = document.getElementById(previewImgId);
+                if (preview) {
+                    preview.src = data.url;
+                    preview.style.display = 'block';
+                }
+
+                if (window.showToast) window.showToast('تم رفع الصورة بنجاح! ☁️', 'success');
+                else alert('تم رفع الصورة بنجاح!');
+            } catch (err) {
+                if (window.showToast) window.showToast(err.message, 'error');
+                else alert(err.message);
             }
         }
 
@@ -180,10 +459,21 @@
 
             const payload = {
                 store_name: document.getElementById('setting_store_name').value.trim(),
+                store_currency: document.getElementById('setting_store_currency').value.trim() || 'دج',
+                store_logo: document.getElementById('setting_store_logo').value.trim(),
+                store_favicon: document.getElementById('setting_store_favicon').value.trim(),
                 store_phone: document.getElementById('setting_store_phone').value.trim(),
                 store_whatsapp: document.getElementById('setting_store_whatsapp').value.trim(),
                 store_email: document.getElementById('setting_store_email').value.trim(),
                 store_address: document.getElementById('setting_store_address').value.trim(),
+                facebook_url: document.getElementById('setting_facebook_url').value.trim(),
+                instagram_url: document.getElementById('setting_instagram_url').value.trim(),
+                tiktok_url: document.getElementById('setting_tiktok_url').value.trim(),
+                shipping_policy: document.getElementById('setting_shipping_policy').value.trim(),
+                return_policy: document.getElementById('setting_return_policy').value.trim(),
+                warranty_policy: document.getElementById('setting_warranty_policy').value.trim(),
+                enable_cod: document.getElementById('setting_enable_cod').checked ? 'true' : 'false',
+                enable_chargily: document.getElementById('setting_enable_chargily').checked ? 'true' : 'false',
                 announcement_bar_text: document.getElementById('setting_announcement_bar_text').value.trim(),
                 facebook_pixel_id: document.getElementById('setting_facebook_pixel_id').value.trim(),
                 tiktok_pixel_id: document.getElementById('setting_tiktok_pixel_id').value.trim(),
@@ -214,14 +504,14 @@
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'فشل حفظ الإعدادات');
 
-                if (window.showToast) window.showToast('تم حفظ الإعدادات بنجاح! ⚙️', 'success');
-                else alert('تم حفظ الإعدادات بنجاح!');
+                if (window.showToast) window.showToast('تم حفظ كافة الإعدادات بنجاح! ⚙️', 'success');
+                else alert('تم حفظ كافة الإعدادات بنجاح!');
             } catch (err) {
                 if (window.showToast) window.showToast(err.message, 'error');
                 else alert(err.message);
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<i class="fas fa-save"></i> حفظ كافة الإعدادات';
+                btn.innerHTML = '<i class="fas fa-save"></i> حفظ كافة التغييرات والإعدادات';
             }
         }
 

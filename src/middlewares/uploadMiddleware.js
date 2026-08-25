@@ -120,6 +120,13 @@ async function validateUploadedImage(req, res, next) {
         return res.status(400).json({ error: 'امتداد الملف لا يطابق محتواه الفعلي' });
     }
 
+    try {
+        const { processUploadedFile } = require('../utils/cloudStorage');
+        await processUploadedFile(req.file);
+    } catch (err) {
+        console.error('Error in cloud storage processor:', err);
+    }
+
     next();
 }
 

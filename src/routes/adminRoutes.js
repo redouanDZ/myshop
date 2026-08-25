@@ -3,6 +3,8 @@ const router = express.Router();
 const adminController = require('../controllers/adminController');
 const { requireAdmin } = require('../middlewares/adminMiddleware');
 
+const { upload, validateUploadedImage } = require('../middlewares/uploadMiddleware');
+
 router.get('/dashboard-stats', requireAdmin, adminController.getDashboardStats);
 router.get('/store-config', adminController.getPublicConfig);
 
@@ -24,5 +26,6 @@ router.delete('/reviews/:id', requireAdmin, adminController.deleteReview);
 // Store Settings & Marketing Pixels
 router.get('/settings', requireAdmin, adminController.getStoreSettings);
 router.put('/settings', requireAdmin, adminController.updateStoreSettings);
+router.post('/upload-media', requireAdmin, upload.single('file'), validateUploadedImage, adminController.uploadMedia);
 
 module.exports = router;

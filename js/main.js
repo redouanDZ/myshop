@@ -468,6 +468,87 @@ function initMobileNavigation() {
 }
 
 /**
+ * Apply Global Dynamic Store Settings (Logo, Branding, Social, Policies, Announcement, Payment Toggles)
+ */
+function applyGlobalStoreSettings(settings) {
+  if (!settings) return;
+
+  // 1. Update Document Title / Favicon
+  if (settings.store_favicon) {
+    let link = document.querySelector("link[rel~='icon']");
+    if (!link) {
+      link = document.createElement('link');
+      link.rel = 'icon';
+      document.head.appendChild(link);
+    }
+    link.href = settings.store_favicon;
+  }
+
+  // 2. Update Header Brand Name & Logo
+  document.querySelectorAll('.logo a').forEach(logoLink => {
+    if (settings.store_logo) {
+      logoLink.innerHTML = `<img src="${settings.store_logo}" alt="${settings.store_name || 'MYSHOP'}" style="max-height: 42px; width: auto; vertical-align: middle;">`;
+    } else if (settings.store_name) {
+      logoLink.textContent = settings.store_name;
+    }
+  });
+
+  // 3. Update Announcement Bar if present
+  const announcementEl = document.querySelector('.top-announcement-bar') || document.getElementById('announcement-bar');
+  if (announcementEl && settings.announcement_bar_text) {
+    announcementEl.textContent = settings.announcement_bar_text;
+  }
+
+  // 4. Update Footer Contact Info & Social Links
+  document.querySelectorAll('.footer-phone, .contact-phone').forEach(el => {
+    if (settings.store_phone) {
+      el.textContent = settings.store_phone;
+      if (el.tagName === 'A') el.href = `tel:${settings.store_phone}`;
+    }
+  });
+
+  document.querySelectorAll('.footer-email, .contact-email').forEach(el => {
+    if (settings.store_email) {
+      el.textContent = settings.store_email;
+      if (el.tagName === 'A') el.href = `mailto:${settings.store_email}`;
+    }
+  });
+
+  document.querySelectorAll('.footer-address, .contact-address').forEach(el => {
+    if (settings.store_address) el.textContent = settings.store_address;
+  });
+
+  document.querySelectorAll('.social-links a.facebook, a[title="فيسبوك"]').forEach(el => {
+    if (settings.facebook_url) el.href = settings.facebook_url;
+  });
+
+  document.querySelectorAll('.social-links a.instagram, a[title="إنستغرام"]').forEach(el => {
+    if (settings.instagram_url) el.href = settings.instagram_url;
+  });
+
+  document.querySelectorAll('.social-links a.tiktok, a[title="تيك توك"]').forEach(el => {
+    if (settings.tiktok_url) el.href = settings.tiktok_url;
+  });
+
+  // 5. Payment Methods Visibility Control (Checkout / Express)
+  if (settings.enable_cod === 'false') {
+    const codRadio = document.querySelector('input[name="paymentMethod"][value="cod"]') || document.querySelector('.cod-option');
+    if (codRadio) {
+      const container = codRadio.closest('.payment-option') || codRadio.parentElement;
+      if (container) container.style.display = 'none';
+    }
+  }
+
+  if (settings.enable_chargily === 'false') {
+    const chargilyRadio = document.querySelector('input[name="paymentMethod"][value="chargily"]') || document.querySelector('.chargily-option');
+    if (chargilyRadio) {
+      const container = chargilyRadio.closest('.payment-option') || chargilyRadio.parentElement;
+      if (container) container.style.display = 'none';
+    }
+  }
+}
+
+/**
  * Marketing Pixels & Event Tracker
  */
 async function initMarketingPixels() {
@@ -478,6 +559,7 @@ async function initMarketingPixels() {
     if (!settings) return;
 
     window.storeSettings = settings;
+    applyGlobalStoreSettings(settings);
 
     // 1. Facebook Pixel
     if (settings.facebook_pixel_id && typeof window.fbq !== 'function') {
