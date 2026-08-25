@@ -7,6 +7,7 @@ const { requireAdmin } = require('../middlewares/adminMiddleware');
 // Public routes
 router.post('/orders', orderController.createOrder);
 router.get('/orders/track', orderController.trackOrder);
+router.get('/admin/orders/export', requireAdmin, orderController.exportOrders);
 router.get('/orders/:id', orderController.getOrderById);
 router.get('/order-items/:orderId', orderController.getOrderItems);
 

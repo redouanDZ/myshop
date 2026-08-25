@@ -256,11 +256,68 @@ async function updateOrderStatus(req, res) {
     }
 }
 
+async function exportOrders(req, res) {
+    try {
+        const { status } = req.query;
+        let orders = await db.getOrders();
+        if (status && status !== 'all') {
+            orders = orders.filter(o => o.status === status);
+        }
+
+        const headers = [
+            'رقم الطلب',
+            'اسم العميل',
+            'رقم الهاتف',
+            'البريد الإلكتروني',
+            'الولاية',
+            'العنوان / البلدية',
+            'نوع التوصيل',
+            'تكلفة الشحن (دج)',
+            'المجموع الكلي (دج)',
+            'طريقة الدفع',
+            'حالة الدفع',
+            'حالة الطلب',
+            'تاريخ الطلب'
+        ];
+
+        const escapeCsv = (str) => {
+            const clean = String(str || '').replace(/"/g, '""');
+            return `"${clean}"`;
+        };
+
+        const rows = orders.map(o => [
+            escapeCsv(o.order_number || o.id),
+            escapeCsv(o.shipping_full_name || 'عميل'),
+            escapeCsv(o.phone || ''),
+            escapeCsv(o.email || ''),
+            escapeCsv(o.wilaya_name || ''),
+            escapeCsv(o.address || o.city || ''),
+            escapeCsv(o.delivery_type === 'desk' ? 'مكتب' : 'منزل'),
+            escapeCsv(o.shipping_cost || 0),
+            escapeCsv(o.total || 0),
+            escapeCsv(o.payment_method === 'chargily' ? 'إلكتروني' : 'عند الاستلام'),
+            escapeCsv(o.payment_status || 'pending'),
+            escapeCsv(o.status || 'pending'),
+            escapeCsv(new Date(o.created_at || Date.now()).toLocaleDateString('ar-DZ'))
+        ].join(','));
+
+        const csvContent = '\uFEFF' + [headers.map(escapeCsv).join(','), ...rows].join('\r\n');
+
+        res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+        res.setHeader('Content-Disposition', `attachment; filename="orders-export-${Date.now()}.csv"`);
+        res.status(200).send(csvContent);
+    } catch (error) {
+        console.error('Error exporting orders:', error);
+        res.status(500).json({ error: 'خطأ في تصدير الطلبات' });
+    }
+}
+
 module.exports = {
     createOrder,
     getOrders,
     getOrderById,
     getOrderItems,
     trackOrder,
-    updateOrderStatus
+    updateOrderStatus,
+    exportOrders
 };

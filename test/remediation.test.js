@@ -1157,6 +1157,33 @@ test('Phase 3 — Commercial Readiness: Product Variants Management (Colors, Siz
     await db.deleteProduct(prodId).catch(() => {});
 });
 
+test('Phase 4 — Commercial Readiness: Shipping Label Printing & Order CSV Export for Logistics', async () => {
+    // 1. Unauthenticated request to export orders must return 401
+    const unauthRes = await fetch(`${baseUrl}/api/admin/orders/export`);
+    assert.strictEqual(unauthRes.status, 401, 'Export orders must require admin authentication');
+
+    // 2. Admin request to export orders
+    const exportRes = await fetch(`${baseUrl}/api/admin/orders/export`, {
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(exportRes.status, 200, 'Admin export must return 200 OK');
+    assert.ok(exportRes.headers.get('content-type').includes('text/csv'), 'Content-Type must be text/csv');
+    assert.ok(exportRes.headers.get('content-disposition').includes('orders-export'), 'Disposition must include filename');
+
+    const arrayBuf = await exportRes.arrayBuffer();
+    const rawBuffer = Buffer.from(arrayBuf);
+    // Verify UTF-8 BOM (0xEF, 0xBB, 0xBF) is present at the start of raw byte stream for Excel Arabic compatibility
+    assert.strictEqual(rawBuffer[0], 0xEF, 'Byte 0 must be 0xEF');
+    assert.strictEqual(rawBuffer[1], 0xBB, 'Byte 1 must be 0xBB');
+    assert.strictEqual(rawBuffer[2], 0xBF, 'Byte 2 must be 0xBF');
+
+    const csvBody = rawBuffer.toString('utf8');
+    assert.ok(csvBody.includes('رقم الطلب'), 'CSV header must include order number in Arabic');
+    assert.ok(csvBody.includes('اسم العميل'), 'CSV header must include customer name in Arabic');
+    assert.ok(csvBody.includes('المجموع الكلي (دج)'), 'CSV header must include total in Arabic');
+});
+
+
 
 
 
