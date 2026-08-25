@@ -90,5 +90,7 @@ module.exports = {
     createProductReview: buildProxy('createProductReview'),
     getAdminReviews: buildProxy('getAdminReviews'),
     updateReviewStatus: buildProxy('updateReviewStatus'),
-    deleteReview: buildProxy('deleteReview')
+    deleteReview: buildProxy('deleteReview'),
+    getStoreSettings: buildProxy('getStoreSettings'),
+    updateStoreSettings: buildProxy('updateStoreSettings')
 };

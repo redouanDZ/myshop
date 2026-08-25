@@ -221,6 +221,14 @@ class StoreService {
   async deleteReview(id) {
     return this.repository.deleteReview(id);
   }
+
+  async getStoreSettings() {
+    return this.repository.getStoreSettings();
+  }
+
+  async updateStoreSettings(settings) {
+    return this.repository.updateStoreSettings(settings);
+  }
 }
 
 module.exports = {

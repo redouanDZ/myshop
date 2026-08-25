@@ -1446,6 +1446,45 @@ class MysqlRepository {
     }
     return result.affectedRows > 0;
   }
+
+  async getStoreSettings() {
+    const defaultSettings = {
+      store_name: 'المتجر الإلكتروني (MYSHOP)',
+      store_phone: '0550000000',
+      store_whatsapp: '213550000000',
+      store_email: 'contact@myshop.dz',
+      store_address: 'الجزائر العاصمة، الجزائر',
+      store_currency: 'دج',
+      facebook_pixel_id: '',
+      tiktok_pixel_id: '',
+      google_analytics_id: '',
+      snapchat_pixel_id: '',
+      announcement_bar_text: 'توصيل سريع متوفر لـ 58 ولاية والدفع عند الاستلام!'
+    };
+    try {
+      const [rows] = await this.pool.query('SELECT setting_key, setting_value FROM store_settings');
+      const settings = { ...defaultSettings };
+      for (const row of rows) {
+        settings[row.setting_key] = row.setting_value;
+      }
+      return settings;
+    } catch (err) {
+      return defaultSettings;
+    }
+  }
+
+  async updateStoreSettings(settings) {
+    if (!settings || typeof settings !== 'object') return false;
+    for (const [key, value] of Object.entries(settings)) {
+      if (typeof key === 'string' && key.length <= 100) {
+        await this.pool.query(
+          'INSERT INTO store_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = VALUES(setting_value)',
+          [key, value === null || value === undefined ? '' : String(value)]
+        );
+      }
+    }
+    return this.getStoreSettings();
+  }
 }
 
 function createMysqlRepository(pool) {
@@ -2181,6 +2220,37 @@ function createFallbackRepository() {
         prod.reviews_count = prodReviews.length;
       }
       return true;
+    },
+
+    async getStoreSettings() {
+      if (!state.settings) {
+        state.settings = {
+          store_name: 'المتجر الإلكتروني (MYSHOP)',
+          store_phone: '0550000000',
+          store_whatsapp: '213550000000',
+          store_email: 'contact@myshop.dz',
+          store_address: 'الجزائر العاصمة، الجزائر',
+          store_currency: 'دج',
+          facebook_pixel_id: '',
+          tiktok_pixel_id: '',
+          google_analytics_id: '',
+          snapchat_pixel_id: '',
+          announcement_bar_text: 'توصيل سريع متوفر لـ 58 ولاية والدفع عند الاستلام!'
+        };
+      }
+      return { ...state.settings };
+    },
+
+    async updateStoreSettings(settings) {
+      if (!state.settings) {
+        await repo.getStoreSettings();
+      }
+      if (settings && typeof settings === 'object') {
+        for (const [k, v] of Object.entries(settings)) {
+          state.settings[k] = v === null || v === undefined ? '' : String(v);
+        }
+      }
+      return { ...state.settings };
     }
   };
   return repo;

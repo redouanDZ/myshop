@@ -21,4 +21,8 @@ router.get('/reviews', requireAdmin, adminController.getAdminReviews);
 router.put('/reviews/:id/status', requireAdmin, adminController.updateReviewStatus);
 router.delete('/reviews/:id', requireAdmin, adminController.deleteReview);
 
+// Store Settings & Marketing Pixels
+router.get('/settings', requireAdmin, adminController.getStoreSettings);
+router.put('/settings', requireAdmin, adminController.updateStoreSettings);
+
 module.exports = router;

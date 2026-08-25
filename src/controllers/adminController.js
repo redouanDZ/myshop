@@ -168,6 +168,26 @@ async function deleteReview(req, res) {
     }
 }
 
+async function getStoreSettings(req, res) {
+    try {
+        const settings = await db.getStoreSettings();
+        res.json(settings);
+    } catch (error) {
+        console.error('Error fetching store settings:', error);
+        res.status(500).json({ error: 'خطأ في جلب إعدادات المتجر' });
+    }
+}
+
+async function updateStoreSettings(req, res) {
+    try {
+        const updated = await db.updateStoreSettings(req.body);
+        res.json({ message: 'تم حفظ الإعدادات بنجاح', settings: updated });
+    } catch (error) {
+        console.error('Error updating store settings:', error);
+        res.status(500).json({ error: 'خطأ في حفظ الإعدادات' });
+    }
+}
+
 module.exports = {
     getDashboardStats,
     getPublicConfig,
@@ -179,5 +199,7 @@ module.exports = {
     deleteCoupon,
     getAdminReviews,
     updateReviewStatus,
-    deleteReview
+    deleteReview,
+    getStoreSettings,
+    updateStoreSettings
 };

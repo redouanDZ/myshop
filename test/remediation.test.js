@@ -1037,6 +1037,49 @@ test('Phase 1 — Commercial Readiness: 1-Click COD Direct Checkout from Product
     await db.deleteProduct(prodId).catch(() => {});
 });
 
+test('Phase 2 — Commercial Readiness: Store Settings & Marketing Pixels Configuration', async () => {
+    // 1. Public GET /api/settings
+    const publicSettingsRes = await fetch(`${baseUrl}/api/settings`);
+    assert.strictEqual(publicSettingsRes.status, 200, 'Public settings endpoint must return 200');
+    const publicSettings = await publicSettingsRes.json();
+    assert.ok(publicSettings.store_name, 'store_name must be present');
+    assert.ok(publicSettings.store_phone, 'store_phone must be present');
+
+    // 2. Unauthenticated PUT /api/admin/settings must return 401
+    const unauthPut = await fetch(`${baseUrl}/api/admin/settings`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ facebook_pixel_id: '9999999999' })
+    });
+    assert.strictEqual(unauthPut.status, 401, 'Non-admin update must be rejected with 401');
+
+    // 3. Admin authenticated PUT /api/admin/settings
+    const adminPut = await fetch(`${baseUrl}/api/admin/settings`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+            store_name: 'متجر الجزائر الحديث',
+            facebook_pixel_id: '123456789012345',
+            tiktok_pixel_id: 'C6TIKTOKTEST',
+            google_analytics_id: 'G-TEST123456'
+        })
+    });
+    assert.strictEqual(adminPut.status, 200, 'Admin update must succeed with 200');
+    const updateResult = await adminPut.json();
+    assert.strictEqual(updateResult.settings.store_name, 'متجر الجزائر الحديث');
+    assert.strictEqual(updateResult.settings.facebook_pixel_id, '123456789012345');
+
+    // 4. Verify updated settings are immediately reflected on public endpoint
+    const verifyPublic = await fetch(`${baseUrl}/api/settings`);
+    const verifiedData = await verifyPublic.json();
+    assert.strictEqual(verifiedData.facebook_pixel_id, '123456789012345');
+    assert.strictEqual(verifiedData.tiktok_pixel_id, 'C6TIKTOKTEST');
+});
+
+
 
 
 

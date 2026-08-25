@@ -1,0 +1,239 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إعدادات المتجر والبكسلات - لوحة الإدارة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <a href="../index.html">المتجر الإلكتروني</a>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html">زيارة المتجر</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
+                    <li><a href="orders.html">الطلبات</a></li>
+                    <li><a href="products.html">المنتجات</a></li>
+                    <li><a href="customers.html">العملاء</a></li>
+                    <li><a href="coupons.html">الكوبونات</a></li>
+                    <li><a href="reviews.html">التقييمات</a></li>
+                    <li><a href="settings.html" class="active">الإعدادات</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="../account.html" class="user-icon" title="حساب الأدمن">
+                    <i class="fas fa-user-shield"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Dashboard -->
+    <div class="admin-dashboard">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>لوحة الإدارة</h2>
+                <p id="adminUserTag">مدير النظام</p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
+                <li><a href="customers.html"><i class="fas fa-users"></i> إدارة العملاء</a></li>
+                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
+                <li><a href="reviews.html"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
+                <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> الإعدادات والبكسلات</a></li>
+                <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
+                <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header" style="margin-bottom: 25px;">
+                <h1>⚙️ إعدادات المتجر وبكسلات التتبع الإعلاني</h1>
+                <p style="color: #64748b; margin-top: 5px;">خصص معلومات متجرك واربط بكسلات Facebook و TikTok و Google Analytics لتتبع الحملات والمبيعات.</p>
+            </div>
+
+            <form id="settingsForm" onsubmit="saveSettings(event)" style="display: grid; gap: 24px; max-width: 900px;">
+                <!-- General Info Card -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                    <h3 style="margin-top: 0; margin-bottom: 18px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-store" style="color: var(--primary-color);"></i> معلومات وهوية المتجر
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">اسم المتجر</label>
+                            <input type="text" id="setting_store_name" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">رقم هاتف خدمة العملاء</label>
+                            <input type="text" id="setting_store_phone" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">رقم الواتساب (للتواصل المباشر)</label>
+                            <input type="text" id="setting_store_whatsapp" placeholder="مثال: 213550000000" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">البريد الإلكتروني الرسمي</label>
+                            <input type="email" id="setting_store_email" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">عنوان ومقر المتجر</label>
+                            <input type="text" id="setting_store_address" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 0.9rem; font-weight: 600; color: #334155; margin-bottom: 6px;">نص شريط الإعلانات العلوي</label>
+                            <input type="text" id="setting_announcement_bar_text" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marketing Pixels Card -->
+                <div style="background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
+                    <h3 style="margin-top: 0; margin-bottom: 18px; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-bullhorn" style="color: #f59e0b;"></i> بكسلات التتبع الإعلاني (Marketing & Ad Pixels)
+                    </h3>
+                    <p style="color: #64748b; font-size: 0.88rem; margin-top: -10px; margin-bottom: 16px;">
+                        أدخل معرفات البكسل (Pixel IDs) فقط، وسيتم حقن أكواد التتبع وتتبع أحداث المشاهدة وإضافة السلة والشراء تلقائياً.
+                    </p>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+                        <div>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #1877f2; margin-bottom: 6px;">
+                                <i class="fab fa-facebook"></i> Facebook / Meta Pixel ID
+                            </label>
+                            <input type="text" id="setting_facebook_pixel_id" placeholder="مثال: 123456789012345" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        </div>
+
+                        <div>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #000; margin-bottom: 6px;">
+                                <i class="fab fa-tiktok"></i> TikTok Pixel ID
+                            </label>
+                            <input type="text" id="setting_tiktok_pixel_id" placeholder="مثال: C6XXXXXXXXXXXXX" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        </div>
+
+                        <div>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #ea4335; margin-bottom: 6px;">
+                                <i class="fab fa-google"></i> Google Analytics 4 (GA4 ID)
+                            </label>
+                            <input type="text" id="setting_google_analytics_id" placeholder="مثال: G-XXXXXXXXXX" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        </div>
+
+                        <div>
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.9rem; font-weight: 600; color: #fffc00; background: #334155; padding: 2px 6px; border-radius: 4px; display: inline-flex; margin-bottom: 6px;">
+                                <i class="fab fa-snapchat-ghost"></i> Snapchat Pixel ID
+                            </label>
+                            <input type="text" id="setting_snapchat_pixel_id" placeholder="مثال: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem;" dir="ltr">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <button type="submit" id="saveSettingsBtn" style="background: var(--primary-color, #2563eb); color: #fff; border: none; padding: 14px 28px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                        <i class="fas fa-save"></i> حفظ كافة الإعدادات
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../js/api-client.js"></script>
+    <script src="../js/main.js"></script>
+    <script>
+        async function loadSettings() {
+            try {
+                const res = await fetch('/api/admin/settings', { credentials: 'include' });
+                if (res.status === 401 || res.status === 403) {
+                    window.location.href = '../account.html?redirect=admin/settings.html';
+                    return;
+                }
+                const settings = await res.json();
+                if (settings) {
+                    for (const [k, v] of Object.entries(settings)) {
+                        const input = document.getElementById(`setting_${k}`);
+                        if (input) input.value = v || '';
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading settings:', err);
+            }
+        }
+
+        async function saveSettings(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveSettingsBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الحفظ...';
+
+            const payload = {
+                store_name: document.getElementById('setting_store_name').value.trim(),
+                store_phone: document.getElementById('setting_store_phone').value.trim(),
+                store_whatsapp: document.getElementById('setting_store_whatsapp').value.trim(),
+                store_email: document.getElementById('setting_store_email').value.trim(),
+                store_address: document.getElementById('setting_store_address').value.trim(),
+                announcement_bar_text: document.getElementById('setting_announcement_bar_text').value.trim(),
+                facebook_pixel_id: document.getElementById('setting_facebook_pixel_id').value.trim(),
+                tiktok_pixel_id: document.getElementById('setting_tiktok_pixel_id').value.trim(),
+                google_analytics_id: document.getElementById('setting_google_analytics_id').value.trim(),
+                snapchat_pixel_id: document.getElementById('setting_snapchat_pixel_id').value.trim()
+            };
+
+            try {
+                let csrfToken = '';
+                try {
+                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                    if (csrfRes.ok) {
+                        const csrfData = await csrfRes.json();
+                        csrfToken = csrfData.csrfToken || '';
+                    }
+                } catch (e) {}
+
+                const headers = { 'Content-Type': 'application/json' };
+                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+
+                const res = await fetch('/api/admin/settings', {
+                    method: 'PUT',
+                    credentials: 'include',
+                    headers,
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'فشل حفظ الإعدادات');
+
+                if (window.showToast) window.showToast('تم حفظ الإعدادات بنجاح! ⚙️', 'success');
+                else alert('تم حفظ الإعدادات بنجاح!');
+            } catch (err) {
+                if (window.showToast) window.showToast(err.message, 'error');
+                else alert(err.message);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-save"></i> حفظ كافة الإعدادات';
+            }
+        }
+
+        document.getElementById('adminLogoutBtn')?.addEventListener('click', async (e) => {
+            e.preventDefault();
+            try {
+                await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+            } catch (e) {}
+            window.location.href = '../account.html';
+        });
+
+        document.addEventListener('DOMContentLoaded', loadSettings);
+    </script>
+</body>
+</html>
