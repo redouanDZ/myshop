@@ -193,6 +193,75 @@ async function addProductReview(req, res) {
     }
 }
 
+async function getProductVariants(req, res) {
+    try {
+        const productId = parseInt(req.params.id, 10);
+        if (isNaN(productId)) return res.status(400).json({ error: 'معرف المنتج غير صالح' });
+        const variants = await db.getProductVariants(productId);
+        res.json(variants);
+    } catch (error) {
+        console.error('Error fetching variants:', error);
+        res.status(500).json({ error: 'خطأ في جلب خيارات المنتج' });
+    }
+}
+
+async function createProductVariant(req, res) {
+    try {
+        const productId = parseInt(req.params.id, 10);
+        if (isNaN(productId)) return res.status(400).json({ error: 'معرف المنتج غير صالح' });
+        const { name, sku, priceModifier, stock, status } = req.body;
+        if (!name || !String(name).trim()) {
+            return res.status(400).json({ error: 'اسم الخيار / التفرع مطلوب' });
+        }
+        const id = await db.createProductVariant({
+            productId,
+            name: sanitizeString(name),
+            sku: sku ? sanitizeString(sku, '', 100) : null,
+            priceModifier: Number(priceModifier) || 0,
+            stock: Number(stock) || 0,
+            imageUrl: req.file ? `/images/${req.file.filename}` : null,
+            status: status || 'active'
+        });
+        res.status(201).json({ message: 'تم إنشاء خيار المنتج بنجاح', id });
+    } catch (error) {
+        console.error('Error creating variant:', error);
+        res.status(500).json({ error: 'خطأ في إنشاء خيار المنتج' });
+    }
+}
+
+async function updateProductVariant(req, res) {
+    try {
+        const variantId = parseInt(req.params.variantId, 10);
+        if (isNaN(variantId)) return res.status(400).json({ error: 'معرف الخيار غير صالح' });
+        const updateData = { ...req.body };
+        if (updateData.name) updateData.name = sanitizeString(updateData.name);
+        if (updateData.sku) updateData.sku = sanitizeString(updateData.sku, '', 100);
+        if (updateData.priceModifier !== undefined) updateData.priceModifier = Number(updateData.priceModifier);
+        if (updateData.stock !== undefined) updateData.stock = Number(updateData.stock);
+        if (req.file) updateData.imageUrl = `/images/${req.file.filename}`;
+
+        const success = await db.updateProductVariant(variantId, updateData);
+        if (!success) return res.status(404).json({ error: 'الخيار غير موجود' });
+        res.json({ message: 'تم تحديث خيار المنتج بنجاح' });
+    } catch (error) {
+        console.error('Error updating variant:', error);
+        res.status(500).json({ error: 'خطأ في تحديث خيار المنتج' });
+    }
+}
+
+async function deleteProductVariant(req, res) {
+    try {
+        const variantId = parseInt(req.params.variantId, 10);
+        if (isNaN(variantId)) return res.status(400).json({ error: 'معرف الخيار غير صالح' });
+        const success = await db.deleteProductVariant(variantId);
+        if (!success) return res.status(404).json({ error: 'الخيار غير موجود' });
+        res.json({ message: 'تم حذف خيار المنتج بنجاح' });
+    } catch (error) {
+        console.error('Error deleting variant:', error);
+        res.status(500).json({ error: 'خطأ في حذف خيار المنتج' });
+    }
+}
+
 module.exports = {
     createProduct,
     getProducts,
@@ -202,5 +271,9 @@ module.exports = {
     autocomplete,
     recommendations,
     getProductReviews,
-    addProductReview
+    addProductReview,
+    getProductVariants,
+    createProductVariant,
+    updateProductVariant,
+    deleteProductVariant
 };

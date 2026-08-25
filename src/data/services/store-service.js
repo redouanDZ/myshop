@@ -229,6 +229,22 @@ class StoreService {
   async updateStoreSettings(settings) {
     return this.repository.updateStoreSettings(settings);
   }
+
+  async getProductVariants(productId) {
+    return this.repository.getProductVariants(productId);
+  }
+
+  async createProductVariant(data) {
+    return this.repository.createProductVariant(data);
+  }
+
+  async updateProductVariant(id, data) {
+    return this.repository.updateProductVariant(id, data);
+  }
+
+  async deleteProductVariant(id) {
+    return this.repository.deleteProductVariant(id);
+  }
 }
 
 module.exports = {

@@ -92,5 +92,9 @@ module.exports = {
     updateReviewStatus: buildProxy('updateReviewStatus'),
     deleteReview: buildProxy('deleteReview'),
     getStoreSettings: buildProxy('getStoreSettings'),
-    updateStoreSettings: buildProxy('updateStoreSettings')
+    updateStoreSettings: buildProxy('updateStoreSettings'),
+    getProductVariants: buildProxy('getProductVariants'),
+    createProductVariant: buildProxy('createProductVariant'),
+    updateProductVariant: buildProxy('updateProductVariant'),
+    deleteProductVariant: buildProxy('deleteProductVariant')
 };

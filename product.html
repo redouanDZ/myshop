@@ -324,19 +324,68 @@
             });
         }
 
+        let selectedVariant = null;
+
         function loadProductOptions(product) {
-            const colors = ['أسود', 'أبيض', 'أزرق'];
-            const sizes = ['S', 'M', 'L', 'XL'];
-            document.getElementById('color-select').innerHTML = colors.map(color => `<button class="color-btn ${color === 'أسود' ? 'active' : ''}" data-color="${color}">${color}</button>`).join('');
-            document.getElementById('size-select').innerHTML = sizes.map(size => `<button class="size-btn ${size === 'M' ? 'active' : ''}" data-size="${size}">${size}</button>`).join('');
-            document.querySelectorAll('.color-btn').forEach(btn => btn.addEventListener('click', e => {
-                e.target.parentNode.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-            }));
-            document.querySelectorAll('.size-btn').forEach(btn => btn.addEventListener('click', e => {
-                e.target.parentNode.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-            }));
+            const optionsContainer = document.querySelector('.product-options');
+            if (!optionsContainer) return;
+
+            if (product.variants && product.variants.length > 0) {
+                // Render real dynamic variants
+                optionsContainer.innerHTML = `
+                    <div class="variant-options">
+                        <h3 style="font-size: 1rem; color: #1e293b; margin-bottom: 8px;">الخيارات المتاحة (المقاس / اللون / السعة):</h3>
+                        <div class="variant-select" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            ${product.variants.map((v, idx) => `
+                                <button type="button" class="variant-btn ${idx === 0 ? 'active' : ''}" 
+                                    data-id="${v.id}" 
+                                    data-price-mod="${v.priceModifier || 0}"
+                                    data-stock="${v.stock}"
+                                    style="padding: 8px 14px; border: 2px solid ${idx === 0 ? 'var(--primary-color)' : '#cbd5e1'}; background: ${idx === 0 ? '#eff6ff' : '#fff'}; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                    ${v.name} ${v.priceModifier ? `(+${v.priceModifier} دج)` : ''}
+                                </button>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                selectedVariant = product.variants[0];
+                document.querySelectorAll('.variant-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        document.querySelectorAll('.variant-btn').forEach(b => {
+                            b.classList.remove('active');
+                            b.style.borderColor = '#cbd5e1';
+                            b.style.background = '#fff';
+                        });
+                        const target = e.currentTarget;
+                        target.classList.add('active');
+                        target.style.borderColor = 'var(--primary-color)';
+                        target.style.background = '#eff6ff';
+                        const vId = Number(target.dataset.id);
+                        selectedVariant = product.variants.find(v => Number(v.id) === vId);
+                        if (selectedVariant) {
+                            const unitPrice = Number(product.price) + Number(selectedVariant.priceModifier || 0);
+                            document.getElementById('product-price').textContent = `${unitPrice.toLocaleString()} دج`;
+                            updateExpressCalculations();
+                        }
+                    });
+                });
+            } else {
+                const colors = ['أسود', 'أبيض', 'أزرق'];
+                const sizes = ['S', 'M', 'L', 'XL'];
+                const colorEl = document.getElementById('color-select');
+                const sizeEl = document.getElementById('size-select');
+                if (colorEl) colorEl.innerHTML = colors.map(color => `<button class="color-btn ${color === 'أسود' ? 'active' : ''}" data-color="${color}">${color}</button>`).join('');
+                if (sizeEl) sizeEl.innerHTML = sizes.map(size => `<button class="size-btn ${size === 'M' ? 'active' : ''}" data-size="${size}">${size}</button>`).join('');
+                document.querySelectorAll('.color-btn').forEach(btn => btn.addEventListener('click', e => {
+                    e.target.parentNode.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                }));
+                document.querySelectorAll('.size-btn').forEach(btn => btn.addEventListener('click', e => {
+                    e.target.parentNode.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                }));
+            }
         }
 
         function changeQuantity(change) {

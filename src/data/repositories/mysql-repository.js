@@ -460,7 +460,27 @@ class MysqlRepository {
        WHERE p.id = ? LIMIT 1`,
       [Number(id)]
     );
-    return rows[0] ? normalizeProductRow(rows[0]) : null;
+    if (!rows[0]) return null;
+    const prod = normalizeProductRow(rows[0]);
+    try {
+      const [variants] = await this.pool.query(
+        'SELECT * FROM product_variants WHERE product_id = ? AND status = "active" ORDER BY id ASC',
+        [Number(id)]
+      );
+      prod.variants = variants.map(v => ({
+        id: Number(v.id),
+        productId: Number(v.product_id),
+        sku: v.sku,
+        name: v.name,
+        priceModifier: Number(v.price_modifier || 0),
+        stock: Number(v.stock || 0),
+        imageUrl: v.image_url,
+        status: v.status
+      }));
+    } catch (e) {
+      prod.variants = [];
+    }
+    return prod;
   }
 
   async getProducts(options = {}) {
@@ -1485,6 +1505,63 @@ class MysqlRepository {
     }
     return this.getStoreSettings();
   }
+
+  async getProductVariants(productId) {
+    try {
+      const [rows] = await this.pool.query(
+        'SELECT * FROM product_variants WHERE product_id = ? ORDER BY id ASC',
+        [Number(productId)]
+      );
+      return rows.map(v => ({
+        id: Number(v.id),
+        productId: Number(v.product_id),
+        sku: v.sku,
+        name: v.name,
+        priceModifier: Number(v.price_modifier || 0),
+        stock: Number(v.stock || 0),
+        imageUrl: v.image_url,
+        status: v.status
+      }));
+    } catch (e) {
+      return [];
+    }
+  }
+
+  async createProductVariant(data) {
+    const [result] = await this.pool.query(
+      'INSERT INTO product_variants (product_id, sku, name, price_modifier, stock, image_url, status) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [
+        Number(data.productId),
+        data.sku ? String(data.sku).trim() : null,
+        String(data.name || '').trim(),
+        Number(data.priceModifier || 0),
+        Number(data.stock || 0),
+        data.imageUrl ? String(data.imageUrl).trim() : null,
+        data.status || 'active'
+      ]
+    );
+    return Number(result.insertId);
+  }
+
+  async updateProductVariant(id, data) {
+    const fields = [];
+    const params = [];
+    if (data.name !== undefined) { fields.push('name = ?'); params.push(String(data.name).trim()); }
+    if (data.sku !== undefined) { fields.push('sku = ?'); params.push(data.sku ? String(data.sku).trim() : null); }
+    if (data.priceModifier !== undefined) { fields.push('price_modifier = ?'); params.push(Number(data.priceModifier || 0)); }
+    if (data.stock !== undefined) { fields.push('stock = ?'); params.push(Number(data.stock || 0)); }
+    if (data.imageUrl !== undefined) { fields.push('image_url = ?'); params.push(data.imageUrl ? String(data.imageUrl).trim() : null); }
+    if (data.status !== undefined) { fields.push('status = ?'); params.push(data.status); }
+    if (!fields.length) return false;
+    params.push(Number(id));
+    const [result] = await this.pool.query(`UPDATE product_variants SET ${fields.join(', ')} WHERE id = ?`, params);
+    return result.affectedRows > 0;
+  }
+
+  async deleteProductVariant(id) {
+    const [result] = await this.pool.query('DELETE FROM product_variants WHERE id = ?', [Number(id)]);
+    return result.affectedRows > 0;
+  }
 }
 
 function createMysqlRepository(pool) {
@@ -1607,7 +1684,9 @@ function createFallbackRepository() {
     },
     async getProductById(id) {
       const item = state.products.find(entry => Number(entry.id) === Number(id));
-      return item ? { ...item } : null;
+      if (!item) return null;
+      const variants = (state.variants || []).filter(v => Number(v.productId || v.product_id) === Number(id));
+      return { ...item, variants };
     },
     async getProducts(options = {}) {
       let filtered = [...state.products];
@@ -2251,6 +2330,49 @@ function createFallbackRepository() {
         }
       }
       return { ...state.settings };
+    },
+
+    async getProductVariants(productId) {
+      if (!state.variants) state.variants = [];
+      return state.variants.filter(v => Number(v.productId || v.product_id) === Number(productId));
+    },
+
+    async createProductVariant(data) {
+      if (!state.variants) state.variants = [];
+      const id = state.variants.length + 1;
+      const variant = {
+        id,
+        productId: Number(data.productId),
+        sku: data.sku || null,
+        name: String(data.name || '').trim(),
+        priceModifier: Number(data.priceModifier || 0),
+        stock: Number(data.stock || 0),
+        imageUrl: data.imageUrl || null,
+        status: data.status || 'active'
+      };
+      state.variants.push(variant);
+      return id;
+    },
+
+    async updateProductVariant(id, data) {
+      if (!state.variants) return false;
+      const v = state.variants.find(entry => Number(entry.id) === Number(id));
+      if (!v) return false;
+      if (data.name !== undefined) v.name = String(data.name).trim();
+      if (data.sku !== undefined) v.sku = data.sku;
+      if (data.priceModifier !== undefined) v.priceModifier = Number(data.priceModifier || 0);
+      if (data.stock !== undefined) v.stock = Number(data.stock || 0);
+      if (data.imageUrl !== undefined) v.imageUrl = data.imageUrl;
+      if (data.status !== undefined) v.status = data.status;
+      return true;
+    },
+
+    async deleteProductVariant(id) {
+      if (!state.variants) return false;
+      const idx = state.variants.findIndex(entry => Number(entry.id) === Number(id));
+      if (idx === -1) return false;
+      state.variants.splice(idx, 1);
+      return true;
     }
   };
   return repo;

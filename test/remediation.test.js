@@ -1079,6 +1079,85 @@ test('Phase 2 — Commercial Readiness: Store Settings & Marketing Pixels Config
     assert.strictEqual(verifiedData.tiktok_pixel_id, 'C6TIKTOKTEST');
 });
 
+test('Phase 3 — Commercial Readiness: Product Variants Management (Colors, Sizes, Options)', async () => {
+    // 1. Create a base product
+    const prodId = await db.createProduct({
+        name: 'حذاء رياضي أصلي',
+        category: 'ملابس وأحذية',
+        price: 8000,
+        stock: 30,
+        status: 'active'
+    });
+
+    // 2. Admin creates variants (Size 42 and Size 43)
+    const var1Res = await fetch(`${baseUrl}/api/products/${prodId}/variants`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+            name: 'المقاس 42 / أسود',
+            sku: 'SHOE-42-BLK',
+            priceModifier: 0,
+            stock: 12
+        })
+    });
+    assert.strictEqual(var1Res.status, 201, 'Creating variant 1 must succeed with 201');
+    const var1Data = await var1Res.json();
+    const var1Id = var1Data.id;
+
+    const var2Res = await fetch(`${baseUrl}/api/products/${prodId}/variants`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+            name: 'المقاس 43 / أبيض خاص',
+            sku: 'SHOE-43-WHT',
+            priceModifier: 500,
+            stock: 8
+        })
+    });
+    assert.strictEqual(var2Res.status, 201, 'Creating variant 2 must succeed with 201');
+
+    // 3. Fetch product details and assert variants are included
+    const getProdRes = await fetch(`${baseUrl}/api/products/${prodId}`);
+    assert.strictEqual(getProdRes.status, 200);
+    const prodDetails = await getProdRes.json();
+    assert.ok(Array.isArray(prodDetails.variants), 'Product must have variants array');
+    assert.strictEqual(prodDetails.variants.length, 2, 'Product must have 2 variants');
+    assert.strictEqual(prodDetails.variants[0].name, 'المقاس 42 / أسود');
+    assert.strictEqual(prodDetails.variants[1].priceModifier, 500);
+
+    // 4. Update variant 1
+    const updateVarRes = await fetch(`${baseUrl}/api/products/variants/${var1Id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({ stock: 20 })
+    });
+    assert.strictEqual(updateVarRes.status, 200);
+
+    // 5. Delete variant 1
+    const delVarRes = await fetch(`${baseUrl}/api/products/variants/${var1Id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delVarRes.status, 200);
+
+    // Verify 1 variant remains
+    const varsAfter = await db.getProductVariants(prodId);
+    assert.strictEqual(varsAfter.length, 1);
+
+    // Cleanup
+    await db.deleteProduct(prodId).catch(() => {});
+});
+
+
 
 
 
