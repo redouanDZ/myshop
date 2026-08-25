@@ -67,17 +67,23 @@
                 </ul>
             </nav>
             <div class="user-actions">
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+                    <i class="fas fa-moon"></i>
+                </button>
                 <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
                     <i class="fas fa-heart" style="color: var(--danger-color);"></i>
                     <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
-                <a href="cart.html" class="cart-icon">
+                <a href="cart.html" class="cart-icon" title="السلة">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
                 <a href="account.html" class="user-icon" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
+                <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </header>

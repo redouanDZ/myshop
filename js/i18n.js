@@ -92,12 +92,10 @@ window.I18n = {
             if (!container.querySelector('.lang-switcher-wrap')) {
                 const wrap = document.createElement('div');
                 wrap.className = 'lang-switcher-wrap';
-                wrap.style.cssText = 'position:relative; display:inline-flex; align-items:center; margin: 0 4px;';
 
                 const select = document.createElement('select');
                 select.className = 'lang-select';
                 select.setAttribute('aria-label', 'اختر اللغة');
-                select.style.cssText = 'background:transparent; border:1px solid #cbd5e1; border-radius:8px; padding:4px 8px; font-size:0.82rem; font-weight:600; cursor:pointer; color:inherit; outline:none;';
                 select.innerHTML = `
                     <option value="ar" ${this.currentLang === 'ar' ? 'selected' : ''}>🇩🇿 العربية</option>
                     <option value="fr" ${this.currentLang === 'fr' ? 'selected' : ''}>🇫🇷 Français</option>

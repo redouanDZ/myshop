@@ -125,61 +125,68 @@ async function checkUserLoginStatus() {
  * @param {Object} user - User data object
  */
 function updateUIForLoggedInUser(user) {
-    // Update user icon
     const userIcon = document.querySelector('.user-icon');
     if (userIcon) {
-        const usernameDisplay = user.username || user.name || 'حسابي';
-        // Create user dropdown menu
-        const dropdownHTML = `
-            <div class="user-dropdown">
-                <div class="user-info" style="padding: 10px 15px; border-bottom: 1px solid rgba(0,0,0,0.08); font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-user-circle" style="font-size: 1.3rem;"></i>
-                    <span>${usernameDisplay}</span>
-                    ${user.role === 'admin' ? '<span class="admin-badge" style="background:#e74c3c; color:#fff; padding:2px 6px; border-radius:4px; font-size:10px; margin-right: auto;">Admin</span>' : ''}
-                </div>
-                <ul style="list-style: none; padding: 5px 0; margin: 0;">
-                    <li><a href="account.html?tab=profile" style="display: block; padding: 8px 15px; text-decoration: none;"><i class="fas fa-user-cog" style="margin-left: 8px;"></i>الملف الشخصي</a></li>
-                    <li><a href="account.html?tab=addresses" style="display: block; padding: 8px 15px; text-decoration: none;"><i class="fas fa-map-marker-alt" style="margin-left: 8px;"></i>عناوين الشحن</a></li>
-                    <li><a href="account.html?tab=orders" style="display: block; padding: 8px 15px; text-decoration: none;"><i class="fas fa-box" style="margin-left: 8px;"></i>طلباتي</a></li>
-                    <li><a href="account.html?tab=wishlist" style="display: block; padding: 8px 15px; text-decoration: none;"><i class="fas fa-heart" style="margin-left: 8px;"></i>المفضلة</a></li>
-                    ${user.role === 'admin' ? '<li><a href="admin/index.html" style="display: block; padding: 8px 15px; text-decoration: none;"><i class="fas fa-tachometer-alt" style="margin-left: 8px;"></i>لوحة التحكم</a></li>' : ''}
-                    <li style="border-top: 1px solid rgba(0,0,0,0.08); margin-top: 5px; padding-top: 5px;"><a href="#" id="logout-btn" style="display: block; padding: 8px 15px; text-decoration: none; color: #e74c3c;"><i class="fas fa-sign-out-alt" style="margin-left: 8px;"></i>تسجيل الخروج</a></li>
-                </ul>
-            </div>
-        `;
-        
-        userIcon.innerHTML = dropdownHTML;
+        let wrapper = userIcon.closest('.user-menu-wrapper');
+        if (!wrapper) {
+            wrapper = document.createElement('div');
+            wrapper.className = 'user-menu-wrapper';
+            wrapper.style.cssText = 'position: relative; display: inline-flex; align-items: center;';
+            userIcon.parentNode.insertBefore(wrapper, userIcon);
+            wrapper.appendChild(userIcon);
+        }
 
-        // Add event listener for logout
-        const logoutBtn = document.getElementById('logout-btn');
+        userIcon.innerHTML = '<i class="fas fa-user-check" style="color: var(--primary-color);"></i>';
+        userIcon.setAttribute('title', `مرحباً، ${user.username || user.name || 'حسابي'}`);
+        userIcon.removeAttribute('href');
+
+        const usernameDisplay = user.username || user.name || 'حسابي';
+        let dropdown = wrapper.querySelector('.user-dropdown');
+        if (!dropdown) {
+            dropdown = document.createElement('div');
+            dropdown.className = 'user-dropdown';
+            wrapper.appendChild(dropdown);
+        }
+
+        dropdown.innerHTML = `
+            <div class="user-info" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color, #e2e8f0); font-weight: bold; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-user-circle" style="font-size: 1.3rem; color: var(--primary-color);"></i>
+                <span style="color: var(--text-color); font-size: 0.95rem;">${usernameDisplay}</span>
+                ${user.role === 'admin' ? '<span class="admin-badge" style="background:#e74c3c; color:#fff; padding:2px 6px; border-radius:4px; font-size:10px; margin-inline-start: auto;">Admin</span>' : ''}
+            </div>
+            <ul style="list-style: none; padding: 6px 0; margin: 0;">
+                <li><a href="account.html?tab=profile"><i class="fas fa-user-cog" style="margin-left: 8px;"></i>الملف الشخصي</a></li>
+                <li><a href="account.html?tab=addresses"><i class="fas fa-map-marker-alt" style="margin-left: 8px;"></i>عناوين الشحن</a></li>
+                <li><a href="account.html?tab=orders"><i class="fas fa-box" style="margin-left: 8px;"></i>طلباتي</a></li>
+                <li><a href="wishlist.html"><i class="fas fa-heart" style="margin-left: 8px;"></i>المفضلة</a></li>
+                ${user.role === 'admin' ? '<li><a href="admin/index.html"><i class="fas fa-tachometer-alt" style="margin-left: 8px;"></i>لوحة التحكم</a></li>' : ''}
+                <li style="border-top: 1px solid var(--border-color, #e2e8f0); margin-top: 4px; padding-top: 4px;">
+                    <a href="#" id="logout-btn" style="color: #ef4444 !important;"><i class="fas fa-sign-out-alt" style="margin-left: 8px;"></i>تسجيل الخروج</a>
+                </li>
+            </ul>
+        `;
+
+        const logoutBtn = dropdown.querySelector('#logout-btn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', function(e) {
                 e.preventDefault();
                 logoutUser();
             });
         }
-        
-        // Add click event to dropdown to toggle visibility
-        userIcon.addEventListener('click', function(e) {
+
+        userIcon.onclick = function(e) {
+            e.preventDefault();
             e.stopPropagation();
-            const dropdown = this.querySelector('.user-dropdown');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
-        });
-        
-        // Close dropdown when clicking outside
+            dropdown.classList.toggle('show');
+        };
+
         document.addEventListener('click', function(e) {
-            if (!userIcon.contains(e.target)) {
-                const dropdown = userIcon.querySelector('.user-dropdown');
-                if (dropdown && dropdown.classList.contains('show')) {
-                    dropdown.classList.remove('show');
-                }
+            if (!wrapper.contains(e.target)) {
+                dropdown.classList.remove('show');
             }
         });
     }
-    
-    // Update cart if exists
+
     updateCartUI();
 }
 
