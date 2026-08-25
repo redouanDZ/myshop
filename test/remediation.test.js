@@ -769,4 +769,42 @@ test('Security Audit: Product Image Upload Hardening (Extension Whitelist & Magi
     }
 });
 
+test('Security Audit: Exclusive httpOnly Cookie Authentication (No Token in JSON Body)', async () => {
+    // 1. Log in via POST /api/login
+    const loginRes = await fetch(`${baseUrl}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'user@example.com', password: 'password123' })
+    });
+
+    assert.strictEqual(loginRes.status, 200, 'Login must succeed with 200');
+    const loginBody = await loginRes.json();
+
+    // 2. Assert token is NOT present in response JSON body
+    assert.strictEqual(loginBody.token, undefined, 'Access token must NOT be returned in response JSON body (XSS protection)');
+    assert.ok(loginBody.user, 'User object should be returned');
+    assert.strictEqual(loginBody.user.email, 'user@example.com');
+
+    // 3. Assert access_token and refresh_token are set as httpOnly cookies
+    const setCookieHeaders = loginRes.headers.get('set-cookie') || '';
+    assert.ok(setCookieHeaders.includes('access_token='), 'access_token cookie must be set');
+    assert.ok(setCookieHeaders.includes('HttpOnly'), 'access_token cookie must be HttpOnly');
+
+    // Extract access_token cookie
+    const match = setCookieHeaders.match(/access_token=([^;]+)/);
+    assert.ok(match, 'access_token cookie must match regex');
+    const accessTokenCookie = match[1];
+
+    // 4. Test authenticated request using cookie alone (no Authorization header)
+    const profileRes = await fetch(`${baseUrl}/api/user/profile`, {
+        headers: {
+            'Cookie': `access_token=${accessTokenCookie}`
+        }
+    });
+    assert.strictEqual(profileRes.status, 200, 'Profile request with httpOnly cookie alone must succeed with 200');
+    const profileData = await profileRes.json();
+    assert.strictEqual(profileData.email, 'user@example.com');
+});
+
+
 

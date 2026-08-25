@@ -40,9 +40,8 @@ function saveSessionUser(user) {
 
 function clearSessionAuthState() {
     sessionStorage.removeItem('currentUser');
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
     localStorage.removeItem('rememberedUser');
-    localStorage.removeItem('rememberToken');
     localStorage.removeItem('redirectAfterLogin');
 }
 
@@ -66,14 +65,9 @@ async function fetchJson(url, options = {}) {
     const isMutatingRequest = !['GET', 'HEAD', 'OPTIONS'].includes(method);
     const csrfToken = isMutatingRequest ? await getCsrfToken() : '';
 
-    const token = localStorage.getItem('authToken');
     const headers = {
         ...(options.headers || {})
     };
-
-    if (token && !headers['Authorization'] && !headers['authorization']) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
 
     if (!(headers['Content-Type'] || headers['content-type'])) {
         if (options.body && typeof options.body === 'string') {
@@ -427,9 +421,6 @@ async function handleLogin() {
         if (response.ok) {
             saveSessionUser(data.user);
             localStorage.setItem('currentUser', JSON.stringify(data.user));
-            if (data.token) {
-                localStorage.setItem('authToken', data.token);
-            }
             if (rememberMe) {
                 localStorage.setItem('rememberedUser', JSON.stringify(data.user));
             }
@@ -681,9 +672,9 @@ async function createOrder(orderData) {
 
         const response = await fetch(`${API_BASE_URL}/orders`, {
             method: 'POST',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify(order)
         });

@@ -333,8 +333,7 @@
             content.innerHTML = '<p style="text-align:center; padding: 30px; color:#64748b;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل تفاصيل الطلب...</p>';
 
             try {
-                const token = localStorage.getItem('authToken');
-                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/orders/${orderId}`, { credentials: 'include', headers });
                 if (!res.ok) throw new Error('فشل جلب تفاصيل الطلب');
 

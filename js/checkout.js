@@ -318,11 +318,7 @@ async function placeOrderNow() {
     };
 
     try {
-        const token = localStorage.getItem('authToken') || (currentUser && currentUser.token) || '';
         const headers = { 'Content-Type': 'application/json' };
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
 
         try {
             const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
@@ -360,15 +356,13 @@ async function placeOrderNow() {
         // If Chargily Pay selected: Redirect to payment gateway
         if (paymentMethod === 'chargily') {
             try {
-                const token = localStorage.getItem('authToken');
-                const headers = { 'Content-Type': 'application/json' };
-                if (token) headers['Authorization'] = `Bearer ${token}`;
-                if (trackingToken) headers['X-Tracking-Token'] = trackingToken;
+                const payHeaders = { 'Content-Type': 'application/json' };
+                if (trackingToken) payHeaders['X-Tracking-Token'] = trackingToken;
 
                 const payRes = await fetch('/api/payments/chargily/checkout', {
                     method: 'POST',
                     credentials: 'include',
-                    headers,
+                    headers: payHeaders,
                     body: JSON.stringify({ 
                         orderId,
                         token: trackingToken,

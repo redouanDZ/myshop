@@ -1,19 +1,11 @@
-﻿/**
+/**
  * MYSHOP Admin Dashboard Centralized Architecture
  * Unifies Security Guards, Shared Utilities, UI Notifications & Modals
  */
 
 const AdminAuth = {
-    getToken() {
-        return localStorage.getItem('authToken') || sessionStorage.getItem('authToken') || '';
-    },
-
     getHeaders(isJson = true) {
-        const token = this.getToken();
         const headers = {};
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
         if (isJson) {
             headers['Content-Type'] = 'application/json';
         }
@@ -21,14 +13,9 @@ const AdminAuth = {
     },
 
     async verifyAdmin() {
-        const token = this.getToken();
-        if (!token) {
-            window.location.href = '../account.html';
-            return null;
-        }
-
         try {
             const res = await fetch('/api/user/profile', {
+                credentials: 'include',
                 headers: this.getHeaders(false)
             });
 
@@ -57,7 +44,6 @@ const AdminAuth = {
     },
 
     clearAuth() {
-        localStorage.removeItem('authToken');
         localStorage.removeItem('currentUser');
         sessionStorage.removeItem('currentUser');
     },
@@ -67,13 +53,11 @@ const AdminAuth = {
         if (!confirmed) return;
 
         try {
-            const token = this.getToken();
-            if (token) {
-                await fetch('/api/logout', {
-                    method: 'POST',
-                    headers: this.getHeaders(true)
-                }).catch(() => {});
-            }
+            await fetch('/api/logout', {
+                method: 'POST',
+                credentials: 'include',
+                headers: this.getHeaders(true)
+            }).catch(() => {});
         } catch (e) {}
 
         this.clearAuth();

@@ -345,22 +345,32 @@
                 return;
             }
 
-            const token = localStorage.getItem('authToken');
-            if (!token) {
-                if (window.showToast) window.showToast('يرجى تسجيل الدخول أولاً لإضافة تقييمك ⭐', 'warning');
-                else alert('يرجى تسجيل الدخول أولاً لإضافة تقييمك');
-                return;
-            }
-
             try {
+                let csrfToken = '';
+                try {
+                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                    if (csrfRes.ok) {
+                        const csrfData = await csrfRes.json();
+                        csrfToken = csrfData.csrfToken || '';
+                    }
+                } catch (e) {}
+
+                const headers = { 'Content-Type': 'application/json' };
+                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+
                 const res = await fetch(`/api/products/${currentProduct.id}/reviews`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
+                    credentials: 'include',
+                    headers,
                     body: JSON.stringify({ rating, comment })
                 });
+
+                if (res.status === 401 || res.status === 403) {
+                    if (window.showToast) window.showToast('يرجى تسجيل الدخول أولاً لإضافة تقييمك ⭐', 'warning');
+                    else alert('يرجى تسجيل الدخول أولاً لإضافة تقييمك');
+                    return;
+                }
+
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'فشل إرسال التقييم');
 

@@ -161,34 +161,29 @@
 
     // جلب البيانات: إذا كان المستخدم مسجلاً جلب من API، وإلا الاعتماد على localStorage
     async function loadCart() {
-      const token = localStorage.getItem('token') || localStorage.getItem('authToken');
-      if (token) {
-        try {
-          const response = await fetch('/api/cart', {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
-          if (response.ok) {
-            const apiItems = await response.json();
-            if (Array.isArray(apiItems) && apiItems.length > 0) {
-              cartItems = apiItems.map(item => ({
-                id: item.id,
-                product_id: item.product_id,
-                name: item.name || 'منتج',
-                category: item.category || 'إلكترونيات',
-                price: Number(item.price) || 0,
-                quantity: Number(item.quantity) || 1,
-                image_url: item.image_url || '/images/christopher-gower-m_HRfLhgABo-unsplash.jpg'
-              }));
-              saveCartToLocalStorage();
-              renderCart();
-              updateSummary();
-              updateHeaderCount();
-              return;
-            }
+      try {
+        const response = await fetch('/api/cart', { credentials: 'include' });
+        if (response.ok) {
+          const apiItems = await response.json();
+          if (Array.isArray(apiItems) && apiItems.length > 0) {
+            cartItems = apiItems.map(item => ({
+              id: item.id,
+              product_id: item.product_id,
+              name: item.name || 'منتج',
+              category: item.category || 'إلكترونيات',
+              price: Number(item.price) || 0,
+              quantity: Number(item.quantity) || 1,
+              image_url: item.image_url || '/images/christopher-gower-m_HRfLhgABo-unsplash.jpg'
+            }));
+            saveCartToLocalStorage();
+            renderCart();
+            updateSummary();
+            updateHeaderCount();
+            return;
           }
-        } catch (error) {
-          console.warn('Could not fetch remote cart, using local cart:', error);
         }
+      } catch (error) {
+        console.warn('Could not fetch remote cart, using local cart:', error);
       }
 
       loadCartFromLocalStorage();

@@ -652,9 +652,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             // Check auth
-            const token = localStorage.getItem('authToken');
-            const currentUser = localStorage.getItem('currentUser');
-            if (!token && !currentUser) {
+            const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+            if (!currentUser) {
                 // Prompt login modal or notice
                 if (window.showLoginForm) {
                     window.showLoginForm();
@@ -971,8 +970,8 @@
                 if (window.logoutUser) {
                     window.logoutUser();
                 } else {
-                    localStorage.removeItem('authToken');
                     localStorage.removeItem('currentUser');
+                    sessionStorage.removeItem('currentUser');
                     window.location.href = 'index.html';
                 }
             });
