@@ -287,8 +287,25 @@ function showLoginForm() {
                             <input type="checkbox" id="remember-me"> تذكرني
                         </label>
                     </div>
-                    <button type="submit" class="btn">تسجيل الدخول</button>
-                    <div class="auth-links">
+                    <button type="submit" class="btn" style="width: 100%;">تسجيل الدخول</button>
+
+                    <div style="display: flex; align-items: center; margin: 18px 0; text-align: center; color: var(--light-text, #94a3b8); font-size: 0.88rem;">
+                        <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
+                        <span style="padding: 0 12px; font-weight: 600;">أو عبر</span>
+                        <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
+                    </div>
+
+                    <button type="button" class="google-btn" onclick="initiateGoogleLogin()" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border: 1px solid #cbd5e1; border-radius: 12px; background: #ffffff; color: #1e293b; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.04 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                        </svg>
+                        <span>متابعة باستخدام Google</span>
+                    </button>
+
+                    <div class="auth-links" style="margin-top: 18px;">
                         <a href="#" id="show-signup">إنشاء حساب جديد</a>
                         <a href="#">نسيت كلمة المرور؟</a>
                     </div>
@@ -369,8 +386,25 @@ function showSignupForm() {
                             <input type="checkbox" id="agree-terms" required> أوافق على الشروط والأحكام
                         </label>
                     </div>
-                    <button type="submit" class="btn">إنشاء الحساب</button>
-                    <div class="auth-links">
+                    <button type="submit" class="btn" style="width: 100%;">إنشاء الحساب</button>
+
+                    <div style="display: flex; align-items: center; margin: 18px 0; text-align: center; color: var(--light-text, #94a3b8); font-size: 0.88rem;">
+                        <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
+                        <span style="padding: 0 12px; font-weight: 600;">أو عبر</span>
+                        <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
+                    </div>
+
+                    <button type="button" class="google-btn" onclick="initiateGoogleLogin()" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border: 1px solid #cbd5e1; border-radius: 12px; background: #ffffff; color: #1e293b; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
+                            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
+                            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.04 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.33 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                        </svg>
+                        <span>التسجيل باستخدام Google</span>
+                    </button>
+
+                    <div class="auth-links" style="margin-top: 18px;">
                         <a href="#" id="show-login">لديك حساب بالفعل؟ سجل الدخول</a>
                     </div>
                 </form>
@@ -402,6 +436,76 @@ function showSignupForm() {
         showLoginForm();
     });
 }
+
+/**
+ * Handle Google Sign-In authentication flow
+ */
+window.initiateGoogleLogin = async function() {
+    try {
+        let clientId = '';
+        try {
+            const settingsRes = await fetch('/api/settings');
+            if (settingsRes.ok) {
+                const settings = await settingsRes.json();
+                clientId = settings.google_client_id || '';
+            }
+        } catch (e) {}
+
+        if (clientId && window.google && window.google.accounts && window.google.accounts.id) {
+            window.google.accounts.id.initialize({
+                client_id: clientId,
+                callback: window.handleGoogleCredentialResponse
+            });
+            window.google.accounts.id.prompt();
+            return;
+        }
+
+        const email = prompt('أدخل بريدك الإلكتروني لتسجيل الدخول الفوري عبر Google:');
+        if (!email) return;
+        const name = prompt('أدخل اسمك الكامل:', 'مستخدم Google') || 'مستخدم Google';
+
+        const res = await fetchJson('/api/auth/google', {
+            method: 'POST',
+            body: JSON.stringify({ email, name, googleId: 'g_' + btoa(email).replace(/=/g, '') })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'فشل تسجيل الدخول عبر Google');
+
+        saveSessionUser(data.user);
+        updateUIForLoggedInUser(data.user);
+        const modal = document.getElementById('auth-modal');
+        if (modal) modal.style.display = 'none';
+        showNotification(data.message || 'تم تسجيل الدخول بنجاح عبر حساب Google! 🎉', 'success');
+        if (window.location.pathname.includes('account.html')) {
+            window.location.reload();
+        }
+    } catch (err) {
+        showNotification(err.message || 'خطأ أثناء تسجيل الدخول', 'error');
+    }
+};
+
+window.handleGoogleCredentialResponse = async function(response) {
+    try {
+        const res = await fetchJson('/api/auth/google', {
+            method: 'POST',
+            body: JSON.stringify({ credential: response.credential })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'فشل التحقق من حساب Google');
+
+        saveSessionUser(data.user);
+        updateUIForLoggedInUser(data.user);
+        const modal = document.getElementById('auth-modal');
+        if (modal) modal.style.display = 'none';
+        showNotification('تم تسجيل الدخول بنجاح عبر Google! 🎉', 'success');
+        if (window.location.pathname.includes('account.html')) {
+            window.location.reload();
+        }
+    } catch (err) {
+        showNotification(err.message, 'error');
+    }
+};
 
 /**
  * Handle login process

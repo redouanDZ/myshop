@@ -619,11 +619,67 @@ async function initMarketingPixels() {
   } catch (e) {}
 }
 
+/**
+ * Mobile Bottom Sticky Navigation Bar
+ */
+function initMobileBottomBar() {
+  if (document.querySelector('.mobile-bottom-nav') || window.location.pathname.includes('/admin/')) {
+    return;
+  }
+
+  const path = window.location.pathname;
+  const isHome = path.endsWith('index.html') || path.endsWith('/') || path === '';
+  const isShop = path.includes('shop.html') || path.includes('product.html');
+  const isWishlist = path.includes('wishlist.html');
+  const isCart = path.includes('cart.html') || path.includes('checkout.html');
+  const isAccount = path.includes('account.html');
+
+  const bottomNav = document.createElement('nav');
+  bottomNav.className = 'mobile-bottom-nav';
+  bottomNav.id = 'mobileBottomNav';
+  bottomNav.setAttribute('aria-label', 'شريط التنقل السفلي للهاتف');
+
+  bottomNav.innerHTML = `
+    <a href="index.html" class="mobile-nav-item ${isHome ? 'active' : ''}">
+      <i class="fas fa-home"></i>
+      <span>الرئيسية</span>
+    </a>
+    <a href="shop.html" class="mobile-nav-item ${isShop ? 'active' : ''}">
+      <i class="fas fa-shopping-bag"></i>
+      <span>التسوق</span>
+    </a>
+    <a href="wishlist.html" class="mobile-nav-item ${isWishlist ? 'active' : ''}">
+      <div class="nav-icon-badge-wrap">
+        <i class="fas fa-heart"></i>
+        <span class="mobile-badge wishlist-count">0</span>
+      </div>
+      <span>المفضلة</span>
+    </a>
+    <a href="cart.html" class="mobile-nav-item ${isCart ? 'active' : ''}">
+      <div class="nav-icon-badge-wrap">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="mobile-badge cart-count">0</span>
+      </div>
+      <span>السلة</span>
+    </a>
+    <a href="account.html" class="mobile-nav-item ${isAccount ? 'active' : ''}">
+      <i class="fas fa-user"></i>
+      <span>حسابي</span>
+    </a>
+  `;
+
+  document.body.appendChild(bottomNav);
+
+  syncCartCounter();
+  updateWishlistUI();
+}
+
 // Page Initialization
 document.addEventListener('DOMContentLoaded', () => {
   initTheme();
   setupThemeToggleButtons();
   initMobileNavigation();
+  initMobileBottomBar();
   initBackToTop();
   initNewsletter();
   updateWishlistUI();

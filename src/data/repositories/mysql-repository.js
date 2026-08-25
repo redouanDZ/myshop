@@ -162,6 +162,8 @@ function normalizeUserRow(row) {
     email: row.email,
     phone: row.phone || '',
     password: row.password,
+    google_id: row.google_id || null,
+    avatar_url: row.avatar_url || null,
     role: row.role || 'customer',
     addresses: [],
     created_at: row.created_at
@@ -354,6 +356,48 @@ class MysqlRepository {
       isDefault: Boolean(addr.is_default)
     }));
     return user;
+  }
+
+  async findUserByGoogleId(googleId) {
+    const safeId = String(googleId || '').trim();
+    if (!safeId) return null;
+    const [rows] = await this.pool.query('SELECT * FROM users WHERE google_id = ? LIMIT 1', [safeId]);
+    if (!rows[0]) return null;
+    const user = normalizeUserRow(rows[0]);
+    const [addresses] = await this.pool.query('SELECT * FROM user_addresses WHERE user_id = ? ORDER BY is_default DESC, id DESC', [user.id]);
+    user.addresses = addresses.map((addr) => ({
+      id: Number(addr.id),
+      title: addr.title,
+      fullName: addr.full_name,
+      phone: addr.phone,
+      city: addr.city,
+      address: addr.address,
+      isDefault: Boolean(addr.is_default)
+    }));
+    return user;
+  }
+
+  async linkGoogleId(userId, googleId, avatarUrl = null) {
+    await this.pool.query(
+      'UPDATE users SET google_id = ?, avatar_url = COALESCE(?, avatar_url) WHERE id = ?',
+      [String(googleId), avatarUrl ? String(avatarUrl) : null, Number(userId)]
+    );
+    return this.findUserById(userId);
+  }
+
+  async createUserFromGoogle(googleData) {
+    const username = String(googleData.name || googleData.username || 'مستخدم Google').trim();
+    const email = String(googleData.email || '').trim().toLowerCase();
+    const googleId = String(googleData.googleId || '').trim();
+    const avatarUrl = googleData.avatarUrl ? String(googleData.avatarUrl).trim() : null;
+    const randomPassword = crypto.randomBytes(20).toString('hex');
+    const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+    const [result] = await this.pool.query(
+      'INSERT INTO users (username, email, phone, password, google_id, avatar_url, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
+      [username, email, '', hashedPassword, googleId, avatarUrl, 'customer']
+    );
+    return this.findUserById(result.insertId);
   }
 
   async createUser(userData) {
@@ -1489,7 +1533,8 @@ class MysqlRepository {
       facebook_pixel_id: '',
       tiktok_pixel_id: '',
       google_analytics_id: '',
-      snapchat_pixel_id: ''
+      snapchat_pixel_id: '',
+      google_client_id: ''
     };
     try {
       const [rows] = await this.pool.query('SELECT setting_key, setting_value FROM store_settings');
@@ -1631,6 +1676,42 @@ function createFallbackRepository() {
     async findUserById(id) {
       const user = state.users.find(entry => Number(entry.id) === Number(id));
       return user ? { ...user, addresses: [...user.addresses] } : null;
+    },
+    async findUserByGoogleId(googleId) {
+      const target = String(googleId || '').trim();
+      if (!target) return null;
+      const user = state.users.find(entry => entry.google_id === target);
+      return user ? { ...user, addresses: [...user.addresses] } : null;
+    },
+    async linkGoogleId(userId, googleId, avatarUrl = null) {
+      const user = state.users.find(entry => Number(entry.id) === Number(userId));
+      if (!user) return null;
+      user.google_id = String(googleId);
+      if (avatarUrl) user.avatar_url = String(avatarUrl);
+      return { ...user, addresses: [...user.addresses] };
+    },
+    async createUserFromGoogle(googleData) {
+      const email = String(googleData.email || '').trim().toLowerCase();
+      const existing = state.users.find(entry => entry.email.toLowerCase() === email);
+      if (existing) {
+        existing.google_id = String(googleData.googleId);
+        if (googleData.avatarUrl) existing.avatar_url = String(googleData.avatarUrl);
+        return { ...existing, addresses: [...existing.addresses] };
+      }
+      const user = {
+        id: state.nextUserId++,
+        username: String(googleData.name || googleData.username || 'مستخدم Google'),
+        email,
+        phone: '',
+        google_id: String(googleData.googleId),
+        avatar_url: googleData.avatarUrl ? String(googleData.avatarUrl) : null,
+        password: await bcrypt.hash(crypto.randomBytes(20).toString('hex'), 10),
+        role: 'customer',
+        addresses: [],
+        created_at: new Date().toISOString()
+      };
+      state.users.push(user);
+      return { ...user, addresses: [...user.addresses] };
     },
     async createUser(userData) {
       const email = String(userData.email || '').trim().toLowerCase();

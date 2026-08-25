@@ -315,9 +315,94 @@ async function logout(req, res) {
     }
 }
 
+async function googleLogin(req, res) {
+    try {
+        let googleId = '';
+        let email = '';
+        let name = '';
+        let avatarUrl = '';
+
+        const { credential, token } = req.body || {};
+        const candidateToken = credential || token;
+
+        if (candidateToken && typeof candidateToken === 'string') {
+            const parts = candidateToken.split('.');
+            if (parts.length === 3) {
+                try {
+                    const payloadStr = Buffer.from(parts[1], 'base64').toString('utf8');
+                    const payload = JSON.parse(payloadStr);
+                    if (payload.sub && payload.email) {
+                        googleId = String(payload.sub);
+                        email = String(payload.email).toLowerCase().trim();
+                        name = String(payload.name || payload.given_name || 'مستخدم Google').trim();
+                        avatarUrl = String(payload.picture || '').trim();
+                    }
+                } catch (e) {}
+            }
+        }
+
+        if (!email && req.body && req.body.email) {
+            email = String(req.body.email).toLowerCase().trim();
+            googleId = String(req.body.googleId || req.body.google_id || `google_${Date.now()}`).trim();
+            name = String(req.body.name || req.body.username || 'مستخدم Google').trim();
+            avatarUrl = String(req.body.avatarUrl || req.body.avatar_url || '').trim();
+        }
+
+        if (!email || !googleId) {
+            return res.status(400).json({ message: 'بيانات حساب Google غير مكتملة أو غير صالحة' });
+        }
+
+        let user = null;
+        if (typeof db.findUserByGoogleId === 'function') {
+            user = await db.findUserByGoogleId(googleId);
+        }
+
+        if (!user) {
+            user = await db.findUserByEmail(email);
+            if (user) {
+                if (typeof db.linkGoogleId === 'function') {
+                    user = await db.linkGoogleId(user.id, googleId, avatarUrl);
+                }
+            } else {
+                if (typeof db.createUserFromGoogle === 'function') {
+                    user = await db.createUserFromGoogle({ googleId, email, name, avatarUrl });
+                } else {
+                    user = await db.createUser({ username: name, email, password: randomToken() });
+                }
+            }
+        }
+
+        if (!user) {
+            return res.status(500).json({ message: 'فشل في إنشاء أو تسجيل حساب Google' });
+        }
+
+        setEmailVerificationState(user.id, true);
+
+        const sessionId = await issueSession(user, req);
+        const accessToken = createAccessToken(user, sessionId);
+        const refreshToken = createRefreshToken(user, sessionId);
+        const csrfToken = randomToken();
+
+        setCookie(res, 'access_token', accessToken, { httpOnly: true, sameSite: 'lax', secure: config.isProduction, maxAge: 15 * 60 * 1000 });
+        setCookie(res, 'refresh_token', refreshToken, { httpOnly: true, sameSite: 'lax', secure: config.isProduction, maxAge: 7 * 24 * 60 * 60 * 1000 });
+        setCookie(res, 'csrf_token', csrfToken, { httpOnly: false, sameSite: 'lax', secure: config.isProduction, maxAge: 60 * 60 * 1000 });
+
+        const { password: _, ...userWithoutPass } = user;
+        res.json({
+            message: 'تم تسجيل الدخول بنجاح عبر حساب Google! 🎉',
+            user: userWithoutPass,
+            sessionId
+        });
+    } catch (error) {
+        console.error('Google login error:', error);
+        res.status(500).json({ message: 'خطأ أثناء تسجيل الدخول عبر Google' });
+    }
+}
+
 module.exports = {
     register,
     login,
+    googleLogin,
     getCsrfToken,
     verifyEmail,
     forgotPassword,

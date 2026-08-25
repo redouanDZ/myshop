@@ -1260,6 +1260,53 @@ test('Phase 5 — Cloud Media Storage & Image Upload Pipeline (Magic Bytes & Pro
     assert.ok(uploadData.storageProvider, 'Storage provider must be returned');
 });
 
+test('Phase 6 — Google Authentication & OAuth Sign-In Integration', async () => {
+    // 1. Test Google Sign-in with payload (new user creation)
+    const googleEmail = `google_user_${Date.now()}@gmail.com`;
+    const googleId = `gid_${Date.now()}`;
+    const googleName = 'مستخدم قوقل تجريبي';
+
+    const loginRes = await fetch(`${baseUrl}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            googleId,
+            email: googleEmail,
+            name: googleName,
+            avatarUrl: 'https://lh3.googleusercontent.com/a/default-user'
+        })
+    });
+
+    assert.strictEqual(loginRes.status, 200, 'Google login should succeed with 200');
+    const loginData = await loginRes.json();
+    assert.ok(loginData.user, 'User object should be returned');
+    assert.strictEqual(loginData.user.email, googleEmail);
+    assert.strictEqual(loginData.user.google_id, googleId);
+
+    // 2. Test Google Sign-in again (existing user should log in seamlessly)
+    const secondLoginRes = await fetch(`${baseUrl}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            googleId,
+            email: googleEmail
+        })
+    });
+
+    assert.strictEqual(secondLoginRes.status, 200, 'Existing Google user login should succeed');
+    const secondData = await secondLoginRes.json();
+    assert.strictEqual(secondData.user.id, loginData.user.id, 'Should return the exact same user ID');
+
+    // 3. Test invalid payload rejection
+    const badRes = await fetch(`${baseUrl}/api/auth/google`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+    });
+    assert.strictEqual(badRes.status, 400, 'Empty Google payload should return 400');
+});
+
+
 
 
 

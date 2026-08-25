@@ -3550,101 +3550,192 @@ body.dark-mode .back-to-top-btn:hover {
 }
 
 /* ==========================================================================
-   Header Action Buttons & Icons (زر الحساب، عربة التسوق، والثيم)
+   📱 Mobile Bottom Navigation Bar & Phone UX Optimization
    ========================================================================== */
-.user-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+.mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--card-bg, #ffffff);
+    border-top: 1px solid var(--border-color, #e2e8f0);
+    padding: 6px 12px calc(6px + env(safe-area-inset-bottom));
+    z-index: 9990;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
 }
 
-.user-actions a,
-.user-actions button,
-.theme-toggle-btn,
-.user-icon,
-.cart-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: var(--card-bg, #ffffff);
-    border: 1px solid var(--border-color, #cbd5e1);
+.mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    color: var(--light-text, #64748b);
+    text-decoration: none;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 6px 8px;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    flex: 1;
+    text-align: center;
+}
+
+.mobile-nav-item i {
+    font-size: 1.25rem;
+    transition: transform 0.2s ease;
+}
+
+.mobile-nav-item:hover,
+.mobile-nav-item.active {
+    color: var(--primary-color, #4f46e5) !important;
+}
+
+.mobile-nav-item.active i {
+    transform: scale(1.15);
+}
+
+.nav-icon-badge-wrap {
+    position: relative;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #0f172a !important;
-    font-size: 17px;
-    cursor: pointer;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    transition: var(--transition);
-    text-decoration: none;
 }
 
-.user-actions a i,
-.user-actions button i,
-.theme-toggle-btn i,
-.user-icon i,
-.cart-icon i {
-    color: #0f172a !important;
-    transition: color 0.3s ease, transform 0.3s ease;
-}
-
-.user-actions a:hover,
-.user-actions button:hover,
-.theme-toggle-btn:hover,
-.user-icon:hover,
-.cart-icon:hover {
-    background: var(--primary-gradient, linear-gradient(135deg, #4f46e5, #6366f1));
-    border-color: transparent;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(79, 70, 229, 0.35);
-}
-
-.user-actions a:hover i,
-.user-actions button:hover i,
-.theme-toggle-btn:hover i,
-.user-icon:hover i,
-.cart-icon:hover i {
-    color: #ffffff !important;
-    transform: scale(1.1);
-}
-
-.cart-count {
+.nav-icon-badge-wrap .mobile-badge {
     position: absolute;
-    top: -4px;
-    left: -4px;
-    background: var(--accent-gradient, linear-gradient(135deg, #f43f5e, #fb7185));
-    color: #ffffff !important;
-    font-size: 11px;
+    top: -6px;
+    inset-inline-end: -10px;
+    background: #ef4444;
+    color: #ffffff;
+    border-radius: 10px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 9px;
     font-weight: 800;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 3px 8px rgba(244, 63, 94, 0.4);
+    padding: 0 3px;
     border: 2px solid var(--card-bg, #ffffff);
+    line-height: 1;
 }
 
-[data-theme="dark"] .user-actions a,
-[data-theme="dark"] .user-actions button,
-[data-theme="dark"] .theme-toggle-btn,
-[data-theme="dark"] .user-icon,
-[data-theme="dark"] .cart-icon,
-[data-theme="dark"] .wishlist-icon {
-    background: #1e293b;
-    border-color: #334155;
-    color: #f8fafc !important;
+[data-theme="dark"] .mobile-bottom-nav,
+body.dark-mode .mobile-bottom-nav {
+    background: rgba(17, 24, 39, 0.95);
+    border-top-color: #1f2937;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
 }
 
-[data-theme="dark"] .user-actions a i,
-[data-theme="dark"] .user-actions button i,
-[data-theme="dark"] .theme-toggle-btn i,
-[data-theme="dark"] .user-icon i,
-[data-theme="dark"] .cart-icon i,
-[data-theme="dark"] .wishlist-icon i {
-    color: #f8fafc !important;
+[data-theme="dark"] .mobile-nav-item,
+body.dark-mode .mobile-nav-item {
+    color: #94a3b8;
+}
+
+[data-theme="dark"] .mobile-nav-item.active,
+body.dark-mode .mobile-nav-item.active {
+    color: #818cf8 !important;
+}
+
+/* ==========================================================================
+   📱 Comprehensive Mobile Breakpoints & Touch Optimization (<= 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+    .mobile-bottom-nav {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    body {
+        padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important;
+    }
+
+    header nav.main-nav {
+        display: none !important;
+    }
+
+    .mobile-menu-btn {
+        display: inline-flex !important;
+    }
+
+    .container {
+        padding: 0 16px;
+    }
+
+    /* Product Grid: 2 columns with neat cards */
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px !important;
+    }
+
+    .product-card {
+        padding: 12px !important;
+        border-radius: 14px !important;
+    }
+
+    .product-image {
+        height: 140px !important;
+    }
+
+    .product-name {
+        font-size: 0.92rem !important;
+        height: 40px !important;
+    }
+
+    .product-price {
+        font-size: 1.05rem !important;
+    }
+
+    .banner {
+        min-height: 240px !important;
+        padding: 28px 16px !important;
+        border-radius: 16px !important;
+        margin: 16px 0 24px !important;
+    }
+
+    .banner h1 {
+        font-size: 24px !important;
+        line-height: 1.3 !important;
+    }
+
+    .banner p {
+        font-size: 14px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .search-bar form {
+        max-width: 100% !important;
+    }
+
+    .search-bar input[type="text"] {
+        padding: 8px 14px !important;
+        font-size: 14px !important;
+    }
+
+    .search-bar button {
+        padding: 8px 18px !important;
+        font-size: 13px !important;
+    }
+
+    .account-page-container {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    .checkout-container {
+        grid-template-columns: 1fr !important;
+        gap: 24px !important;
+    }
+
+    .express-checkout-box {
+        padding: 16px !important;
+        margin-top: 20px !important;
+    }
 }
 
 /* ==========================================================================

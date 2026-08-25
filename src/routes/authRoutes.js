@@ -5,6 +5,7 @@ const { requireAuth } = require('../middlewares/authMiddleware');
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.post('/auth/google', authController.googleLogin);
 router.post('/logout', authController.logout);
 router.get('/csrf-token', authController.getCsrfToken);
 router.post('/auth/verify-email', authController.verifyEmail);

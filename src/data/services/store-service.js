@@ -51,6 +51,18 @@ class StoreService {
     return this.repository.findUserById(id);
   }
 
+  async findUserByGoogleId(googleId) {
+    return this.repository.findUserByGoogleId(googleId);
+  }
+
+  async linkGoogleId(userId, googleId, avatarUrl = null) {
+    return this.repository.linkGoogleId(userId, googleId, avatarUrl);
+  }
+
+  async createUserFromGoogle(googleData) {
+    return this.repository.createUserFromGoogle(googleData);
+  }
+
   async updateUserProfile(id, data) {
     return this.repository.updateUserProfile(id, data);
   }
