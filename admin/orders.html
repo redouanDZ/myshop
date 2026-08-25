@@ -177,43 +177,18 @@
     </div>
 
     <script src="../js/api-client.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         let cachedOrders = [];
         let currentStatusFilter = 'all';
 
-        // Theme Initialization
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', currentTheme);
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await AdminAuth.verifyAdmin();
+            if (!user) return;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // Load logged in admin name
-            try {
-                const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
-                if (user && user.username) {
-                    const tag = document.getElementById('adminUserTag');
-                    if (tag) tag.textContent = user.username;
-                }
-            } catch(e) {}
-
-            // Admin Logout Handler
-            const logoutBtn = document.getElementById('adminLogoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    if (confirm('هل ترغب في تسجيل الخروج من لوحة الإدارة؟')) {
-                        try {
-                            const token = localStorage.getItem('authToken');
-                            await fetch('/api/logout', {
-                                method: 'POST',
-                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                            });
-                        } catch(err) {}
-                        localStorage.removeItem('authToken');
-                        localStorage.removeItem('currentUser');
-                        sessionStorage.removeItem('currentUser');
-                        window.location.href = '../account.html';
-                    }
-                });
+            const searchInput = document.getElementById('orderSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', AdminTable.debounce(filterOrders, 250));
             }
 
             loadAdminOrders();
@@ -221,12 +196,11 @@
 
         async function loadAdminOrders() {
             try {
-                const token = localStorage.getItem('authToken');
-                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const headers = AdminAuth.getHeaders(false);
                 const response = await fetch('/api/orders', { credentials: 'include', headers });
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        alert('يرجى تسجيل الدخول بحساب مسؤول لعرض الطلبات');
+                        AdminUI.showToast('يرجى تسجيل الدخول بحساب مسؤول لعرض الطلبات', 'error');
                         window.location.href = '../account.html';
                         return;
                     }
@@ -237,7 +211,8 @@
                 document.getElementById('ordersCountBadge').textContent = `${cachedOrders.length} طلب`;
                 filterOrders();
             } catch (error) {
-                document.getElementById('admin-orders-tbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: red;">فشل في جلب الطلبات: ${error.message}</td></tr>`;
+                document.getElementById('admin-orders-tbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: red;">فشل في جلب الطلبات: ${AdminTable.escapeHtml(error.message)}</td></tr>`;
+                AdminUI.showToast('فشل في جلب الطلبات', 'error');
             }
         }
 
@@ -281,14 +256,14 @@
             tbody.innerHTML = orders.map(order => `
                 <tr style="border-bottom: 1px solid #f1f5f9;">
                     <td style="padding: 12px 10px; font-weight: bold; color: #2563eb;">
-                        ${order.order_number || '#' + order.id}
+                        ${AdminTable.escapeHtml(order.order_number || '#' + order.id)}
                     </td>
                     <td style="padding: 12px 10px;">
-                        <strong style="display: block; color: #1e293b;">${order.shipping_full_name || 'عميل #' + (order.user_id || 'ضيف')}</strong>
-                        <span style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-phone"></i> ${order.phone || '-'}</span>
+                        <strong style="display: block; color: #1e293b;">${AdminTable.escapeHtml(order.shipping_full_name || 'عميل #' + (order.user_id || 'ضيف'))}</strong>
+                        <span style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-phone"></i> ${AdminTable.escapeHtml(order.phone || '-')}</span>
                     </td>
                     <td style="padding: 12px 10px;">
-                        <strong style="display: block;">${order.wilaya_name || order.city || 'الجزائر'}</strong>
+                        <strong style="display: block;">${AdminTable.escapeHtml(order.wilaya_name || order.city || 'الجزائر')}</strong>
                         <span style="font-size: 0.85rem; color: #64748b;">${order.delivery_type === 'desk' ? 'استلام مكتب' : 'توصيل منزلي'}</span>
                     </td>
                     <td style="padding: 12px 10px; font-weight: bold; color: #059669;">
@@ -323,11 +298,7 @@
         async function changeOrderStatus(orderId, newStatus, selectEl) {
             try {
                 if (selectEl) selectEl.disabled = true;
-                const token = localStorage.getItem('authToken');
-                const headers = {
-                    'Content-Type': 'application/json'
-                };
-                if (token) headers['Authorization'] = `Bearer ${token}`;
+                const headers = AdminAuth.getHeaders(true);
 
                 const response = await fetch(`/api/orders/${orderId}/status`, {
                     method: 'PUT',
@@ -344,8 +315,9 @@
                 if (selectEl) selectEl.className = `status-select ${newStatus}`;
                 const item = cachedOrders.find(o => o.id === orderId);
                 if (item) item.status = newStatus;
+                AdminUI.showToast('تم تحديث حالة الطلب بنجاح', 'success');
             } catch (err) {
-                alert('خطأ: ' + err.message);
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
                 loadAdminOrders();
             } finally {
                 if (selectEl) selectEl.disabled = false;

@@ -204,28 +204,26 @@
         </div>
     </div>
 
+    <script src="../js/api-client.js"></script>
+    <script src="js/admin.js"></script>
     <script>
-        async function verifyAdminAuth() {
-            const token = localStorage.getItem('authToken');
-            try {
-                const res = await fetch('/api/user/profile', {
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                });
-                if (!res.ok) throw new Error('Not authorized');
-                const user = await res.json();
-                if (user.role !== 'admin') window.location.href = '../index.html';
-                const userTag = document.getElementById('adminUserTag');
-                if (userTag) userTag.textContent = user.username || 'مدير النظام';
-            } catch (e) {
-                window.location.href = '../index.html';
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await AdminAuth.verifyAdmin();
+            if (!user) return;
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', AdminTable.debounce(loadAdminCoupons, 300));
             }
-        }
+            document.getElementById('statusFilter').addEventListener('change', loadAdminCoupons);
+
+            loadAdminCoupons();
+        });
 
         async function loadAdminCoupons() {
             const search = (document.getElementById('searchInput').value || '').trim();
             const status = document.getElementById('statusFilter').value;
-            const token = localStorage.getItem('authToken');
-            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+            const headers = AdminAuth.getHeaders(false);
 
             let url = `/api/admin/coupons?status=${status}`;
             if (search) url += `&search=${encodeURIComponent(search)}`;
@@ -238,7 +236,7 @@
                 renderCouponsTable(coupons);
             } catch (err) {
                 const tbody = document.getElementById('coupons-tbody');
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">خطأ: ${err.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">خطأ: ${AdminTable.escapeHtml(err.message)}</td></tr>`;
             }
         }
 
@@ -258,7 +256,7 @@
                 return `
                     <tr style="border-bottom: 1px solid #f1f5f9;">
                         <td style="padding: 12px 15px; font-weight: bold;">${c.id}</td>
-                        <td style="padding: 12px 15px; font-weight: bold; color: #2563eb; font-size: 1.05rem;">${c.code}</td>
+                        <td style="padding: 12px 15px; font-weight: bold; color: #2563eb; font-size: 1.05rem;">${AdminTable.escapeHtml(c.code)}</td>
                         <td style="padding: 12px 15px; font-weight: bold; color: #059669;">${discountText}</td>
                         <td style="padding: 12px 15px;">${Number(c.min_order_amount) > 0 ? Number(c.min_order_amount).toLocaleString() + ' دج' : 'بدون حد'}</td>
                         <td style="padding: 12px 15px; text-align: center;"><strong>${c.uses_count}</strong> / ${c.max_uses}</td>
@@ -292,20 +290,17 @@
             const expiresAt = document.getElementById('couponExpiry').value || null;
             const status = document.getElementById('couponStatus').value;
 
-            if (!code) { alert('رمز الكوبون مطلوب'); return; }
+            if (!code) { AdminUI.showToast('رمز الكوبون مطلوب', 'warning'); return; }
             if (discountPercent <= 0 && discountAmount <= 0) {
-                alert('يرجى تحديد نسبة الخصم أو قيمة الخصم الثابت');
+                AdminUI.showToast('يرجى تحديد نسبة الخصم أو قيمة الخصم الثابت', 'warning');
                 return;
             }
 
             try {
-                const token = localStorage.getItem('authToken');
+                const headers = AdminAuth.getHeaders(true);
                 const res = await fetch('/api/admin/coupons', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-                    },
+                    headers,
                     body: JSON.stringify({
                         code,
                         discountPercent,
@@ -320,59 +315,47 @@
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'فشل حفظ الكوبون');
 
-                alert('تم إنشاء قسيمة الخصم بنجاح! 🎉');
+                AdminUI.showToast('تم إنشاء قسيمة الخصم بنجاح! 🎉', 'success');
                 closeCouponModal();
                 loadAdminCoupons();
             } catch (err) {
-                alert('خطأ: ' + err.message);
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
             }
         }
 
         async function toggleCouponStatus(id, newStatus) {
             try {
-                const token = localStorage.getItem('authToken');
+                const headers = AdminAuth.getHeaders(true);
                 const res = await fetch(`/api/admin/coupons/${id}`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-                    },
+                    headers,
                     body: JSON.stringify({ status: newStatus })
                 });
                 if (!res.ok) throw new Error('فشل تحديث الحالة');
+                AdminUI.showToast('تم تحديث حالة الكوبون بنجاح', 'success');
                 loadAdminCoupons();
             } catch (err) {
-                alert('خطأ: ' + err.message);
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
             }
         }
 
         async function deleteCoupon(id) {
-            if (!confirm('هل أنت متأكد من رغبتك في حذف هذا الكوبون؟')) return;
+            const confirmed = await AdminUI.confirm('هل أنت متأكد من رغبتك في حذف هذا الكوبون؟', 'حذف الكوبون');
+            if (!confirmed) return;
+
             try {
-                const token = localStorage.getItem('authToken');
+                const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/admin/coupons/${id}`, {
                     method: 'DELETE',
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                    headers
                 });
                 if (!res.ok) throw new Error('فشل حذف الكوبون');
-                alert('تم حذف الكوبون بنجاح');
+                AdminUI.showToast('تم حذف الكوبون بنجاح', 'success');
                 loadAdminCoupons();
             } catch (err) {
-                alert('خطأ: ' + err.message);
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
             }
         }
-
-        document.getElementById('adminLogoutBtn')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('currentUser');
-            window.location.href = '../index.html';
-        });
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await verifyAdminAuth();
-            loadAdminCoupons();
-        });
     </script>
 </body>
 </html>

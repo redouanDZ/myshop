@@ -1129,4 +1129,228 @@
 .role-customer {
     background: rgba(79, 70, 229, 0.12);
     color: var(--primary-color, #4f46e5);
-}
+}
+
+/* ========================================================
+   Admin Mobile Responsive Drawer & Header Menu Toggle
+   ======================================================== */
+.admin-menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    font-size: 1.3rem;
+    color: var(--text-color, #1e293b);
+    cursor: pointer;
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm, 8px);
+    transition: var(--transition);
+}
+
+.admin-menu-toggle:hover {
+    background: var(--light-color, #f1f5f9);
+    color: var(--primary-color);
+}
+
+.admin-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.admin-sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+@media (max-width: 900px) {
+    .admin-menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .admin-dashboard {
+        position: relative;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 280px;
+        z-index: 999;
+        transform: translateX(100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        width: 100%;
+        padding: 20px 15px;
+    }
+}
+
+/* ========================================================
+   Admin Toast Notification System
+   ======================================================== */
+.admin-toast-container {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.admin-toast {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--card-bg, #ffffff);
+    color: var(--text-color, #1e293b);
+    border-radius: var(--border-radius-sm, 10px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border-color, #e2e8f0);
+    font-size: 0.95rem;
+    font-weight: 600;
+    animation: toastSlideIn 0.3s ease forwards;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.admin-toast.hide {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.admin-toast.success {
+    border-right: 4px solid var(--success-color, #10b981);
+    color: #065f46;
+    background: #f0fdf4;
+}
+
+.admin-toast.success i {
+    color: var(--success-color, #10b981);
+}
+
+.admin-toast.error {
+    border-right: 4px solid var(--danger-color, #ef4444);
+    color: #991b1b;
+    background: #fef2f2;
+}
+
+.admin-toast.error i {
+    color: var(--danger-color, #ef4444);
+}
+
+.admin-toast.warning {
+    border-right: 4px solid var(--warning-color, #f59e0b);
+    color: #92400e;
+    background: #fffbeb;
+}
+
+.admin-toast.warning i {
+    color: var(--warning-color, #f59e0b);
+}
+
+.admin-toast.info {
+    border-right: 4px solid var(--primary-color, #4f46e5);
+    color: #1e3a8a;
+    background: #eff6ff;
+}
+
+.admin-toast.info i {
+    color: var(--primary-color, #4f46e5);
+}
+
+@keyframes toastSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ========================================================
+   Admin Custom Confirmation Modal
+   ======================================================== */
+.admin-modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.admin-confirm-card {
+    background: var(--card-bg, #ffffff);
+    padding: 24px;
+    border-radius: var(--border-radius-sm, 12px);
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 20px 35px -5px rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color, #e2e8f0);
+}
+
+.admin-confirm-card h3 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+    color: var(--dark-color, #1e293b);
+}
+
+.admin-confirm-card p {
+    color: var(--light-text, #64748b);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.admin-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.admin-confirm-actions button {
+    padding: 8px 18px;
+    border-radius: var(--border-radius-sm, 8px);
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.admin-confirm-actions .btn-secondary {
+    background: var(--light-color, #f1f5f9);
+    border: 1px solid var(--border-color, #cbd5e1);
+    color: var(--text-color, #334155);
+}
+
+.admin-confirm-actions .btn-primary {
+    background: var(--primary-color, #4f46e5);
+    border: 1px solid var(--primary-color, #4f46e5);
+    color: #ffffff;
+}
+
+.admin-confirm-actions .btn-primary:hover {
+    background: var(--primary-hover, #4338ca);
+}

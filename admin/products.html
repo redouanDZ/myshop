@@ -215,6 +215,7 @@
     </div>
 
     <script src="../js/api-client.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         let editingProductId = null;
         let currentPage = 1;
@@ -225,36 +226,9 @@
         document.documentElement.setAttribute('data-theme', currentTheme);
 
         // Image Preview Handler
-        document.addEventListener('DOMContentLoaded', function() {
-            // Display Logged In Admin Info
-            try {
-                const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
-                if (user && user.username) {
-                    const tag = document.getElementById('adminUserTag');
-                    if (tag) tag.textContent = user.username;
-                }
-            } catch(e) {}
-
-            // Admin Logout Handler
-            const logoutBtn = document.getElementById('adminLogoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    if (confirm('هل ترغب في تسجيل الخروج من لوحة الإدارة؟')) {
-                        try {
-                            const token = localStorage.getItem('authToken');
-                            await fetch('/api/logout', {
-                                method: 'POST',
-                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                            });
-                        } catch(err) {}
-                        localStorage.removeItem('authToken');
-                        localStorage.removeItem('currentUser');
-                        sessionStorage.removeItem('currentUser');
-                        window.location.href = '../account.html';
-                    }
-                });
-            }
+        document.addEventListener('DOMContentLoaded', async function() {
+            const user = await AdminAuth.verifyAdmin();
+            if (!user) return;
 
             const productImage = document.getElementById('productImage');
             const imagePreview = document.getElementById('imagePreview');
@@ -272,11 +246,10 @@
             }
 
             // Filter Event Listeners
-            let debounceTimer;
-            document.getElementById('searchInput').addEventListener('input', () => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => loadProducts(1), 300);
-            });
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', AdminTable.debounce(() => loadProducts(1), 300));
+            }
             document.getElementById('categoryFilter').addEventListener('change', () => loadProducts(1));
             document.getElementById('stockFilter').addEventListener('change', () => loadProducts(1));
             document.getElementById('sortFilter').addEventListener('change', () => loadProducts(1));
@@ -298,10 +271,10 @@
             document.getElementById('productCategory').value = '';
             document.getElementById('productPrice').value = '';
             document.getElementById('productStock').value = '';
-            document.getElementById('productDescription').value = '';
             document.getElementById('productStatus').value = 'active';
-            document.getElementById('imagePreview').src = '../images/product-placeholder.jpg';
+            document.getElementById('productDescription').value = '';
             document.getElementById('productImage').value = '';
+            document.getElementById('imagePreview').src = '../images/product-placeholder.jpg';
             document.getElementById('productModal').style.display = 'block';
         }
 
@@ -311,55 +284,47 @@
 
         async function editProduct(id) {
             try {
-                const res = await fetch(`/api/products/${id}`);
-                if (!res.ok) throw new Error('فشل جلب بيانات المنتج');
-                const product = await res.json();
+                const response = await fetch(`/api/products/${id}`);
+                if (!response.ok) throw new Error('فشل جلب بيانات المنتج');
+                const product = await response.json();
 
-                editingProductId = id;
-                document.getElementById('modalTitle').textContent = `تعديل المنتج: ${product.name}`;
+                editingProductId = product.id;
+                document.getElementById('modalTitle').textContent = 'تعديل المنتج #' + product.id;
                 document.getElementById('productName').value = product.name || '';
                 document.getElementById('productCategory').value = product.category_name || product.category || '';
-                document.getElementById('productPrice').value = product.price || 0;
-                document.getElementById('productStock').value = product.stock || 0;
-                document.getElementById('productDescription').value = product.description || '';
+                document.getElementById('productPrice').value = product.price || '';
+                document.getElementById('productStock').value = product.stock || '0';
                 document.getElementById('productStatus').value = product.status || 'active';
+                document.getElementById('productDescription').value = product.description || '';
                 document.getElementById('imagePreview').src = product.image_url || '../images/product-placeholder.jpg';
-                document.getElementById('productImage').value = '';
                 document.getElementById('productModal').style.display = 'block';
-            } catch (err) {
-                alert('خطأ: ' + err.message);
+            } catch (error) {
+                AdminUI.showToast('خطأ: ' + error.message, 'error');
             }
         }
 
         async function saveProduct() {
-            const name = document.getElementById('productName').value.trim();
-            const category = document.getElementById('productCategory').value.trim();
-            const price = parseFloat(document.getElementById('productPrice').value);
-            const stock = parseInt(document.getElementById('productStock').value, 10);
-            const description = document.getElementById('productDescription').value.trim();
-            const status = document.getElementById('productStatus').value;
-            const imageInput = document.getElementById('productImage');
-
-            if (!name || !category || isNaN(price) || isNaN(stock)) {
-                alert('يرجى ملء جميع الحقول الإلزامية (الاسم، التصنيف، السعر، الكمية)');
-                return;
-            }
-
             try {
-                const formData = new FormData();
-                formData.append('name', name);
-                formData.append('category', category);
-                formData.append('price', price);
-                formData.append('stock', stock);
-                formData.append('description', description);
-                formData.append('status', status);
-
-                if (imageInput.files[0]) {
-                    formData.append('image', imageInput.files[0]);
+                const form = document.getElementById('productForm');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
                 }
 
-                const token = localStorage.getItem('authToken');
-                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const formData = new FormData();
+                formData.append('name', document.getElementById('productName').value.trim());
+                formData.append('category', document.getElementById('productCategory').value.trim());
+                formData.append('price', document.getElementById('productPrice').value);
+                formData.append('stock', document.getElementById('productStock').value);
+                formData.append('status', document.getElementById('productStatus').value);
+                formData.append('description', document.getElementById('productDescription').value.trim());
+
+                const imageFile = document.getElementById('productImage').files[0];
+                if (imageFile) {
+                    formData.append('image', imageFile);
+                }
+
+                const headers = AdminAuth.getHeaders(false);
 
                 let response;
                 if (editingProductId) {
@@ -381,20 +346,20 @@
                     throw new Error(errData.error || 'حدث خطأ أثناء حفظ المنتج');
                 }
 
-                alert(editingProductId ? 'تم تحديث المنتج بنجاح! 🎉' : 'تمت إضافة المنتج بنجاح! 🎉');
+                AdminUI.showToast(editingProductId ? 'تم تحديث المنتج بنجاح! 🎉' : 'تمت إضافة المنتج بنجاح! 🎉', 'success');
                 closeProductModal();
                 loadProducts(currentPage);
             } catch (error) {
-                alert('خطأ: ' + error.message);
+                AdminUI.showToast('خطأ: ' + error.message, 'error');
             }
         }
 
         async function deleteProduct(id) {
-            if (!confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج نهائياً؟')) return;
+            const confirmed = await AdminUI.confirm('هل أنت متأكد من رغبتك في حذف هذا المنتج نهائياً؟', 'حذف المنتج');
+            if (!confirmed) return;
 
             try {
-                const token = localStorage.getItem('authToken');
-                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const headers = AdminAuth.getHeaders(false);
                 const response = await fetch(`/api/products/${id}`, {
                     method: 'DELETE',
                     headers
@@ -405,10 +370,10 @@
                     throw new Error(errData.error || 'فشل حذف المنتج');
                 }
 
-                alert('تم حذف المنتج بنجاح');
+                AdminUI.showToast('تم حذف المنتج بنجاح', 'success');
                 loadProducts(currentPage);
             } catch (error) {
-                alert('خطأ: ' + error.message);
+                AdminUI.showToast('خطأ: ' + error.message, 'error');
             }
         }
 
@@ -444,7 +409,7 @@
             } catch (error) {
                 const tbody = document.getElementById('products-tbody');
                 if (tbody) {
-                    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 30px; color: red;">فشل في جلب المنتجات: ${error.message}</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 30px; color: red;">فشل في جلب المنتجات: ${AdminTable.escapeHtml(error.message)}</td></tr>`;
                 }
             }
         }

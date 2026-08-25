@@ -153,32 +153,30 @@
         </div>
     </div>
 
+    <script src="../js/api-client.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         let currentPage = 1;
         let totalPages = 1;
 
-        async function verifyAdminAuth() {
-            const token = localStorage.getItem('authToken');
-            try {
-                const res = await fetch('/api/user/profile', {
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                });
-                if (!res.ok) throw new Error('Not authorized');
-                const user = await res.json();
-                if (user.role !== 'admin') window.location.href = '../index.html';
-                const userTag = document.getElementById('adminUserTag');
-                if (userTag) userTag.textContent = user.username || 'مدير النظام';
-            } catch (e) {
-                window.location.href = '../index.html';
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await AdminAuth.verifyAdmin();
+            if (!user) return;
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', AdminTable.debounce(() => loadAdminReviews(1), 300));
             }
-        }
+            document.getElementById('statusFilter').addEventListener('change', () => loadAdminReviews(1));
+
+            loadAdminReviews(1);
+        });
 
         async function loadAdminReviews(page = 1) {
             currentPage = page;
             const search = (document.getElementById('searchInput').value || '').trim();
             const status = document.getElementById('statusFilter').value;
-            const token = localStorage.getItem('authToken');
-            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+            const headers = AdminAuth.getHeaders(false);
 
             let url = `/api/admin/reviews?page=${page}&limit=15&status=${status}`;
             if (search) url += `&search=${encodeURIComponent(search)}`;
@@ -196,7 +194,7 @@
                 renderPagination(currentPage, totalPages);
             } catch (err) {
                 const tbody = document.getElementById('reviews-tbody');
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">خطأ: ${err.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">خطأ: ${AdminTable.escapeHtml(err.message)}</td></tr>`;
             }
         }
 
@@ -217,15 +215,15 @@
                         <td style="padding: 12px 15px;">
                             <div style="display: flex; align-items: center; gap: 8px;">
                                 <img src="${r.productImage || '../images/product-placeholder.jpg'}" style="width: 36px; height: 36px; border-radius: 4px; object-fit: cover;">
-                                <strong>${r.productName}</strong>
+                                <strong>${AdminTable.escapeHtml(r.productName)}</strong>
                             </div>
                         </td>
                         <td style="padding: 12px 15px;">
-                            <strong>${r.username}</strong>
-                            <div style="font-size: 0.8rem; color: #64748b;">${r.email || ''}</div>
+                            <strong>${AdminTable.escapeHtml(r.username)}</strong>
+                            <div style="font-size: 0.8rem; color: #64748b;">${AdminTable.escapeHtml(r.email || '')}</div>
                         </td>
                         <td style="padding: 12px 15px; text-align: center; font-size: 1.1rem;" class="stars-gold">${stars}</td>
-                        <td style="padding: 12px 15px; max-width: 250px; font-size: 0.9rem; color: #334155;">${r.comment || '<span style="color:#94a3b8;">بدون تعليق نصي</span>'}</td>
+                        <td style="padding: 12px 15px; max-width: 250px; font-size: 0.9rem; color: #334155;">${AdminTable.escapeHtml(r.comment) || '<span style="color:#94a3b8;">بدون تعليق نصي</span>'}</td>
                         <td style="padding: 12px 15px; text-align: center; color: #64748b; font-size: 0.85rem;">${new Date(r.created_at).toLocaleDateString('ar-DZ')}</td>
                         <td style="padding: 12px 15px; text-align: center;"><span class="status-badge status-${r.status}">${statusLabels[r.status] || r.status}</span></td>
                         <td style="padding: 12px 15px; text-align: center;">
@@ -243,56 +241,44 @@
             if (total <= 1) { container.innerHTML = ''; return; }
             let html = '';
             for (let i = 1; i <= total; i++) {
-                html += `<button class="btn" style="padding: 6px 12px; border-radius: 4px; border: 1px solid #cbd5e1; background: ${i === current ? '#2563eb' : '#fff'}; color: ${i === current ? '#fff' : '#334155'}; font-weight: bold; cursor: pointer;" onclick="loadAdminReviews(${i})">${i}</button>`;
+                html += `<button class="btn" style="padding: 6px 12px; border-radius: 4px; border: 1px solid #cbd5e1; background: ${i === current ? 'var(--primary-color, #2563eb)' : '#fff'}; color: ${i === current ? '#fff' : '#334155'}; font-weight: bold; cursor: pointer;" onclick="loadAdminReviews(${i})">${i}</button>`;
             }
             container.innerHTML = html;
         }
 
         async function updateReviewStatus(id, newStatus) {
             try {
-                const token = localStorage.getItem('authToken');
+                const headers = AdminAuth.getHeaders(true);
                 const res = await fetch(`/api/admin/reviews/${id}/status`, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
-                    },
+                    headers,
                     body: JSON.stringify({ status: newStatus })
                 });
                 if (!res.ok) throw new Error('فشل تحديث الحالة');
+                AdminUI.showToast('تم تحديث حالة التقييم بنجاح', 'success');
                 loadAdminReviews(currentPage);
             } catch (err) {
-                alert('خطأ: ' + err.message);
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
             }
         }
 
         async function deleteReview(id) {
-            if (!confirm('هل أنت متأكد من رغبتك في حذف هذا التقييم نهائياً؟')) return;
+            const confirmed = await AdminUI.confirm('هل أنت متأكد من رغبتك في حذف هذا التقييم نهائياً؟', 'حذف التقييم');
+            if (!confirmed) return;
+
             try {
-                const token = localStorage.getItem('authToken');
+                const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/admin/reviews/${id}`, {
                     method: 'DELETE',
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+                    headers
                 });
                 if (!res.ok) throw new Error('فشل حذف التقييم');
-                alert('تم حذف التقييم بنجاح');
+                AdminUI.showToast('تم حذف التقييم بنجاح', 'success');
                 loadAdminReviews(currentPage);
             } catch (err) {
-                alert('خطأ: ' + err.message);
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
             }
         }
-
-        document.getElementById('adminLogoutBtn')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('currentUser');
-            window.location.href = '../index.html';
-        });
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await verifyAdminAuth();
-            loadAdminReviews(1);
-        });
     </script>
 </body>
 </html>

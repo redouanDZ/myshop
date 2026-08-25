@@ -153,33 +153,28 @@
         </div>
     </div>
 
+    <script src="../js/api-client.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         let currentPage = 1;
         let totalPages = 1;
 
-        async function verifyAdminAuth() {
-            const token = localStorage.getItem('authToken');
-            try {
-                const res = await fetch('/api/user/profile', {
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                });
-                if (!res.ok) throw new Error('Not authorized');
-                const user = await res.json();
-                if (user.role !== 'admin') {
-                    window.location.href = '../index.html';
-                }
-                const userTag = document.getElementById('adminUserTag');
-                if (userTag) userTag.textContent = user.username || 'مدير النظام';
-            } catch (e) {
-                window.location.href = '../index.html';
+        document.addEventListener('DOMContentLoaded', async () => {
+            const user = await AdminAuth.verifyAdmin();
+            if (!user) return;
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', AdminTable.debounce(() => loadAdminCustomers(1), 300));
             }
-        }
+
+            loadAdminCustomers(1);
+        });
 
         async function loadAdminCustomers(page = 1) {
             currentPage = page;
             const search = (document.getElementById('searchInput').value || '').trim();
-            const token = localStorage.getItem('authToken');
-            const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+            const headers = AdminAuth.getHeaders(false);
 
             let url = `/api/admin/users?page=${page}&limit=15`;
             if (search) url += `&search=${encodeURIComponent(search)}`;
@@ -197,7 +192,7 @@
                 renderPagination(currentPage, totalPages);
             } catch (err) {
                 const tbody = document.getElementById('customers-tbody');
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: red; padding: 20px;">خطأ: ${err.message}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: red; padding: 20px;">خطأ: ${AdminTable.escapeHtml(err.message)}</td></tr>`;
             }
         }
 
@@ -211,9 +206,9 @@
             tbody.innerHTML = customers.map(c => `
                 <tr style="border-bottom: 1px solid #f1f5f9;">
                     <td style="padding: 12px 15px; font-weight: bold;">${c.id}</td>
-                    <td style="padding: 12px 15px; font-weight: bold; color: #1e293b;">${c.username}</td>
-                    <td style="padding: 12px 15px; color: #64748b;">${c.email}</td>
-                    <td style="padding: 12px 15px; color: #334155;">${c.phone || '-'}</td>
+                    <td style="padding: 12px 15px; font-weight: bold; color: #1e293b;">${AdminTable.escapeHtml(c.username)}</td>
+                    <td style="padding: 12px 15px; color: #64748b;">${AdminTable.escapeHtml(c.email)}</td>
+                    <td style="padding: 12px 15px; color: #334155;">${AdminTable.escapeHtml(c.phone || '-')}</td>
                     <td style="padding: 12px 15px;"><span class="role-badge ${c.role === 'admin' ? 'role-admin' : 'role-customer'}">${c.role === 'admin' ? 'مدير' : 'عميل'}</span></td>
                     <td style="padding: 12px 15px; text-align: center; font-weight: bold;">${c.orders_count || 0}</td>
                     <td style="padding: 12px 15px; text-align: left; font-weight: bold; color: #059669;">${Number(c.total_spent || 0).toLocaleString()} دج</td>
@@ -230,7 +225,7 @@
             if (total <= 1) { container.innerHTML = ''; return; }
             let html = '';
             for (let i = 1; i <= total; i++) {
-                html += `<button class="btn" style="padding: 6px 12px; border-radius: 4px; border: 1px solid #cbd5e1; background: ${i === current ? '#2563eb' : '#fff'}; color: ${i === current ? '#fff' : '#334155'}; font-weight: bold; cursor: pointer;" onclick="loadAdminCustomers(${i})">${i}</button>`;
+                html += `<button class="btn" style="padding: 6px 12px; border-radius: 4px; border: 1px solid #cbd5e1; background: ${i === current ? 'var(--primary-color, #2563eb)' : '#fff'}; color: ${i === current ? '#fff' : '#334155'}; font-weight: bold; cursor: pointer;" onclick="loadAdminCustomers(${i})">${i}</button>`;
             }
             container.innerHTML = html;
         }
@@ -242,10 +237,8 @@
             body.innerHTML = '<p style="text-align:center; color:#64748b; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل بيانات العميل...</p>';
 
             try {
-                const token = localStorage.getItem('authToken');
-                const res = await fetch(`/api/admin/users/${userId}`, {
-                    headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                });
+                const headers = AdminAuth.getHeaders(false);
+                const res = await fetch(`/api/admin/users/${userId}`, { headers });
                 if (!res.ok) throw new Error('فشل جلب تفاصيل العميل');
                 const user = await res.json();
 
@@ -256,19 +249,19 @@
                 body.innerHTML = `
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.95rem;">
                         <div>
-                            <p style="margin: 4px 0;"><strong>الاسم:</strong> ${user.username}</p>
-                            <p style="margin: 4px 0;"><strong>البريد:</strong> ${user.email}</p>
-                            <p style="margin: 4px 0;"><strong>الهاتف:</strong> ${user.phone || '-'}</p>
+                            <p style="margin: 4px 0;"><strong>الاسم:</strong> ${AdminTable.escapeHtml(user.username)}</p>
+                            <p style="margin: 4px 0;"><strong>البريد:</strong> ${AdminTable.escapeHtml(user.email)}</p>
+                            <p style="margin: 4px 0;"><strong>الهاتف:</strong> ${AdminTable.escapeHtml(user.phone || '-')}</p>
                         </div>
                         <div>
-                            <p style="margin: 4px 0;"><strong>الدور:</strong> ${user.role}</p>
+                            <p style="margin: 4px 0;"><strong>الدور:</strong> ${AdminTable.escapeHtml(user.role)}</p>
                             <p style="margin: 4px 0;"><strong>تاريخ التسجيل:</strong> ${new Date(user.created_at).toLocaleDateString('ar-DZ')}</p>
                         </div>
                     </div>
 
                     <h4 style="margin-bottom: 8px;">العناوين المسجلة (${addresses.length})</h4>
                     <div style="margin-bottom: 20px;">
-                        ${addresses.length ? addresses.map(a => `<div style="background: #fff; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;"><strong>${a.title}:</strong> ${a.city} - ${a.address} (${a.phone})</div>`).join('') : '<p style="color:#64748b; font-size:0.9rem;">لا توجد عناوين مسجلة</p>'}
+                        ${addresses.length ? addresses.map(a => `<div style="background: #fff; border: 1px solid #e2e8f0; padding: 8px 12px; border-radius: 6px; margin-bottom: 6px; font-size: 0.9rem;"><strong>${AdminTable.escapeHtml(a.title)}:</strong> ${AdminTable.escapeHtml(a.city)} - ${AdminTable.escapeHtml(a.address)} (${AdminTable.escapeHtml(a.phone)})</div>`).join('') : '<p style="color:#64748b; font-size:0.9rem;">لا توجد عناوين مسجلة</p>'}
                     </div>
 
                     <h4 style="margin-bottom: 8px;">سجل الطلبات (${orders.length})</h4>
@@ -286,10 +279,10 @@
                                 <tbody>
                                     ${orders.map(o => `
                                         <tr style="border-bottom: 1px solid #f1f5f9;">
-                                            <td style="padding: 6px 10px; font-weight: bold;">${o.order_number || '#' + o.id}</td>
+                                            <td style="padding: 6px 10px; font-weight: bold;">${AdminTable.escapeHtml(o.order_number || '#' + o.id)}</td>
                                             <td style="padding: 6px 10px;">${new Date(o.created_at).toLocaleDateString('ar-DZ')}</td>
                                             <td style="padding: 6px 10px; font-weight: bold; color: #059669;">${Number(o.total).toLocaleString()} دج</td>
-                                            <td style="padding: 6px 10px;">${o.status}</td>
+                                            <td style="padding: 6px 10px;">${AdminTable.escapeHtml(o.status)}</td>
                                         </tr>
                                     `).join('')}
                                 </tbody>
@@ -298,25 +291,13 @@
                     </div>
                 `;
             } catch (err) {
-                body.innerHTML = `<p style="color: red; padding: 15px;">خطأ: ${err.message}</p>`;
+                body.innerHTML = `<p style="color: red; padding: 15px;">خطأ: ${AdminTable.escapeHtml(err.message)}</p>`;
             }
         }
 
         function closeCustomerModal() {
             document.getElementById('customerModal').style.display = 'none';
         }
-
-        document.getElementById('adminLogoutBtn')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('currentUser');
-            window.location.href = '../index.html';
-        });
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await verifyAdminAuth();
-            loadAdminCustomers(1);
-        });
     </script>
 </body>
 </html>

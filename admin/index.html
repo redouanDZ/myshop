@@ -141,54 +141,23 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/api-client.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         let ordersChartInstance = null;
         let statusChartInstance = null;
 
-        // Theme Initialization
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', currentTheme);
-
         async function loadAdminDashboard() {
+            const user = await AdminAuth.verifyAdmin();
+            if (!user) return;
+
             document.getElementById('currentDateDisplay').textContent = new Date().toLocaleDateString('ar-DZ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-            // Admin Name
             try {
-                const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || '{}');
-                if (user && user.username) {
-                    const tag = document.getElementById('adminUserTag');
-                    if (tag) tag.textContent = user.username;
-                }
-            } catch(e) {}
-
-            // Admin Logout Handler
-            const logoutBtn = document.getElementById('adminLogoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', async (e) => {
-                    e.preventDefault();
-                    if (confirm('هل ترغب في تسجيل الخروج من لوحة الإدارة؟')) {
-                        try {
-                            const token = localStorage.getItem('authToken');
-                            await fetch('/api/logout', {
-                                method: 'POST',
-                                headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-                            });
-                        } catch(err) {}
-                        localStorage.removeItem('authToken');
-                        localStorage.removeItem('currentUser');
-                        sessionStorage.removeItem('currentUser');
-                        window.location.href = '../account.html';
-                    }
-                });
-            }
-
-            try {
-                const token = localStorage.getItem('authToken');
-                const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+                const headers = AdminAuth.getHeaders(false);
                 const res = await fetch('/api/admin/dashboard-stats', { credentials: 'include', headers });
                 if (!res.ok) {
                     if (res.status === 401 || res.status === 403) {
-                        alert('يرجى تسجيل الدخول بحساب مسؤول للوصول إلى لوحة التحكم');
+                        AdminUI.showToast('يرجى تسجيل الدخول بحساب مسؤول', 'error');
                         window.location.href = '../account.html';
                         return;
                     }
@@ -215,6 +184,7 @@
 
             } catch (err) {
                 console.error('Error loading dashboard stats:', err);
+                AdminUI.showToast('خطأ أثناء جلب إحصائيات لوحة التحكم', 'error');
             }
         }
 
