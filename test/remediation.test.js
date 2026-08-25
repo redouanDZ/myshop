@@ -984,5 +984,59 @@ test('Backend Audit: Automatic Product Rating Recalculation on Review Submission
     await db.deleteProduct(prodId).catch(() => {});
 });
 
+test('Phase 1 — Commercial Readiness: 1-Click COD Direct Checkout from Product Page', async () => {
+    // 1. Create product for testing express checkout
+    const prodId = await db.createProduct({
+        name: 'منتج اختبار الشراء المباشر',
+        category: 'إلكترونيات',
+        price: 4500,
+        stock: 25,
+        status: 'active'
+    });
+
+    // 2. Submit express direct COD order
+    const expressOrderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            cart: [{
+                id: prodId,
+                name: 'منتج اختبار الشراء المباشر',
+                price: 4500,
+                quantity: 2,
+                image_url: '/images/product-placeholder.jpg'
+            }],
+            paymentMethod: 'cod',
+            shippingInfo: {
+                fullName: 'كريم بلحاج',
+                phone: '0770123456',
+                address: 'شارع ديدوش مراد',
+                city: 'الجزائر الوسطى',
+                wilayaId: 16,
+                wilayaName: 'الجزائر',
+                deliveryType: 'home',
+                shippingCost: 400
+            }
+        })
+    });
+
+    assert.strictEqual(expressOrderRes.status, 201, 'Express checkout order must be created with 201');
+    const orderData = await expressOrderRes.json();
+    assert.ok(orderData.id, 'Order ID must be returned');
+    assert.ok(orderData.orderNumber, 'Order Number must be generated');
+    assert.ok(orderData.trackingToken, 'Tracking Token must be generated');
+
+    // (4500 * 2) + 400 = 9400 DZD
+    assert.strictEqual(orderData.total, 9400, 'Calculated total must be (4500 * 2) + 400 = 9400 DZD');
+
+    // Verify stock decreased by 2 (25 - 2 = 23)
+    const prodAfter = await db.getProductById(prodId);
+    assert.strictEqual(Number(prodAfter.stock), 23, 'Stock must decrease by ordered quantity (2)');
+
+    // Cleanup
+    await db.deleteProduct(prodId).catch(() => {});
+});
+
+
 
 

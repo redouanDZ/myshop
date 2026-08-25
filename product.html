@@ -71,9 +71,81 @@
                         <div class="size-options"><h3>المقاس:</h3><div class="size-select" id="size-select"></div></div>
                     </div>
                     <div class="product-actions">
-                        <div class="quantity"><button class="quantity-btn decrease" onclick="changeQuantity(-1)">-</button><input type="number" id="quantity" value="1" min="1" max="10"><button class="quantity-btn increase" onclick="changeQuantity(1)">+</button></div>
+                        <div class="quantity"><button class="quantity-btn decrease" onclick="changeQuantity(-1)">-</button><input type="number" id="quantity" value="1" min="1" max="10" onchange="updateExpressCalculations()"><button class="quantity-btn increase" onclick="changeQuantity(1)">+</button></div>
                         <button class="add-to-cart" onclick="addToCartFromProduct()" data-i18n="common.add_to_cart"><i class="fas fa-cart-plus"></i> أضف إلى السلة</button>
                         <button class="add-to-wishlist" onclick="addToWishlist()" title="أضف للمفضلة"><i class="far fa-heart"></i></button>
+                    </div>
+
+                    <!-- ===== ⚡ 1-Click Direct COD Checkout Box ===== -->
+                    <div class="express-checkout-box" id="express-checkout-box" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid var(--primary-color, #2563eb); border-radius: 12px; padding: 20px; margin-top: 24px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.08);">
+                        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
+                            <h3 style="margin: 0; font-size: 1.12rem; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-bolt" style="color: #f59e0b;"></i> الشراء السريع (الدفع عند الاستلام)
+                            </h3>
+                            <span style="background: #e0f2fe; color: #0369a1; font-size: 0.78rem; font-weight: bold; padding: 3px 8px; border-radius: 20px;">
+                                <i class="fas fa-shield-alt"></i> طلب مباشر
+                            </span>
+                        </div>
+
+                        <form id="express-order-form" onsubmit="handleExpressOrder(event)" style="display: grid; gap: 12px;">
+                            <div>
+                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">الاسم الكامل <span style="color:#ef4444;">*</span></label>
+                                <input type="text" id="express-name" required placeholder="مثال: أحمد بن علي" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;">
+                            </div>
+
+                            <div>
+                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">رقم الهاتف <span style="color:#ef4444;">*</span></label>
+                                <input type="tel" id="express-phone" required placeholder="05 / 06 / 07 XX XX XX XX" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;" dir="ltr">
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <div>
+                                    <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">الولاية <span style="color:#ef4444;">*</span></label>
+                                    <select id="express-wilaya" required onchange="onExpressWilayaChange()" style="width: 100%; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
+                                        <option value="">-- اختر الولاية --</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">البلدية / العنوان</label>
+                                    <input type="text" id="express-address" placeholder="البلدية أو العنوان" style="width: 100%; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">نوع التوصيل</label>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.84rem;">
+                                        <input type="radio" name="express-delivery" value="home" checked onchange="updateExpressCalculations()">
+                                        <span>🏠 للمنزل (<span id="express-home-price">500 دج</span>)</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.84rem;">
+                                        <input type="radio" name="express-delivery" value="desk" onchange="updateExpressCalculations()">
+                                        <span>🏢 للمكتب (<span id="express-desk-price">350 دج</span>)</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- ملخص السعر المباشر -->
+                            <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-top: 2px; font-size: 0.9rem;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; color: #64748b;">
+                                    <span>سعر المنتجات (<span id="express-qty-display">1</span>x):</span>
+                                    <span id="express-subtotal-display" style="font-weight: 600; color: #1e293b;">0 دج</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 6px; color: #64748b;">
+                                    <span>تكلفة التوصيل:</span>
+                                    <span id="express-shipping-display" style="font-weight: 600; color: #1e293b;">500 دج</span>
+                                </div>
+                                <div style="display: flex; justify-content: space-between; border-top: 1px dashed #cbd5e1; padding-top: 8px; font-size: 1.05rem; font-weight: 800; color: var(--primary-color, #2563eb);">
+                                    <span>المجموع الإجمالي:</span>
+                                    <span id="express-total-display">0 دج</span>
+                                </div>
+                            </div>
+
+                            <!-- زر الإرسال -->
+                            <button type="submit" id="express-submit-btn" style="width: 100%; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; border-radius: 10px; padding: 14px 20px; font-size: 1.08rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: all 0.2s ease;">
+                                <i class="fas fa-check-circle"></i> اضغط هنا لتأكيد الطلب الآن ⚡
+                            </button>
+                        </form>
                     </div>
 
                     <!-- مزايا الشراء والضمان -->
@@ -439,8 +511,179 @@
             }
         }
 
+        let wilayasList = [];
+
+        async function loadExpressWilayas() {
+            const select = document.getElementById('express-wilaya');
+            if (!select) return;
+            try {
+                const res = await fetch('/api/wilayas');
+                if (res.ok) {
+                    wilayasList = await res.json();
+                }
+            } catch (e) {}
+
+            if (!wilayasList || !wilayasList.length) {
+                wilayasList = [
+                    { id: 16, name_ar: 'الجزائر', home_delivery_price: 400, desk_delivery_price: 250 },
+                    { id: 31, name_ar: 'وهران', home_delivery_price: 500, desk_delivery_price: 350 },
+                    { id: 25, name_ar: 'قسنطينة', home_delivery_price: 500, desk_delivery_price: 350 },
+                    { id: 19, name_ar: 'سطيف', home_delivery_price: 500, desk_delivery_price: 350 },
+                    { id: 9, name_ar: 'البليدة', home_delivery_price: 450, desk_delivery_price: 300 }
+                ];
+            }
+
+            select.innerHTML = '<option value="">-- اختر الولاية --</option>' + wilayasList.map(w => 
+                `<option value="${w.id}" data-name="${w.name_ar || w.name}" data-home="${w.home_delivery_price || 500}" data-desk="${w.desk_delivery_price || 350}">
+                    ${w.id} - ${w.name_ar || w.name}
+                </option>`
+            ).join('');
+
+            const defaultWilaya = wilayasList.find(w => Number(w.id) === 16);
+            if (defaultWilaya) {
+                select.value = String(defaultWilaya.id);
+                onExpressWilayaChange();
+            } else {
+                updateExpressCalculations();
+            }
+        }
+
+        function onExpressWilayaChange() {
+            const select = document.getElementById('express-wilaya');
+            if (!select) return;
+            const selectedOpt = select.options[select.selectedIndex];
+            if (selectedOpt && selectedOpt.dataset.home) {
+                document.getElementById('express-home-price').textContent = `${Number(selectedOpt.dataset.home).toLocaleString()} دج`;
+                document.getElementById('express-desk-price').textContent = `${Number(selectedOpt.dataset.desk).toLocaleString()} دج`;
+            }
+            updateExpressCalculations();
+        }
+
+        function updateExpressCalculations() {
+            if (!currentProduct) return;
+            const qty = parseInt(document.getElementById('quantity').value, 10) || 1;
+            const unitPrice = Number(currentProduct.price) || 0;
+            const subtotal = unitPrice * qty;
+
+            const select = document.getElementById('express-wilaya');
+            const selectedOpt = select ? select.options[select.selectedIndex] : null;
+            const deliveryType = document.querySelector('input[name="express-delivery"]:checked')?.value || 'home';
+
+            let shipping = 500;
+            if (selectedOpt && selectedOpt.dataset.home) {
+                shipping = deliveryType === 'desk' ? Number(selectedOpt.dataset.desk || 350) : Number(selectedOpt.dataset.home || 500);
+            }
+
+            const total = subtotal + shipping;
+
+            const qtyEl = document.getElementById('express-qty-display');
+            const subEl = document.getElementById('express-subtotal-display');
+            const shipEl = document.getElementById('express-shipping-display');
+            const totalEl = document.getElementById('express-total-display');
+
+            if (qtyEl) qtyEl.textContent = qty;
+            if (subEl) subEl.textContent = `${subtotal.toLocaleString()} دج`;
+            if (shipEl) shipEl.textContent = `${shipping.toLocaleString()} دج`;
+            if (totalEl) totalEl.textContent = `${total.toLocaleString()} دج`;
+        }
+
+        async function handleExpressOrder(event) {
+            event.preventDefault();
+            if (!currentProduct) return;
+
+            const name = document.getElementById('express-name').value.trim();
+            const phone = document.getElementById('express-phone').value.trim();
+            const wilayaSelect = document.getElementById('express-wilaya');
+            const wilayaId = wilayaSelect.value;
+            const selectedOpt = wilayaSelect.options[wilayaSelect.selectedIndex];
+            const wilayaName = selectedOpt ? (selectedOpt.dataset.name || selectedOpt.text) : 'الجزائر';
+            const address = document.getElementById('express-address').value.trim();
+            const deliveryType = document.querySelector('input[name="express-delivery"]:checked')?.value || 'home';
+            const quantity = parseInt(document.getElementById('quantity').value, 10) || 1;
+
+            if (!name) {
+                alert('يرجى إدخال الاسم الكامل');
+                return;
+            }
+
+            const cleanPhone = phone.replace(/[\s-]/g, '');
+            if (!/^(0[567][0-9]{8}|0[2-49][0-9]{7}|\+213[567][0-9]{8})$/.test(cleanPhone)) {
+                alert('يرجى إدخال رقم هاتف جزائري صحيح (مثال: 0555123456 أو 0666123456 أو 0777123456)');
+                return;
+            }
+
+            if (!wilayaId) {
+                alert('يرجى اختيار الولاية');
+                return;
+            }
+
+            const submitBtn = document.getElementById('express-submit-btn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تأكيد طلبك...';
+            }
+
+            try {
+                let csrfToken = '';
+                try {
+                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                    if (csrfRes.ok) {
+                        const csrfData = await csrfRes.json();
+                        csrfToken = csrfData.csrfToken || '';
+                    }
+                } catch (e) {}
+
+                const headers = { 'Content-Type': 'application/json' };
+                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+
+                const payload = {
+                    cart: [{
+                        id: currentProduct.id,
+                        name: currentProduct.name,
+                        price: Number(currentProduct.price),
+                        quantity,
+                        image_url: currentProduct.image_url || '/images/product-placeholder.jpg'
+                    }],
+                    paymentMethod: 'cod',
+                    shippingInfo: {
+                        fullName: name,
+                        phone: cleanPhone,
+                        address: address || wilayaName,
+                        city: address || wilayaName,
+                        wilayaId: Number(wilayaId),
+                        wilayaName: wilayaName,
+                        deliveryType: deliveryType,
+                        paymentMethod: 'cod',
+                        shippingCost: deliveryType === 'desk' ? Number(selectedOpt.dataset.desk || 350) : Number(selectedOpt.dataset.home || 500)
+                    }
+                };
+
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers,
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || data.message || 'تعذر تأكيد الطلب، يرجى المحاولة لاحقاً');
+                }
+
+                window.location.href = `order-confirmation.html?orderId=${data.id}&orderNumber=${encodeURIComponent(data.orderNumber || '')}&token=${encodeURIComponent(data.trackingToken || '')}`;
+            } catch (err) {
+                alert(err.message || 'حدث خطأ أثناء تأكيد الطلب');
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> اضغط هنا لتأكيد الطلب الآن ⚡';
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
-            loadProductDetails();
+            loadProductDetails().then(() => {
+                loadExpressWilayas();
+            });
             initTabs();
         });
     </script>
