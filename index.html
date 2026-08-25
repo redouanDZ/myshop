@@ -317,14 +317,23 @@
         </div>
     </footer>
 
-    <!-- Main JavaScript Logic -->
+    <!-- Main Scripts -->
+    <script src="js/api-client.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/user-system.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
+        let homeProductsList = [];
+
         async function loadHomeProducts() {
             try {
                 const response = await fetch('/api/products');
                 if (!response.ok) return;
                 const data = await response.json();
                 const products = Array.isArray(data) ? data : (Array.isArray(data && data.products) ? data.products : []);
+                homeProductsList = products;
                 
                 const featuredContainer = document.getElementById('featured-products');
                 const offersContainer = document.getElementById('special-offers');
@@ -333,19 +342,21 @@
                     const wishlistIds = window.getWishlist ? window.getWishlist() : [];
                     featuredContainer.innerHTML = products.map(p => {
                         const isFav = wishlistIds.includes(p.id);
+                        const safeName = window.escapeHtml ? window.escapeHtml(p.name) : p.name;
+                        const safeCat = window.escapeHtml ? window.escapeHtml(p.category || 'عام') : (p.category || 'عام');
                         return `
                         <div class="product-card" id="product-card-${p.id}">
-                            <span class="product-badge">${p.category || 'متوفر'}</span>
-                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="toggleWishlist(${p.id}, '${p.name.replace(/'/g, "\\'")}')" aria-label="المفضلة">
+                            <span class="product-badge">${safeCat}</span>
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" aria-label="المفضلة">
                                 <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
                             </button>
                             <a href="product.html?id=${p.id}" class="product-image">
-                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${p.name}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
                             </a>
                             <div class="product-info">
-                                <span class="product-category">${p.category || 'عام'}</span>
+                                <span class="product-category">${safeCat}</span>
                                 <h3 class="product-name">
-                                    <a href="product.html?id=${p.id}">${p.name}</a>
+                                    <a href="product.html?id=${p.id}">${safeName}</a>
                                 </h3>
                                 <div class="product-rating">
                                     <div class="rating-stars" style="color: #f59e0b; font-size: 0.85rem;">
@@ -360,8 +371,8 @@
                                     </span>
                                 </div>
                                 <div style="display: flex; gap: 8px; margin-top: auto;">
-                                    <a href="product.html?id=${p.id}" class="btn btn-secondary" style="flex: 1; padding: 10px; font-size: 0.88rem;">التفاصيل</a>
-                                    <button type="button" onclick="quickAddToCart(${p.id})" class="btn" style="flex: 1.3; padding: 10px; font-size: 0.88rem;" ${p.stock <= 0 ? 'disabled' : ''}>
+                                    <a href="product.html?id=${p.id}" class="btn btn-secondary" style="flex: 1; padding: 10px; font-size: 0.88rem; justify-content: center;">التفاصيل</a>
+                                    <button type="button" onclick="quickAddToCart(${p.id})" class="btn" style="flex: 1.3; padding: 10px; font-size: 0.88rem; justify-content: center;" ${p.stock <= 0 ? 'disabled' : ''}>
                                         <i class="fas fa-cart-plus"></i> أضف للسلة
                                     </button>
                                 </div>
@@ -375,25 +386,27 @@
                     const wishlistIds = window.getWishlist ? window.getWishlist() : [];
                     offersContainer.innerHTML = specialOffers.map(p => {
                         const isFav = wishlistIds.includes(p.id);
+                        const safeName = window.escapeHtml ? window.escapeHtml(p.name) : p.name;
+                        const safeCat = window.escapeHtml ? window.escapeHtml(p.category || 'عرض حصري') : (p.category || 'عرض حصري');
                         return `
                         <div class="product-card" id="offer-card-${p.id}">
                             <span class="product-badge" style="background: var(--accent-gradient);">تخفيض خاص 🔥</span>
-                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="toggleWishlist(${p.id}, '${p.name.replace(/'/g, "\\'")}')" aria-label="المفضلة">
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" aria-label="المفضلة">
                                 <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
                             </button>
                             <a href="product.html?id=${p.id}" class="product-image">
-                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${p.name}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
                             </a>
                             <div class="product-info">
-                                <span class="product-category">${p.category || 'عرض حصري'}</span>
+                                <span class="product-category">${safeCat}</span>
                                 <h3 class="product-name">
-                                    <a href="product.html?id=${p.id}">${p.name}</a>
+                                    <a href="product.html?id=${p.id}">${safeName}</a>
                                 </h3>
                                 <div class="product-price-row" style="display: flex; justify-content: space-between; align-items: baseline; margin: 10px 0 14px;">
                                     <span class="product-price" style="color: var(--primary-color);">${Number(p.price).toLocaleString()} <small style="font-size: 0.85rem;">دج</small></span>
                                     <span class="product-old-price" style="text-decoration: line-through; color: var(--light-text); font-size: 0.88rem;">${Number(p.price * 1.25).toLocaleString()} دج</span>
                                 </div>
-                                <button type="button" onclick="quickAddToCart(${p.id})" class="btn" style="width: 100%; padding: 11px; font-size: 0.92rem;" ${p.stock <= 0 ? 'disabled' : ''}>
+                                <button type="button" onclick="quickAddToCart(${p.id})" class="btn" style="width: 100%; padding: 11px; font-size: 0.92rem; justify-content: center;" ${p.stock <= 0 ? 'disabled' : ''}>
                                     <i class="fas fa-bolt"></i> اطلب الآن بالعرض
                                 </button>
                             </div>
@@ -402,6 +415,17 @@
                 }
             } catch (error) {
                 // Silent error handling
+            }
+        }
+
+        async function handleHomeToggleWishlist(id) {
+            const p = homeProductsList.find(item => Number(item.id) === Number(id));
+            if (p) {
+                if (window.toggleWishlist) {
+                    await window.toggleWishlist(p.id, p.name);
+                } else if (window.WishlistManager) {
+                    await window.WishlistManager.toggleItem(p);
+                }
             }
         }
 
@@ -424,21 +448,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', loadHomeProducts);
-    </script>
-    <script src="js/api-client.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/user-system.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/wishlist.js"></script>
-    <script src="js/i18n.js"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then(() => {})
-            .catch(() => {});
-        });
-      }
     </script>
 </body>
 </html>

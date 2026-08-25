@@ -8,8 +8,8 @@ window.WishlistManager = {
      */
     isUserLoggedIn() {
         try {
-            const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
-            return Boolean(user && (user.id || user.token));
+            const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
+            return Boolean(user && user.id);
         } catch (e) {
             return false;
         }
@@ -21,7 +21,7 @@ window.WishlistManager = {
     async getItems() {
         if (this.isUserLoggedIn()) {
             try {
-                const res = await fetch('/api/wishlist');
+                const res = await fetch('/api/wishlist', { credentials: 'include' });
                 if (res.ok) {
                     const items = await res.json();
                     return items;
@@ -63,9 +63,22 @@ window.WishlistManager = {
             const inList = await this.isInWishlist(prodId);
             const method = inList ? 'DELETE' : 'POST';
             try {
+                let csrfToken = '';
+                try {
+                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                    if (csrfRes.ok) {
+                        const csrfData = await csrfRes.json();
+                        csrfToken = csrfData.csrfToken || '';
+                    }
+                } catch (e) {}
+
+                const headers = { 'Content-Type': 'application/json' };
+                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+
                 const res = await fetch(`/api/wishlist/${prodId}`, {
                     method: method,
-                    headers: { 'Content-Type': 'application/json' }
+                    credentials: 'include',
+                    headers
                 });
                 if (res.ok) {
                     const data = await res.json();
@@ -89,8 +102,8 @@ window.WishlistManager = {
         } else {
             local.push({
                 id: prodId,
-                name: product.name,
-                price: Number(product.price),
+                name: product.name || 'منتج',
+                price: Number(product.price || 0),
                 stock: Number(product.stock || 10),
                 image_url: product.image_url || product.image || '/images/product-placeholder.jpg',
                 category: product.category || 'إلكترونيات',
@@ -111,7 +124,7 @@ window.WishlistManager = {
         const prodId = Number(productId);
         if (this.isUserLoggedIn()) {
             try {
-                const res = await fetch(`/api/wishlist/check/${prodId}`);
+                const res = await fetch(`/api/wishlist/check/${prodId}`, { credentials: 'include' });
                 if (res.ok) {
                     const data = await res.json();
                     return Boolean(data.inWishlist);
@@ -129,7 +142,7 @@ window.WishlistManager = {
         const prodId = Number(productId);
         if (this.isUserLoggedIn()) {
             try {
-                await fetch(`/api/wishlist/${prodId}`, { method: 'DELETE' });
+                await fetch(`/api/wishlist/${prodId}`, { method: 'DELETE', credentials: 'include' });
             } catch (e) {}
         }
         let local = this.getLocalItems();
@@ -143,12 +156,11 @@ window.WishlistManager = {
      */
     async updateBadgeCount() {
         const badges = document.querySelectorAll('.wishlist-count, #wishlist-count');
-        if (!badges.length) return;
 
         let count = 0;
         if (this.isUserLoggedIn()) {
             try {
-                const res = await fetch('/api/wishlist');
+                const res = await fetch('/api/wishlist', { credentials: 'include' });
                 if (res.ok) {
                     const items = await res.json();
                     count = items.length;
@@ -164,8 +176,24 @@ window.WishlistManager = {
 
         badges.forEach(b => {
             b.textContent = count;
-            b.style.display = count > 0 ? 'inline-block' : 'inline-block';
         });
+
+        // Synchronize heart button states in DOM
+        const wishlistBtns = document.querySelectorAll('[data-wishlist-id], .product-wishlist');
+        if (wishlistBtns.length > 0) {
+            const local = this.getLocalItems().map(p => Number(p.id));
+            wishlistBtns.forEach(btn => {
+                const id = parseInt(btn.getAttribute('data-wishlist-id'), 10);
+                const icon = btn.querySelector('i');
+                if (id && local.includes(id)) {
+                    btn.classList.add('active');
+                    if (icon) icon.className = 'fas fa-heart text-danger';
+                } else {
+                    btn.classList.remove('active');
+                    if (icon) icon.className = 'far fa-heart';
+                }
+            });
+        }
     },
 
     showToast(message, type = 'success') {

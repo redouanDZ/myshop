@@ -489,19 +489,21 @@
       container.innerHTML = pageProducts.map(product => {
         const isFav = wishlistIds.includes(product.id);
         const stockNum = Number(product.stock) || 0;
+        const safeName = window.escapeHtml ? window.escapeHtml(product.name) : product.name;
+        const safeCat = window.escapeHtml ? window.escapeHtml(product.category || 'عام') : (product.category || 'عام');
         return `
         <div class="product-card" id="shop-product-${product.id}">
-          <span class="product-badge">${product.category || 'متوفر'}</span>
-          <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${product.id}" onclick="toggleWishlist(${product.id}, '${product.name.replace(/'/g, "\\'")}')" aria-label="المفضلة">
+          <span class="product-badge">${safeCat}</span>
+          <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${product.id}" onclick="handleToggleWishlist(${product.id})" aria-label="المفضلة">
             <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
           </button>
           <a href="product.html?id=${product.id}" class="product-image">
-            <img src="${product.image_url || '/images/product-placeholder.jpg'}" alt="${product.name}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+            <img src="${product.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
           </a>
           <div class="product-info">
-            <span class="product-category">${product.category || 'عام'}</span>
+            <span class="product-category">${safeCat}</span>
             <h3 class="product-name">
-              <a href="product.html?id=${product.id}">${product.name}</a>
+              <a href="product.html?id=${product.id}">${safeName}</a>
             </h3>
             <div class="product-rating">
               <div class="rating-stars" style="color: #f59e0b; font-size: 0.85rem;">
@@ -629,10 +631,14 @@
       }, 3000);
     }
 
-    async function toggleWishlistShop(productId) {
+    async function handleToggleWishlist(productId) {
       const prod = products.find(p => p.id === productId);
-      if (prod && window.WishlistManager) {
-        await window.WishlistManager.toggleItem(prod);
+      if (prod) {
+        if (window.toggleWishlist) {
+          await window.toggleWishlist(prod.id, prod.name);
+        } else if (window.WishlistManager) {
+          await window.WishlistManager.toggleItem(prod);
+        }
       }
     }
 

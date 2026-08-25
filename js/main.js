@@ -86,26 +86,60 @@ window.toggleTheme = toggleTheme;
 window.initTheme = initTheme;
 
 /**
- * Wishlist Manager (LocalStorage based)
+ * Universal HTML Sanitization Helper to defend against DOM / Stored XSS
+ */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+window.escapeHtml = escapeHtml;
+
+/**
+ * Wishlist Manager (Synchronized with window.WishlistManager)
  */
 function getWishlist() {
+  if (window.WishlistManager) {
+    return window.WishlistManager.getLocalItems().map(p => Number(p.id));
+  }
   try {
-    return JSON.parse(localStorage.getItem('wishlist')) || [];
+    const raw = localStorage.getItem('myshop_wishlist') || localStorage.getItem('wishlist');
+    const parsed = raw ? JSON.parse(raw) : [];
+    if (Array.isArray(parsed) && parsed.length > 0 && typeof parsed[0] === 'object') {
+      return parsed.map(p => Number(p.id));
+    }
+    return Array.isArray(parsed) ? parsed.map(Number) : [];
   } catch (e) {
     return [];
   }
 }
 
-function toggleWishlist(productId, productName = 'المنتج') {
+async function toggleWishlist(productId, productName = 'المنتج') {
+  const prodId = Number(productId);
+  if (!prodId) return false;
+
+  if (window.WishlistManager) {
+    const result = await window.WishlistManager.toggleItem({
+      id: prodId,
+      name: productName
+    });
+    updateWishlistUI();
+    return result;
+  }
+
   let wishlist = getWishlist();
-  const index = wishlist.indexOf(productId);
+  const index = wishlist.indexOf(prodId);
   let isAdded = false;
 
   if (index > -1) {
     wishlist.splice(index, 1);
     showToast(`تم إزالة "${productName}" من قائمة المفضلة`, 'info');
   } else {
-    wishlist.push(productId);
+    wishlist.push(prodId);
     isAdded = true;
     showToast(`تمت إضافة "${productName}" إلى قائمة المفضلة ❤️`, 'success');
   }
@@ -118,17 +152,17 @@ function toggleWishlist(productId, productName = 'المنتج') {
 function updateWishlistUI() {
   const wishlist = getWishlist();
   const count = wishlist.length;
-  const wishlistBadges = document.querySelectorAll('.wishlist-count');
+  const wishlistBadges = document.querySelectorAll('.wishlist-count, #wishlist-count');
   wishlistBadges.forEach(badge => {
     badge.textContent = count;
   });
 
   // Update heart buttons on cards
-  const wishlistBtns = document.querySelectorAll('[data-wishlist-id]');
+  const wishlistBtns = document.querySelectorAll('[data-wishlist-id], .product-wishlist');
   wishlistBtns.forEach(btn => {
     const id = parseInt(btn.getAttribute('data-wishlist-id'), 10);
     const icon = btn.querySelector('i');
-    if (wishlist.includes(id)) {
+    if (id && wishlist.includes(id)) {
       btn.classList.add('active');
       if (icon) icon.className = 'fas fa-heart text-danger';
     } else {

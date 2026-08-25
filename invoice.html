@@ -268,6 +268,7 @@
         </div>
     </div>
 
+    <script src="js/main.js"></script>
     <script>
         async function loadInvoice() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -276,7 +277,7 @@
             const phone = urlParams.get('phone');
 
             if (!orderId) {
-                alert('لم يتم تحديد رقم الطلب');
+                document.getElementById('invoiceItemsBody').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">لم يتم تحديد رقم الطلب</td></tr>';
                 return;
             }
 
@@ -317,10 +318,11 @@
                 tbody.innerHTML = items.map((item, index) => {
                     const lineTotal = Number(item.price) * Number(item.quantity);
                     subtotal += lineTotal;
+                    const safeName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
                     return `
                         <tr>
                             <td>${index + 1}</td>
-                            <td>${item.name}</td>
+                            <td>${safeName}</td>
                             <td style="text-align: center;">${item.quantity}</td>
                             <td style="text-align: left;">${Number(item.price).toLocaleString()} دج</td>
                             <td>${lineTotal.toLocaleString()} دج</td>
@@ -339,7 +341,7 @@
                 document.getElementById('trackLinkBtn').href = `track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}`;
 
             } catch (err) {
-                alert('خطأ في تحميل الفاتورة: ' + err.message);
+                document.getElementById('invoiceItemsBody').innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">خطأ في تحميل الفاتورة: ${window.escapeHtml ? window.escapeHtml(err.message) : err.message}</td></tr>`;
             }
         }
 

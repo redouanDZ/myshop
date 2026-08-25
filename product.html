@@ -220,18 +220,21 @@
                     container.innerHTML = '<p style="color:#64748b; padding:15px;">لا توجد تقييمات لهذا المنتج بعد. كن أول من يقيّم هذا المنتج!</p>';
                     return;
                 }
-                container.innerHTML = reviews.map(r => `
+                container.innerHTML = reviews.map(r => {
+                    const safeUser = window.escapeHtml ? window.escapeHtml(r.username || 'عميل المتجر') : (r.username || 'عميل المتجر');
+                    const safeComment = window.escapeHtml ? window.escapeHtml(r.comment || '') : (r.comment || '');
+                    return `
                     <div class="review-item" style="border-bottom: 1px solid #f1f5f9; padding: 12px 0;">
                         <div class="review-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                             <div class="reviewer-info">
-                                <strong class="reviewer-name">${r.username || 'عميل المتجر'}</strong>
+                                <strong class="reviewer-name">${safeUser}</strong>
                                 <span class="review-date" style="color: #64748b; font-size: 0.85rem; margin-right: 8px;">${new Date(r.created_at || Date.now()).toLocaleDateString('ar-DZ')}</span>
                             </div>
                             <div class="review-rating" style="color: #f59e0b;">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
                         </div>
-                        <div class="review-content"><p style="margin: 0; color: #334155;">${r.comment || ''}</p></div>
+                        <div class="review-content"><p style="margin: 0; color: #334155;">${safeComment}</p></div>
                     </div>
-                `).join('');
+                `}).join('');
             } catch (e) {}
         }
 
@@ -345,6 +348,13 @@
                 return;
             }
 
+            const submitBtn = document.querySelector('#add-review button[type="button"], #add-review .btn');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.dataset.origText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+            }
+
             try {
                 let csrfToken = '';
                 try {
@@ -384,6 +394,11 @@
             } catch (err) {
                 if (window.showToast) window.showToast(err.message, 'error');
                 else alert(err.message);
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = submitBtn.dataset.origText || 'إرسال التقييم';
+                }
             }
         }
 

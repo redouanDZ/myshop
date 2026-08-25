@@ -5,6 +5,10 @@
 var cart = window.cart || [];
 
 document.addEventListener('DOMContentLoaded', function() {
+    // If we are on cart.html, the specialized cart.html script handles the view
+    if (window.location.pathname.endsWith('cart.html') || window.location.pathname.endsWith('/cart')) {
+        return;
+    }
     initCart();
     const savedPromo = getSavedPromoCode();
     if (savedPromo) updateOrderSummary();
@@ -127,19 +131,20 @@ function updateCartUI() {
 }
 
 function createCartItemHTML(item) {
+    const safeName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
     return `
         <div class="cart-item" data-id="${item.id}">
-            <div class="item-image"><img src="${item.image}" alt="${item.name}"></div>
+            <div class="item-image"><img src="${item.image}" alt="${safeName}"></div>
             <div class="item-details">
-                <h3>${item.name}</h3>
-                <div class="item-price">${item.price.toLocaleString()} دج</div>
+                <h3>${safeName}</h3>
+                <div class="item-price">${Number(item.price).toLocaleString()} دج</div>
             </div>
             <div class="item-quantity">
                 <button class="quantity-btn decrease" data-id="${item.id}">-</button>
                 <input type="number" value="${item.quantity}" min="1" max="20" data-id="${item.id}">
                 <button class="quantity-btn increase" data-id="${item.id}">+</button>
             </div>
-            <div class="item-total">${(item.price * item.quantity).toLocaleString()} دج</div>
+            <div class="item-total">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</div>
             <button class="remove-item" data-id="${item.id}" title="إزالة العنصر"><i class="fas fa-trash-alt"></i></button>
         </div>
     `;

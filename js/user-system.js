@@ -433,7 +433,14 @@ async function handleLogin() {
 
             setTimeout(() => {
                 const savedRedirect = localStorage.getItem('redirectAfterLogin');
-                if (savedRedirect) {
+                const isSafeLocalUrl = (url) => {
+                    if (!url || typeof url !== 'string') return false;
+                    const trimmed = url.trim();
+                    if (/^(?:[a-z]+:|\/\/)/i.test(trimmed)) return false;
+                    return !trimmed.toLowerCase().includes('javascript:') && !trimmed.toLowerCase().includes('data:');
+                };
+
+                if (savedRedirect && isSafeLocalUrl(savedRedirect)) {
                     localStorage.removeItem('redirectAfterLogin');
                     window.location.href = savedRedirect;
                 } else if (data.user && data.user.role === 'admin') {

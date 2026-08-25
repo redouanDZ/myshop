@@ -259,12 +259,13 @@
                 itemsContainer.innerHTML = items.map(item => {
                     const lineTotal = Number(item.price) * Number(item.quantity);
                     subtotal += lineTotal;
+                    const safeName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
                     return `
                         <div class="order-item-card">
                             <div class="item-info-wrapper">
-                                <img src="${item.image_url || '/images/product-placeholder.jpg'}" alt="${item.name}">
+                                <img src="${item.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}">
                                 <div>
-                                    <strong style="display: block; color: #1e293b;">${item.name}</strong>
+                                    <strong style="display: block; color: #1e293b;">${safeName}</strong>
                                     <span style="font-size: 0.85rem; color: #64748b;">الكمية: ${item.quantity}</span>
                                 </div>
                             </div>

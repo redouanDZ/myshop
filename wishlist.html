@@ -266,18 +266,21 @@
 
     <script src="js/api-client.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/user-system.js"></script>
     <script src="js/cart.js"></script>
     <script src="js/wishlist.js"></script>
     <script src="js/i18n.js"></script>
     <script>
+        let wishlistProducts = [];
+
         async function renderWishlist() {
             const container = document.getElementById('wishlistContainer');
             const headerCount = document.getElementById('wishlistHeaderCount');
-            const items = await window.WishlistManager.getItems();
+            wishlistProducts = await window.WishlistManager.getItems();
 
-            headerCount.textContent = `${items.length} منتجات`;
+            headerCount.textContent = `${wishlistProducts.length} منتجات`;
 
-            if (!items.length) {
+            if (!wishlistProducts.length) {
                 container.innerHTML = `
                     <div class="empty-wishlist">
                         <i class="far fa-heart"></i>
@@ -291,24 +294,26 @@
 
             container.innerHTML = `
                 <div class="wishlist-grid">
-                    ${items.map(p => {
+                    ${wishlistProducts.map(p => {
                         const isOutOfStock = Number(p.stock) === 0;
+                        const safeName = window.escapeHtml ? window.escapeHtml(p.name) : p.name;
+                        const safeCat = window.escapeHtml ? window.escapeHtml(p.category || 'عام') : (p.category || 'عام');
                         return `
-                            <div class="wishlist-card">
+                            <div class="wishlist-card" id="wishlist-card-${p.id}">
                                 <div class="card-img-wrapper">
-                                    <img src="${p.image_url || p.image || '/images/product-placeholder.jpg'}" alt="${p.name}">
+                                    <img src="${p.image_url || p.image || '/images/product-placeholder.jpg'}" alt="${safeName}">
                                     <button class="btn-remove-wishlist" onclick="removeItem(${p.id})" title="حذف من المفضلة">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
                                 <div class="card-body">
-                                    <span class="card-category">${p.category || 'إلكترونيات'}</span>
+                                    <span class="card-category">${safeCat}</span>
                                     <a href="product.html?id=${p.id}" style="text-decoration: none;">
-                                        <h3 class="card-title">${p.name}</h3>
+                                        <h3 class="card-title">${safeName}</h3>
                                     </a>
                                     <div class="card-price">${Number(p.price).toLocaleString()} دج</div>
                                     <div class="card-actions">
-                                        <button class="btn-add-cart-card" ${isOutOfStock ? 'disabled' : ''} onclick="addToCartAndNotify(${p.id}, '${p.name.replace(/'/g, "\\'")}', ${p.price}, '${p.image_url || ''}')">
+                                        <button class="btn-add-cart-card" ${isOutOfStock ? 'disabled' : ''} onclick="addToCartFromWishlist(${p.id})">
                                             <i class="fas fa-cart-plus"></i> ${isOutOfStock ? 'نفد المخزون' : 'أضف للسلة'}
                                         </button>
                                     </div>
@@ -325,30 +330,26 @@
             renderWishlist();
         }
 
-        async function addToCartAndNotify(id, name, price, image) {
+        async function addToCartFromWishlist(id) {
+            const p = wishlistProducts.find(item => Number(item.id) === Number(id));
+            if (!p) return;
+
             if (window.addToCart) {
-                await window.addToCart({ id, name, price, image_url: image }, 1);
+                await window.addToCart(p, 1);
             } else {
                 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
                 const existing = cart.find(item => item.id === id);
                 if (existing) {
                     existing.quantity += 1;
                 } else {
-                    cart.push({ id, name, price, quantity: 1, image: image });
+                    cart.push({ id: p.id, name: p.name, price: p.price, quantity: 1, image: p.image_url || p.image });
                 }
                 localStorage.setItem('cart', JSON.stringify(cart));
+                if (window.showToast) window.showToast('تمت إضافة المنتج إلى سلة التسوق 🛒', 'success');
             }
-            window.WishlistManager.showToast('تمت إضافة المنتج إلى سلة التسوق 🛒', 'success');
-            if (typeof updateCartCount === 'function') updateCartCount();
         }
 
         document.addEventListener('DOMContentLoaded', renderWishlist);
     </script>
-    <script src="js/api-client.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/user-system.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/wishlist.js"></script>
-    <script src="js/i18n.js"></script>
 </body>
 </html>

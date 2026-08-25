@@ -318,17 +318,12 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <div class="footer-bottom">
-                <p>&copy; 2026 المتجر الإلكتروني - جميع الحقوق محفوظة.</p>
-            </div>
-        </div>
-    </footer>
-
     <script src="js/api-client.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/user-system.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
         async function submitTrack() {
             const orderId = document.getElementById('orderInput').value.trim();
@@ -349,7 +344,7 @@
 
                 if (!response.ok) {
                     msgBox.className = 'status-cancelled';
-                    msgBox.textContent = data.error || 'لم يتم العثور على طلب مطابق للبيانات المدخلة.';
+                    msgBox.textContent = data.error || 'لم نتمكن من العثور على طلب مطابق للبيانات المدخلة.';
                     msgBox.style.display = 'block';
                     resBox.style.display = 'none';
                     return;
@@ -370,12 +365,14 @@
 
                 // Items list
                 const tbody = document.getElementById('resOrderItemsBody');
-                tbody.innerHTML = items.map(item => `
+                tbody.innerHTML = items.map(item => {
+                    const safeName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
+                    return `
                     <tr>
                         <td>
                             <div class="product-cell">
-                                <img src="${item.image_url || '/images/product-placeholder.jpg'}" alt="${item.name}">
-                                <span>${item.name}</span>
+                                <img src="${item.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}">
+                                <span>${safeName}</span>
                             </div>
                         </td>
                         <td style="text-align: center;">${item.quantity}</td>
@@ -483,10 +480,5 @@
             </div>
         </div>
     </footer>
-
-    <script src="js/api-client.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/wishlist.js"></script>
-    <script src="js/i18n.js"></script>
 </body>
 </html>
