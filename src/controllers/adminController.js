@@ -34,7 +34,9 @@ async function getPublicConfig(req, res) {
 async function getAdminUsers(req, res) {
     try {
         const { search, page, limit } = req.query;
-        const result = await db.getAdminUsers({ search, page, limit });
+        const pageNum = Math.max(1, parseInt(page, 10) || 1);
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+        const result = await db.getAdminUsers({ search, page: pageNum, limit: limitNum });
         res.json(result);
     } catch (error) {
         console.error('Error fetching admin users:', error);
@@ -126,7 +128,9 @@ async function deleteCoupon(req, res) {
 async function getAdminReviews(req, res) {
     try {
         const { status, productId, search, page, limit } = req.query;
-        const result = await db.getAdminReviews({ status, productId, search, page, limit });
+        const pageNum = Math.max(1, parseInt(page, 10) || 1);
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 20));
+        const result = await db.getAdminReviews({ status, productId, search, page: pageNum, limit: limitNum });
         res.json(result);
     } catch (error) {
         console.error('Error fetching admin reviews:', error);

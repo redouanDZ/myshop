@@ -187,6 +187,30 @@ async function parseUserFromReq(req) {
     }
 }
 
+function purgeExpiredMemoryRecords() {
+    const now = Date.now();
+    for (const [key, val] of loginAttempts.entries()) {
+        if (val.lockedUntil && val.lockedUntil < now) {
+            loginAttempts.delete(key);
+        }
+    }
+    for (const [key, val] of refreshTokens.entries()) {
+        if (val.expiresAt && val.expiresAt < now) {
+            refreshTokens.delete(key);
+        }
+    }
+    for (const [key, val] of activeSessions.entries()) {
+        if (val.expiresAt && val.expiresAt < now) {
+            activeSessions.delete(key);
+        }
+    }
+}
+
+const purgeTimer = setInterval(purgeExpiredMemoryRecords, 30 * 60 * 1000);
+if (purgeTimer && typeof purgeTimer.unref === 'function') {
+    purgeTimer.unref();
+}
+
 module.exports = {
     randomToken,
     hashToken,
@@ -203,6 +227,7 @@ module.exports = {
     revokeSession,
     getAccessTokenFromRequest,
     parseUserFromReq,
+    purgeExpiredMemoryRecords,
     activeSessions,
     refreshTokens,
     loginAttempts

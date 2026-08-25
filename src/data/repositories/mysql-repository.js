@@ -792,8 +792,37 @@ class MysqlRepository {
         }
       }
 
-      // 3. Server-computed Grand Total (Never trusting client total/prices)
-      const computedGrandTotal = itemsSubtotal + serverShippingCost;
+      // 3. Server-side Coupon validation & discount computation
+      let couponDiscount = 0;
+      const rawCoupon = String(orderData.couponCode || shippingInfo.couponCode || orderData.promoCode || orderData.coupon || '').trim().toUpperCase();
+
+      if (rawCoupon) {
+        const [couponRows] = await connection.query(
+          'SELECT * FROM coupons WHERE code = ? FOR UPDATE',
+          [rawCoupon]
+        );
+        if (couponRows[0]) {
+          const cp = couponRows[0];
+          const isExpired = cp.expires_at && new Date(cp.expires_at) < new Date();
+          const isMaxed = cp.max_uses > 0 && cp.uses_count >= cp.max_uses;
+          const isMinMet = cp.min_order_amount <= 0 || itemsSubtotal >= Number(cp.min_order_amount);
+
+          if (cp.status === 'active' && !isExpired && !isMaxed && isMinMet) {
+            if (cp.discount_percent > 0) {
+              couponDiscount = Math.round((itemsSubtotal * Number(cp.discount_percent)) / 100);
+            } else if (cp.discount_amount > 0) {
+              couponDiscount = Math.min(itemsSubtotal, Math.round(Number(cp.discount_amount)));
+            }
+            await connection.query(
+              'UPDATE coupons SET uses_count = uses_count + 1 WHERE id = ?',
+              [cp.id]
+            );
+          }
+        }
+      }
+
+      // 4. Server-computed Grand Total (Never trusting client total/prices)
+      const computedGrandTotal = Math.max(0, itemsSubtotal - couponDiscount + serverShippingCost);
 
       const randomSuffix = Math.floor(10000 + Math.random() * 90000);
       const orderNumber = `DZ-${new Date().getFullYear()}-${randomSuffix}`;
@@ -831,7 +860,7 @@ class MysqlRepository {
 
       const orderId = Number(orderResult.insertId);
 
-      // 4. Insert order items & atomically decrement stock
+      // 5. Insert order items & atomically decrement stock
       for (const item of orderItemsToInsert) {
         await connection.query(
           'INSERT INTO order_items (order_id, product_id, name, price, quantity, image_url) VALUES (?, ?, ?, ?, ?, ?)',
@@ -889,7 +918,32 @@ class MysqlRepository {
   }
 
   async updateOrderStatus(orderId, status) {
-    const [result] = await this.pool.query('UPDATE orders SET status = ? WHERE id = ?', [String(status), Number(orderId)]);
+    const cleanId = Number(orderId);
+    const cleanStatus = String(status);
+
+    const [currentRows] = await this.pool.query('SELECT id, status FROM orders WHERE id = ?', [cleanId]);
+    if (!currentRows[0]) return false;
+    const prevStatus = currentRows[0].status;
+
+    // If transitioning from an active status to 'cancelled', restore product stock
+    if (cleanStatus === 'cancelled' && prevStatus !== 'cancelled') {
+      const [items] = await this.pool.query('SELECT product_id, quantity FROM order_items WHERE order_id = ?', [cleanId]);
+      for (const item of items) {
+        if (item.product_id && item.quantity > 0) {
+          await this.pool.query('UPDATE products SET stock = stock + ? WHERE id = ?', [Number(item.quantity), Number(item.product_id)]);
+        }
+      }
+    } else if (prevStatus === 'cancelled' && cleanStatus !== 'cancelled') {
+      // Reinstating a cancelled order: decrement stock again
+      const [items] = await this.pool.query('SELECT product_id, quantity FROM order_items WHERE order_id = ?', [cleanId]);
+      for (const item of items) {
+        if (item.product_id && item.quantity > 0) {
+          await this.pool.query('UPDATE products SET stock = GREATEST(0, stock - ?) WHERE id = ?', [Number(item.quantity), Number(item.product_id)]);
+        }
+      }
+    }
+
+    const [result] = await this.pool.query('UPDATE orders SET status = ? WHERE id = ?', [cleanStatus, cleanId]);
     return result.affectedRows > 0;
   }
 
@@ -1267,16 +1321,39 @@ class MysqlRepository {
   }
 
   async createProductReview(data) {
+    const prodId = Number(data.productId);
+    const ratingVal = Math.max(1, Math.min(5, Math.trunc(Number(data.rating) || 5)));
+    const revStatus = data.status || 'approved';
+
     const [result] = await this.pool.query(
       'INSERT INTO product_reviews (product_id, user_id, rating, comment, status) VALUES (?, ?, ?, ?, ?)',
       [
-        Number(data.productId),
+        prodId,
         Number(data.userId),
-        Math.max(1, Math.min(5, Math.trunc(Number(data.rating) || 5))),
+        ratingVal,
         String(data.comment || '').trim().substring(0, 1000),
-        data.status || 'approved'
+        revStatus
       ]
     );
+
+    if (revStatus === 'approved') {
+      try {
+        const [stats] = await this.pool.query(
+          'SELECT AVG(rating) as avg_rating, COUNT(*) as total_count FROM product_reviews WHERE product_id = ? AND status = "approved"',
+          [prodId]
+        );
+        if (stats[0]) {
+          const avg = stats[0].avg_rating ? parseFloat(Number(stats[0].avg_rating).toFixed(2)) : 5.0;
+          await this.pool.query(
+            'UPDATE products SET rating = ? WHERE id = ?',
+            [avg, prodId]
+          );
+        }
+      } catch (e) {
+        console.error('Error recalculating product rating:', e.message);
+      }
+    }
+
     return Number(result.insertId);
   }
 
@@ -1339,12 +1416,34 @@ class MysqlRepository {
   async updateReviewStatus(id, status) {
     const allowed = ['approved', 'pending', 'rejected'];
     if (!allowed.includes(status)) throw new Error('حالة المراجعة غير صالحة');
+    const [rev] = await this.pool.query('SELECT product_id FROM product_reviews WHERE id = ?', [Number(id)]);
     const [result] = await this.pool.query('UPDATE product_reviews SET status = ? WHERE id = ?', [status, Number(id)]);
+    if (rev[0] && rev[0].product_id) {
+      try {
+        const [stats] = await this.pool.query(
+          'SELECT AVG(rating) as avg_rating FROM product_reviews WHERE product_id = ? AND status = "approved"',
+          [rev[0].product_id]
+        );
+        const avg = stats[0] && stats[0].avg_rating ? parseFloat(Number(stats[0].avg_rating).toFixed(2)) : 5.0;
+        await this.pool.query('UPDATE products SET rating = ? WHERE id = ?', [avg, rev[0].product_id]);
+      } catch (e) {}
+    }
     return result.affectedRows > 0;
   }
 
   async deleteReview(id) {
+    const [rev] = await this.pool.query('SELECT product_id FROM product_reviews WHERE id = ?', [Number(id)]);
     const [result] = await this.pool.query('DELETE FROM product_reviews WHERE id = ?', [Number(id)]);
+    if (rev[0] && rev[0].product_id) {
+      try {
+        const [stats] = await this.pool.query(
+          'SELECT AVG(rating) as avg_rating FROM product_reviews WHERE product_id = ? AND status = "approved"',
+          [rev[0].product_id]
+        );
+        const avg = stats[0] && stats[0].avg_rating ? parseFloat(Number(stats[0].avg_rating).toFixed(2)) : 5.0;
+        await this.pool.query('UPDATE products SET rating = ? WHERE id = ?', [avg, rev[0].product_id]);
+      } catch (e) {}
+    }
     return result.affectedRows > 0;
   }
 }
@@ -1583,7 +1682,29 @@ function createFallbackRepository() {
       }
 
       const shippingInfo = orderData.shippingInfo || {};
-      const total = Number(orderData.total || cartItems.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.quantity || 1)), 0));
+      const rawShippingCost = Number(shippingInfo.shippingCost || 0);
+      const itemsSubtotal = cartItems.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.quantity || 1)), 0);
+
+      let couponDiscount = 0;
+      const rawCoupon = String(orderData.couponCode || shippingInfo.couponCode || orderData.promoCode || orderData.coupon || '').trim().toUpperCase();
+      if (rawCoupon && state.coupons) {
+        const cp = state.coupons.find(c => c.code === rawCoupon);
+        if (cp && cp.status === 'active') {
+          const isExpired = cp.expires_at && new Date(cp.expires_at) < new Date();
+          const isMaxed = cp.max_uses > 0 && cp.uses_count >= cp.max_uses;
+          const isMinMet = cp.min_order_amount <= 0 || itemsSubtotal >= Number(cp.min_order_amount);
+          if (!isExpired && !isMaxed && isMinMet) {
+            if (cp.discount_percent > 0) {
+              couponDiscount = Math.round((itemsSubtotal * Number(cp.discount_percent)) / 100);
+            } else if (cp.discount_amount > 0) {
+              couponDiscount = Math.min(itemsSubtotal, Math.round(Number(cp.discount_amount)));
+            }
+            cp.uses_count = (cp.uses_count || 0) + 1;
+          }
+        }
+      }
+
+      const finalTotal = Math.max(0, itemsSubtotal - couponDiscount + rawShippingCost);
       const orderId = state.nextOrderId++;
       const orderNumber = `DZ-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
       const trackingToken = crypto.randomBytes(16).toString('hex');
@@ -1592,7 +1713,7 @@ function createFallbackRepository() {
         id: orderId,
         order_number: orderNumber,
         user_id: userId,
-        total,
+        total: finalTotal,
         status: 'pending',
         payment_method: orderData.paymentMethod || shippingInfo.paymentMethod || 'cod',
         payment_status: orderData.paymentStatus || 'pending',
@@ -1604,7 +1725,7 @@ function createFallbackRepository() {
         wilaya_id: shippingInfo.wilayaId ? Number(shippingInfo.wilayaId) : null,
         wilaya_name: shippingInfo.wilayaName || shippingInfo.city || '',
         delivery_type: shippingInfo.deliveryType || 'home',
-        shipping_cost: Number(shippingInfo.shippingCost || 0),
+        shipping_cost: rawShippingCost,
         postal_code: shippingInfo.postalCode || '',
         notes: shippingInfo.notes || '',
         shipping_method: shippingInfo.shippingMethod || 'standard',
@@ -1624,7 +1745,7 @@ function createFallbackRepository() {
         state.cartItems.forEach(item => { if (Number(item.user_id) === userId) item.processed = 1; });
       }
 
-      return { id: orderId, orderNumber, trackingToken };
+      return { id: orderId, orderNumber, trackingToken, total: finalTotal };
     },
     async getOrderById(id) {
       const order = state.orders.find(entry => Number(entry.id) === Number(id));
@@ -1644,9 +1765,27 @@ function createFallbackRepository() {
       return order ? normalizeOrderRow(order) : null;
     },
     async updateOrderStatus(orderId, status) {
-      const order = state.orders.find(entry => Number(entry.id) === Number(orderId));
+      const cleanId = Number(orderId);
+      const cleanStatus = String(status);
+      const order = state.orders.find(entry => Number(entry.id) === cleanId);
       if (!order) return false;
-      order.status = String(status);
+
+      const prevStatus = order.status;
+      if (cleanStatus === 'cancelled' && prevStatus !== 'cancelled') {
+        const items = state.orderItems.filter(i => Number(i.order_id) === cleanId);
+        for (const item of items) {
+          const product = state.products.find(p => Number(p.id) === Number(item.product_id));
+          if (product) product.stock = Number(product.stock || 0) + Number(item.quantity || 0);
+        }
+      } else if (prevStatus === 'cancelled' && cleanStatus !== 'cancelled') {
+        const items = state.orderItems.filter(i => Number(i.order_id) === cleanId);
+        for (const item of items) {
+          const product = state.products.find(p => Number(p.id) === Number(item.product_id));
+          if (product) product.stock = Math.max(0, Number(product.stock || 0) - Number(item.quantity || 0));
+        }
+      }
+
+      order.status = cleanStatus;
       return true;
     },
     async updateOrderPaymentStatus(orderId, paymentStatus, paymentMethod = null) {
@@ -1938,17 +2077,30 @@ function createFallbackRepository() {
       if (!state.reviews) state.reviews = [];
       const user = state.users.find(u => Number(u.id) === Number(data.userId));
       const id = state.reviews.length + 1;
+      const ratingVal = Math.max(1, Math.min(5, Math.trunc(Number(data.rating) || 5)));
+      const revStatus = data.status || 'approved';
       const review = {
         id,
         product_id: Number(data.productId),
         user_id: Number(data.userId),
         username: user ? user.username : 'مستخدم',
-        rating: Math.max(1, Math.min(5, Math.trunc(Number(data.rating) || 5))),
+        rating: ratingVal,
         comment: String(data.comment || '').trim(),
-        status: data.status || 'approved',
+        status: revStatus,
         created_at: new Date().toISOString()
       };
       state.reviews.push(review);
+
+      if (revStatus === 'approved') {
+        const prodReviews = state.reviews.filter(r => Number(r.product_id) === Number(data.productId) && r.status === 'approved');
+        const prod = state.products.find(p => Number(p.id) === Number(data.productId));
+        if (prod) {
+          const sum = prodReviews.reduce((s, r) => s + r.rating, 0);
+          prod.rating = prodReviews.length > 0 ? parseFloat((sum / prodReviews.length).toFixed(1)) : 5.0;
+          prod.reviews_count = prodReviews.length;
+        }
+      }
+
       return id;
     },
 
@@ -2006,6 +2158,13 @@ function createFallbackRepository() {
       const r = state.reviews.find(item => item.id === Number(id));
       if (!r) return false;
       r.status = status;
+      const prodReviews = state.reviews.filter(item => Number(item.product_id) === Number(r.product_id) && item.status === 'approved');
+      const prod = state.products.find(p => Number(p.id) === Number(r.product_id));
+      if (prod) {
+        const sum = prodReviews.reduce((s, item) => s + item.rating, 0);
+        prod.rating = prodReviews.length > 0 ? parseFloat((sum / prodReviews.length).toFixed(1)) : 5.0;
+        prod.reviews_count = prodReviews.length;
+      }
       return true;
     },
 
@@ -2013,7 +2172,14 @@ function createFallbackRepository() {
       if (!state.reviews) return false;
       const idx = state.reviews.findIndex(item => item.id === Number(id));
       if (idx === -1) return false;
-      state.reviews.splice(idx, 1);
+      const [r] = state.reviews.splice(idx, 1);
+      const prodReviews = state.reviews.filter(item => Number(item.product_id) === Number(r.product_id) && item.status === 'approved');
+      const prod = state.products.find(p => Number(p.id) === Number(r.product_id));
+      if (prod) {
+        const sum = prodReviews.reduce((s, item) => s + item.rating, 0);
+        prod.rating = prodReviews.length > 0 ? parseFloat((sum / prodReviews.length).toFixed(1)) : 5.0;
+        prod.reviews_count = prodReviews.length;
+      }
       return true;
     }
   };

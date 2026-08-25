@@ -806,5 +806,183 @@ test('Security Audit: Exclusive httpOnly Cookie Authentication (No Token in JSON
     assert.strictEqual(profileData.email, 'user@example.com');
 });
 
+test('Backend Audit: Long Product Description Preservation (> 500 chars)', async () => {
+    const longDesc = 'هذا وصف تفصيلي طويل جداً للمنتج للتأكد من عدم اقتطاعه أو حذفه بالخطأ عند التعقيم البرمجي. '.repeat(10);
+    assert.ok(longDesc.length > 500);
+
+    const createRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+            name: 'منتج تجريبي بوصف طويل جداً',
+            category: 'إلكترونيات',
+            price: 5000,
+            stock: 20,
+            description: longDesc
+        })
+    });
+
+    assert.strictEqual(createRes.status, 201);
+    const created = await createRes.json();
+    assert.strictEqual(created.product.description.length, longDesc.trim().length);
+
+    // Fetch by ID to confirm persistence
+    const fetchRes = await fetch(`${baseUrl}/api/products/${created.id}`);
+    assert.strictEqual(fetchRes.status, 200);
+    const fetched = await fetchRes.json();
+    assert.strictEqual(fetched.description.length, longDesc.trim().length);
+
+    // Cleanup
+    await db.deleteProduct(created.id).catch(() => {});
+});
+
+test('Backend Audit: Server-Side Coupon Discount Calculation & Usage Increment in createOrder', async () => {
+    const couponCode = 'DISCOUNT' + Math.floor(Math.random() * 10000);
+
+    // 1. Create a 20% discount coupon
+    await db.createCoupon({
+        code: couponCode,
+        discountPercent: 20,
+        minOrderAmount: 1000,
+        maxUses: 10,
+        status: 'active'
+    });
+
+    // 2. Create product for testing
+    const prodId = await db.createProduct({
+        name: 'منتج اختبار الكوبون',
+        category: 'إلكترونيات',
+        price: 10000,
+        stock: 50,
+        status: 'active'
+    });
+
+    // 3. Create order with coupon applied
+    const orderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            cart: [{ id: prodId, quantity: 1 }],
+            couponCode: couponCode,
+            shippingInfo: {
+                fullName: 'عميل اختبار الكوبون',
+                phone: '0555123456',
+                wilayaId: 16,
+                wilayaName: 'الجزائر',
+                deliveryType: 'home'
+            }
+        })
+    });
+
+    assert.strictEqual(orderRes.status, 201);
+    const orderData = await orderRes.json();
+
+    // 10,000 DZD item price - 20% coupon (2,000 DZD) + 400 DZD Wilaya 16 home shipping = 8,400 DZD total
+    assert.strictEqual(orderData.total, 8400, 'Grand total must accurately reflect the 20% server-computed coupon discount and wilaya 16 shipping');
+
+    // 4. Verify coupon uses_count incremented
+    const updatedCoupon = await db.getCouponByCode(couponCode);
+    assert.strictEqual(updatedCoupon.uses_count, 1, 'Coupon uses_count must be incremented by 1');
+
+    // Cleanup
+    await db.deleteProduct(prodId).catch(() => {});
+});
+
+test('Backend Audit: Stock Restoration upon Order Cancellation', async () => {
+    // 1. Create product with 10 stock
+    const prodId = await db.createProduct({
+        name: 'منتج اختبار استرجاع المخزون',
+        category: 'إلكترونيات',
+        price: 4000,
+        stock: 10,
+        status: 'active'
+    });
+
+    // 2. Create order buying 4 items
+    const orderRes = await fetch(`${baseUrl}/api/orders`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            cart: [{ id: prodId, quantity: 4 }],
+            shippingInfo: {
+                fullName: 'مشتري الاختبار',
+                phone: '0666778899',
+                city: 'الجزائر'
+            }
+        })
+    });
+    assert.strictEqual(orderRes.status, 201);
+    const orderData = await orderRes.json();
+
+    // Stock should now be 10 - 4 = 6
+    let prod = await db.getProductById(prodId);
+    assert.strictEqual(Number(prod.stock), 6);
+
+    // 3. Admin cancels order
+    const cancelRes = await fetch(`${baseUrl}/api/orders/${orderData.id}/status`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({ status: 'cancelled' })
+    });
+    assert.strictEqual(cancelRes.status, 200);
+
+    // Stock should be restored back to 6 + 4 = 10
+    prod = await db.getProductById(prodId);
+    assert.strictEqual(Number(prod.stock), 10, 'Product stock must be restored to 10 when order is cancelled');
+
+    // Cleanup
+    await db.deleteProduct(prodId).catch(() => {});
+});
+
+test('Backend Audit: Automatic Product Rating Recalculation on Review Submission', async () => {
+    // 1. Create product
+    const prodId = await db.createProduct({
+        name: 'منتج اختبار التقييم التلقائي',
+        category: 'إلكترونيات',
+        price: 3000,
+        stock: 15,
+        rating: 5,
+        reviews_count: 0,
+        status: 'active'
+    });
+
+    // 2. Login to get token for user
+    const loginRes = await fetch(`${baseUrl}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'user@example.com', password: 'password123' })
+    });
+    const setCookieHeaders = loginRes.headers.get('set-cookie') || '';
+    const match = setCookieHeaders.match(/access_token=([^;]+)/);
+    const userCookie = match ? match[1] : '';
+
+    // 3. Submit a 4-star review
+    const reviewRes = await fetch(`${baseUrl}/api/products/${prodId}/reviews`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Cookie': `access_token=${userCookie}`
+        },
+        body: JSON.stringify({
+            rating: 4,
+            comment: 'منتج جيد يستحق 4 نجوم'
+        })
+    });
+    assert.strictEqual(reviewRes.status, 201);
+
+    // 4. Verify product rating is automatically updated to 4.0
+    const prod = await db.getProductById(prodId);
+    assert.strictEqual(Math.round(Number(prod.rating)), 4, 'Product rating must be recalculated to 4');
+
+    // Cleanup
+    await db.deleteProduct(prodId).catch(() => {});
+});
+
 
 

@@ -14,6 +14,7 @@ async function requireAuth(req, res, next) {
             try {
                 const decoded = jwt.verify(accessToken, config.JWT_SECRET);
                 req.sessionId = decoded.sessionId || null;
+                req.userRole = decoded.role || 'customer';
             } catch (error) {
                 return res.status(401).json({ message: 'توكن غير صالح' });
             }

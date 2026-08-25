@@ -8,7 +8,7 @@ async function createProduct(req, res) {
         const price = Number(req.body.price);
         const stock = Number(req.body.stock);
         const status = sanitizeString(req.body.status, 'active');
-        const description = sanitizeString(req.body.description || '', '');
+        const description = sanitizeString(req.body.description || '', '', 10000);
 
         if (!name || !category || !Number.isFinite(price) || !Number.isFinite(stock) || stock < 0 || price < 0) {
             return res.status(400).json({ error: 'جميع الحقول مطلوبة (الاسم، القسم، السعر، الكمية)' });
@@ -40,6 +40,9 @@ async function createProduct(req, res) {
 async function getProducts(req, res) {
     try {
         const { category, search, minPrice, maxPrice, minRating, inStock, status, sortBy, page, limit } = req.query;
+        const pageNum = Math.max(1, parseInt(page, 10) || 1);
+        const limitNum = Math.min(100, Math.max(1, parseInt(limit, 10) || 100));
+
         const result = await db.getProducts({
             category,
             search,
@@ -49,8 +52,8 @@ async function getProducts(req, res) {
             inStock: inStock === 'true' || inStock === '1' || inStock === true,
             status,
             sortBy,
-            page: page ? parseInt(page, 10) : 1,
-            limit: limit ? parseInt(limit, 10) : 100
+            page: pageNum,
+            limit: limitNum
         });
         res.json(result);
     } catch (error) {
@@ -89,7 +92,7 @@ async function updateProduct(req, res) {
             updateData.category = sanitizeString(updateData.category);
         }
         if (updateData.description !== undefined) {
-            updateData.description = sanitizeString(updateData.description, '');
+            updateData.description = sanitizeString(updateData.description, '', 10000);
         }
         if (updateData.status) {
             updateData.status = sanitizeString(updateData.status);
