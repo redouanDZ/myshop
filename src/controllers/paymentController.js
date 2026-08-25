@@ -72,7 +72,7 @@ async function handleChargilyWebhook(req, res) {
 
         const event = req.body;
         if (event && event.type === 'checkout.paid') {
-            const checkoutData = event.data;
+            const checkoutData = event.data || {};
             const rawOrderId = checkoutData.metadata && checkoutData.metadata.order_id;
             const orderId = validateId(rawOrderId);
 
@@ -80,6 +80,14 @@ async function handleChargilyWebhook(req, res) {
                 const order = await db.getOrderById(orderId);
                 if (!order) {
                     return res.status(404).json({ error: 'الطلب المشار إليه غير موجود' });
+                }
+
+                // Mandatory check: Amount paid must strictly match order total
+                const paidAmount = Number(checkoutData.amount);
+                const expectedAmount = Math.round(Number(order.total));
+                if (!paidAmount || paidAmount !== expectedAmount) {
+                    console.error(`⚠️ Payment amount mismatch for order ${orderId}: paid=${paidAmount}, expected=${expectedAmount}`);
+                    return res.status(400).json({ error: 'المبلغ المدفوع لا يطابق قيمة الطلب' });
                 }
 
                 // Idempotency: Do not process twice if already marked paid

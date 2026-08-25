@@ -2,6 +2,8 @@ const test = require('node:test');
 const assert = require('node:assert');
 const http = require('http');
 const crypto = require('crypto');
+const path = require('path');
+const fs = require('fs');
 const app = require('../src/app');
 const db = require('../src/data/db-connection');
 const { issueSession, createAccessToken } = require('../src/utils/tokenUtils');
@@ -325,6 +327,7 @@ test('Phase 8: Chargily Webhook Signature Verification and Idempotency', async (
         type: 'checkout.paid',
         data: {
             id: 'chk_12345',
+            amount: Math.round(Number(order.total)),
             metadata: { order_id: String(order.id) }
         }
     });
@@ -662,4 +665,108 @@ test('Phase 2 — Commercial Readiness: Chargily Checkout Authorization Protecti
     });
     assert.strictEqual(crossPayRes.status, 403, 'Cross-user payment attempt must be rejected with 403');
 });
+
+// =========================================================================
+// SECURITY AUDIT: PAYMENT WEBHOOK AMOUNT VERIFICATION & FILE UPLOAD HARDENING
+// =========================================================================
+
+test('Security Audit: Chargily Webhook Amount Mismatch Rejection', async () => {
+    await ensureStock();
+    const order = await db.createOrder({
+        userId: null,
+        shippingInfo: { fullName: 'عميل تدقيق المبلغ', phone: '0551112233', wilayaId: 16 },
+        cart: [{ id: 1, quantity: 1 }]
+    });
+
+    const webhookSecret = storeConfig.chargily.secretKey || 'test_secret_key';
+    storeConfig.chargily.secretKey = webhookSecret;
+
+    // 1. Webhook with mismatched amount (e.g. 100 DZD instead of true total)
+    const mismatchedPayload = JSON.stringify({
+        type: 'checkout.paid',
+        data: {
+            id: 'chk_fraud_test',
+            amount: 100, // Forged lower amount!
+            metadata: { order_id: String(order.id) }
+        }
+    });
+
+    const mismatchedSig = crypto.createHmac('sha256', webhookSecret).update(mismatchedPayload).digest('hex');
+
+    const mismatchRes = await fetch(`${baseUrl}/api/payments/chargily/webhook`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'signature': mismatchedSig
+        },
+        body: mismatchedPayload
+    });
+
+    assert.strictEqual(mismatchRes.status, 400, 'Webhook with mismatched payment amount must be rejected with 400');
+    const errBody = await mismatchRes.json();
+    assert.strictEqual(errBody.error, 'المبلغ المدفوع لا يطابق قيمة الطلب');
+
+    // Verify order payment_status remains 'pending'
+    const orderAfterMismatch = await db.getOrderById(order.id);
+    assert.strictEqual(orderAfterMismatch.payment_status, 'pending');
+    assert.notStrictEqual(orderAfterMismatch.status, 'processing');
+});
+
+test('Security Audit: Product Image Upload Hardening (Extension Whitelist & Magic Bytes)', async () => {
+    // 1. Upload attempt with forbidden extension (.php) disguised as image/jpeg
+    const formPhp = new FormData();
+    formPhp.append('name', 'منتج اختبار أمني PHP');
+    formPhp.append('category', 'إلكترونيات');
+    formPhp.append('price', '2500');
+    formPhp.append('stock', '5');
+    formPhp.append('image', new Blob(['<?php echo "malicious code"; ?>'], { type: 'image/jpeg' }), 'evil.php');
+
+    const phpRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminToken}` },
+        body: formPhp
+    });
+    assert.strictEqual(phpRes.status, 400, 'Uploading .php file must be rejected with 400');
+
+    // 2. Upload attempt with allowed extension (.jpg) but forged / invalid magic bytes
+    const formForged = new FormData();
+    formForged.append('name', 'منتج اختبار أمني تزوير');
+    formForged.append('category', 'إلكترونيات');
+    formForged.append('price', '2500');
+    formForged.append('stock', '5');
+    formForged.append('image', new Blob(['Plain text disguised as JPEG file without magic bytes'], { type: 'image/jpeg' }), 'fake.jpg');
+
+    const forgedRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminToken}` },
+        body: formForged
+    });
+    assert.strictEqual(forgedRes.status, 400, 'Uploading file with invalid magic bytes must be rejected with 400');
+
+    // 3. Upload attempt with valid PNG image and correct magic bytes
+    const validPngBuffer = Buffer.from('89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000a49444154789c63000100000500010d0a2d420000000049454e44ae426082', 'hex');
+    const formValid = new FormData();
+    formValid.append('name', 'منتج اختبار أمني صالح');
+    formValid.append('category', 'إلكترونيات');
+    formValid.append('price', '3500');
+    formValid.append('stock', '15');
+    formValid.append('image', new Blob([validPngBuffer], { type: 'image/png' }), 'valid-image.png');
+
+    const validRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminToken}` },
+        body: formValid
+    });
+    assert.strictEqual(validRes.status, 201, 'Uploading valid PNG image must succeed with 201');
+    const validData = await validRes.json();
+    assert.ok(validData.product.image_url.startsWith('/images/'));
+
+    // Cleanup created test product and uploaded test image
+    if (validData.product && validData.product.id) {
+        await db.deleteProduct(validData.product.id).catch(() => {});
+        const uploadedFilePath = path.join(__dirname, '..', String(validData.product.image_url).replace(/^\/+/, ''));
+        await fs.promises.unlink(uploadedFilePath).catch(() => {});
+    }
+});
+
 
