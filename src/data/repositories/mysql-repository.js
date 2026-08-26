@@ -266,7 +266,7 @@ class MysqlRepository {
         if (adminEmail && adminPassword) {
           const adminHash = await bcrypt.hash(adminPassword, 12);
           await this.pool.query(
-            'INSERT IGNORE INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
+            'INSERT IGNORE INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1)',
             ['مدير النظام', adminEmail.toLowerCase().trim(), '0550000000', adminHash, 'admin']
           );
           console.log(`✅ [Production Init] Initialized admin user from environment (${adminEmail}).`);
@@ -277,7 +277,7 @@ class MysqlRepository {
         const customerHash = await bcrypt.hash('password123', 10);
         const adminHash = await bcrypt.hash('adminpassword', 10);
         await this.pool.query(
-          'INSERT IGNORE INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)',
+          'INSERT IGNORE INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1), (?, ?, ?, ?, ?, 1)',
           ['مستخدم تجريبي', 'user@example.com', '0550000000', customerHash, 'customer', 'مدير النظام', 'admin@example.com', '0660000000', adminHash, 'admin']
         );
       }
@@ -1772,7 +1772,7 @@ function createFallbackRepository() {
         email: 'user@example.com',
         phone: '0550000000',
         password: bcrypt.hashSync('password123', 10),
-        role: 'customer',
+        role: 'customer', is_verified: true,
         addresses: [{ id: 101, title: 'المنزل', fullName: 'مستخدم تجريبي', phone: '0550000000', city: 'الجزائر العاصمة', address: 'شارع ديدوش مراد رقم 12', isDefault: true }],
         created_at: new Date().toISOString()
       },
@@ -1782,7 +1782,7 @@ function createFallbackRepository() {
         email: 'admin@example.com',
         phone: '0660000000',
         password: bcrypt.hashSync('adminpassword', 10),
-        role: 'admin',
+        role: 'admin', is_verified: true,
         addresses: [],
         created_at: new Date().toISOString()
       }
@@ -1839,7 +1839,7 @@ function createFallbackRepository() {
         google_id: String(googleData.googleId),
         avatar_url: googleData.avatarUrl ? String(googleData.avatarUrl) : null,
         password: await bcrypt.hash(crypto.randomBytes(20).toString('hex'), 10),
-        role: 'customer',
+        role: 'customer', is_verified: true,
         addresses: [],
         created_at: new Date().toISOString()
       };
