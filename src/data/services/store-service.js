@@ -63,6 +63,26 @@ class StoreService {
     return this.repository.createUserFromGoogle(googleData);
   }
 
+  async updateUserVerificationToken(userId, token, expiresAt) {
+    return this.repository.updateUserVerificationToken(userId, token, expiresAt);
+  }
+
+  async verifyUserEmail(userId) {
+    return this.repository.verifyUserEmail(userId);
+  }
+
+  async findUserByVerificationToken(token) {
+    return this.repository.findUserByVerificationToken(token);
+  }
+
+  async updatePasswordResetToken(email, token, expiresAt) {
+    return this.repository.updatePasswordResetToken(email, token, expiresAt);
+  }
+
+  async findUserByResetToken(token) {
+    return this.repository.findUserByResetToken(token);
+  }
+
   async updateUserProfile(id, data) {
     return this.repository.updateUserProfile(id, data);
   }

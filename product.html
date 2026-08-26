@@ -248,7 +248,8 @@
                 document.getElementById('product-breadcrumb').textContent = currentProduct.name;
                 document.getElementById('product-name').textContent = currentProduct.name;
                 document.getElementById('product-price').textContent = `${Number(currentProduct.price).toLocaleString()} دج`;
-                document.getElementById('product-description').innerHTML = `<p>${currentProduct.description || 'وصف غير متوفر'}</p>`;
+                const safeDescription = window.escapeHtml ? window.escapeHtml(currentProduct.description || 'وصف غير متوفر').replace(/\n/g, '<br>') : (currentProduct.description || 'وصف غير متوفر');
+                document.getElementById('product-description').innerHTML = `<p>${safeDescription}</p>`;
                 document.title = `${currentProduct.name} - المتجر الإلكتروني`;
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc && currentProduct.description) metaDesc.content = currentProduct.description.substring(0, 160);

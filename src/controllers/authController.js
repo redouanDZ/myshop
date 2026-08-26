@@ -22,19 +22,6 @@ const {
 } = require('../utils/tokenUtils');
 const { sanitizeString } = require('../utils/helpers');
 
-const emailVerificationTokens = new Map();
-const emailVerificationStatus = new Map();
-const passwordResetTokens = new Map();
-
-function isEmailVerified(userId) {
-    const value = emailVerificationStatus.get(String(userId));
-    return value === undefined ? true : Boolean(value);
-}
-
-function setEmailVerificationState(userId, verified) {
-    emailVerificationStatus.set(String(userId), Boolean(verified));
-}
-
 function getLoginAttemptKey(email, req) {
     return `${String(req.ip || 'unknown')}|${String(email || '').trim().toLowerCase()}`;
 }
@@ -56,11 +43,7 @@ async function register(req, res) {
 
         const user = await db.createUser({ username, email, phone, password });
         const verificationToken = randomToken();
-        emailVerificationTokens.set(verificationToken, {
-            userId: user.id,
-            expiresAt: Date.now() + 24 * 60 * 60 * 1000
-        });
-        setEmailVerificationState(user.id, false);
+        await db.updateUserVerificationToken(user.id, verificationToken, Date.now() + 24 * 60 * 60 * 1000);
 
         const payload = { message: 'تم إنشاء الحساب بنجاح! يرجى التحقق من البريد الإلكتروني.', user: sanitizeUser(user), verificationRequired: true };
         if (!config.isProduction) {
@@ -94,7 +77,7 @@ async function login(req, res) {
             return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
         }
 
-        if (!isEmailVerified(user.id)) {
+        if (!user.is_verified) {
             return res.status(403).json({ message: 'يرجى التحقق من البريد الإلكتروني قبل تسجيل الدخول.' });
         }
 
@@ -133,13 +116,12 @@ async function verifyEmail(req, res) {
             return res.status(400).json({ message: 'رمز التحقق مطلوب' });
         }
 
-        const verification = emailVerificationTokens.get(token);
-        if (!verification || verification.expiresAt <= Date.now()) {
+        const user = await db.findUserByVerificationToken(token);
+        if (!user) {
             return res.status(400).json({ message: 'رمز التحقق غير صالح أو منتهي الصلاحية' });
         }
 
-        emailVerificationTokens.delete(token);
-        setEmailVerificationState(verification.userId, true);
+        await db.verifyUserEmail(user.id);
         res.json({ message: 'تم التحقق من البريد الإلكتروني بنجاح.' });
     } catch (error) {
         console.error('Email verification error:', error);
@@ -160,10 +142,7 @@ async function forgotPassword(req, res) {
         }
 
         const resetToken = randomToken();
-        passwordResetTokens.set(resetToken, {
-            userId: Number(user.id),
-            expiresAt: Date.now() + 60 * 60 * 1000
-        });
+        await db.updatePasswordResetToken(email, resetToken, Date.now() + 60 * 60 * 1000);
 
         if (!config.isProduction) {
             return res.json({ message: 'إذا كان البريد الإلكتروني مسجلاً، سيتم إرسال تعليمات استعادة كلمة المرور.', resetToken });
@@ -185,18 +164,17 @@ async function resetPassword(req, res) {
             return res.status(400).json({ message: 'الرمز وكلمة المرور الجديدة مطلوبة ويجب أن تكون 6 أحرف على الأقل' });
         }
 
-        const record = passwordResetTokens.get(token);
-        if (!record || record.expiresAt <= Date.now()) {
+        const user = await db.findUserByResetToken(token);
+        if (!user) {
             return res.status(400).json({ message: 'رمز استعادة كلمة المرور غير صالح أو منتهي الصلاحية' });
         }
 
-        const user = await db.findUserById(record.userId);
-        if (!user) {
-            return res.status(404).json({ message: 'المستخدم غير موجود' });
-        }
-
-        await db.updateUserProfile(user.id, { password });
-        passwordResetTokens.delete(token);
+        const hashedPassword = await require('bcryptjs').hash(password, 10);
+        await db.updateUserProfile(user.id, { password: hashedPassword });
+        
+        // Invalidate token
+        await db.updatePasswordResetToken(user.email, null, null);
+        
         res.json({ message: 'تم تحديث كلمة المرور بنجاح.' });
     } catch (error) {
         console.error('Password reset error:', error);

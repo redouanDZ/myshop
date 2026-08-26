@@ -165,6 +165,11 @@ function normalizeUserRow(row) {
     google_id: row.google_id || null,
     avatar_url: row.avatar_url || null,
     role: row.role || 'customer',
+    is_verified: Boolean(row.is_verified),
+    verification_token: row.verification_token || null,
+    verification_token_expires: row.verification_token_expires || null,
+    reset_token: row.reset_token || null,
+    reset_token_expires: row.reset_token_expires || null,
     addresses: [],
     created_at: row.created_at
   };
@@ -467,8 +472,8 @@ class MysqlRepository {
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
     const [result] = await this.pool.query(
-      'INSERT INTO users (username, email, phone, password, google_id, avatar_url, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [username, email, '', hashedPassword, googleId, avatarUrl, 'customer']
+      'INSERT INTO users (username, email, phone, password, google_id, avatar_url, role, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [username, email, '', hashedPassword, googleId, avatarUrl, 'customer', true]
     );
     return this.findUserById(result.insertId);
   }
@@ -485,6 +490,45 @@ class MysqlRepository {
     );
 
     return this.findUserById(result.insertId);
+  }
+
+  async updateUserVerificationToken(userId, token, expiresAt) {
+    await this.pool.query(
+      'UPDATE users SET verification_token = ?, verification_token_expires = ? WHERE id = ?',
+      [token, expiresAt ? new Date(expiresAt) : null, userId]
+    );
+  }
+
+  async verifyUserEmail(userId) {
+    const [result] = await this.pool.query(
+      'UPDATE users SET is_verified = TRUE, verification_token = NULL, verification_token_expires = NULL WHERE id = ?',
+      [userId]
+    );
+    return result.affectedRows > 0;
+  }
+
+  async findUserByVerificationToken(token) {
+    const [rows] = await this.pool.query(
+      'SELECT * FROM users WHERE verification_token = ? AND verification_token_expires > NOW() LIMIT 1',
+      [token]
+    );
+    return rows[0] ? normalizeUserRow(rows[0]) : null;
+  }
+
+  async updatePasswordResetToken(email, token, expiresAt) {
+    const [result] = await this.pool.query(
+      'UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE LOWER(email) = LOWER(?)',
+      [token, expiresAt ? new Date(expiresAt) : null, String(email).trim()]
+    );
+    return result.affectedRows > 0;
+  }
+
+  async findUserByResetToken(token) {
+    const [rows] = await this.pool.query(
+      'SELECT * FROM users WHERE reset_token = ? AND reset_token_expires > NOW() LIMIT 1',
+      [token]
+    );
+    return rows[0] ? normalizeUserRow(rows[0]) : null;
   }
 
   async verifyUserCredentials(email, password) {
@@ -1813,11 +1857,48 @@ function createFallbackRepository() {
         phone: String(userData.phone || ''),
         password: await bcrypt.hash(String(userData.password || ''), 10),
         role: userData.role || 'customer',
+        is_verified: false,
+        verification_token: null,
+        verification_token_expires: null,
+        reset_token: null,
+        reset_token_expires: null,
         addresses: [],
         created_at: new Date().toISOString()
       };
       state.users.push(user);
       return { ...user, addresses: [...user.addresses] };
+    },
+    async updateUserVerificationToken(userId, token, expiresAt) {
+      const user = state.users.find(u => u.id === userId);
+      if (user) {
+        user.verification_token = token;
+        user.verification_token_expires = expiresAt ? new Date(expiresAt).getTime() : null;
+      }
+    },
+    async verifyUserEmail(userId) {
+      const user = state.users.find(u => u.id === userId);
+      if (user) {
+        user.is_verified = true;
+        user.verification_token = null;
+        user.verification_token_expires = null;
+        return true;
+      }
+      return false;
+    },
+    async findUserByVerificationToken(token) {
+      return state.users.find(u => u.verification_token === token && u.verification_token_expires > Date.now()) || null;
+    },
+    async updatePasswordResetToken(email, token, expiresAt) {
+      const user = state.users.find(u => u.email === String(email).trim().toLowerCase());
+      if (user) {
+        user.reset_token = token;
+        user.reset_token_expires = expiresAt ? new Date(expiresAt).getTime() : null;
+        return true;
+      }
+      return false;
+    },
+    async findUserByResetToken(token) {
+      return state.users.find(u => u.reset_token === token && u.reset_token_expires > Date.now()) || null;
     },
     async verifyUserCredentials(email, password) {
       const user = await repo.findUserByEmail(email);

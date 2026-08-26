@@ -487,7 +487,7 @@ function applyGlobalStoreSettings(settings) {
   // 2. Update Header Brand Name & Logo
   document.querySelectorAll('.logo a').forEach(logoLink => {
     if (settings.store_logo) {
-      logoLink.innerHTML = `<img src="${settings.store_logo}" alt="${settings.store_name || 'MYSHOP'}" style="max-height: 42px; width: auto; vertical-align: middle;">`;
+      logoLink.innerHTML = `<img src="${settings.store_logo}" alt="${window.escapeHtml ? window.escapeHtml(settings.store_name || '') || 'MYSHOP' : (settings.store_name || 'MYSHOP')}" style="max-height: 42px; width: auto; vertical-align: middle;">`;
     } else if (settings.store_name) {
       logoLink.textContent = settings.store_name;
     }
