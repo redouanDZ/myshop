@@ -385,9 +385,9 @@
                             </div>
                         </td>
                         <td style="text-align: center;">${item.quantity}</td>
-                        <td style="text-align: left; font-weight: bold;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</td>
+                        <td style="text-align: left; font-weight: bold;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} د.ج</td>
                     </tr>
-                `).join('');
+                `}).join('');
 
                 // Invoice button link
                 document.getElementById('viewInvoiceBtn').href = `invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone)}`;
