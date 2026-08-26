@@ -3652,7 +3652,7 @@ body.dark-mode .mobile-nav-item.active {
     }
 
     body {
-        padding-bottom: calc(65px + env(safe-area-inset-bottom)) !important;
+        padding-bottom: calc(100px + env(safe-area-inset-bottom)) !important;
     }
 
     header nav.main-nav {

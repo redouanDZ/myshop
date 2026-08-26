@@ -321,9 +321,9 @@ function syncCartCounter() {
 function initNetworkStatusWatcher() {
   const banner = document.createElement('div');
   banner.id = 'offline-notification-banner';
-  banner.style.cssText = 'display:none; position:fixed; top:0; left:0; right:0; z-index:10000; background:#dc2626; color:#fff; text-align:center; padding:10px 15px; font-weight:bold; font-size:0.92rem; box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+  banner.style.cssText = 'display:none; position:relative; width:100%; z-index:10000; background:#dc2626; color:#fff; text-align:center; padding:10px 15px; font-weight:bold; font-size:0.92rem; box-shadow:0 4px 12px rgba(0,0,0,0.2);';
   banner.innerHTML = '<i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت حالياً (وضع التصفح دون اتصال). يلزم الاتصال لتأكيد الطلبات.';
-  document.body.appendChild(banner);
+  document.body.prepend(banner);
 
   function updateStatus() {
     if (!navigator.onLine) {
@@ -435,7 +435,7 @@ function initMobileNavigation() {
       </ul>
       <div class="mobile-drawer-footer">
         <a href="account.html" class="btn btn-outline" style="width: 100%; justify-content: center; font-size: 0.92rem; padding: 10px;">
-          <i class="fas fa-user-circle"></i> حسابي الشخصي
+          <i class="fas fa-user-circle"></i> <span data-i18n="nav.account">حسابي الشخصي</span>
         </a>
       </div>
     `;
