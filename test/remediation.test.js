@@ -1260,50 +1260,64 @@ test('Phase 5 — Cloud Media Storage & Image Upload Pipeline (Magic Bytes & Pro
     assert.ok(uploadData.storageProvider, 'Storage provider must be returned');
 });
 
-test('Phase 6 — Google Authentication & OAuth Sign-In Integration', async () => {
-    // 1. Test Google Sign-in with payload (new user creation)
-    const googleEmail = `google_user_${Date.now()}@gmail.com`;
-    const googleId = `gid_${Date.now()}`;
-    const googleName = 'مستخدم قوقل تجريبي';
+test('Phase 6 — Google Authentication Security & Account Takeover Prevention', async () => {
+    // 1. When GOOGLE_CLIENT_ID is not configured, endpoint returns 503
+    const originalClientId = process.env.GOOGLE_CLIENT_ID;
+    delete process.env.GOOGLE_CLIENT_ID;
 
-    const loginRes = await fetch(`${baseUrl}/api/auth/google`, {
+    const unconfiguredRes = await fetch(`${baseUrl}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            googleId,
-            email: googleEmail,
-            name: googleName,
-            avatarUrl: 'https://lh3.googleusercontent.com/a/default-user'
-        })
+        body: JSON.stringify({ credential: 'any_token' })
     });
+    assert.strictEqual(unconfiguredRes.status, 503, 'Unconfigured Google login should return 503');
+    const unconfigData = await unconfiguredRes.json();
+    assert.ok(unconfigData.message.includes('غير مُفعَّل'));
 
-    assert.strictEqual(loginRes.status, 200, 'Google login should succeed with 200');
-    const loginData = await loginRes.json();
-    assert.ok(loginData.user, 'User object should be returned');
-    assert.strictEqual(loginData.user.email, googleEmail);
-    assert.strictEqual(loginData.user.google_id, googleId);
+    // Enable test Google Client ID
+    process.env.GOOGLE_CLIENT_ID = 'test-client-id.apps.googleusercontent.com';
 
-    // 2. Test Google Sign-in again (existing user should log in seamlessly)
-    const secondLoginRes = await fetch(`${baseUrl}/api/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            googleId,
-            email: googleEmail
-        })
-    });
+    try {
+        // 2. Missing credential in body (e.g. attempting to send raw email/googleId) -> Must return 400
+        const noCredRes = await fetch(`${baseUrl}/api/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: 'admin@myshop.dz',
+                googleId: `spoofed_admin_${Date.now()}`
+            })
+        });
+        assert.strictEqual(noCredRes.status, 400, 'Direct body with missing credential must return 400');
 
-    assert.strictEqual(secondLoginRes.status, 200, 'Existing Google user login should succeed');
-    const secondData = await secondLoginRes.json();
-    assert.strictEqual(secondData.user.id, loginData.user.id, 'Should return the exact same user ID');
+        // 3. Forged JWT with base64 payload (Unsigned/Spoofed token) -> Must return 401
+        const fakeHeader = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64');
+        const fakePayload = Buffer.from(JSON.stringify({
+            sub: '1234567890',
+            email: 'admin@myshop.dz',
+            email_verified: true,
+            name: 'Hacked Admin'
+        })).toString('base64');
+        const fakeSignature = Buffer.from('invalid_signature').toString('base64');
+        const forgedToken = `${fakeHeader}.${fakePayload}.${fakeSignature}`;
 
-    // 3. Test invalid payload rejection
-    const badRes = await fetch(`${baseUrl}/api/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-    });
-    assert.strictEqual(badRes.status, 400, 'Empty Google payload should return 400');
+        const fakeTokenRes = await fetch(`${baseUrl}/api/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential: forgedToken })
+        });
+        assert.strictEqual(fakeTokenRes.status, 401, 'Forged/Unverified Google credential must return 401');
+
+        // 4. Verify no authentication cookies or valid sessions were issued
+        const setCookieHeader = fakeTokenRes.headers.get('set-cookie') || '';
+        assert.ok(!setCookieHeader.includes('access_token='), 'Must not issue access_token on failed Google auth');
+    } finally {
+        // Restore original env
+        if (originalClientId) {
+            process.env.GOOGLE_CLIENT_ID = originalClientId;
+        } else {
+            delete process.env.GOOGLE_CLIENT_ID;
+        }
+    }
 });
 
 test('Phase 7 — Admin Dashboard CRUD: Category Management Lifecycle & Authorization', async () => {

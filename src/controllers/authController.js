@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
 const db = require('../data/db-connection.js');
 const config = require('../config/database');
 const {
@@ -317,40 +318,36 @@ async function logout(req, res) {
 
 async function googleLogin(req, res) {
     try {
-        let googleId = '';
-        let email = '';
-        let name = '';
-        let avatarUrl = '';
-
-        const { credential, token } = req.body || {};
-        const candidateToken = credential || token;
-
-        if (candidateToken && typeof candidateToken === 'string') {
-            const parts = candidateToken.split('.');
-            if (parts.length === 3) {
-                try {
-                    const payloadStr = Buffer.from(parts[1], 'base64').toString('utf8');
-                    const payload = JSON.parse(payloadStr);
-                    if (payload.sub && payload.email) {
-                        googleId = String(payload.sub);
-                        email = String(payload.email).toLowerCase().trim();
-                        name = String(payload.name || payload.given_name || 'مستخدم Google').trim();
-                        avatarUrl = String(payload.picture || '').trim();
-                    }
-                } catch (e) {}
-            }
+        const googleClientId = process.env.GOOGLE_CLIENT_ID;
+        if (!googleClientId) {
+            return res.status(503).json({ message: 'تسجيل الدخول عبر Google غير مُفعَّل على هذا الخادم' });
         }
 
-        if (!email && req.body && req.body.email) {
-            email = String(req.body.email).toLowerCase().trim();
-            googleId = String(req.body.googleId || req.body.google_id || `google_${Date.now()}`).trim();
-            name = String(req.body.name || req.body.username || 'مستخدم Google').trim();
-            avatarUrl = String(req.body.avatarUrl || req.body.avatar_url || '').trim();
+        const { credential } = req.body || {};
+        if (!credential || typeof credential !== 'string') {
+            return res.status(400).json({ message: 'رمز اعتماد Google مفقود أو غير صالح' });
         }
 
-        if (!email || !googleId) {
-            return res.status(400).json({ message: 'بيانات حساب Google غير مكتملة أو غير صالحة' });
+        const googleClient = new OAuth2Client(googleClientId);
+        let payload;
+        try {
+            const ticket = await googleClient.verifyIdToken({
+                idToken: credential,
+                audience: googleClientId
+            });
+            payload = ticket.getPayload();
+        } catch (err) {
+            return res.status(401).json({ message: 'رمز اعتماد Google غير صالح' });
         }
+
+        if (!payload || !payload.sub || !payload.email || !payload.email_verified) {
+            return res.status(401).json({ message: 'بيانات حساب Google غير صالحة أو غير مؤكَّدة' });
+        }
+
+        const googleId = String(payload.sub);
+        const email = String(payload.email).toLowerCase().trim();
+        const name = String(payload.name || payload.given_name || 'مستخدم Google').trim();
+        const avatarUrl = String(payload.picture || '').trim();
 
         let user = null;
         if (typeof db.findUserByGoogleId === 'function') {
