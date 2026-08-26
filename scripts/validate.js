@@ -78,6 +78,15 @@ function runValidation() {
         console.log(`   ✔ Migration files discovered: ${sqlFiles.length} files.`);
     }
 
+    // 4. Asset placeholders validation
+    console.log('4. Checking placeholder assets...');
+    const placeholderJpg = path.join(__dirname, '..', 'images', 'product-placeholder.jpg');
+    if (!fs.existsSync(placeholderJpg)) {
+        console.error('❌ Missing required asset: images/product-placeholder.jpg');
+        process.exit(1);
+    }
+    console.log('   ✔ Product placeholder asset verified.');
+
     console.log('--- ✅ All production checks passed successfully. ---');
     console.log('BUILD/VALIDATION PASSED');
 }

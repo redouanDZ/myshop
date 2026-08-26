@@ -357,7 +357,7 @@
                                 <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
                             </button>
                             <a href="product.html?id=${p.id}" class="product-image">
-                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.src='/images/product-placeholder.jpg';">
                             </a>
                             <div class="product-info">
                                 <span class="product-category">${safeCat}</span>
@@ -401,7 +401,7 @@
                                 <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
                             </button>
                             <a href="product.html?id=${p.id}" class="product-image">
-                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+                                <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.src='/images/product-placeholder.jpg';">
                             </a>
                             <div class="product-info">
                                 <span class="product-category">${safeCat}</span>
