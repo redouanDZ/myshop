@@ -179,10 +179,14 @@ async function getOrderItems(req, res) {
 async function trackOrder(req, res) {
     try {
         const { orderId, orderNumber, phone, token } = req.query;
-        const searchId = orderId || orderNumber;
+        let searchId = orderId || orderNumber;
+
+        if (searchId) {
+            searchId = String(searchId).replace(/^#/, '').trim();
+        }
 
         if (!searchId || (!phone && !token)) {
-            return res.status(400).json({ error: 'يرجى إدخال رقم الطلب ورقم الهاتف أو رمز التتبع' });
+            return res.status(400).json({ error: 'يرجى تقديم رقم الطلب ورقم الهاتف أو التوكن' });
         }
 
         let order = null;

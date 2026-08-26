@@ -348,7 +348,7 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
 
             try {
-                const response = await fetch(`/api/orders/track?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}`);
+                const response = await fetch(`/api/orders/status?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}`);
                 const data = await response.json();
 
                 if (!response.ok) {
