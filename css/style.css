@@ -3863,3 +3863,27 @@ body.dark-mode .page-title h1 {
 
 
 
+/* ?? Apple Touch Target Optimization (44px) and iOS Zoom Fix */
+@media (max-width: 768px) {
+    /* Prevent iOS auto-zoom on inputs */
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+    
+    /* Increase touch targets for mobile accessibility */
+    .color-btn, .size-btn, .quantity-btn, .page-btn, .remove-item, .social-links a {
+        min-width: 44px !important;
+        min-height: 44px !important;
+    }
+    
+    .quantity input, .item-quantity input {
+        height: 44px !important;
+    }
+    
+    .product-actions .btn {
+        min-height: 44px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
