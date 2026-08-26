@@ -257,6 +257,34 @@ class StoreService {
   async deleteProductVariant(id) {
     return this.repository.deleteProductVariant(id);
   }
+
+  async getCategories() {
+    return this.repository.getCategories();
+  }
+
+  async getCategoryById(id) {
+    return this.repository.getCategoryById(id);
+  }
+
+  async createCategory(data) {
+    return this.repository.createCategory(data);
+  }
+
+  async updateCategory(id, data) {
+    return this.repository.updateCategory(id, data);
+  }
+
+  async deleteCategory(id) {
+    return this.repository.deleteCategory(id);
+  }
+
+  async updateUserRole(id, role) {
+    return this.repository.updateUserRole(id, role);
+  }
+
+  async deleteUser(id) {
+    return this.repository.deleteUser(id);
+  }
 }
 
 module.exports = {

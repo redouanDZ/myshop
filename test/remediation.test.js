@@ -1306,6 +1306,142 @@ test('Phase 6 — Google Authentication & OAuth Sign-In Integration', async () =
     assert.strictEqual(badRes.status, 400, 'Empty Google payload should return 400');
 });
 
+test('Phase 7 — Admin Dashboard CRUD: Category Management Lifecycle & Authorization', async () => {
+    const uniqueSlug = `cat_${Date.now()}`;
+    const uniqueName = `قسم تجريبي ${Date.now()}`;
+
+    // 1. Unauthorized Guest cannot create category (401)
+    const guestRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(guestRes.status, 401, 'Guest cannot create category');
+
+    // 2. Normal Customer cannot create category (403)
+    const userRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userAToken}` },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(userRes.status, 403, 'Normal customer cannot create category');
+
+    // 3. Admin can create category (201)
+    const createRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(createRes.status, 201, 'Admin should create category with 201');
+    const createdCat = await createRes.json();
+    assert.ok(createdCat.id, 'Created category must return ID');
+
+    // 4. Duplicate Category creation should be rejected (400)
+    const dupRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(dupRes.status, 400, 'Duplicate category name/slug must be rejected');
+
+    // 5. Read Category list
+    const listRes = await fetch(`${baseUrl}/api/categories`);
+    assert.strictEqual(listRes.status, 200, 'Category list should be public');
+    const categories = await listRes.json();
+    assert.ok(Array.isArray(categories), 'Categories must be an array');
+    const found = categories.find(c => Number(c.id) === Number(createdCat.id));
+    assert.ok(found, 'Created category should exist in categories list');
+
+    // 6. Update Category as Admin
+    const updateRes = await fetch(`${baseUrl}/api/admin/categories/${createdCat.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ name: `${uniqueName} محدث` })
+    });
+    assert.strictEqual(updateRes.status, 200, 'Category update must succeed');
+
+    // 7. Delete Category as Admin
+    const deleteRes = await fetch(`${baseUrl}/api/admin/categories/${createdCat.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(deleteRes.status, 200, 'Category deletion must succeed');
+});
+
+test('Phase 8 — Admin Dashboard CRUD: User Role Management & Lockout Protection', async () => {
+    // 1. Customer cannot update user role (403)
+    const forbidRes = await fetch(`${baseUrl}/api/admin/users/${userBId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userAToken}` },
+        body: JSON.stringify({ role: 'admin' })
+    });
+    assert.strictEqual(forbidRes.status, 403, 'Customer cannot update user role');
+
+    // 2. Admin can promote customer to admin (200)
+    const promoteRes = await fetch(`${baseUrl}/api/admin/users/${userBId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ role: 'admin' })
+    });
+    assert.strictEqual(promoteRes.status, 200, 'Admin can promote user');
+
+    // 3. Admin can demote user back to customer (200)
+    const demoteRes = await fetch(`${baseUrl}/api/admin/users/${userBId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ role: 'customer' })
+    });
+    assert.strictEqual(demoteRes.status, 200, 'Admin can demote user');
+
+    // 4. Admin cannot demote themselves (Lockout protection 400)
+    const selfDemoteRes = await fetch(`${baseUrl}/api/admin/users/${adminId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ role: 'customer' })
+    });
+    assert.strictEqual(selfDemoteRes.status, 400, 'Admin cannot demote own account');
+
+    // 5. Admin cannot delete themselves (Lockout protection 400)
+    const selfDeleteRes = await fetch(`${baseUrl}/api/admin/users/${adminId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(selfDeleteRes.status, 400, 'Admin cannot delete own account');
+});
+
+test('Phase 9 — Admin Dashboard CRUD: Product Deletion Protection & Error Handling', async () => {
+    // 1. Create a standalone test product
+    const createProdRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: `منتج اختبار الحذف ${Date.now()}`,
+            category: 'إلكترونيات',
+            price: 4500,
+            stock: 10,
+            status: 'active',
+            description: 'وصف تجريبي'
+        })
+    });
+    assert.strictEqual(createProdRes.status, 201, 'Product creation should succeed');
+    const prodData = await createProdRes.json();
+
+    // 2. Delete standalone product as Admin (200)
+    const delProdRes = await fetch(`${baseUrl}/api/products/${prodData.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delProdRes.status, 200, 'Standalone product deletion should succeed with 200');
+
+    // 3. Deleting non-existent product should return 404
+    const delNonExistent = await fetch(`${baseUrl}/api/products/999999`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delNonExistent.status, 404, 'Deleting non-existent product returns 404');
+});
+
+
 
 
 

@@ -99,5 +99,12 @@ module.exports = {
     getProductVariants: buildProxy('getProductVariants'),
     createProductVariant: buildProxy('createProductVariant'),
     updateProductVariant: buildProxy('updateProductVariant'),
-    deleteProductVariant: buildProxy('deleteProductVariant')
+    deleteProductVariant: buildProxy('deleteProductVariant'),
+    getCategories: buildProxy('getCategories'),
+    getCategoryById: buildProxy('getCategoryById'),
+    createCategory: buildProxy('createCategory'),
+    updateCategory: buildProxy('updateCategory'),
+    deleteCategory: buildProxy('deleteCategory'),
+    updateUserRole: buildProxy('updateUserRole'),
+    deleteUser: buildProxy('deleteUser')
 };

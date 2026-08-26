@@ -203,6 +203,21 @@ const AdminUI = {
             okBtn.onclick = () => cleanup(true);
             cancelBtn.onclick = () => cleanup(false);
         });
+    },
+
+    setButtonLoading(btn, isLoading, loadingText = 'جاري الحفظ...') {
+        if (!btn) return;
+        if (isLoading) {
+            btn.dataset.originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${loadingText}`;
+        } else {
+            btn.disabled = false;
+            if (btn.dataset.originalHtml) {
+                btn.innerHTML = btn.dataset.originalHtml;
+                delete btn.dataset.originalHtml;
+            }
+        }
     }
 };
 

@@ -8,9 +8,18 @@ const { upload, validateUploadedImage } = require('../middlewares/uploadMiddlewa
 router.get('/dashboard-stats', requireAdmin, adminController.getDashboardStats);
 router.get('/store-config', adminController.getPublicConfig);
 
-// Customers Management
+// Customers & Users Management
 router.get('/users', requireAdmin, adminController.getAdminUsers);
 router.get('/users/:id', requireAdmin, adminController.getAdminUserById);
+router.put('/users/:id/role', requireAdmin, adminController.updateUserRole);
+router.delete('/users/:id', requireAdmin, adminController.deleteUser);
+
+// Categories Management
+router.get('/categories', adminController.getCategories);
+router.get('/categories/:id', requireAdmin, adminController.getCategoryById);
+router.post('/categories', requireAdmin, adminController.createCategory);
+router.put('/categories/:id', requireAdmin, adminController.updateCategory);
+router.delete('/categories/:id', requireAdmin, adminController.deleteCategory);
 
 // Coupons Management
 router.get('/coupons', requireAdmin, adminController.getAdminCoupons);
