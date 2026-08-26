@@ -180,7 +180,7 @@
             if (search) url += `&search=${encodeURIComponent(search)}`;
 
             try {
-                const res = await fetch(url, { headers });
+                const res = await fetch(url, { credentials: 'include', headers });
                 if (!res.ok) throw new Error('فشل جلب العملاء');
                 const data = await res.json();
 
@@ -238,7 +238,7 @@
 
             try {
                 const headers = AdminAuth.getHeaders(false);
-                const res = await fetch(`/api/admin/users/${userId}`, { headers });
+                const res = await fetch(`/api/admin/users/${userId}`, { credentials: 'include', headers });
                 if (!res.ok) throw new Error('فشل جلب تفاصيل العميل');
                 const user = await res.json();
 
@@ -321,6 +321,7 @@
                 const headers = AdminAuth.getHeaders(true);
                 const res = await fetch(`/api/admin/users/${userId}/role`, {
                     method: 'PUT',
+                    credentials: 'include',
                     headers,
                     body: JSON.stringify({ role: newRole })
                 });
@@ -343,6 +344,7 @@
                 const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/admin/users/${userId}`, {
                     method: 'DELETE',
+                    credentials: 'include',
                     headers
                 });
                 const data = await res.json().catch(() => ({}));

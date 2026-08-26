@@ -229,7 +229,7 @@
             if (search) url += `&search=${encodeURIComponent(search)}`;
 
             try {
-                const res = await fetch(url, { headers });
+                const res = await fetch(url, { credentials: 'include', headers });
                 if (!res.ok) throw new Error('فشل جلب القسائم');
                 const coupons = await res.json();
 
@@ -325,6 +325,7 @@
                 if (editingCouponId) {
                     res = await fetch(`/api/admin/coupons/${editingCouponId}`, {
                         method: 'PUT',
+                        credentials: 'include',
                         headers,
                         body: JSON.stringify({
                             discountPercent,
@@ -338,6 +339,7 @@
                 } else {
                     res = await fetch('/api/admin/coupons', {
                         method: 'POST',
+                        credentials: 'include',
                         headers,
                         body: JSON.stringify({
                             code,
@@ -369,6 +371,7 @@
                 const headers = AdminAuth.getHeaders(true);
                 const res = await fetch(`/api/admin/coupons/${id}`, {
                     method: 'PUT',
+                    credentials: 'include',
                     headers,
                     body: JSON.stringify({ status: newStatus })
                 });
@@ -389,6 +392,7 @@
                 const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/admin/coupons/${id}`, {
                     method: 'DELETE',
+                    credentials: 'include',
                     headers
                 });
                 const data = await res.json().catch(() => ({}));
@@ -397,7 +401,6 @@
                 loadAdminCoupons();
             } catch (err) {
                 AdminUI.showToast('خطأ: ' + err.message, 'error');
-            }
         }
     </script>
 </body>

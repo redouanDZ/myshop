@@ -182,7 +182,7 @@
             if (search) url += `&search=${encodeURIComponent(search)}`;
 
             try {
-                const res = await fetch(url, { headers });
+                const res = await fetch(url, { credentials: 'include', headers });
                 if (!res.ok) throw new Error('فشل جلب التقييمات');
                 const data = await res.json();
 
@@ -251,6 +251,7 @@
                 const headers = AdminAuth.getHeaders(true);
                 const res = await fetch(`/api/admin/reviews/${id}/status`, {
                     method: 'PUT',
+                    credentials: 'include',
                     headers,
                     body: JSON.stringify({ status: newStatus })
                 });
@@ -271,6 +272,7 @@
                 const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/admin/reviews/${id}`, {
                     method: 'DELETE',
+                    credentials: 'include',
                     headers
                 });
                 const data = await res.json().catch(() => ({}));
