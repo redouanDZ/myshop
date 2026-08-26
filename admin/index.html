@@ -191,6 +191,10 @@
         }
 
         function renderMonthlyChart(trends) {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js is not loaded. Skipping chart render.');
+                return;
+            }
             const ctx = document.getElementById('ordersChart').getContext('2d');
             let labels = [];
             let revenues = [];
@@ -230,6 +234,10 @@
         }
 
         function renderStatusChart(breakdown) {
+            if (typeof Chart === 'undefined') {
+                console.warn('Chart.js is not loaded. Skipping chart render.');
+                return;
+            }
             const ctx = document.getElementById('statusChart').getContext('2d');
             const pending = breakdown.pending || 0;
             const processing = breakdown.processing || 0;
