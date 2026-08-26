@@ -12,6 +12,7 @@ function requireCsrf(req, res, next) {
     const exemptPaths = [
         '/api/login',
         '/api/register',
+        '/api/auth/google',
         '/api/auth/refresh',
         '/api/auth/forgot-password',
         '/api/auth/reset-password',

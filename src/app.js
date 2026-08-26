@@ -18,15 +18,16 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net'],
+            scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://accounts.google.com'],
             scriptSrcAttr: ["'unsafe-inline'"],
-            styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com'],
+            styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://accounts.google.com'],
             imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
             fontSrc: ["'self'", 'https://cdnjs.cloudflare.com', 'https://fonts.gstatic.com'],
-            connectSrc: ["'self'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://geoip.maxmind.com', 'ws:', 'wss:'],
+            connectSrc: ["'self'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://geoip.maxmind.com', 'https://accounts.google.com', 'https://*.chargily.com', 'https://*.chargily.net', 'ws:', 'wss:'],
             objectSrc: ["'none'"],
             baseUri: ["'self'"],
-            frameAncestors: ["'none'"]
+            frameAncestors: ["'none'"],
+            frameSrc: ["'self'", 'https://accounts.google.com']
         }
     },
     crossOriginResourcePolicy: { policy: 'cross-origin' },
@@ -34,6 +35,11 @@ app.use(helmet({
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     hsts: config.isProduction ? { maxAge: 31536000, includeSubDomains: true, preload: true } : false
 }));
+
+app.use((req, res, next) => {
+    res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+    next();
+});
 
 // Rate Limiters
 const trackOrderRateLimiter = rateLimit({
