@@ -92,7 +92,8 @@ async function updateCartItemQuantity(productId, quantity) {
 
 async function removeFromCart(productId) {
     try {
-        cart = cart.filter(item => item.id !== productId);
+        const idToRemove = Number(productId);
+        cart = cart.filter(item => Number(item.id) !== idToRemove);
         window.cart = cart;
         localStorage.setItem('cart', JSON.stringify(cart));
         updateCartUI();
@@ -108,7 +109,7 @@ function updateCartUI() {
     const cartCounts = document.querySelectorAll('.cart-count');
     cartCounts.forEach(el => el.textContent = totalCount);
 
-    const container = document.querySelector('.cart-items .products-grid') || document.querySelector('.cart-items .cart-items-grid');
+    const container = document.querySelector('.cart-items .products-grid');
     if (!container) return;
     
     container.innerHTML = '';

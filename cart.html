@@ -359,9 +359,9 @@
             <button type="button" class="quantity-btn increase" onclick="changeQuantity(${item.id}, 1)">+</button>
           </div>
           <div class="item-total" id="total-${item.id}" style="font-weight: 800; color: var(--dark-color, #1e293b);">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</div>
-          <button type="button" class="remove-item" onclick="removeFromCart(${item.id})" title="حذف المنتج">
-            <i class="fas fa-trash-alt"></i>
-          </button>
+          <button type="button" class="remove-item" onclick="removeCartPageItem(${item.id})" title="إزالة المنتج">
+              <i class="fas fa-trash-alt"></i>
+            </button>
         </div>
       `}).join('');
     }
@@ -412,7 +412,7 @@
     }
 
     // حذف المنتج تفاعلياً وبسلاسة
-    function removeFromCart(id) {
+    function removeCartPageItem(id) {
       const itemEl = document.getElementById(`cart-item-${id}`);
       if (itemEl) {
         itemEl.style.transition = 'all 0.3s ease';
