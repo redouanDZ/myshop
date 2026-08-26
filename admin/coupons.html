@@ -263,6 +263,7 @@
                         <td style="padding: 12px 15px; text-align: center; color: #64748b; font-size: 0.9rem;">${c.expires_at ? new Date(c.expires_at).toLocaleDateString('ar-DZ') : 'دائم'}</td>
                         <td style="padding: 12px 15px; text-align: center;"><span class="status-badge status-${displayStatus}">${statusLabels[displayStatus] || displayStatus}</span></td>
                         <td style="padding: 12px 15px; text-align: center;">
+                            <button class="coupon-action-btn" onclick='openEditCouponModal(${JSON.stringify(c)})' title="تعديل الكوبون"><i class="fas fa-edit"></i></button>
                             <button class="coupon-action-btn toggle-btn" onclick="toggleCouponStatus(${c.id}, '${c.status === 'active' ? 'inactive' : 'active'}')" title="${c.status === 'active' ? 'تعطيل الكوبون' : 'تفعيل الكوبون'}"><i class="fas fa-power-off"></i></button>
                             <button class="coupon-action-btn delete-btn" onclick="deleteCoupon(${c.id})" title="حذف الكوبون"><i class="fas fa-trash-alt"></i></button>
                         </td>
@@ -271,8 +272,27 @@
             }).join('');
         }
 
+        let editingCouponId = null;
+
         function openAddCouponModal() {
+            editingCouponId = null;
+            document.getElementById('modalCouponTitle').textContent = 'إضافة قسيمة خصم جديدة';
             document.getElementById('couponForm').reset();
+            document.getElementById('couponCode').disabled = false;
+            document.getElementById('couponModal').style.display = 'block';
+        }
+
+        function openEditCouponModal(coupon) {
+            editingCouponId = coupon.id;
+            document.getElementById('modalCouponTitle').textContent = `تعديل قسيمة الخصم #${coupon.id}`;
+            document.getElementById('couponCode').value = coupon.code;
+            document.getElementById('couponCode').disabled = true;
+            document.getElementById('couponPercent').value = coupon.discount_percent || '';
+            document.getElementById('couponAmount').value = coupon.discount_amount || '';
+            document.getElementById('couponMinOrder').value = coupon.min_order_amount || 0;
+            document.getElementById('couponMaxUses').value = coupon.max_uses || 100;
+            document.getElementById('couponExpiry').value = coupon.expires_at ? coupon.expires_at.split('T')[0] : '';
+            document.getElementById('couponStatus').value = coupon.status || 'active';
             document.getElementById('couponModal').style.display = 'block';
         }
 
@@ -282,6 +302,7 @@
 
         async function handleSaveCoupon(e) {
             e.preventDefault();
+            const submitBtn = e.target.querySelector('button[type="submit"]');
             const code = document.getElementById('couponCode').value.trim().toUpperCase();
             const discountPercent = parseFloat(document.getElementById('couponPercent').value) || 0;
             const discountAmount = parseFloat(document.getElementById('couponAmount').value) || 0;
@@ -296,30 +317,50 @@
                 return;
             }
 
+            AdminUI.setButtonLoading(submitBtn, true, editingCouponId ? 'جاري التحديث...' : 'جاري الحفظ...');
+
             try {
                 const headers = AdminAuth.getHeaders(true);
-                const res = await fetch('/api/admin/coupons', {
-                    method: 'POST',
-                    headers,
-                    body: JSON.stringify({
-                        code,
-                        discountPercent,
-                        discountAmount,
-                        minOrderAmount,
-                        maxUses,
-                        expiresAt,
-                        status
-                    })
-                });
+                let res;
+                if (editingCouponId) {
+                    res = await fetch(`/api/admin/coupons/${editingCouponId}`, {
+                        method: 'PUT',
+                        headers,
+                        body: JSON.stringify({
+                            discountPercent,
+                            discountAmount,
+                            minOrderAmount,
+                            maxUses,
+                            expiresAt,
+                            status
+                        })
+                    });
+                } else {
+                    res = await fetch('/api/admin/coupons', {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify({
+                            code,
+                            discountPercent,
+                            discountAmount,
+                            minOrderAmount,
+                            maxUses,
+                            expiresAt,
+                            status
+                        })
+                    });
+                }
 
-                const data = await res.json();
+                const data = await res.json().catch(() => ({}));
                 if (!res.ok) throw new Error(data.error || 'فشل حفظ الكوبون');
 
-                AdminUI.showToast('تم إنشاء قسيمة الخصم بنجاح! 🎉', 'success');
+                AdminUI.showToast(editingCouponId ? 'تم تحديث قسيمة الخصم بنجاح! 🎉' : 'تم إنشاء قسيمة الخصم بنجاح! 🎉', 'success');
                 closeCouponModal();
                 loadAdminCoupons();
             } catch (err) {
                 AdminUI.showToast('خطأ: ' + err.message, 'error');
+            } finally {
+                AdminUI.setButtonLoading(submitBtn, false);
             }
         }
 
@@ -331,7 +372,8 @@
                     headers,
                     body: JSON.stringify({ status: newStatus })
                 });
-                if (!res.ok) throw new Error('فشل تحديث الحالة');
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'فشل تحديث الحالة');
                 AdminUI.showToast('تم تحديث حالة الكوبون بنجاح', 'success');
                 loadAdminCoupons();
             } catch (err) {
@@ -349,7 +391,8 @@
                     method: 'DELETE',
                     headers
                 });
-                if (!res.ok) throw new Error('فشل حذف الكوبون');
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'فشل حذف الكوبون');
                 AdminUI.showToast('تم حذف الكوبون بنجاح', 'success');
                 loadAdminCoupons();
             } catch (err) {

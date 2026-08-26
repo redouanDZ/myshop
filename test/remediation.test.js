@@ -1441,6 +1441,115 @@ test('Phase 9 — Admin Dashboard CRUD: Product Deletion Protection & Error Hand
     assert.strictEqual(delNonExistent.status, 404, 'Deleting non-existent product returns 404');
 });
 
+test('Phase 10 — Admin Dashboard CRUD: Product Variants CRUD & Coupon Lifecycle', async () => {
+    // 1. Create a base product
+    const createProdRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: `منتج تجربة المتغيرات ${Date.now()}`,
+            category: 'ملابس',
+            price: 3200,
+            stock: 20,
+            status: 'active',
+            description: 'وصف المنتج'
+        })
+    });
+    assert.strictEqual(createProdRes.status, 201);
+    const prod = await createProdRes.json();
+
+    // 2. Add variant to product
+    const createVariantRes = await fetch(`${baseUrl}/api/products/${prod.id}/variants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: 'المقاس: XL - اللون: أسود',
+            sku: `SKU-XL-BLK-${Date.now()}`,
+            priceModifier: 300,
+            stock: 8
+        })
+    });
+    assert.strictEqual(createVariantRes.status, 201, 'Variant creation should succeed');
+    const variantData = await createVariantRes.json();
+    assert.ok(variantData.id, 'Variant ID must be returned');
+
+    // 3. Get product variants
+    const listVariantsRes = await fetch(`${baseUrl}/api/products/${prod.id}/variants`);
+    assert.strictEqual(listVariantsRes.status, 200);
+    const variants = await listVariantsRes.json();
+    assert.ok(variants.length > 0, 'Variants list must not be empty');
+
+    // 4. Update variant
+    const updateVariantRes = await fetch(`${baseUrl}/api/products/variants/${variantData.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: 'المقاس: XXL - اللون: أسود',
+            priceModifier: 500,
+            stock: 12
+        })
+    });
+    assert.strictEqual(updateVariantRes.status, 200, 'Variant update must succeed');
+
+    // 5. Delete variant
+    const delVariantRes = await fetch(`${baseUrl}/api/products/variants/${variantData.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delVariantRes.status, 200, 'Variant deletion must succeed');
+
+    // 6. Clean up base product
+    await fetch(`${baseUrl}/api/products/${prod.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+
+    // 7. Coupon Lifecycle: Create coupon
+    const couponCode = `E2ECOUPON_${Date.now()}`;
+    const createCouponRes = await fetch(`${baseUrl}/api/admin/coupons`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            code: couponCode,
+            discountPercent: 15,
+            minOrderAmount: 2000,
+            maxUses: 50,
+            status: 'active'
+        })
+    });
+    assert.strictEqual(createCouponRes.status, 201, 'Coupon creation should return 201');
+    const couponData = await createCouponRes.json();
+
+    // 8. Validate coupon via public endpoint
+    const validateRes = await fetch(`${baseUrl}/api/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode, orderTotal: 5000 })
+    });
+    assert.strictEqual(validateRes.status, 200, 'Coupon validation should succeed');
+    const valData = await validateRes.json();
+    assert.strictEqual(valData.discountPercent, 15);
+    assert.strictEqual(valData.calculatedDiscount, 750);
+
+    // 9. Update Coupon discount
+    const updateCouponRes = await fetch(`${baseUrl}/api/admin/coupons/${couponData.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            discountPercent: 25
+        })
+    });
+    assert.strictEqual(updateCouponRes.status, 200, 'Coupon update should succeed');
+
+    // 10. Delete Coupon
+    const delCouponRes = await fetch(`${baseUrl}/api/admin/coupons/${couponData.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delCouponRes.status, 200, 'Coupon deletion should succeed');
+});
+
+
 
 
 

@@ -254,7 +254,8 @@
                     headers,
                     body: JSON.stringify({ status: newStatus })
                 });
-                if (!res.ok) throw new Error('فشل تحديث الحالة');
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'فشل تحديث الحالة');
                 AdminUI.showToast('تم تحديث حالة التقييم بنجاح', 'success');
                 loadAdminReviews(currentPage);
             } catch (err) {
@@ -272,7 +273,8 @@
                     method: 'DELETE',
                     headers
                 });
-                if (!res.ok) throw new Error('فشل حذف التقييم');
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'فشل حذف التقييم');
                 AdminUI.showToast('تم حذف التقييم بنجاح', 'success');
                 loadAdminReviews(currentPage);
             } catch (err) {

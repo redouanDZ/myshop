@@ -289,9 +289,70 @@
                             </table>
                         ` : '<p style="color:#64748b; font-size:0.9rem;">لم يقم العميل بإجراء أي طلبات حتى الآن</p>'}
                     </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #e2e8f0; padding-top: 15px; margin-top: 20px; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; gap: 8px;">
+                            ${user.role === 'customer' ? `
+                                <button onclick="changeUserRole(${user.id}, 'admin')" class="btn" style="background: #2563eb; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-user-shield"></i> ترقية إلى مدير
+                                </button>
+                            ` : `
+                                <button onclick="changeUserRole(${user.id}, 'customer')" class="btn" style="background: #64748b; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                    <i class="fas fa-user"></i> تحويل إلى عميل عادي
+                                </button>
+                            `}
+                            <button onclick="deleteUserAccount(${user.id})" class="btn" style="background: #ef4444; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 0.9rem;">
+                                <i class="fas fa-trash"></i> حذف الحساب
+                            </button>
+                        </div>
+                        <button type="button" onclick="closeCustomerModal()" class="btn" style="background: #f1f5f9; color: #334155; border: 1px solid #cbd5e1; padding: 7px 16px; border-radius: 6px; cursor: pointer;">إغلاق</button>
+                    </div>
                 `;
             } catch (err) {
                 body.innerHTML = `<p style="color: red; padding: 15px;">خطأ: ${AdminTable.escapeHtml(err.message)}</p>`;
+            }
+        }
+
+        async function changeUserRole(userId, newRole) {
+            const roleName = newRole === 'admin' ? 'مدير' : 'عميل عادي';
+            const confirmed = await AdminUI.confirm(`هل أنت متأكد من تغيير دور هذا المستخدم إلى "${roleName}"؟`, 'تعديل صلاحيات المستخدم');
+            if (!confirmed) return;
+
+            try {
+                const headers = AdminAuth.getHeaders(true);
+                const res = await fetch(`/api/admin/users/${userId}/role`, {
+                    method: 'PUT',
+                    headers,
+                    body: JSON.stringify({ role: newRole })
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'فشل تحديث الدور');
+
+                AdminUI.showToast('تم تحديث دور المستخدم بنجاح', 'success');
+                closeCustomerModal();
+                loadAdminCustomers(currentPage);
+            } catch (err) {
+                AdminUI.showToast(err.message, 'error');
+            }
+        }
+
+        async function deleteUserAccount(userId) {
+            const confirmed = await AdminUI.confirm('هل أنت متأكد من رغبتك في حذف هذا الحساب نهائياً؟', 'حذف حساب المستخدم');
+            if (!confirmed) return;
+
+            try {
+                const headers = AdminAuth.getHeaders(false);
+                const res = await fetch(`/api/admin/users/${userId}`, {
+                    method: 'DELETE',
+                    headers
+                });
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) throw new Error(data.error || 'فشل حذف الحساب');
+
+                AdminUI.showToast('تم حذف الحساب بنجاح', 'success');
+                closeCustomerModal();
+                loadAdminCustomers(currentPage);
+            } catch (err) {
+                AdminUI.showToast(err.message, 'error');
             }
         }
 

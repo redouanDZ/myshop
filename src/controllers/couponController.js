@@ -3,7 +3,7 @@ const db = require('../data/db-connection.js');
 async function validateCoupon(req, res) {
     try {
         const code = String(req.body.code || '').trim().toUpperCase();
-        const orderAmount = Number(req.body.orderAmount || req.body.total || 0);
+        const orderAmount = Number(req.body.orderAmount || req.body.orderTotal || req.body.total || 0);
 
         if (!code) {
             return res.status(400).json({ valid: false, error: 'يرجى إدخال رمز قسيمة الخصم' });
