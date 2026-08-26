@@ -3887,3 +3887,5 @@ body.dark-mode .page-title h1 {
         justify-content: center;
     }
 }
+
+@media print { .mobile-bottom-nav, #mobile-nav-overlay, #mobile-nav-drawer, .offline-notification-banner, #offline-notification-banner { display: none !important; } }
