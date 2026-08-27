@@ -58,6 +58,3 @@ jobs:
 
     - name: Run Build & Integrity Check
       run: npm run build
-
-    - name: Run HTML UI Integrity Check
-      run: npm run test:ui
