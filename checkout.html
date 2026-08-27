@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إتمام الطلب والدفع - المتجر الإلكتروني</title>
+    <title data-i18n="checkout.meta_title">إتمام الطلب والدفع - <span data-i18n="footer.brand">المتجر الإلكتروني</span></title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -60,7 +60,7 @@
             <div class="logo">
                 <a href="index.html">
                     <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
-                    <span data-i18n="common.store_name">المتجر الإلكتروني</span>
+                    <span data-i18n="common.store_name"><span data-i18n="footer.brand">المتجر الإلكتروني</span></span>
                 </a>
             </div>
             <nav class="main-nav">
@@ -73,21 +73,21 @@
                 </ul>
             </nav>
             <div class="user-actions">
-                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" data-i18n="common.toggle_theme" title="تبديل الوضع">
                     <i class="fas fa-moon"></i>
                 </button>
-                <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+                <a href="wishlist.html" class="wishlist-icon" data-i18n="common.wishlist" title="المفضلة">
                     <i class="fas fa-heart" style="color: var(--danger-color);"></i>
                     <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
-                <a href="cart.html" class="cart-icon" title="السلة">
+                <a href="cart.html" class="cart-icon" data-i18n="common.cart_title" title="السلة">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <a href="account.html" class="user-icon" title="حسابي">
+                <a href="account.html" class="user-icon" data-i18n="common.my_account" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
-                <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+                <button type="button" class="mobile-menu-btn" data-i18n="common.menu" aria-label="القائمة">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -99,7 +99,7 @@
         <div class="container">
             <h1 data-i18n="checkout.title">إتمام الطلب والدفع</h1>
             <div class="breadcrumb">
-                <a href="index.html" data-i18n="nav.home">الرئيسية</a> <i class="fas fa-chevron-left"></i> <a href="cart.html" data-i18n="nav.cart">عربة التسوق</a> <i class="fas fa-chevron-left"></i> <span data-i18n="common.checkout">الدفع</span>
+                <a href="index.html" data-i18n="nav.home"><span data-i18n="footer.link_home">الرئيسية</span></a> <i class="fas fa-chevron-left"></i> <a href="cart.html" data-i18n="nav.cart"><span data-i18n="footer.link_cart">عربة التسوق</span></a> <i class="fas fa-chevron-left"></i> <span data-i18n="common.checkout">الدفع</span>
             </div>
         </div>
     </div>
@@ -126,66 +126,66 @@
 
                     <!-- Shipping Info -->
                     <div class="checkout-step active" id="shipping-info">
-                        <h2>معلومات الشحن والتوصيل</h2>
+                        <h2><span data-i18n="checkout.shipping_info">معلومات الشحن والتوصيل</span></h2>
 
                         <div class="form-group">
-                            <label for="fullname">الاسم الكامل <span style="color:red">*</span></label>
-                            <input type="text" id="fullname" name="fullname" placeholder="أدخل اسمك الكامل" required>
+                            <label for="fullname"><span data-i18n="checkout.full_name">الاسم الكامل</span> <span style="color:red">*</span></label>
+                            <input type="text" id="fullname" name="fullname" data-i18n="checkout.name_placeholder" placeholder="أدخل اسمك الكامل" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="phone">رقم الهاتف (الجزائر) <span style="color:red">*</span></label>
-                            <input type="tel" id="phone" name="phone" placeholder="مثال: 0550123456 أو 0660123456" required>
+                            <label for="phone"><span data-i18n="checkout.phone_label">رقم الهاتف (الجزائر)</span> <span style="color:red">*</span></label>
+                            <input type="tel" id="phone" name="phone" data-i18n="checkout.phone_placeholder" placeholder="مثال: 0550123456 أو 0660123456" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="email">البريد الإلكتروني (اختياري لاستلام الفاتورة)</label>
+                            <label for="email"><span data-i18n="checkout.email_label">البريد الإلكتروني (اختياري لاستلام الفاتورة)</span></label>
                             <input type="email" id="email" name="email" placeholder="email@example.com">
                         </div>
 
                         <div class="form-group">
-                            <label for="wilayaSelect">الولاية (58 ولاية) <span style="color:red">*</span></label>
+                            <label for="wilayaSelect"><span data-i18n="checkout.wilaya_label">الولاية (58 ولاية)</span> <span style="color:red">*</span></label>
                             <select id="wilayaSelect" name="wilaya" required onchange="onWilayaChange()">
-                                <option value="">جاري تحميل الولايات...</option>
+                                <option value=""><span data-i18n="checkout.wilaya_loading">جاري تحميل الولايات...</span></option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label for="address">العنوان الكامل / البلدية <span style="color:red">*</span></label>
-                            <textarea id="address" name="address" rows="2" placeholder="البلدية، اسم الشارع، رقم العمارة أو المنزل..." required></textarea>
+                            <label for="address"><span data-i18n="checkout.address_label">العنوان الكامل / البلدية</span> <span style="color:red">*</span></label>
+                            <textarea id="address" name="address" rows="2" data-i18n="checkout.address_placeholder" placeholder="البلدية، اسم الشارع، رقم العمارة أو المنزل..." required></textarea>
                         </div>
 
                         <div class="form-group">
-                            <label>نوع التوصيل المفضل:</label>
+                            <label><span data-i18n="checkout.delivery_type_label">نوع التوصيل المفضل:</span></label>
                             <div class="delivery-type-options">
                                 <label class="delivery-card active" id="deliveryCardHome">
                                     <input type="radio" name="delivery-type" value="home" checked onchange="onDeliveryTypeChange()">
                                     <div class="delivery-card-info">
-                                        <strong>توصيل للمنزل (Home Delivery)</strong>
-                                        <span id="homeDeliveryPriceLabel">السعر: حسب الولاية</span>
+                                        <strong><span data-i18n="checkout.home_delivery">توصيل للمنزل (Home Delivery)</span></strong>
+                                        <span id="homeDeliveryPriceLabel"><span data-i18n="checkout.home_delivery_price">السعر: حسب الولاية</span>
                                     </div>
                                 </label>
                                 <label class="delivery-card" id="deliveryCardDesk">
                                     <input type="radio" name="delivery-type" value="desk" onchange="onDeliveryTypeChange()">
                                     <div class="delivery-card-info">
-                                        <strong>استلام من المكتب (Stop Desk)</strong>
-                                        <span id="deskDeliveryPriceLabel">السعر: خيار اقتصادي</span>
+                                        <strong><span data-i18n="checkout.desk_delivery">استلام من المكتب (Stop Desk)</span></strong>
+                                        <span id="deskDeliveryPriceLabel"><span data-i18n="checkout.desk_delivery_price">السعر: خيار اقتصادي</span>
                                     </div>
                                 </label>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="notes">ملاحظات خاصة بالموزع (اختياري)</label>
-                            <textarea id="notes" name="notes" rows="2" placeholder="أوقات التواجد المفضلة، تفاصيل إضافية..."></textarea>
+                            <label for="notes"><span data-i18n="checkout.notes_label">ملاحظات خاصة بالموزع (اختياري)</span></label>
+                            <textarea id="notes" name="notes" rows="2" data-i18n="checkout.notes_placeholder" placeholder="أوقات التواجد المفضلة، تفاصيل إضافية..."></textarea>
                         </div>
 
-                        <button type="button" class="next-step-btn" onclick="proceedToPayment()">التالي: اختيار طريقة الدفع <i class="fas fa-chevron-left"></i></button>
+                        <button type="button" class="next-step-btn" onclick="proceedToPayment()"><span data-i18n="checkout.next_payment">التالي: اختيار طريقة الدفع</span> <i class="fas fa-chevron-left"></i></button>
                     </div>
 
                     <!-- Payment Method -->
                     <div class="checkout-step" id="payment-method">
-                        <h2>طريقة الدفع</h2>
+                        <h2><span data-i18n="checkout.payment_method">طريقة الدفع</span></h2>
 
                         <div class="payment-options">
                             <div class="payment-option active">
@@ -193,9 +193,9 @@
                                 <label for="cash">
                                     <i class="fas fa-money-bill-wave" style="color: #10b981;"></i>
                                     <div>
-                                        <strong>الدفع عند الاستلام (COD)</strong>
-                                        <span class="payment-badge">الأكثر استخداماً</span>
-                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;">ادفع نقداً ومباشرة عند استلام الطلب من موزع شركة التوصيل.</p>
+                                        <strong><span data-i18n="checkout.cod_title"><span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)</span></strong>
+                                        <span class="payment-badge"><span data-i18n="checkout.most_used">الأكثر استخداماً</span>
+                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.cod_desc">ادفع نقداً ومباشرة عند استلام الطلب من موزع شركة التوصيل.</span></p>
                                     </div>
                                 </label>
                             </div>
@@ -205,8 +205,8 @@
                                 <label for="chargily">
                                     <i class="fas fa-credit-card" style="color: #2563eb;"></i>
                                     <div>
-                                        <strong>الدفع الإلكتروني (البطاقة الذهبية / CIB)</strong>
-                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;">دفع فوري وآمن عبر بوابة الدفع الإلكتروني الجزائرية الرسمية.</p>
+                                        <strong><span data-i18n="checkout.epay_title">الدفع الإلكتروني (البطاقة الذهبية / CIB)</span></strong>
+                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.epay_desc">دفع فوري وآمن عبر بوابة الدفع الإلكتروني الجزائرية الرسمية.</span></p>
                                     </div>
                                 </label>
                             </div>
@@ -216,8 +216,8 @@
                                 <label for="bank-transfer">
                                     <i class="fas fa-university" style="color: #f59e0b;"></i>
                                     <div>
-                                        <strong>تحويل بريدي / بنكي (CCP / BaridiMob)</strong>
-                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;">إرسال المبلغ إلى الحساب البريدي وتأكيد الطلب بإرسال الوصل.</p>
+                                        <strong><span data-i18n="checkout.ccp_title">تحويل بريدي / بنكي (CCP / BaridiMob)</span></strong>
+                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.ccp_desc">إرسال المبلغ إلى الحساب البريدي وتأكيد الطلب بإرسال الوصل.</span></p>
                                     </div>
                                 </label>
                             </div>
@@ -225,27 +225,27 @@
 
                         <!-- Bank transfer details -->
                         <div class="payment-details" id="bank-transfer-details" style="display: none; background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border: 1px solid #e2e8f0;">
-                            <h3 style="margin-top: 0; color: #1e293b;">معلومات الحساب البريدي (CCP / BaridiMob)</h3>
-                            <p>يرجى تحويل إجمالي الطلب إلى الحساب التالي وإرسال صورة الوصل عبر واتساب أو البريد:</p>
+                            <h3 style="margin-top: 0; color: #1e293b;"><span data-i18n="checkout.ccp_info_title">معلومات الحساب البريدي (CCP / BaridiMob)</span></h3>
+                            <p><span data-i18n="checkout.ccp_info_desc">يرجى تحويل إجمالي الطلب إلى الحساب التالي وإرسال صورة الوصل عبر واتساب أو البريد:</span></p>
                             <div class="bank-info" style="font-size: 0.95rem; line-height: 1.8;">
-                                <div><strong>رقم الحساب البريدي (CCP):</strong> 0012345678 المفتاح 90</div>
+                                <div><strong><span data-i18n="checkout.ccp_account_number">رقم الحساب البريدي (CCP):</span></strong> 0012345678 <span data-i18n="checkout.ccp_key">المفتاح</span> 90</div>
                                 <div><strong>RIP:</strong> 00799999001234567890</div>
-                                <div><strong>الاسم:</strong> المتجر الإلكتروني</div>
+                                <div><strong><span data-i18n="checkout.ccp_name">الاسم:</span></strong> <span data-i18n="footer.brand">المتجر الإلكتروني</span></div>
                             </div>
                         </div>
 
                         <div class="step-buttons" style="margin-top: 25px;">
-                            <button type="button" class="prev-step-btn" onclick="goToShippingStep()"><i class="fas fa-chevron-right"></i> السابق: معلومات الشحن</button>
-                            <button type="button" class="next-step-btn" onclick="proceedToReview()">التالي: مراجعة الطلب <i class="fas fa-chevron-left"></i></button>
+                            <button type="button" class="prev-step-btn" onclick="goToShippingStep()"><i class="fas fa-chevron-right"></i> <span data-i18n="checkout.prev_shipping">السابق: معلومات الشحن</span></button>
+                            <button type="button" class="next-step-btn" onclick="proceedToReview()"><span data-i18n="checkout.next_review">التالي: مراجعة الطلب</span> <i class="fas fa-chevron-left"></i></button>
                         </div>
                     </div>
 
                     <!-- Order Review -->
                     <div class="checkout-step" id="order-review">
-                        <h2>مراجعة وتأكيد الطلب</h2>
+                        <h2><span data-i18n="checkout.review_title">مراجعة وتأكيد الطلب</span></h2>
 
                         <div class="order-summary">
-                            <h3>ملخص المنتجات والتوصيل</h3>
+                            <h3><span data-i18n="checkout.summary_title">ملخص المنتجات والتوصيل</span></h3>
 
                             <div class="order-items" id="reviewOrderItems">
                                 <!-- Loaded dynamically from cart -->
@@ -253,32 +253,32 @@
 
                             <div class="order-totals" style="margin: 20px 0; background: #f8fafc; padding: 15px; border-radius: 8px;">
                                 <div class="total-item" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <span>المجموع الفرعي للمنتجات:</span>
-                                    <strong id="reviewSubtotal">0 دج</strong>
+                                    <span><span data-i18n="checkout.subtotal">المجموع الفرعي للمنتجات:</span>
+                                    <strong id="reviewSubtotal">0 <span data-i18n="common.currency">دج</span></strong>
                                 </div>
                                 <div class="total-item" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <span>تكلفة الشحن والتوصيل (<span id="reviewWilayaName">الولاية</span>):</span>
-                                    <strong id="reviewShippingCost">0 دج</strong>
+                                    <span>تكلفة الشحن والتوصيل (<span id="reviewWilayaName"><span data-i18n="checkout.wilaya_fallback">الولاية</span>):</span>
+                                    <strong id="reviewShippingCost">0 <span data-i18n="common.currency">دج</span></strong>
                                 </div>
                                 <div class="total-item" id="reviewDiscountRow" style="display: none; justify-content: space-between; margin-bottom: 8px; color: #10b981;">
-                                    <span>الخصم المطبق:</span>
-                                    <strong id="reviewDiscount">-0 دج</strong>
+                                    <span><span data-i18n="checkout.discount">الخصم المطبق:</span>
+                                    <strong id="reviewDiscount">-0 <span data-i18n="common.currency">دج</span></strong>
                                 </div>
                                 <div class="total-item final-total" style="display: flex; justify-content: space-between; font-size: 1.25rem; color: #2563eb; font-weight: bold; border-top: 2px solid #e2e8f0; padding-top: 10px;">
-                                    <span>المبلغ الإجمالي المستحق:</span>
-                                    <span id="reviewGrandTotal">0 دج</span>
+                                    <span><span data-i18n="checkout.total">المبلغ الإجمالي المستحق:</span>
+                                    <span id="reviewGrandTotal">0 <span data-i18n="common.currency">دج</span></span>
                                 </div>
                             </div>
 
                             <div class="form-group checkbox-group" style="margin: 20px 0;">
                                 <input type="checkbox" id="terms" name="terms" checked required>
-                                <label for="terms">أوافق على <a href="#">شروط الخدمة</a> وسياسة الاسترجاع الخاصة بالمتجر.</label>
+                                <label for="terms"><span data-i18n="checkout.agree">أوافق على</span> <a href="#"><span data-i18n="checkout.tos">شروط الخدمة</span></a> <span data-i18n="checkout.and_policy">وسياسة الاسترجاع الخاصة بالمتجر.</span></label>
                             </div>
 
                             <div class="step-buttons">
-                                <button type="button" class="prev-step-btn" onclick="goToPaymentStep()"><i class="fas fa-chevron-right"></i> السابق: طريقة الدفع</button>
+                                <button type="button" class="prev-step-btn" onclick="goToPaymentStep()"><i class="fas fa-chevron-right"></i> <span data-i18n="checkout.prev_payment">السابق: طريقة الدفع</span></button>
                                 <button type="button" class="submit-order-btn" id="confirmOrderBtn" onclick="placeOrderNow()">
-                                    <i class="fas fa-check-circle"></i> تأكيد الطلب الآن
+                                    <i class="fas fa-check-circle"></i> <span data-i18n="checkout.confirm_btn">تأكيد الطلب الآن</span>
                                 </button>
                             </div>
                         </div>
@@ -294,39 +294,39 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
                     </div>
                     <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-                        تسوق آمن وموثوق لـ 58 ولاية جزائرية مع ضمان الدفع عند الاستلام وسرعة الشحن.
+                        تسوق آمن وموثوق لـ 58 ولاية جزائرية مع ضمان <span data-i18n="features.cod_title">الدفع عند الاستلام</span> وسرعة الشحن.
                     </p>
                 </div>
                 <div class="footer-col">
-                    <h3>روابط هامة</h3>
+                    <h3 data-i18n="checkout.footer_links">روابط هامة</h3>
                     <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="shop.html">التسوق</a></li>
-                        <li><a href="cart.html">عربة التسوق</a></li>
-                        <li><a href="track-order.html">تتبع طلبي</a></li>
+                        <li><a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a></li>
+                        <li><a href="shop.html"><span data-i18n="footer.link_shop">التسوق</span></a></li>
+                        <li><a href="cart.html"><span data-i18n="footer.link_cart">عربة التسوق</span></a></li>
+                        <li><a href="track-order.html"><span data-i18n="footer.link_track">تتبع طلبي</span></a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>دعم الطلبات</h3>
+                    <h3 data-i18n="checkout.footer_support">دعم الطلبات</h3>
                     <ul>
                         <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
                         <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
-                        <li><i class="fas fa-shield-alt"></i> حماية تامة للبيانات والطلبات</li>
+                        <li><i class="fas fa-shield-alt"></i> <span data-i18n="checkout.footer_protection">حماية تامة للبيانات والطلبات</span></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>طرق الدفع</h3>
+                    <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
                     <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
                         <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+                <p>&copy; 2026 <span data-i18n="footer.brand">المتجر الإلكتروني</span> (MYSHOP). جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>

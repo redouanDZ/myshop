@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>عربة التسوق - متجر الإلكتروني</title>
+  <title data-i18n="cart.meta_title">عربة التسوق - متجر الإلكتروني</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet"> <!-- خط عربي للدعم RTL -->
@@ -137,7 +137,7 @@
       <div class="logo">
         <a href="index.html">
           <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
-          <span data-i18n="common.store_name">المتجر الإلكتروني</span>
+          <span data-i18n="common.store_name"><span data-i18n="footer.brand">المتجر الإلكتروني</span></span>
         </a>
       </div>
       <nav class="main-nav">
@@ -150,21 +150,21 @@
         </ul>
       </nav>
       <div class="user-actions">
-        <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+        <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" data-i18n="common.toggle_theme" title="تبديل الوضع">
           <i class="fas fa-moon"></i>
         </button>
-        <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+        <a href="wishlist.html" class="wishlist-icon" data-i18n="common.wishlist" title="المفضلة">
           <i class="fas fa-heart" style="color: var(--danger-color);"></i>
           <span class="wishlist-count" id="wishlist-count">0</span>
         </a>
-        <a href="cart.html" class="cart-icon" title="السلة">
+        <a href="cart.html" class="cart-icon" data-i18n="common.cart_title" title="السلة">
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-count" id="cart-count">0</span>
         </a>
-        <a href="account.html" class="user-icon" title="حسابي">
+        <a href="account.html" class="user-icon" data-i18n="common.my_account" title="حسابي">
           <i class="fas fa-user"></i>
         </a>
-        <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+        <button type="button" class="mobile-menu-btn" data-i18n="common.menu" aria-label="القائمة">
           <i class="fas fa-bars"></i>
         </button>
       </div>
@@ -176,7 +176,7 @@
     <div class="container">
       <h1 data-i18n="cart.title">عربة التسوق</h1>
       <div class="breadcrumb">
-        <a href="index.html" data-i18n="nav.home">الرئيسية</a> <i class="fas fa-chevron-left"></i> <span data-i18n="cart.title">عربة التسوق</span>
+        <a href="index.html" data-i18n="nav.home"><span data-i18n="footer.link_home">الرئيسية</span></a> <i class="fas fa-chevron-left"></i> <span data-i18n="cart.title">عربة التسوق</span>
       </div>
     </div>
   </div>
@@ -186,7 +186,7 @@
     <div class="container">
       <div class="cart-container">
         <div class="cart-items">
-          <h2>المنتجات المضافة</h2>
+          <h2><span data-i18n="cart.added_products">المنتجات المضافة</span></h2>
           <div class="cart-items-grid" id="cart-items-grid">
             <!-- سيتم ملؤها ديناميكيًا من MySQL عبر API -->
           </div>
@@ -194,10 +194,10 @@
             <div class="empty-state-icon">
               <i class="fas fa-shopping-cart"></i>
             </div>
-            <h3 class="empty-state-title">عربة التسوق فارغة حالياً</h3>
-            <p class="empty-state-desc">لم تقم بإضافة أي منتجات إلى سلتك بعد. استكشف تشكيلتنا الواسعة وابدأ التسوق الآن.</p>
+            <h3 class="empty-state-title"><span data-i18n="cart.empty_title">عربة التسوق فارغة حالياً</span></h3>
+            <p class="empty-state-desc"><span data-i18n="cart.empty_desc">لم تقم بإضافة أي منتجات إلى سلتك بعد. استكشف تشكيلتنا الواسعة وابدأ التسوق الآن.</span></p>
             <a href="shop.html" class="btn btn-primary">
-              <i class="fas fa-shopping-bag"></i> تصفح متجر المنتجات
+              <i class="fas fa-shopping-bag"></i> <span data-i18n="cart.browse_shop">تصفح متجر المنتجات</span>
             </a>
           </div>
         </div>
@@ -215,39 +215,39 @@
       <div class="footer-grid">
         <div class="footer-col">
           <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-            <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+            <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
           </div>
           <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-            وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.
+            <span data-i18n="footer.description">وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، و<span data-i18n="features.cod_title">الدفع عند الاستلام</span>.</span>
           </p>
         </div>
         <div class="footer-col">
-          <h3>روابط سريعة</h3>
+          <h3 data-i18n="footer.quick_links">روابط سريعة</h3>
           <ul>
-            <li><a href="index.html">الرئيسية</a></li>
-            <li><a href="shop.html">التسوق</a></li>
-            <li><a href="cart.html">عربة التسوق</a></li>
-            <li><a href="track-order.html">تتبع طلبي</a></li>
+            <li><a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a></li>
+            <li><a href="shop.html"><span data-i18n="footer.link_shop">التسوق</span></a></li>
+            <li><a href="cart.html"><span data-i18n="footer.link_cart">عربة التسوق</span></a></li>
+            <li><a href="track-order.html"><span data-i18n="footer.link_track">تتبع طلبي</span></a></li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3>تواصل معنا</h3>
+          <h3 data-i18n="footer.contact">تواصل معنا</h3>
           <ul>
-            <li><i class="fas fa-map-marker-alt"></i> الجزائر العاصمة، الجزائر</li>
+            <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer.address">الجزائر العاصمة، الجزائر</span></li>
             <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
             <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3>طرق الدفع</h3>
+          <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
           <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-            <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+            <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
             <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
           </div>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+        <p data-i18n="footer.copyright">&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
       </div>
     </div>
   </footer>
@@ -267,8 +267,8 @@
             cartItems = apiItems.map(item => ({
               id: item.id,
               product_id: item.product_id,
-              name: item.name || 'منتج',
-              category: item.category || 'إلكترونيات',
+              name: item.name || window.I18n.t('product.store_customer', 'منتج'),
+              category: item.category || window.I18n.t('categories.electronics', 'إلكترونيات'),
               price: Number(item.price) || 0,
               quantity: Number(item.quantity) || 1,
               image_url: item.image_url || '/images/christopher-gower-m_HRfLhgABo-unsplash.jpg'
@@ -299,8 +299,8 @@
           cartItems = parsed.map(item => ({
             id: item.id,
             product_id: item.product_id || item.id,
-            name: item.name || 'منتج',
-            category: item.category || 'إلكترونيات',
+            name: item.name || window.I18n.t('product.store_customer', 'منتج'),
+            category: item.category || window.I18n.t('categories.electronics', 'إلكترونيات'),
             price: Number(item.price) || 0,
             quantity: Number(item.quantity) || 1,
             image_url: item.image_url || item.image || '/images/christopher-gower-m_HRfLhgABo-unsplash.jpg'
@@ -344,22 +344,22 @@
 
       grid.innerHTML = cartItems.map(item => {
         const safeName = window.escapeHtml ? window.escapeHtml(item.name) : item.name;
-        const safeCat = window.escapeHtml ? window.escapeHtml(item.category || 'عام') : (item.category || 'عام');
+        const safeCat = window.escapeHtml ? window.escapeHtml(item.category || window.I18n.t('categories.general', 'عام')) : (item.category || window.I18n.t('categories.general', 'عام'));
         return `
         <div class="cart-item" id="cart-item-${item.id}" data-id="${item.id}">
           <img src="${item.image_url}" alt="${safeName}">
           <div class="item-details">
             <h3>${safeName}</h3>
             <p style="color: var(--light-text, #64748b); font-size: 0.85rem; margin-top: 2px;">${safeCat}</p>
-            <p class="item-price" style="font-weight: 700; color: var(--primary-color); margin-top: 5px;">${Number(item.price).toLocaleString()} دج</p>
+            <p class="item-price" style="font-weight: 700; color: var(--primary-color); margin-top: 5px;">${Number(item.price).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</p>
           </div>
           <div class="item-quantity">
             <button type="button" class="quantity-btn decrease" onclick="changeQuantity(${item.id}, -1)">-</button>
             <input type="number" id="input-qty-${item.id}" value="${item.quantity}" min="1" max="99" onchange="handleQtyInputChange(${item.id}, this.value)">
             <button type="button" class="quantity-btn increase" onclick="changeQuantity(${item.id}, 1)">+</button>
           </div>
-          <div class="item-total" id="total-${item.id}" style="font-weight: 800; color: var(--dark-color, #1e293b);">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</div>
-          <button type="button" class="remove-item" onclick="removeCartPageItem(${item.id})" title="إزالة المنتج">
+          <div class="item-total" id="total-${item.id}" style="font-weight: 800; color: var(--dark-color, #1e293b);">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</div>
+          <button type="button" class="remove-item" onclick="removeCartPageItem(${item.id})" data-i18n="cart.remove_item" title="إزالة المنتج">
               <i class="fas fa-trash-alt"></i>
             </button>
         </div>
@@ -396,7 +396,7 @@
       if (inputEl) inputEl.value = newQty;
 
       const totalEl = document.getElementById(`total-${item.id}`);
-      if (totalEl) totalEl.textContent = (item.price * newQty).toLocaleString() + ' دج';
+      if (totalEl) totalEl.textContent = (item.price * newQty).toLocaleString() + ' ' + window.I18n.t('common.currency', 'دج');
 
       // حفظ ومزامنة
       saveCartToLocalStorage();
@@ -449,33 +449,33 @@
       const estimatedTotal = Math.max(0, subtotal - discount);
 
       summaryBox.innerHTML = `
-        <h2>ملخص الطلب</h2>
-        <div class="summary-item"><span>المجموع الفرعي</span><strong style="color:var(--dark-color, #1e293b);">${subtotal.toLocaleString()} دج</strong></div>
+        <h2 data-i18n="cart.summary">ملخص الطلب</h2>
+        <div class="summary-item"><span><span data-i18n="checkout.subtotal">المجموع الفرعي</span></span><strong style="color:var(--dark-color, #1e293b);">${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</strong></div>
         <div class="summary-item" style="border-bottom: 1px dashed var(--border-color, #e2e8f0); padding-bottom: 8px;">
-          <span>مصاريف الشحن</span>
+          <span><span data-i18n="checkout.shipping_cost">مصاريف الشحن</span></span>
           <span style="font-size: 0.88rem; color: var(--primary-color); font-weight: bold;">
-            <i class="fas fa-truck" style="margin-left: 4px;"></i> تُحسب حسب الولاية عند الدفع
+            <i class="fas fa-truck" style="margin-left: 4px;"></i> <span data-i18n="cart.shipping_calc">تُحسب حسب الولاية عند الدفع</span>
           </span>
         </div>
-        ${discount > 0 ? `<div class="summary-item discount" style="color:var(--success-color);"><span>الخصم</span><span>-${discount.toLocaleString()} دج</span></div>` : ''}
+        ${discount > 0 ? `<div class="summary-item discount" style="color:var(--success-color);"><span><span data-i18n="checkout.discount">الخصم</span></span><span>-${discount.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</span></div>` : ''}
         <div class="summary-total">
-          <span>المجموع (قبل الشحن)</span>
-          <strong style="color: var(--primary-color); font-size: 1.25rem;">${estimatedTotal.toLocaleString()} دج</strong>
+          <span><span data-i18n="cart.total_pre_shipping">المجموع (قبل الشحن)</span></span>
+          <strong style="color: var(--primary-color); font-size: 1.25rem;">${estimatedTotal.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</strong>
         </div>
         <p style="font-size: 0.82rem; color: var(--light-text, #64748b); margin: 8px 0 14px; line-height: 1.4;">
-          * سيتم احتساب تكلفة التوصيل الدقيقة (400 - 900 دج) وإضافتها للإجمالي النهائي بعد اختيار ولايتك في صفحة الدفع.
+          <span data-i18n="cart.shipping_note">* سيتم احتساب تكلفة التوصيل الدقيقة (400 - 900 دج) وإضافتها للإجمالي النهائي بعد اختيار ولايتك في صفحة الدفع.</span>
         </p>
         
         <div class="promo-code" style="margin-top: 10px;">
-          <input type="text" id="promo-code" placeholder="رمز الخصم (مثال: SAVE10)" value="${discountRate === 0.1 ? 'SAVE10' : discountRate === 0.2 ? 'SAVE20' : ''}">
-          <button type="button" class="apply-promo" onclick="applyPromoCode()">تطبيق</button>
+          <input type="text" id="promo-code" placeholder="رمز <span data-i18n="checkout.discount">الخصم</span> (مثال: SAVE10)" value="${discountRate === 0.1 ? 'SAVE10' : discountRate === 0.2 ? 'SAVE20' : ''}">
+          <button type="button" class="apply-promo" onclick="applyPromoCode()"><span data-i18n="cart.apply_promo">تطبيق</span></button>
         </div>
-        <button type="button" class="checkout-btn" onclick="proceedToCheckout()" style="margin-top: 15px;">متابعة إلى الدفع <i class="fas fa-arrow-left" style="margin-right: 8px;"></i></button>
-        <a href="shop.html" class="continue-shopping" style="display: block; margin-top: 10px;">متابعة التسوق</a>
+        <button type="button" class="checkout-btn" onclick="proceedToCheckout()" style="margin-top: 15px;"><span data-i18n="cart.checkout_btn">متابعة إلى الدفع</span> <i class="fas fa-arrow-left" style="margin-right: 8px;"></i></button>
+        <a href="shop.html" class="continue-shopping" style="display: block; margin-top: 10px;"><span data-i18n="cart.continue_shopping">متابعة التسوق</span></a>
       `;
     }
 
-    // تطبيق كود الخصم
+    // تطبيق كود <span data-i18n="checkout.discount">الخصم</span>
     async function applyPromoCode() {
       const codeInput = document.getElementById('promo-code');
       if (!codeInput) return;
@@ -505,21 +505,21 @@
           } else {
             discountRate = 0.1;
           }
-          if (window.showToast) window.showToast(data.message || 'تم تطبيق الخصم بنجاح! 🎉', 'success');
-          else alert('تم تطبيق الخصم بنجاح! 🎉');
+          if (window.showToast) window.showToast(data.message || 'تم تطبيق <span data-i18n="checkout.discount">الخصم</span> بنجاح! 🎉', 'success');
+          else alert('تم تطبيق <span data-i18n="checkout.discount">الخصم</span> بنجاح! 🎉');
         } else {
           // Fallback to static codes for offline/demo
           if (code === 'SAVE10') {
             discountRate = 0.1;
-            if (window.showToast) window.showToast('تم تطبيق خصم 10% بنجاح! 🎉', 'success');
-            else alert('تم تطبيق خصم 10% بنجاح! 🎉');
+            if (window.showToast) window.showToast(window.I18n.t('messages.promo_success_10', 'تم تطبيق خصم 10% بنجاح! 🎉'), 'success');
+            else alert(window.I18n.t('messages.promo_success_10', 'تم تطبيق خصم 10% بنجاح! 🎉'));
           } else if (code === 'SAVE20') {
             discountRate = 0.2;
-            if (window.showToast) window.showToast('تم تطبيق خصم 20% بنجاح! 🎉', 'success');
-            else alert('تم تطبيق خصم 20% بنجاح! 🎉');
+            if (window.showToast) window.showToast(window.I18n.t('messages.promo_success_20', 'تم تطبيق خصم 20% بنجاح! 🎉'), 'success');
+            else alert(window.I18n.t('messages.promo_success_20', 'تم تطبيق خصم 20% بنجاح! 🎉'));
           } else {
             discountRate = 0;
-            const errMsg = data.error || 'رمز الخصم غير صالح';
+            const errMsg = data.error || 'رمز <span data-i18n="checkout.discount">الخصم</span> غير صالح';
             if (window.showToast) window.showToast(errMsg, 'error');
             else alert(errMsg);
           }
@@ -535,8 +535,8 @@
     // التوجه إلى صفحة الدفع
     function proceedToCheckout() {
       if (cartItems.length === 0) {
-        if (window.showToast) window.showToast('عربة التسوق فارغة', 'warning');
-        else alert('عربة التسوق فارغة');
+        if (window.showToast) window.showToast(window.I18n.t('messages.cart_empty', 'عربة التسوق فارغة'), 'warning');
+        else alert(window.I18n.t('messages.cart_empty', 'عربة التسوق فارغة'));
         return;
       }
       window.location.href = 'checkout.html';
