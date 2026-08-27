@@ -77,7 +77,7 @@
                 <a href="account.html" class="user-icon" data-i18n-title="common.my_account" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
-                <button type="button" class="mobile-menu-btn" data-i18n="common.menu" aria-label="القائمة">
+                <button type="button" class="mobile-menu-btn" data-i18n-title="common.menu" aria-label="القائمة">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -354,7 +354,7 @@
                         return `
                         <div class="product-card" id="product-card-${p.id}">
                             <span class="product-badge">${safeCat}</span>
-                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" data-i18n="common.wishlist" aria-label="المفضلة">
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" data-i18n-title="common.wishlist" aria-label="المفضلة">
                                 <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
                             </button>
                             <a href="product.html?id=${p.id}" class="product-image">
@@ -398,7 +398,7 @@
                         return `
                         <div class="product-card" id="offer-card-${p.id}">
                             <span class="product-badge" style="background: var(--accent-gradient);"><span data-i18n="home.special_discount">تخفيض خاص 🔥</span></span>
-                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" data-i18n="common.wishlist" aria-label="المفضلة">
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" data-i18n-title="common.wishlist" aria-label="المفضلة">
                                 <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
                             </button>
                             <a href="product.html?id=${p.id}" class="product-image">

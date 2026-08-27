@@ -196,7 +196,7 @@
                 <a href="account.html" class="user-icon" data-i18n-title="common.my_account" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
-                <button type="button" class="mobile-menu-btn" data-i18n="common.menu" aria-label="القائمة">
+                <button type="button" class="mobile-menu-btn" data-i18n-title="common.menu" aria-label="القائمة">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -311,7 +311,7 @@
                             <div class="wishlist-card" id="wishlist-card-${p.id}">
                                 <div class="card-img-wrapper">
                                     <img src="${p.image_url || p.image || '/images/product-placeholder.jpg'}" alt="${safeName}">
-                                    <button class="btn-remove-wishlist" onclick="removeItem(${p.id})" data-i18n="wishlist.remove_btn" title="حذف من المفضلة">
+                                    <button class="btn-remove-wishlist" onclick="removeItem(${p.id})" data-i18n-title="wishlist.remove_btn" title="حذف من المفضلة">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>

@@ -164,7 +164,7 @@
         <a href="account.html" class="user-icon" data-i18n-title="common.my_account" title="حسابي">
           <i class="fas fa-user"></i>
         </a>
-        <button type="button" class="mobile-menu-btn" data-i18n="common.menu" aria-label="القائمة">
+        <button type="button" class="mobile-menu-btn" data-i18n-title="common.menu" aria-label="القائمة">
           <i class="fas fa-bars"></i>
         </button>
       </div>
@@ -359,7 +359,7 @@
             <button type="button" class="quantity-btn increase" onclick="changeQuantity(${item.id}, 1)">+</button>
           </div>
           <div class="item-total" id="total-${item.id}" style="font-weight: 800; color: var(--dark-color, #1e293b);">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</div>
-          <button type="button" class="remove-item" onclick="removeCartPageItem(${item.id})" data-i18n="cart.remove_item" title="إزالة المنتج">
+          <button type="button" class="remove-item" onclick="removeCartPageItem(${item.id})" data-i18n-title="cart.remove_item" title="إزالة المنتج">
               <i class="fas fa-trash-alt"></i>
             </button>
         </div>
