@@ -351,7 +351,6 @@ async function googleLogin(req, res) {
             return res.status(500).json({ message: 'فشل في إنشاء أو تسجيل حساب Google' });
         }
 
-        setEmailVerificationState(user.id, true);
 
         const sessionId = await issueSession(user, req);
         const accessToken = createAccessToken(user, sessionId);
