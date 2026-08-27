@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تتبع طلبي - المتجر الإلكتروني</title>
+    <title><span data-i18n="footer.link_track">تتبع طلبي</span> - <span data-i18n="footer.brand">المتجر الإلكتروني</span></title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -31,9 +31,35 @@
             align-items: flex-end;
             margin-bottom: 25px;
         }
+        
         @media (max-width: 768px) {
             .track-form-grid { grid-template-columns: 1fr; }
+            
+            /* Responsive Stepper for Mobile */
+            .timeline-stepper { flex-direction: column; align-items: flex-start; margin-right: 20px; margin-left: 20px; }
+            .timeline-stepper::before { top: 0; bottom: 0; left: auto; right: 22px; width: 4px; height: auto; }
+            .timeline-progress-bar { top: 0; left: auto; right: 22px; width: 4px !important; height: var(--progress-perc, 0%); transition: height 0.4s ease; }
+            .step-node { display: flex; align-items: center; width: 100%; margin-bottom: 25px; text-align: right; }
+            .step-icon { margin-left: 15px; flex-shrink: 0; margin-right: 0; }
+            
+            .order-header-info { flex-direction: column; }
+            .order-result-box { overflow-x: auto; }
         }
+
+        /* Dark Mode Support */
+        [data-theme="dark"] .track-container { background: var(--card-bg, #1e293b); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        [data-theme="dark"] .form-field label { color: #cbd5e1; }
+        [data-theme="dark"] .form-field input { background: #0f172a; border-color: #334155; color: #f1f5f9; }
+        [data-theme="dark"] .timeline-stepper::before { background: #334155; }
+        [data-theme="dark"] .step-icon { background: #1e293b; border-color: #334155; }
+        [data-theme="dark"] .step-label { color: #94a3b8; }
+        [data-theme="dark"] .order-header-info { background: #0f172a; }
+        [data-theme="dark"] .order-info-item span { color: #94a3b8; }
+        [data-theme="dark"] .order-info-item strong { color: #f1f5f9; }
+        [data-theme="dark"] .order-items-table th { background: #0f172a; color: #cbd5e1; border-color: #334155; }
+        [data-theme="dark"] .order-items-table td { border-color: #1e293b; color: #f1f5f9; }
+        [data-theme="dark"] .order-items-table .product-cell span { color: #f1f5f9; }
+
         .form-field { display: flex; flex-direction: column; text-align: right; }
         .form-field label { font-weight: bold; margin-bottom: 8px; color: #334155; }
         .form-field input {
@@ -76,6 +102,7 @@
             z-index: 1;
         }
         .timeline-progress-bar {
+            width: var(--progress-perc, 0%);
             position: absolute;
             top: 22px;
             right: 40px;
@@ -174,6 +201,17 @@
         .status-delivered { background: #d1fae5; color: #059669; }
         .status-cancelled { background: #fee2e2; color: #dc2626; }
     </style>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+
+    <!-- Theme Anti-Flicker -->
+    <script>
+        (function(){
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -182,34 +220,34 @@
             <div class="logo">
                 <a href="index.html">
                     <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
-                    <span>المتجر الإلكتروني</span>
+                    <span><span data-i18n="footer.brand">المتجر الإلكتروني</span></span>
                 </a>
             </div>
             <nav class="main-nav">
                 <ul>
-                    <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
-                    <li><a href="shop.html"><i class="fas fa-shopping-bag"></i> التسوق</a></li>
-                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> عربة التسوق</a></li>
-                    <li><a href="wishlist.html"><i class="fas fa-heart"></i> المفضلة</a></li>
-                    <li><a href="track-order.html" class="active"><i class="fas fa-truck"></i> تتبع طلبي</a></li>
+                    <li><a href="index.html"><i class="fas fa-home"></i> <span data-i18n="footer.link_home">الرئيسية</span></a></li>
+                    <li><a href="shop.html"><i class="fas fa-shopping-bag"></i> <span data-i18n="footer.link_shop">التسوق</span></a></li>
+                    <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> عربة <span data-i18n="footer.link_shop">التسوق</span></a></li>
+                    <li><a href="wishlist.html"><i class="fas fa-heart"></i> <span data-i18n="footer.link_wishlist">المفضلة</span></a></li>
+                    <li><a href="track-order.html" class="active"><i class="fas fa-truck"></i> <span data-i18n="footer.link_track">تتبع طلبي</span></a></li>
                 </ul>
             </nav>
             <div class="user-actions">
-                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" data-i18n-title="common.toggle_theme" title="تبديل الوضع">
                     <i class="fas fa-moon"></i>
                 </button>
-                <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+                <a href="wishlist.html" class="wishlist-icon" data-i18n-title="common.wishlist" title="المفضلة">
                     <i class="fas fa-heart" style="color: var(--danger-color);"></i>
                     <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
-                <a href="cart.html" class="cart-icon" title="السلة">
+                <a href="cart.html" class="cart-icon" data-i18n-title="common.cart_title" title="السلة">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <a href="account.html" class="user-icon" title="حسابي">
+                <a href="account.html" class="user-icon" data-i18n-title="common.my_account" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
-                <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+                <button type="button" class="mobile-menu-btn" data-i18n-title="common.menu" aria-label="القائمة">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -219,8 +257,8 @@
     <!-- Track Hero -->
     <section class="track-hero">
         <div class="container">
-            <h1>تتبّع مسار شحنتك</h1>
-            <p>أدخل رقم الطلب ورقم هاتفك للاطلاع على آخر مستجدات حالة الطلب وموعد التوصيل</p>
+            <h1><span data-i18n="track.page_title">تتبّع مسار شحنتك</span></h1>
+            <p><span data-i18n="track.form_desc">أدخل رقم الطلب ورقم هاتفك للاطلاع على آخر مستجدات حالة الطلب وموعد التوصيل</span></p>
         </div>
     </section>
 
@@ -230,15 +268,15 @@
             <form id="trackingForm" onsubmit="event.preventDefault(); submitTrack();">
                 <div class="track-form-grid">
                     <div class="form-field">
-                        <label for="orderInput">رقم الطلب (Order ID / DZ-xxxx)</label>
-                        <input type="text" id="orderInput" placeholder="مثال: DZ-2026-12345 أو 1001" required>
+                        <label for="orderInput"><span data-i18n="track.order_id_label">رقم الطلب (Order ID / DZ-xxxx)</span></label>
+                        <input type="text" id="orderInput" data-i18n="track.order_id_placeholder" placeholder="مثال: DZ-2026-12345 أو 1001" required>
                     </div>
                     <div class="form-field">
-                        <label for="phoneInput">رقم الهاتف المسجل في الطلب</label>
-                        <input type="tel" id="phoneInput" placeholder="مثال: 0550000000" required>
+                        <label for="phoneInput"><span data-i18n="track.phone_label">رقم الهاتف المسجل في الطلب</span></label>
+                        <input type="tel" id="phoneInput" data-i18n="track.phone_placeholder" placeholder="مثال: 0550000000" required>
                     </div>
                     <button type="submit" class="btn-track" id="trackSubmitBtn">
-                        <i class="fas fa-search"></i> تتبع الطلب
+                        <i class="fas fa-search"></i> <span data-i18n="track.submit_btn">تتبع الطلب</span>
                     </button>
                 </div>
             </form>
@@ -252,42 +290,42 @@
                     <div class="timeline-progress-bar" id="timelineProgressBar"></div>
                     <div class="step-node" id="stepNode1">
                         <div class="step-icon"><i class="fas fa-file-invoice"></i></div>
-                        <div class="step-label">تم استلام الطلب</div>
+                        <div class="step-label"><span data-i18n="track.status_pending">تم استلام الطلب</span></div>
                     </div>
                     <div class="step-node" id="stepNode2">
                         <div class="step-icon"><i class="fas fa-box-open"></i></div>
-                        <div class="step-label">قيد التجهيز والتأكيد</div>
+                        <div class="step-label"><span data-i18n="track.status_processing">قيد التجهيز والتأكيد</span></div>
                     </div>
                     <div class="step-node" id="stepNode3">
                         <div class="step-icon"><i class="fas fa-shipping-fast"></i></div>
-                        <div class="step-label">تم الشحن للتوصيل</div>
+                        <div class="step-label"><span data-i18n="track.status_shipped">تم الشحن للتوصيل</span></div>
                     </div>
                     <div class="step-node" id="stepNode4">
                         <div class="step-icon"><i class="fas fa-check-circle"></i></div>
-                        <div class="step-label">تم التسليم بنجاح</div>
+                        <div class="step-label"><span data-i18n="track.status_delivered">تم التسليم بنجاح</span></div>
                     </div>
                 </div>
 
                 <!-- Order Header Info -->
                 <div class="order-header-info">
                     <div class="order-info-item">
-                        <span>رقم الطلب</span>
+                        <span><span data-i18n="account.col_order_num">رقم الطلب</span>
                         <strong id="resOrderNumber">-</strong>
                     </div>
                     <div class="order-info-item">
-                        <span>تاريخ الطلب</span>
+                        <span><span data-i18n="account.col_date">تاريخ الطلب</span>
                         <strong id="resOrderDate">-</strong>
                     </div>
                     <div class="order-info-item">
-                        <span>الولاية والعنوان</span>
+                        <span><span data-i18n="track.wilaya_address">الولاية والعنوان</span>
                         <strong id="resWilaya">-</strong>
                     </div>
                     <div class="order-info-item">
-                        <span>طريقة الدفع</span>
+                        <span><span data-i18n="conf.payment_method">طريقة الدفع</span>
                         <strong id="resPaymentMethod">-</strong>
                     </div>
                     <div class="order-info-item">
-                        <span>حالة الطلب</span>
+                        <span><span data-i18n="account.col_status">حالة الطلب</span>
                         <span id="resStatusBadge" class="status-badge-custom status-pending">-</span>
                     </div>
                 </div>
@@ -296,9 +334,9 @@
                 <table class="order-items-table">
                     <thead>
                         <tr>
-                            <th>المنتج</th>
-                            <th style="text-align: center;">الكمية</th>
-                            <th style="text-align: left;">السعر الإجمالي</th>
+                            <th><span data-i18n="track.product">المنتج</span></th>
+                            <th style="text-align: center;"><span data-i18n="invoice.col_qty">الكمية</span></th>
+                            <th style="text-align: left;"><span data-i18n="track.total_price">السعر الإجمالي</span></th>
                         </tr>
                     </thead>
                     <tbody id="resOrderItemsBody">
@@ -306,8 +344,8 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="2" style="font-weight: bold; text-align: right; padding-top: 15px;">المبلغ الإجمالي (شامل التوصيل):</td>
-                            <td style="font-weight: bold; text-align: left; color: #2563eb; font-size: 1.15rem; padding-top: 15px;" id="resOrderTotal">0 دج</td>
+                            <td colspan="2" style="font-weight: bold; text-align: right; padding-top: 15px;"><span data-i18n="track.grand_total">المبلغ الإجمالي (شامل التوصيل):</span></td>
+                            <td style="font-weight: bold; text-align: left; color: #2563eb; font-size: 1.15rem; padding-top: 15px;" id="resOrderTotal">0 <span data-i18n="common.currency">دج</span></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -317,7 +355,7 @@
                         <i class="fas fa-file-pdf"></i> فتح الفاتورة
                     </a>
                     <a href="shop.html" class="btn-outline">
-                        <i class="fas fa-shopping-bag"></i> مواصلة التسوق
+                        <i class="fas fa-shopping-bag"></i> مواصلة <span data-i18n="footer.link_shop">التسوق</span>
                     </a>
                 </div>
             </div>
@@ -345,12 +383,12 @@
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري البحث...';
 
             try {
-                const response = await fetch(`/api/orders/track?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}`);
+                const response = await fetch(`/api/orders/status?orderId=${encodeURIComponent(orderId)}&phone=${encodeURIComponent(phone)}`);
                 const data = await response.json();
 
                 if (!response.ok) {
                     msgBox.className = 'status-cancelled';
-                    msgBox.textContent = data.error || 'لم نتمكن من العثور على طلب مطابق للبيانات المدخلة.';
+                    msgBox.textContent = data.error || window.I18n.t('messages.tracking_not_found', 'لم نتمكن من العثور على طلب مطابق للبيانات المدخلة.');
                     msgBox.style.display = 'block';
                     resBox.style.display = 'none';
                     return;
@@ -362,9 +400,9 @@
                 // Fill UI
                 document.getElementById('resOrderNumber').textContent = order.order_number || `#${order.id}`;
                 document.getElementById('resOrderDate').textContent = new Date(order.created_at).toLocaleDateString('ar-DZ');
-                document.getElementById('resWilaya').textContent = `${order.wilaya_name || order.city || 'الجزائر'} (${order.delivery_type === 'desk' ? 'استلام من المكتب' : 'توصيل للمنزل'})`;
-                document.getElementById('resPaymentMethod').textContent = order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : 'الدفع عند الاستلام (COD)';
-                document.getElementById('resOrderTotal').textContent = `${Number(order.total).toLocaleString()} دج`;
+                document.getElementById('resWilaya').textContent = `${order.wilaya_name || order.city || window.I18n.t('wilayas.algiers', 'الجزائر')} (${order.delivery_type === 'desk' ? window.I18n.t('invoice.desk_pickup', 'استلام من المكتب') : window.I18n.t('invoice.home_delivery', 'توصيل للمنزل')})`;
+                document.getElementById('resPaymentMethod').textContent = order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : '<span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)';
+                document.getElementById('resOrderTotal').textContent = `${Number(order.total).toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
 
                 // Status Badge & Stepper
                 renderOrderStatus(order.status);
@@ -382,9 +420,9 @@
                             </div>
                         </td>
                         <td style="text-align: center;">${item.quantity}</td>
-                        <td style="text-align: left; font-weight: bold;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</td>
+                        <td style="text-align: left; font-weight: bold;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} د.ج</td>
                     </tr>
-                `).join('');
+                `}).join('');
 
                 // Invoice button link
                 document.getElementById('viewInvoiceBtn').href = `invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone)}`;
@@ -392,11 +430,11 @@
                 resBox.style.display = 'block';
             } catch (err) {
                 msgBox.className = 'status-cancelled';
-                msgBox.textContent = 'حدث خطأ في الاتصال بالخادم، يرجى المحاولة مرة أخرى.';
+                msgBox.textContent = window.I18n.t('messages.tracking_error_network', 'حدث خطأ في الاتصال بالخادم، يرجى المحاولة مرة أخرى.');
                 msgBox.style.display = 'block';
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-search"></i> تتبع الطلب';
+                submitBtn.innerHTML = '<i class="fas fa-search"></i> <span data-i18n="track.submit_btn">تتبع الطلب</span>';
             }
         }
 
@@ -411,17 +449,17 @@
             [s1, s2, s3, s4].forEach(s => { s.className = 'step-node'; });
 
             const statusMap = {
-                'pending': { text: 'قيد المراجعة', class: 'status-pending', width: '15%', activeNode: s1 },
-                'processing': { text: 'قيد التجهيز والتأكيد', class: 'status-processing', width: '45%', completedNodes: [s1], activeNode: s2 },
-                'shipped': { text: 'تم الشحن مع الموزع 🚚', class: 'status-shipped', width: '75%', completedNodes: [s1, s2], activeNode: s3 },
-                'delivered': { text: 'تم التسليم بنجاح ✅', class: 'status-delivered', width: '100%', completedNodes: [s1, s2, s3, s4], activeNode: null },
-                'cancelled': { text: 'ملغي ❌', class: 'status-cancelled', width: '0%', activeNode: null }
+                'pending': { text: window.I18n.t('track.status_pending', 'قيد المراجعة'), class: 'status-pending', width: '15%', activeNode: s1 },
+                'processing': { text: window.I18n.t('track.status_processing', 'قيد التجهيز والتأكيد'), class: 'status-processing', width: '45%', completedNodes: [s1], activeNode: s2 },
+                'shipped': { text: window.I18n.t('track.status_shipped_truck', 'تم الشحن مع الموزع 🚚'), class: 'status-shipped', width: '75%', completedNodes: [s1, s2], activeNode: s3 },
+                'delivered': { text: window.I18n.t('track.status_delivered_check', 'تم التسليم بنجاح ✅'), class: 'status-delivered', width: '100%', completedNodes: [s1, s2, s3, s4], activeNode: null },
+                'cancelled': { text: window.I18n.t('track.status_cancelled_cross', 'ملغي ❌'), class: 'status-cancelled', width: '0%', activeNode: null }
             };
 
             const current = statusMap[status] || statusMap['pending'];
             badge.textContent = current.text;
             badge.className = `status-badge-custom ${current.class}`;
-            progressBar.style.width = current.width;
+            progressBar.style.setProperty('--progress-perc', current.width);
 
             if (current.completedNodes) {
                 current.completedNodes.forEach(node => node.classList.add('completed'));
@@ -450,39 +488,39 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
                     </div>
                     <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-                        تسوق آمن وموثوق لـ 58 ولاية جزائرية مع متابعة دقيقة لمسار شحنتك لحظة بلحظة.
+                        <span data-i18n="track.footer_desc">تسوق آمن وموثوق لـ 58 ولاية جزائرية مع متابعة دقيقة لمسار شحنتك لحظة بلحظة.</span>
                     </p>
                 </div>
                 <div class="footer-col">
-                    <h3>روابط هامة</h3>
+                    <h3><span data-i18n="checkout.footer_links">روابط هامة</span></h3>
                     <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="shop.html">التسوق</a></li>
-                        <li><a href="cart.html">عربة التسوق</a></li>
-                        <li><a href="track-order.html">تتبع طلبي</a></li>
+                        <li><a href="index.html"><span data-i18n="footer.link_home"><span data-i18n="footer.link_home">الرئيسية</span></span></a></li>
+                        <li><a href="shop.html"><span data-i18n="footer.link_shop"><span data-i18n="footer.link_shop">التسوق</span></span></a></li>
+                        <li><a href="cart.html"><span data-i18n="footer.link_cart">عربة <span data-i18n="footer.link_shop">التسوق</span></span></a></li>
+                        <li><a href="track-order.html"><span data-i18n="footer.link_track"><span data-i18n="footer.link_track">تتبع طلبي</span></span></a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>دعم الشحن والمتابعة</h3>
+                    <h3><span data-i18n="track.footer_support">دعم الشحن والمتابعة</span></h3>
                     <ul>
                         <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
                         <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
-                        <li><i class="fas fa-shipping-fast"></i> توصيل سريع إلى 58 ولاية</li>
+                        <li><i class="fas fa-shipping-fast"></i> <span data-i18n="track.footer_fast_delivery">توصيل سريع إلى 58 ولاية</span></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>طرق الدفع</h3>
+                    <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
                     <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
                         <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+                <p>&copy; 2026 <span data-i18n="footer.brand">المتجر الإلكتروني</span> (MYSHOP). جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>

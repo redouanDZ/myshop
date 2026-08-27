@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>التسوق - متجر الإلكتروني</title>
+  <title data-i18n="shop.meta_title">التسوق - متجر الإلكتروني</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet"> <!-- خط عربي -->
@@ -153,6 +153,17 @@
     .close-notification { margin-left: 15px; cursor: pointer; font-size: 20px; font-weight: bold; }
     .notification.show { transform: translateX(0); }
   </style>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+
+    <!-- Theme Anti-Flicker -->
+    <script>
+        (function(){
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
   <!-- رأس الموقع -->
@@ -174,21 +185,21 @@
         </ul>
       </nav>
       <div class="user-actions">
-        <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+        <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" data-i18n-title="common.toggle_theme" title="تبديل الوضع">
           <i class="fas fa-moon"></i>
         </button>
-        <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+        <a href="wishlist.html" class="wishlist-icon" data-i18n-title="common.wishlist" title="المفضلة">
           <i class="fas fa-heart" style="color: var(--danger-color);"></i>
           <span class="wishlist-count" id="wishlist-count">0</span>
         </a>
-        <a href="cart.html" class="cart-icon" title="السلة">
+        <a href="cart.html" class="cart-icon" data-i18n-title="common.cart_title" title="السلة">
           <i class="fas fa-shopping-cart"></i>
           <span class="cart-count" id="cart-count">0</span>
         </a>
-        <a href="account.html" class="user-icon" title="حسابي">
+        <a href="account.html" class="user-icon" data-i18n-title="common.my_account" title="حسابي">
           <i class="fas fa-user"></i>
         </a>
-        <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+        <button type="button" class="mobile-menu-btn" data-i18n-title="common.menu" aria-label="القائمة">
           <i class="fas fa-bars"></i>
         </button>
       </div>
@@ -198,9 +209,9 @@
   <!-- عنوان الصفحة -->
   <div class="page-title">
     <div class="container">
-      <h1>التسوق</h1>
+      <h1 data-i18n="shop.title">التسوق</h1>
       <div class="breadcrumb">
-        <a href="index.html">الرئيسية</a> <i class="fas fa-chevron-left"></i> التسوق
+        <a href="index.html" data-i18n="footer.link_home">الرئيسية</a> <i class="fas fa-chevron-left"></i> التسوق
       </div>
     </div>
   </div>
@@ -213,77 +224,77 @@
         <!-- الشريط الجانبي (Sidebar) للفلاتر -->
         <aside class="shop-sidebar">
           <div class="sidebar-header">
-            <h3><i class="fas fa-sliders-h"></i> فلاتر المنتجات</h3>
-            <button type="button" class="reset-filters-btn" onclick="resetFilters()"><i class="fas fa-redo-alt"></i> إعادة ضبط</button>
+            <h3><i class="fas fa-sliders-h"></i> <span data-i18n="shop.filters_title">فلاتر المنتجات</span></h3>
+            <button type="button" class="reset-filters-btn" onclick="resetFilters()"><i class="fas fa-redo-alt"></i> <span data-i18n="shop.reset_filters">إعادة ضبط</span></button>
           </div>
 
           <!-- تصنيفات المنتجات -->
           <div class="filter-group">
-            <h4><i class="fas fa-tags" style="color:#0284c7;"></i> التصنيفات</h4>
+            <h4><i class="fas fa-tags" style="color:#0284c7;"></i> <span data-i18n="shop.categories_title">التصنيفات</span></h4>
             <div class="filter-options">
               <label class="filter-option-label">
                 <input type="radio" name="categoryFilter" value="" checked onchange="applyFilters()">
-                <span>الكل</span>
+                <span data-i18n="shop.cat_all">الكل</span>
               </label>
               <label class="filter-option-label">
                 <input type="radio" name="categoryFilter" value="إلكترونيات" onchange="applyFilters()">
-                <span>إلكترونيات</span>
+                <span data-i18n="categories.electronics">إلكترونيات</span>
               </label>
               <label class="filter-option-label">
                 <input type="radio" name="categoryFilter" value="ملابس" onchange="applyFilters()">
-                <span>ملابس</span>
+                <span data-i18n="categories.fashion">ملابس</span>
               </label>
               <label class="filter-option-label">
                 <input type="radio" name="categoryFilter" value="كتب" onchange="applyFilters()">
-                <span>كتب</span>
+                <span data-i18n="categories.books">كتب</span>
               </label>
             </div>
           </div>
 
           <!-- فلتر نطاق السعر -->
           <div class="filter-group">
-            <h4><i class="fas fa-coins" style="color:var(--primary-color);"></i> أقصى سعر (دج)</h4>
+            <h4><i class="fas fa-coins" style="color:var(--primary-color);"></i> <span data-i18n="shop.max_price_title">أقصى سعر (دج)</span></h4>
             <div class="price-range-box">
               <div class="price-slider-container">
                 <input type="range" id="priceRange" min="0" max="200000" step="5000" value="200000" oninput="updatePriceLabel(); applyFilters();">
               </div>
               <div class="price-labels">
-                <span>0 دج</span>
-                <span>حتى: <strong id="priceRangeValue" style="color:var(--primary-color);">200,000 دج</strong></span>
+                <span>0 <span data-i18n="common.currency">دج</span></span>
+                <span>حتى: <strong id="priceRangeValue" style="color:var(--primary-color);">200,000 <span data-i18n="common.currency">دج</span></strong></span>
               </div>
             </div>
           </div>
 
           <!-- فلتر تقييم النجوم -->
           <div class="filter-group">
-            <h4><i class="fas fa-star" style="color:var(--warning-color);"></i> التقييم</h4>
+            <h4><i class="fas fa-star" style="color:var(--warning-color);"></i> <span data-i18n="shop.rating_title">التقييم</span></h4>
             <div class="filter-options">
               <label class="filter-option-label">
                 <input type="radio" name="ratingFilter" value="0" checked onchange="applyFilters()">
-                <span>جميع التقييمات</span>
+                <span data-i18n="shop.all_ratings">جميع التقييمات</span>
               </label>
               <label class="filter-option-label">
                 <input type="radio" name="ratingFilter" value="4.5" onchange="applyFilters()">
-                <span>⭐ 4.5 فما فوق (ممتاز)</span>
+                <span data-i18n="shop.stars_4_5">⭐ 4.5 فما فوق (ممتاز)</span>
               </label>
               <label class="filter-option-label">
                 <input type="radio" name="ratingFilter" value="4.0" onchange="applyFilters()">
-                <span>⭐ 4.0 فما فوق (جيد جداً)</span>
+                <span data-i18n="shop.stars_4_0">⭐ 4.0 فما فوق (جيد جداً)</span>
               </label>
               <label class="filter-option-label">
                 <input type="radio" name="ratingFilter" value="3.0" onchange="applyFilters()">
-                <span>⭐ 3.0 فما فوق</span>
+                <span data-i18n="shop.stars_3_0">⭐ 3.0 فما فوق</span>
               </label>
             </div>
           </div>
 
           <!-- فلتر حالة المخزون -->
           <div class="filter-group">
-            <h4><i class="fas fa-boxes" style="color:var(--success-color);"></i> التوفر في المتجر</h4>
+            <h4><i class="fas fa-boxes" style="color:var(--success-color);"></i> <span data-i18n="shop.availability_title">التوفر في المتجر</span></h4>
             <div class="filter-options">
               <label class="filter-option-label">
                 <input type="checkbox" id="inStockOnly" onchange="applyFilters()">
-                <span>المتوفر في المخزون فقط</span>
+                <span data-i18n="shop.in_stock_only">المتوفر في المخزون فقط</span>
               </label>
             </div>
           </div>
@@ -294,17 +305,17 @@
           <div class="products-header">
             <div class="search-box">
               <i class="fas fa-search"></i>
-              <input type="text" id="searchInput" placeholder="ابحث عن منتج بالاسم...">
+              <input type="text" id="searchInput" data-i18n="shop.search_placeholder" placeholder="ابحث عن منتج بالاسم...">
             </div>
             <div class="filter-box">
               <span id="resultsCount" style="font-weight: 600; color: var(--light-text, #64748b); font-size: 0.9rem;"></span>
               <select id="sortFilter" onchange="applyFilters()">
-                <option value="newest">الأحدث أولاً</option>
-                <option value="rating-desc">التقييم: الأعلى تقييماً ⭐</option>
-                <option value="price-asc">السعر: الأقل إلى الأعلى</option>
-                <option value="price-desc">السعر: الأعلى إلى الأقل</option>
-                <option value="name-asc">الاسم: أ-ي</option>
-                <option value="name-desc">الاسم: ي-أ</option>
+                <option value="newest" data-i18n="shop.sort_newest">الأحدث أولاً</option>
+                <option value="rating-desc" data-i18n="shop.sort_rating">التقييم: الأعلى تقييماً ⭐</option>
+                <option value="price-asc" data-i18n="shop.sort_price_asc">السعر: الأقل إلى الأعلى</option>
+                <option value="price-desc" data-i18n="shop.sort_price_desc">السعر: الأعلى إلى الأقل</option>
+                <option value="name-asc" data-i18n="shop.sort_name_asc">الاسم: أ-ي</option>
+                <option value="name-desc" data-i18n="shop.sort_name_desc">الاسم: ي-أ</option>
               </select>
             </div>
           </div>
@@ -358,7 +369,7 @@
   <!-- التذييل -->
   <footer>
     <div class="container">
-      <p>&copy; 2025 متجر الإلكتروني. جميع الحقوق محفوظة.</p>
+      <p data-i18n="footer.copyright">&copy; 2025 متجر الإلكتروني. جميع الحقوق محفوظة.</p>
     </div>
   </footer>
 
@@ -371,7 +382,7 @@
     async function loadProducts() {
       try {
         const response = await fetch('/api/products');
-        if (!response.ok) throw new Error('خطأ في جلب المنتجات');
+        if (!response.ok) throw new Error(window.I18n.t('messages.fetch_products_error', 'خطأ في جلب المنتجات'));
         const data = await response.json();
         products = Array.isArray(data) ? data : (Array.isArray(data && data.products) ? data.products : []);
         
@@ -397,7 +408,7 @@
       const priceSlider = document.getElementById('priceRange');
       const priceLabel = document.getElementById('priceRangeValue');
       if (priceSlider && priceLabel) {
-        priceLabel.textContent = Number(priceSlider.value).toLocaleString() + ' دج';
+        priceLabel.textContent = Number(priceSlider.value).toLocaleString() + ' ' + window.I18n.t('common.currency', 'دج');
       }
     }
 
@@ -443,7 +454,7 @@
       // تحديث عداد النتائج
       const countEl = document.getElementById('resultsCount');
       if (countEl) {
-        countEl.textContent = `عُثر على (${filteredProducts.length}) منتج`;
+        countEl.textContent = window.I18n.t('shop.products_found', 'عُثر على ({count}) منتج').replace('{count}', filteredProducts.length);
       }
 
       currentPage = 1;
@@ -484,10 +495,10 @@
             <div class="empty-state-icon">
               <i class="fas fa-search"></i>
             </div>
-            <h3 class="empty-state-title">لم نجد منتجات مطابقة لخيارات البحث</h3>
-            <p class="empty-state-desc">جرب استخدام كلمات بحث مختلفة أو قم بتوسيع نطاق السعر والتصنيفات المختارة.</p>
+            <h3 class="empty-state-title"><span data-i18n="shop.empty_title">لم نجد منتجات مطابقة لخيارات البحث</span></h3>
+            <p class="empty-state-desc"><span data-i18n="shop.empty_desc">جرب استخدام كلمات بحث مختلفة أو قم بتوسيع نطاق السعر والتصنيفات المختارة.</span></p>
             <button type="button" class="btn btn-primary" onclick="resetFilters()">
-              <i class="fas fa-redo-alt"></i> إعادة تعيين الفلاتر
+              <i class="fas fa-redo-alt"></i> <span data-i18n="shop.reset_filters_btn">إعادة تعيين الفلاتر</span>
             </button>
           </div>
         `;
@@ -500,15 +511,15 @@
         const isFav = wishlistIds.includes(product.id);
         const stockNum = Number(product.stock) || 0;
         const safeName = window.escapeHtml ? window.escapeHtml(product.name) : product.name;
-        const safeCat = window.escapeHtml ? window.escapeHtml(product.category || 'عام') : (product.category || 'عام');
+        const safeCat = window.escapeHtml ? window.escapeHtml(window.I18n.t('categories.general', 'عام')) : (window.I18n.t('categories.general', 'عام'));
         return `
         <div class="product-card" id="shop-product-${product.id}">
           <span class="product-badge">${safeCat}</span>
-          <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${product.id}" onclick="handleToggleWishlist(${product.id})" aria-label="المفضلة">
+          <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" data-wishlist-id="${product.id}" onclick="handleToggleWishlist(${product.id})" data-i18n-title="common.wishlist" aria-label="المفضلة">
             <i class="${isFav ? 'fas fa-heart' : 'far fa-heart'}"></i>
           </button>
           <a href="product.html?id=${product.id}" class="product-image">
-            <img src="${product.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.src='/images/product-placeholder.jpg'">
+            <img src="${product.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.src='/images/product-placeholder.jpg';">
           </a>
           <div class="product-info">
             <span class="product-category">${safeCat}</span>
@@ -522,15 +533,15 @@
               <span class="rating-count" style="font-size: 0.8rem; color: var(--light-text); margin-inline-start: 6px;">(${product.rating || '4.5'})</span>
             </div>
             <div class="product-price-row" style="display: flex; justify-content: space-between; align-items: baseline; margin: 10px 0 14px;">
-              <span class="product-price">${Number(product.price).toLocaleString()} <small style="font-size: 0.85rem; font-weight: 600;">دج</small></span>
+              <span class="product-price">${Number(product.price).toLocaleString()} <small style="font-size: 0.85rem; font-weight: 600;" data-i18n="common.currency">دج</small></span>
               <span style="font-size: 0.8rem; color: ${stockNum > 3 ? 'var(--success-color)' : stockNum > 0 ? 'var(--warning-color)' : 'var(--danger-color)'}; font-weight: 600;">
-                <i class="fas fa-box"></i> ${stockNum > 0 ? `متوفر (${stockNum})` : 'نفد المخزون'}
+                <i class="fas fa-box"></i> ${stockNum > 0 ? window.I18n.t('product.in_stock_count', 'متوفر ({count})').replace('{count}', stockNum) : window.I18n.t('product.out_of_stock', 'نفد المخزون')}
               </span>
             </div>
             <div style="display: flex; gap: 8px; margin-top: auto;">
-              <a href="product.html?id=${product.id}" class="btn btn-secondary" style="flex: 1; padding: 9px; font-size: 0.88rem; text-align: center; justify-content: center;">التفاصيل</a>
+              <a href="product.html?id=${product.id}" class="btn btn-secondary" style="flex: 1; padding: 9px; font-size: 0.88rem; text-align: center; justify-content: center;" data-i18n="product.details">التفاصيل</a>
               <button type="button" onclick="handleAddToCart(${product.id})" class="btn" style="flex: 1.3; padding: 9px; font-size: 0.88rem; justify-content: center;" ${stockNum <= 0 ? 'disabled' : ''}>
-                <i class="fas fa-cart-plus"></i> أضف للسلة
+                <i class="fas fa-cart-plus"></i> <span data-i18n="product.add_to_cart">أضف للسلة</span>
               </button>
             </div>
           </div>
@@ -548,7 +559,7 @@
 
       let paginationHTML = `
         <button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="changePage(${currentPage - 1})">
-          <i class="fas fa-chevron-right"></i> السابق
+          <i class="fas fa-chevron-right"></i data-i18n="shop.prev_page"> السابق
         </button>
       `;
 
@@ -560,7 +571,7 @@
 
       paginationHTML += `
         <button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="changePage(${currentPage + 1})">
-          التالي <i class="fas fa-chevron-left"></i>
+          <span data-i18n="shop.next_page">التالي</span> <i class="fas fa-chevron-left"></i>
         </button>
       `;
 
@@ -585,7 +596,7 @@
           }
         }
         if (!product) {
-          showNotification('تعذر العثور على بيانات المنتج', 'error');
+          showNotification(window.I18n.t('messages.product_not_found', 'تعذر العثور على بيانات المنتج'), 'error');
           return;
         }
 
@@ -613,10 +624,10 @@
             const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
             cartCount.textContent = totalCount;
           }
-          showNotification(`تمت إضافة "${product.name}" إلى سلة التسوق 🛒`, 'success');
+          showNotification(window.I18n.t('messages.add_cart_success_name', 'تمت إضافة "{name}" إلى سلة التسوق 🛒').replace('{name}', product.name), 'success');
         }
       } catch (error) {
-        showNotification('حدث خطأ أثناء إضافة المنتج إلى السلة', 'error');
+        showNotification(window.I18n.t('messages.add_cart_error', 'حدث خطأ أثناء إضافة المنتج إلى السلة'), 'error');
       }
     }
 

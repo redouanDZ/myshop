@@ -460,28 +460,9 @@ window.initiateGoogleLogin = async function() {
             return;
         }
 
-        const email = prompt('أدخل بريدك الإلكتروني لتسجيل الدخول الفوري عبر Google:');
-        if (!email) return;
-        const name = prompt('أدخل اسمك الكامل:', 'مستخدم Google') || 'مستخدم Google';
-
-        const res = await fetchJson('/api/auth/google', {
-            method: 'POST',
-            body: JSON.stringify({ email, name, googleId: 'g_' + btoa(email).replace(/=/g, '') })
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'فشل تسجيل الدخول عبر Google');
-
-        saveSessionUser(data.user);
-        updateUIForLoggedInUser(data.user);
-        const modal = document.getElementById('auth-modal');
-        if (modal) modal.style.display = 'none';
-        showNotification(data.message || 'تم تسجيل الدخول بنجاح عبر حساب Google! 🎉', 'success');
-        if (window.location.pathname.includes('account.html')) {
-            window.location.reload();
-        }
+        showNotification('تسجيل الدخول عبر Google غير مُفعَّل حالياً على هذا المتجر', 'warning');
     } catch (err) {
-        showNotification(err.message || 'خطأ أثناء تسجيل الدخول', 'error');
+        showNotification(err.message || 'خطأ أثناء تسجيل الدخول عبر Google', 'error');
     }
 };
 

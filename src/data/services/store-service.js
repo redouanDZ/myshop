@@ -63,6 +63,26 @@ class StoreService {
     return this.repository.createUserFromGoogle(googleData);
   }
 
+  async updateUserVerificationToken(userId, token, expiresAt) {
+    return this.repository.updateUserVerificationToken(userId, token, expiresAt);
+  }
+
+  async verifyUserEmail(userId) {
+    return this.repository.verifyUserEmail(userId);
+  }
+
+  async findUserByVerificationToken(token) {
+    return this.repository.findUserByVerificationToken(token);
+  }
+
+  async updatePasswordResetToken(email, token, expiresAt) {
+    return this.repository.updatePasswordResetToken(email, token, expiresAt);
+  }
+
+  async findUserByResetToken(token) {
+    return this.repository.findUserByResetToken(token);
+  }
+
   async updateUserProfile(id, data) {
     return this.repository.updateUserProfile(id, data);
   }
@@ -256,6 +276,34 @@ class StoreService {
 
   async deleteProductVariant(id) {
     return this.repository.deleteProductVariant(id);
+  }
+
+  async getCategories() {
+    return this.repository.getCategories();
+  }
+
+  async getCategoryById(id) {
+    return this.repository.getCategoryById(id);
+  }
+
+  async createCategory(data) {
+    return this.repository.createCategory(data);
+  }
+
+  async updateCategory(id, data) {
+    return this.repository.updateCategory(id, data);
+  }
+
+  async deleteCategory(id) {
+    return this.repository.deleteCategory(id);
+  }
+
+  async updateUserRole(id, role) {
+    return this.repository.updateUserRole(id, role);
+  }
+
+  async deleteUser(id) {
+    return this.repository.deleteUser(id);
   }
 }
 

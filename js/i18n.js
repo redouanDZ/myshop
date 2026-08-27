@@ -41,6 +41,16 @@ window.I18n = {
     },
 
     /**
+     * Get translation dynamically
+     */
+    t(keyPath, defaultValue = '') {
+        const dict = this.cache[this.currentLang];
+        if (!dict) return defaultValue || keyPath;
+        const val = this.getValue(dict, keyPath);
+        return val !== null ? val : (defaultValue || keyPath);
+    },
+
+    /**
      * تغيير لغة المتجر وتحديث كافة النصوص والاتجاه (RTL / LTR)
      */
     async setLanguage(lang) {

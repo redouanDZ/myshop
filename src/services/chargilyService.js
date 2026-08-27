@@ -66,12 +66,16 @@ class ChargilyService {
      * Verify Webhook Signature
      */
     verifyWebhookSignature(rawBody, signatureHeader) {
-        if (!this.config.secretKey) return true;
+        const secretKey = this.config.secretKey || process.env.CHARGILY_SECRET_KEY;
+        if (!secretKey) {
+            console.warn('⚠️ Webhook received but CHARGILY_SECRET_KEY is not configured.');
+            return false;
+        }
         if (!signatureHeader || !rawBody) return false;
 
         try {
             const calculatedSignature = crypto
-                .createHmac('sha256', this.config.secretKey)
+                .createHmac('sha256', secretKey)
                 .update(rawBody)
                 .digest('hex');
 

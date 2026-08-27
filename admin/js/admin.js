@@ -4,16 +4,47 @@
  */
 
 const AdminAuth = {
+    csrfToken: null,
+
+    getCsrfToken() {
+        if (this.csrfToken) return this.csrfToken;
+        const cookieMatch = document.cookie.match(/(?:^|;\s*)csrf_token=([^;]+)/);
+        if (cookieMatch) {
+            this.csrfToken = decodeURIComponent(cookieMatch[1]);
+            return this.csrfToken;
+        }
+        return '';
+    },
+
+    async fetchCsrfToken() {
+        try {
+            const res = await fetch('/api/csrf-token', { credentials: 'include' });
+            if (res.ok) {
+                const data = await res.json();
+                if (data && data.csrfToken) {
+                    this.csrfToken = data.csrfToken;
+                    return this.csrfToken;
+                }
+            }
+        } catch (e) {}
+        return this.getCsrfToken();
+    },
+
     getHeaders(isJson = true) {
         const headers = {};
         if (isJson) {
             headers['Content-Type'] = 'application/json';
+        }
+        const token = this.getCsrfToken();
+        if (token) {
+            headers['X-CSRF-Token'] = token;
         }
         return headers;
     },
 
     async verifyAdmin() {
         try {
+            await this.fetchCsrfToken();
             const res = await fetch('/api/user/profile', {
                 credentials: 'include',
                 headers: this.getHeaders(false)
@@ -203,6 +234,21 @@ const AdminUI = {
             okBtn.onclick = () => cleanup(true);
             cancelBtn.onclick = () => cleanup(false);
         });
+    },
+
+    setButtonLoading(btn, isLoading, loadingText = 'جاري الحفظ...') {
+        if (!btn) return;
+        if (isLoading) {
+            btn.dataset.originalHtml = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${loadingText}`;
+        } else {
+            btn.disabled = false;
+            if (btn.dataset.originalHtml) {
+                btn.innerHTML = btn.dataset.originalHtml;
+                delete btn.dataset.originalHtml;
+            }
+        }
     }
 };
 

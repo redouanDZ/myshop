@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const { OAuth2Client } = require('google-auth-library');
 const db = require('../data/db-connection.js');
 const config = require('../config/database');
 const {
@@ -21,19 +22,6 @@ const {
 } = require('../utils/tokenUtils');
 const { sanitizeString } = require('../utils/helpers');
 
-const emailVerificationTokens = new Map();
-const emailVerificationStatus = new Map();
-const passwordResetTokens = new Map();
-
-function isEmailVerified(userId) {
-    const value = emailVerificationStatus.get(String(userId));
-    return value === undefined ? true : Boolean(value);
-}
-
-function setEmailVerificationState(userId, verified) {
-    emailVerificationStatus.set(String(userId), Boolean(verified));
-}
-
 function getLoginAttemptKey(email, req) {
     return `${String(req.ip || 'unknown')}|${String(email || '').trim().toLowerCase()}`;
 }
@@ -55,11 +43,7 @@ async function register(req, res) {
 
         const user = await db.createUser({ username, email, phone, password });
         const verificationToken = randomToken();
-        emailVerificationTokens.set(verificationToken, {
-            userId: user.id,
-            expiresAt: Date.now() + 24 * 60 * 60 * 1000
-        });
-        setEmailVerificationState(user.id, false);
+        await db.updateUserVerificationToken(user.id, verificationToken, Date.now() + 24 * 60 * 60 * 1000);
 
         const payload = { message: 'تم إنشاء الحساب بنجاح! يرجى التحقق من البريد الإلكتروني.', user: sanitizeUser(user), verificationRequired: true };
         if (!config.isProduction) {
@@ -93,7 +77,7 @@ async function login(req, res) {
             return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
         }
 
-        if (!isEmailVerified(user.id)) {
+        if (!user.is_verified) {
             return res.status(403).json({ message: 'يرجى التحقق من البريد الإلكتروني قبل تسجيل الدخول.' });
         }
 
@@ -132,13 +116,12 @@ async function verifyEmail(req, res) {
             return res.status(400).json({ message: 'رمز التحقق مطلوب' });
         }
 
-        const verification = emailVerificationTokens.get(token);
-        if (!verification || verification.expiresAt <= Date.now()) {
+        const user = await db.findUserByVerificationToken(token);
+        if (!user) {
             return res.status(400).json({ message: 'رمز التحقق غير صالح أو منتهي الصلاحية' });
         }
 
-        emailVerificationTokens.delete(token);
-        setEmailVerificationState(verification.userId, true);
+        await db.verifyUserEmail(user.id);
         res.json({ message: 'تم التحقق من البريد الإلكتروني بنجاح.' });
     } catch (error) {
         console.error('Email verification error:', error);
@@ -159,10 +142,7 @@ async function forgotPassword(req, res) {
         }
 
         const resetToken = randomToken();
-        passwordResetTokens.set(resetToken, {
-            userId: Number(user.id),
-            expiresAt: Date.now() + 60 * 60 * 1000
-        });
+        await db.updatePasswordResetToken(email, resetToken, Date.now() + 60 * 60 * 1000);
 
         if (!config.isProduction) {
             return res.json({ message: 'إذا كان البريد الإلكتروني مسجلاً، سيتم إرسال تعليمات استعادة كلمة المرور.', resetToken });
@@ -184,18 +164,17 @@ async function resetPassword(req, res) {
             return res.status(400).json({ message: 'الرمز وكلمة المرور الجديدة مطلوبة ويجب أن تكون 6 أحرف على الأقل' });
         }
 
-        const record = passwordResetTokens.get(token);
-        if (!record || record.expiresAt <= Date.now()) {
+        const user = await db.findUserByResetToken(token);
+        if (!user) {
             return res.status(400).json({ message: 'رمز استعادة كلمة المرور غير صالح أو منتهي الصلاحية' });
         }
 
-        const user = await db.findUserById(record.userId);
-        if (!user) {
-            return res.status(404).json({ message: 'المستخدم غير موجود' });
-        }
-
-        await db.updateUserProfile(user.id, { password });
-        passwordResetTokens.delete(token);
+        const hashedPassword = await require('bcryptjs').hash(password, 10);
+        await db.updateUserProfile(user.id, { password: hashedPassword });
+        
+        // Invalidate token
+        await db.updatePasswordResetToken(user.email, null, null);
+        
         res.json({ message: 'تم تحديث كلمة المرور بنجاح.' });
     } catch (error) {
         console.error('Password reset error:', error);
@@ -317,40 +296,36 @@ async function logout(req, res) {
 
 async function googleLogin(req, res) {
     try {
-        let googleId = '';
-        let email = '';
-        let name = '';
-        let avatarUrl = '';
-
-        const { credential, token } = req.body || {};
-        const candidateToken = credential || token;
-
-        if (candidateToken && typeof candidateToken === 'string') {
-            const parts = candidateToken.split('.');
-            if (parts.length === 3) {
-                try {
-                    const payloadStr = Buffer.from(parts[1], 'base64').toString('utf8');
-                    const payload = JSON.parse(payloadStr);
-                    if (payload.sub && payload.email) {
-                        googleId = String(payload.sub);
-                        email = String(payload.email).toLowerCase().trim();
-                        name = String(payload.name || payload.given_name || 'مستخدم Google').trim();
-                        avatarUrl = String(payload.picture || '').trim();
-                    }
-                } catch (e) {}
-            }
+        const googleClientId = process.env.GOOGLE_CLIENT_ID;
+        if (!googleClientId) {
+            return res.status(503).json({ message: 'تسجيل الدخول عبر Google غير مُفعَّل على هذا الخادم' });
         }
 
-        if (!email && req.body && req.body.email) {
-            email = String(req.body.email).toLowerCase().trim();
-            googleId = String(req.body.googleId || req.body.google_id || `google_${Date.now()}`).trim();
-            name = String(req.body.name || req.body.username || 'مستخدم Google').trim();
-            avatarUrl = String(req.body.avatarUrl || req.body.avatar_url || '').trim();
+        const { credential } = req.body || {};
+        if (!credential || typeof credential !== 'string') {
+            return res.status(400).json({ message: 'رمز اعتماد Google مفقود أو غير صالح' });
         }
 
-        if (!email || !googleId) {
-            return res.status(400).json({ message: 'بيانات حساب Google غير مكتملة أو غير صالحة' });
+        const googleClient = new OAuth2Client(googleClientId);
+        let payload;
+        try {
+            const ticket = await googleClient.verifyIdToken({
+                idToken: credential,
+                audience: googleClientId
+            });
+            payload = ticket.getPayload();
+        } catch (err) {
+            return res.status(401).json({ message: 'رمز اعتماد Google غير صالح' });
         }
+
+        if (!payload || !payload.sub || !payload.email || !payload.email_verified) {
+            return res.status(401).json({ message: 'بيانات حساب Google غير صالحة أو غير مؤكَّدة' });
+        }
+
+        const googleId = String(payload.sub);
+        const email = String(payload.email).toLowerCase().trim();
+        const name = String(payload.name || payload.given_name || 'مستخدم Google').trim();
+        const avatarUrl = String(payload.picture || '').trim();
 
         let user = null;
         if (typeof db.findUserByGoogleId === 'function') {
@@ -376,7 +351,6 @@ async function googleLogin(req, res) {
             return res.status(500).json({ message: 'فشل في إنشاء أو تسجيل حساب Google' });
         }
 
-        setEmailVerificationState(user.id, true);
 
         const sessionId = await issueSession(user, req);
         const accessToken = createAccessToken(user, sessionId);

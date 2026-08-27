@@ -1,15 +1,31 @@
-﻿name: CI Quality Gate
+name: CI Quality Gate
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, "release/*" ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, "release/*" ]
 
 jobs:
   test:
     name: Lint, Test & Build Validation
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpassword
+          MYSQL_DATABASE: ecommerce_store
+          MYSQL_USER: ecommerce_user
+          MYSQL_PASSWORD: testing_password
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     strategy:
       matrix:
@@ -32,7 +48,16 @@ jobs:
       run: npm run lint
 
     - name: Run Automated Test Suites
+      env:
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_USER: ecommerce_user
+        DB_PASSWORD: testing_password
+        DB_NAME: ecommerce_store
       run: npm test
 
     - name: Run Build & Integrity Check
       run: npm run build
+
+    - name: Run HTML UI Integrity Check
+      run: npm run test:ui

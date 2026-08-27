@@ -165,6 +165,11 @@ function normalizeUserRow(row) {
     google_id: row.google_id || null,
     avatar_url: row.avatar_url || null,
     role: row.role || 'customer',
+    is_verified: Boolean(row.is_verified),
+    verification_token: row.verification_token || null,
+    verification_token_expires: row.verification_token_expires || null,
+    reset_token: row.reset_token || null,
+    reset_token_expires: row.reset_token_expires || null,
     addresses: [],
     created_at: row.created_at
   };
@@ -261,7 +266,7 @@ class MysqlRepository {
         if (adminEmail && adminPassword) {
           const adminHash = await bcrypt.hash(adminPassword, 12);
           await this.pool.query(
-            'INSERT IGNORE INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
+            'INSERT IGNORE INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1)',
             ['مدير النظام', adminEmail.toLowerCase().trim(), '0550000000', adminHash, 'admin']
           );
           console.log(`✅ [Production Init] Initialized admin user from environment (${adminEmail}).`);
@@ -272,7 +277,7 @@ class MysqlRepository {
         const customerHash = await bcrypt.hash('password123', 10);
         const adminHash = await bcrypt.hash('adminpassword', 10);
         await this.pool.query(
-          'INSERT IGNORE INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?), (?, ?, ?, ?, ?)',
+          'INSERT IGNORE INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1), (?, ?, ?, ?, ?, 1)',
           ['مستخدم تجريبي', 'user@example.com', '0550000000', customerHash, 'customer', 'مدير النظام', 'admin@example.com', '0660000000', adminHash, 'admin']
         );
       }
@@ -318,6 +323,79 @@ class MysqlRepository {
     if (rows[0]) return Number(rows[0].id);
     const [result] = await this.pool.query('INSERT INTO categories (name, slug) VALUES (?, ?)', [name, slug]);
     return Number(result.insertId);
+  }
+
+  async getCategories() {
+    const [rows] = await this.pool.query(
+      `SELECT c.id, c.name, c.slug, c.created_at, COUNT(p.id) AS products_count 
+       FROM categories c 
+       LEFT JOIN products p ON p.category_id = c.id 
+       GROUP BY c.id, c.name, c.slug, c.created_at 
+       ORDER BY c.id ASC`
+    );
+    return rows.map(r => ({
+      id: Number(r.id),
+      name: r.name,
+      slug: r.slug,
+      productsCount: Number(r.products_count || 0),
+      createdAt: r.created_at
+    }));
+  }
+
+  async getCategoryById(id) {
+    const [rows] = await this.pool.query('SELECT * FROM categories WHERE id = ? LIMIT 1', [Number(id)]);
+    if (!rows[0]) return null;
+    return {
+      id: Number(rows[0].id),
+      name: rows[0].name,
+      slug: rows[0].slug,
+      createdAt: rows[0].created_at
+    };
+  }
+
+  async createCategory(data) {
+    const name = String(data.name || '').trim();
+    if (!name) throw new Error('اسم القسم مطلوب');
+    const slug = slugify(data.slug || name) || 'category';
+    const [existing] = await this.pool.query('SELECT id FROM categories WHERE slug = ? OR name = ? LIMIT 1', [slug, name]);
+    if (existing[0]) {
+      const err = new Error('القسم موجود بالفعل');
+      err.code = 'ER_DUP_ENTRY';
+      throw err;
+    }
+    const [result] = await this.pool.query('INSERT INTO categories (name, slug) VALUES (?, ?)', [name, slug]);
+    return Number(result.insertId);
+  }
+
+  async updateCategory(id, data) {
+    const category = await this.getCategoryById(id);
+    if (!category) return false;
+    const updates = [];
+    const params = [];
+    if (data.name) {
+      updates.push('name = ?');
+      params.push(String(data.name).trim());
+    }
+    if (data.slug) {
+      updates.push('slug = ?');
+      params.push(slugify(data.slug));
+    }
+    if (!updates.length) return true;
+    params.push(Number(id));
+    const [res] = await this.pool.query(`UPDATE categories SET ${updates.join(', ')} WHERE id = ?`, params);
+    return res.affectedRows > 0;
+  }
+
+  async deleteCategory(id) {
+    const catId = Number(id);
+    const [prodCount] = await this.pool.query('SELECT COUNT(*) AS count FROM products WHERE category_id = ?', [catId]);
+    if (prodCount[0] && Number(prodCount[0].count) > 0) {
+      const err = new Error('لا يمكن حذف قسم يحتوي على منتجات مرتبطة. يرجى نقل أو حذف المنتجات أولاً.');
+      err.code = 'CATEGORY_HAS_PRODUCTS';
+      throw err;
+    }
+    const [result] = await this.pool.query('DELETE FROM categories WHERE id = ?', [catId]);
+    return result.affectedRows > 0;
   }
 
   async findUserByEmail(email) {
@@ -394,8 +472,8 @@ class MysqlRepository {
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
     const [result] = await this.pool.query(
-      'INSERT INTO users (username, email, phone, password, google_id, avatar_url, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
-      [username, email, '', hashedPassword, googleId, avatarUrl, 'customer']
+      'INSERT INTO users (username, email, phone, password, google_id, avatar_url, role, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [username, email, '', hashedPassword, googleId, avatarUrl, 'customer', true]
     );
     return this.findUserById(result.insertId);
   }
@@ -412,6 +490,45 @@ class MysqlRepository {
     );
 
     return this.findUserById(result.insertId);
+  }
+
+  async updateUserVerificationToken(userId, token, expiresAt) {
+    await this.pool.query(
+      'UPDATE users SET verification_token = ?, verification_token_expires = ? WHERE id = ?',
+      [token, expiresAt ? new Date(expiresAt) : null, userId]
+    );
+  }
+
+  async verifyUserEmail(userId) {
+    const [result] = await this.pool.query(
+      'UPDATE users SET is_verified = TRUE, verification_token = NULL, verification_token_expires = NULL WHERE id = ?',
+      [userId]
+    );
+    return result.affectedRows > 0;
+  }
+
+  async findUserByVerificationToken(token) {
+    const [rows] = await this.pool.query(
+      'SELECT * FROM users WHERE verification_token = ? AND verification_token_expires > NOW() LIMIT 1',
+      [token]
+    );
+    return rows[0] ? normalizeUserRow(rows[0]) : null;
+  }
+
+  async updatePasswordResetToken(email, token, expiresAt) {
+    const [result] = await this.pool.query(
+      'UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE LOWER(email) = LOWER(?)',
+      [token, expiresAt ? new Date(expiresAt) : null, String(email).trim()]
+    );
+    return result.affectedRows > 0;
+  }
+
+  async findUserByResetToken(token) {
+    const [rows] = await this.pool.query(
+      'SELECT * FROM users WHERE reset_token = ? AND reset_token_expires > NOW() LIMIT 1',
+      [token]
+    );
+    return rows[0] ? normalizeUserRow(rows[0]) : null;
   }
 
   async verifyUserCredentials(email, password) {
@@ -973,7 +1090,7 @@ class MysqlRepository {
     const cleanPhone = String(phone || '').trim();
     const [rows] = await this.pool.query(query, [
       isNaN(Number(orderIdOrNumber)) ? 0 : Number(orderIdOrNumber),
-      String(orderIdOrNumber).trim(),
+      String(orderIdOrNumber).replace(/^#/, '').trim(),
       cleanPhone,
       cleanPhone
     ]);
@@ -1063,7 +1180,7 @@ class MysqlRepository {
         COALESCE(SUM(total), 0) AS revenue
       FROM orders
       WHERE created_at >= DATE_SUB(NOW(), INTERVAL 6 MONTH)
-      GROUP BY month
+      GROUP BY DATE_FORMAT(created_at, '%Y-%m')
       ORDER BY month ASC
     `);
 
@@ -1251,6 +1368,22 @@ class MysqlRepository {
       ...safeUser,
       orders
     };
+  }
+
+  async updateUserRole(id, role) {
+    const cleanId = Number(id);
+    const cleanRole = String(role).trim();
+    if (!['customer', 'admin'].includes(cleanRole)) {
+      throw new Error('الدور غير صالح');
+    }
+    const [res] = await this.pool.query('UPDATE users SET role = ? WHERE id = ?', [cleanRole, cleanId]);
+    return res.affectedRows > 0;
+  }
+
+  async deleteUser(id) {
+    const cleanId = Number(id);
+    const [res] = await this.pool.query('DELETE FROM users WHERE id = ?', [cleanId]);
+    return res.affectedRows > 0;
   }
 
   // --- Coupons Management ---
@@ -1639,7 +1772,7 @@ function createFallbackRepository() {
         email: 'user@example.com',
         phone: '0550000000',
         password: bcrypt.hashSync('password123', 10),
-        role: 'customer',
+        role: 'customer', is_verified: true,
         addresses: [{ id: 101, title: 'المنزل', fullName: 'مستخدم تجريبي', phone: '0550000000', city: 'الجزائر العاصمة', address: 'شارع ديدوش مراد رقم 12', isDefault: true }],
         created_at: new Date().toISOString()
       },
@@ -1649,7 +1782,7 @@ function createFallbackRepository() {
         email: 'admin@example.com',
         phone: '0660000000',
         password: bcrypt.hashSync('adminpassword', 10),
-        role: 'admin',
+        role: 'admin', is_verified: true,
         addresses: [],
         created_at: new Date().toISOString()
       }
@@ -1706,7 +1839,7 @@ function createFallbackRepository() {
         google_id: String(googleData.googleId),
         avatar_url: googleData.avatarUrl ? String(googleData.avatarUrl) : null,
         password: await bcrypt.hash(crypto.randomBytes(20).toString('hex'), 10),
-        role: 'customer',
+        role: 'customer', is_verified: true,
         addresses: [],
         created_at: new Date().toISOString()
       };
@@ -1724,11 +1857,48 @@ function createFallbackRepository() {
         phone: String(userData.phone || ''),
         password: await bcrypt.hash(String(userData.password || ''), 10),
         role: userData.role || 'customer',
+        is_verified: false,
+        verification_token: null,
+        verification_token_expires: null,
+        reset_token: null,
+        reset_token_expires: null,
         addresses: [],
         created_at: new Date().toISOString()
       };
       state.users.push(user);
       return { ...user, addresses: [...user.addresses] };
+    },
+    async updateUserVerificationToken(userId, token, expiresAt) {
+      const user = state.users.find(u => u.id === userId);
+      if (user) {
+        user.verification_token = token;
+        user.verification_token_expires = expiresAt ? new Date(expiresAt).getTime() : null;
+      }
+    },
+    async verifyUserEmail(userId) {
+      const user = state.users.find(u => u.id === userId);
+      if (user) {
+        user.is_verified = true;
+        user.verification_token = null;
+        user.verification_token_expires = null;
+        return true;
+      }
+      return false;
+    },
+    async findUserByVerificationToken(token) {
+      return state.users.find(u => u.verification_token === token && u.verification_token_expires > Date.now()) || null;
+    },
+    async updatePasswordResetToken(email, token, expiresAt) {
+      const user = state.users.find(u => u.email === String(email).trim().toLowerCase());
+      if (user) {
+        user.reset_token = token;
+        user.reset_token_expires = expiresAt ? new Date(expiresAt).getTime() : null;
+        return true;
+      }
+      return false;
+    },
+    async findUserByResetToken(token) {
+      return state.users.find(u => u.reset_token === token && u.reset_token_expires > Date.now()) || null;
     },
     async verifyUserCredentials(email, password) {
       const user = await repo.findUserByEmail(email);
@@ -2176,6 +2346,106 @@ function createFallbackRepository() {
         addresses,
         orders
       };
+    },
+
+    async updateUserRole(id, role) {
+      const user = state.users.find(u => Number(u.id) === Number(id));
+      if (!user) return false;
+      const cleanRole = String(role).trim();
+      if (!['customer', 'admin'].includes(cleanRole)) {
+        throw new Error('الدور غير صالح');
+      }
+      user.role = cleanRole;
+      return true;
+    },
+
+    async deleteUser(id) {
+      const before = state.users.length;
+      state.users = state.users.filter(u => Number(u.id) !== Number(id));
+      return state.users.length < before;
+    },
+
+    async ensureCategory(categoryName) {
+      if (!state.categories) {
+        state.categories = [
+          { id: 1, name: 'إلكترونيات', slug: 'electronics', created_at: new Date().toISOString() },
+          { id: 2, name: 'ملابس', slug: 'clothing', created_at: new Date().toISOString() },
+          { id: 3, name: 'كتب', slug: 'books', created_at: new Date().toISOString() }
+        ];
+      }
+      const name = String(categoryName || 'إلكترونيات').trim();
+      const existing = state.categories.find(c => c.name === name || c.slug === slugify(name));
+      if (existing) return Number(existing.id);
+      const id = state.categories.length + 1;
+      state.categories.push({ id, name, slug: slugify(name) || 'cat', created_at: new Date().toISOString() });
+      return id;
+    },
+
+    async getCategories() {
+      if (!state.categories) {
+        state.categories = [
+          { id: 1, name: 'إلكترونيات', slug: 'electronics', created_at: new Date().toISOString() },
+          { id: 2, name: 'ملابس', slug: 'clothing', created_at: new Date().toISOString() },
+          { id: 3, name: 'كتب', slug: 'books', created_at: new Date().toISOString() }
+        ];
+      }
+      return state.categories.map(c => {
+        const prodCount = state.products.filter(p => p.category === c.name || p.category_id === c.id).length;
+        return {
+          id: Number(c.id),
+          name: c.name,
+          slug: c.slug,
+          productsCount: prodCount,
+          createdAt: c.created_at
+        };
+      });
+    },
+
+    async getCategoryById(id) {
+      if (!state.categories) await this.getCategories();
+      const c = state.categories.find(entry => Number(entry.id) === Number(id));
+      return c ? { id: Number(c.id), name: c.name, slug: c.slug, createdAt: c.created_at } : null;
+    },
+
+    async createCategory(data) {
+      if (!state.categories) await this.getCategories();
+      const name = String(data.name || '').trim();
+      if (!name) throw new Error('اسم القسم مطلوب');
+      const slug = slugify(data.slug || name) || 'category';
+      const existing = state.categories.find(c => c.slug === slug || c.name === name);
+      if (existing) {
+        const err = new Error('القسم موجود بالفعل');
+        err.code = 'ER_DUP_ENTRY';
+        throw err;
+      }
+      const id = state.categories.length + 1;
+      state.categories.push({ id, name, slug, created_at: new Date().toISOString() });
+      return id;
+    },
+
+    async updateCategory(id, data) {
+      if (!state.categories) await this.getCategories();
+      const c = state.categories.find(entry => Number(entry.id) === Number(id));
+      if (!c) return false;
+      if (data.name) c.name = String(data.name).trim();
+      if (data.slug) c.slug = slugify(data.slug);
+      return true;
+    },
+
+    async deleteCategory(id) {
+      if (!state.categories) await this.getCategories();
+      const catId = Number(id);
+      const cat = state.categories.find(c => Number(c.id) === catId);
+      if (!cat) return false;
+      const hasProds = state.products.some(p => p.category === cat.name || p.category_id === catId);
+      if (hasProds) {
+        const err = new Error('لا يمكن حذف قسم يحتوي على منتجات مرتبطة. يرجى نقل أو حذف المنتجات أولاً.');
+        err.code = 'CATEGORY_HAS_PRODUCTS';
+        throw err;
+      }
+      const before = state.categories.length;
+      state.categories = state.categories.filter(c => Number(c.id) !== catId);
+      return state.categories.length < before;
     },
 
     // --- In-Memory Coupons ---

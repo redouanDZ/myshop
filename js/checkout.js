@@ -23,10 +23,10 @@ async function loadWilayas() {
 
     try {
         const response = await fetch('/api/wilayas');
-        if (!response.ok) throw new Error('فشل جلب الولايات');
+        if (!response.ok) throw new Error(window.I18n.t('messages.fetch_wilayas_error', 'فشل جلب الولايات'));
         allWilayas = await response.json();
 
-        select.innerHTML = '<option value="">-- اختر ولايتك (58 ولاية) --</option>';
+        select.innerHTML = '<option value="">' + window.I18n.t('checkout.select_wilaya_58', '-- اختر ولايتك (58 ولاية) --') + '</option>';
         allWilayas.forEach(w => {
             const opt = document.createElement('option');
             opt.value = w.id;
@@ -42,7 +42,7 @@ async function loadWilayas() {
         }
     } catch (error) {
         console.error('Error loading wilayas:', error);
-        select.innerHTML = '<option value="16">16 - الجزائر العاصمة (Alger)</option>';
+        select.innerHTML = '<option value="16">' + window.I18n.t('wilayas.algiers_16', '16 - الجزائر العاصمة (Alger)') + '</option>';
         currentShippingCost = 400;
         updateOrderSummary();
     }
@@ -57,8 +57,8 @@ function onWilayaChange() {
     selectedWilaya = allWilayas.find(w => Number(w.id) === wilayaId) || null;
 
     if (selectedWilaya) {
-        document.getElementById('homeDeliveryPriceLabel').textContent = `السعر: ${selectedWilaya.home_delivery_price.toLocaleString()} دج (${selectedWilaya.delivery_time_days})`;
-        document.getElementById('deskDeliveryPriceLabel').textContent = `السعر: ${selectedWilaya.desk_delivery_price.toLocaleString()} دج (${selectedWilaya.delivery_time_days})`;
+        document.getElementById('homeDeliveryPriceLabel').textContent = `${window.I18n.t('checkout.price_prefix', 'السعر:')} ${selectedWilaya.home_delivery_price.toLocaleString()} ${window.I18n.t('common.currency', 'دج')} (${selectedWilaya.delivery_time_days})`;
+        document.getElementById('deskDeliveryPriceLabel').textContent = `${window.I18n.t('checkout.price_prefix', 'السعر:')} ${selectedWilaya.desk_delivery_price.toLocaleString()} ${window.I18n.t('common.currency', 'دج')} (${selectedWilaya.delivery_time_days})`;
         
         currentShippingCost = currentDeliveryType === 'home' 
             ? selectedWilaya.home_delivery_price 
@@ -130,10 +130,10 @@ function proceedToPayment() {
     const address = document.getElementById('address').value.trim();
     const wilaya = document.getElementById('wilayaSelect').value;
 
-    if (!fullname) { showNotification('يرجى إدخال الاسم الكامل', 'error'); return; }
-    if (!phone || phone.length < 8) { showNotification('يرجى إدخال رقم هاتف صحيح', 'error'); return; }
-    if (!wilaya) { showNotification('يرجى اختيار الولاية', 'error'); return; }
-    if (!address) { showNotification('يرجى إدخال العنوان بالتفصيل', 'error'); return; }
+    if (!fullname) { showNotification(window.I18n.t('messages.enter_full_name', 'يرجى إدخال الاسم الكامل'), 'error'); return; }
+    if (!phone || phone.length < 8) { showNotification(window.I18n.t('messages.enter_valid_phone', 'يرجى إدخال رقم هاتف صحيح'), 'error'); return; }
+    if (!wilaya) { showNotification(window.I18n.t('messages.select_wilaya', 'يرجى اختيار الولاية'), 'error'); return; }
+    if (!address) { showNotification(window.I18n.t('messages.enter_address', 'يرجى إدخال العنوان بالتفصيل'), 'error'); return; }
 
     switchStep(2);
 }
@@ -173,7 +173,7 @@ function loadCartData() {
     try { cart = saved ? JSON.parse(saved) : []; } catch (e) { cart = []; }
 
     if (cart.length === 0) {
-        showNotification('عربة التسوق فارغة، جاري تحويلك للمتجر...', 'error');
+        showNotification(window.I18n.t('messages.cart_empty_redirect', 'عربة التسوق فارغة، جاري تحويلك للمتجر...'), 'error');
         setTimeout(() => { window.location.href = 'shop.html'; }, 1500);
         return;
     }
@@ -194,10 +194,10 @@ function renderReviewItems() {
                 <img src="${item.image || item.image_url || '/images/product-placeholder.jpg'}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
                 <div>
                     <strong style="display: block; font-size: 0.95rem; color: #1e293b;">${item.name}</strong>
-                    <span style="font-size: 0.85rem; color: #64748b;">الكمية: ${item.quantity}</span>
+                    <span style="font-size: 0.85rem; color: #64748b;">' + window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity) + '</span>
                 </div>
             </div>
-            <strong style="color: #2563eb;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</strong>
+            <strong style="color: #2563eb;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</strong>
         </div>
     `).join('');
 }
@@ -207,7 +207,7 @@ function updateOrderSummary() {
     try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
 
     const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
-    const wilayaName = selectedWilaya ? selectedWilaya.name_ar : 'الولاية';
+    const wilayaName = selectedWilaya ? selectedWilaya.name_ar : window.I18n.t('checkout.wilaya_fallback', 'الولاية');
     
     // Promo discount if applicable
     const promo = getSavedPromo();
@@ -221,14 +221,14 @@ function updateOrderSummary() {
     const discountRow = document.getElementById('reviewDiscountRow');
     const discountEl = document.getElementById('reviewDiscount');
 
-    if (subtotalEl) subtotalEl.textContent = `${subtotal.toLocaleString()} دج`;
-    if (shippingEl) shippingEl.textContent = `${currentShippingCost.toLocaleString()} دج`;
+    if (subtotalEl) subtotalEl.textContent = `${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
+    if (shippingEl) shippingEl.textContent = `${currentShippingCost.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
     if (wilayaNameEl) wilayaNameEl.textContent = wilayaName;
-    if (grandTotalEl) grandTotalEl.textContent = `${grandTotal.toLocaleString()} دج`;
+    if (grandTotalEl) grandTotalEl.textContent = `${grandTotal.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
 
     if (discount > 0 && discountRow && discountEl) {
         discountRow.style.display = 'flex';
-        discountEl.textContent = `-${discount.toLocaleString()} دج`;
+        discountEl.textContent = `-${discount.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
     } else if (discountRow) {
         discountRow.style.display = 'none';
     }
@@ -249,28 +249,28 @@ function getSavedPromo() {
 async function placeOrderNow() {
     const terms = document.getElementById('terms');
     if (terms && !terms.checked) {
-        showNotification('يرجى الموافقة على شروط الخدمة لتأكيد الطلب', 'error');
+        showNotification(window.I18n.t('messages.agree_tos', 'يرجى الموافقة على شروط الخدمة لتأكيد الطلب'), 'error');
         return;
     }
 
     if (!navigator.onLine) {
-        showNotification('عذراً، أنت غير متصل بالإنترنت حالياً. يلزم توفر اتصال فعلي لتأكيد الطلب والدفع.', 'error');
+        showNotification(window.I18n.t('messages.offline_error', 'عذراً، أنت غير متصل بالإنترنت حالياً. يلزم توفر اتصال فعلي لتأكيد الطلب والدفع.'), 'error');
         return;
     }
 
     const btn = document.getElementById('confirmOrderBtn');
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تأكيد وتسجيل الطلب...';
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + window.I18n.t('messages.confirming_order_full', 'جاري تأكيد وتسجيل الطلب...');
     }
 
     let cart = [];
     try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
     if (cart.length === 0) {
-        showNotification('السلة فارغة!', 'error');
+        showNotification(window.I18n.t('messages.cart_empty', 'السلة فارغة!'), 'error');
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = 'تأكيد الطلب نهائياً <i class="fas fa-check"></i>';
+            btn.innerHTML = '' + window.I18n.t('checkout.final_confirm', 'تأكيد الطلب نهائياً') + ' <i class="fas fa-check"></i>';
         }
         return;
     }
@@ -307,9 +307,9 @@ async function placeOrderNow() {
             phone: phone,
             email: email,
             address: address,
-            city: selectedWilaya ? selectedWilaya.name_ar : 'الجزائر',
+            city: selectedWilaya ? selectedWilaya.name_ar : window.I18n.t('wilayas.algiers', 'الجزائر'),
             wilayaId: selectedWilaya ? selectedWilaya.id : 16,
-            wilayaName: selectedWilaya ? selectedWilaya.name_ar : 'الجزائر العاصمة',
+            wilayaName: selectedWilaya ? selectedWilaya.name_ar : window.I18n.t('checkout.algiers_fallback', 'الجزائر العاصمة'),
             deliveryType: currentDeliveryType,
             shippingCost: currentShippingCost,
             paymentMethod: paymentMethod,
@@ -339,7 +339,7 @@ async function placeOrderNow() {
 
         const data = await response.json();
         if (!response.ok) {
-            throw new Error(data.error || data.message || 'فشل في إنشاء الطلب');
+            throw new Error(data.error || data.message || window.I18n.t('messages.create_order_fail', 'فشل في إنشاء الطلب'));
         }
 
         const orderId = data.id;
@@ -387,7 +387,7 @@ async function placeOrderNow() {
         showNotification(error.message, 'error');
         if (btn) {
             btn.disabled = false;
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> تأكيد الطلب الآن';
+            btn.innerHTML = '<i class="fas fa-check-circle"></i> ' + window.I18n.t('checkout.confirm_btn', 'تأكيد الطلب الآن');
         }
     }
 }

@@ -1,0 +1,133 @@
+﻿
+    <title>ظ…طھط¬ط±ظٹ - ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ ط§ظ„طھظ‚ظ†ظٹ ط§ظ„ظ…طھظƒط§ظ…ظ„</title>
+    <meta name="description" content="ظ…طھط¬ط± ط¥ظ„ظƒطھط±ظˆظ†ظٹ طط¯ظٹط« ظٹظ‚ط¯ظ… ط£ظپط¶ظ„ ط§ظ„ط£ط¬ظ‡ط²ط© 
+ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹط© ظˆط§ظ„طھظ‚ظ†ظٹط© ظپظٹ ط§ظ„ط¬ط²ط§ط¦ط± ط¨ط£ط³ط¹ط§ط± طھظ†ط§ظپط³ظٹط© ظˆطھظˆطµظٹظ„ ط³ط±ظٹط¹.">
+    <meta property="og:title" content="ظ…طھط¬ط±ظٹ - ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹط§طھ ط§ظ„ط¹طµط±ظٹط©">
+    <meta property="og:description" content="طھط³ظˆظ‚ ط£طط¯ط« ط§ظ„طظˆط§ط³ظٹط¨ ظˆط§ظ„ظ…ظ„طظ‚ط§طھ ط§ظ„طھظ‚ظ†ظٹط© 
+ط¨ط£ظپط¶ظ„ ط§ظ„ط£ط³ط¹ط§ط±.">
+    <meta name="twitter:title" content="ظ…طھط¬ط±ظٹ - ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹط§طھ ط§ظ„ط¹طµط±ظٹط©">
+    <meta name="twitter:description" content="طھط³ظˆظ‚ ط£طط¯ط« ط§ظ„طظˆط§ط³ظٹط¨ ظˆط§ظ„ظ…ظ„طظ‚ط§طھ ط§ظ„طھظ‚ظ†ظٹط© 
+ط¨ط£ظپط¶ظ„ ط§ظ„ط£ط³ط¹ط§ط±.">
+      "name": "ظ…طھط¬ط±ظٹ",
+      "description": "ظ…طھط¬ط± ط¥ظ„ظƒطھط±ظˆظ†ظٹ ظ…طھظƒط§ظ…ظ„ ظ„ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹط§طھ ظˆط§ظ„ط£ط¬ظ‡ط²ط© ط§ظ„ط­ط¯ظٹط«ط©",
+                    <span data-i18n="common.store_name">ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</span>
+                    <li><a href="index.html" class="active" data-i18n="nav.home"><i class="fas fa-home"></i> 
+ط§ظ„ط±ط¦ظٹط³ظٹط©</a></li>
+                    <li><a href="shop.html" data-i18n="nav.shop"><i class="fas fa-shopping-bag"></i> 
+ط§ظ„طھط³ظˆظ‚</a></li>
+                    <li><a href="cart.html" data-i18n="nav.cart"><i class="fas fa-shopping-cart"></i> ط¹ط±ط¨ط© 
+ط§ظ„طھط³ظˆظ‚</a></li>
+                    <li><a href="wishlist.html" data-i18n="nav.wishlist"><i class="fas fa-heart"></i> 
+ط§ظ„ظ…ظپط¶ظ„ط©</a></li>
+                    <li><a href="track-order.html" data-i18n="nav.track_order"><i class="fas fa-truck"></i> طھطھط¨ط¹ 
+ط·ظ„ط¨ظٹ</a></li>
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="طھط¨ط¯ظٹظ„ ط§ظ„ظˆط¶ط¹">
+                <a href="wishlist.html" class="wishlist-icon" title="ط§ظ„ظ…ظپط¶ظ„ط©">
+                <a href="cart.html" class="cart-icon" title="ط§ظ„ط³ظ„ط©">
+                <a href="account.html" class="user-icon" title="ط­ط³ط§ط¨ظٹ">
+                <button type="button" class="mobile-menu-btn" aria-label="ط§ظ„ظ‚ط§ط¦ظ…ط©">
+                <input type="text" name="search" placeholder="ط§ط¨طط« ط¹ظ† ظ‡ط§طھظپطŒ طط§ط³ظˆط¨طŒ ظ…ظ„طظ‚ط§طھ 
+طھظ‚ظ†ظٹط©..." data-i18n-placeholder="common.search_placeholder">
+                <button type="submit"><i class="fas fa-search"></i> <span data-i18n="common.search">ط¨ط
+ط«</span></button>
+                    <span>ًں‡©ًں‡؟ ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ ط§ظ„ظ…ظˆط«ظˆظ‚ ظپظٹ ط§ظ„ط¬ط²ط§ط¦ط±</span>
+                <h1>طھط³ظˆظ‚ ط£ظپط¶ظ„ ط§ظ„ط£ط¬ظ‡ط²ط© ظˆط§ظ„ظ…ظ†طھط¬ط§طھ ط§ظ„طھظ‚ظ†ظٹط© ط¨ط£ط³ط¹ط§ط± ظ…ظ†ط§ظپط³ط©</h1>
+                <p>طھظˆطµظٹظ„ ط³ط±ظٹط¹ ظˆظ…ظˆط«ظˆظ‚ ط¥ظ„ظ‰ 58 ظˆظ„ط§ظٹط© ظ…ط¹ ط¥ظ…ظƒط§ظ†ظٹط© ط§ظ„ط¯ظپط¹ ط¹ظ†ط¯ 
+ط§ظ„ط§ط³طھظ„ط§ظ… ظˆط¶ظ…ط§ظ† ط§ظ„ط¬ظˆط¯ط© ظˆط£طµط§ظ„ط© ط§ظ„ظ…ظ†طھط¬ط§طھ 100%.</p>
+                        <i class="fas fa-shopping-bag"></i> ط§ط¨ط¯ط£ ط§ظ„طھط³ظˆظ‚ ط§ظ„ط¢ظ†
+                        <i class="fas fa-truck"></i> طھطھط¨ط¹ ط·ظ„ط¨ظƒ ط§ظ„ط­ط§ظ„ظٹ
+                        <h3>ط§ظ„ط¯ظپط¹ ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ…</h3>
+                        <p>ط§ط¯ظپط¹ ط¨ط±ط§ط­ط© ظˆط£ظ…ط§ظ† ط¨ط¹ط¯ ط§ط³طھظ„ط§ظ… ظˆظپط­طµ ط·ظ„ط¨ظƒ ظپظٹ ظ…ظ†ط²ظ„ظƒ</p>
+                        <h3>طھظˆطµظٹظ„ ظ„ظƒط§ظپط© 58 ظˆظ„ط§ظٹط©</h3>
+                        <p>ط´ط­ظ† ط³ط±ظٹط¹ ط¥ظ„ظ‰ ط¨ط§ط¨ ظ…ظ†ط²ظ„ظƒ ط£ظˆ ط£ظ‚ط±ط¨ ظ…ظƒطھط¨ ط§ط³طھظ„ط§ظ…</p>
+                        <h3>ظ…ظ†طھط¬ط§طھ ط£طµظ„ظٹط© 100%</h3>
+                        <p>ط¶ظ…ط§ظ† ط±ط³ظ…ظٹ ظˆط¬ظˆط¯ط© ط¹ط§ظ„ظٹط© ظ…ظپط­ظˆطµط© ط¨ط¯ظ‚ط©</p>
+                        <h3>ط¯ط¹ظ… ط¹ظ…ظ„ط§ط، ظˆظ…طھط§ط¨ط¹ط©</h3>
+                        <p>ظپط±ظٹظ‚ ظ…طھط®طµطµ ظ„ظ…ط³ط§ط¹ط¯طھظƒ ظˆظ…طھط§ط¨ط¹ط© ط§ظ„ط´ط­ظ†ط© ط­طھظ‰ ظˆطµظˆظ„ظ‡ط§</p>
+            <a href="shop.html" class="category-pill active"><i class="fas fa-th-large"></i> ط¬ظ…ظٹط¹ 
+ط§ظ„ظ…ظ†طھط¬ط§طھ</a>
+            <a href="shop.html?category=ط¥ظ„ظƒطھط±ظˆظ†ظٹط§طھ" class="category-pill"><i class="fas fa-laptop"></i> 
+ط¥ظ„ظƒطھط±ظˆظ†ظٹط§طھ</a>
+            <a href="shop.html?category=ظ‡ظˆط§طھظپ" class="category-pill"><i class="fas fa-mobile-alt"></i> ظ‡ظˆط§طھظپ 
+ظˆظ…ظ„طظ‚ط§طھ</a>
+            <a href="shop.html?category=طµظˆطھظٹط§طھ" class="category-pill"><i class="fas fa-headphones"></i> 
+طµظˆطھظٹط§طھ ظˆط³ظ…ط§ط¹ط§طھ</a>
+            <a href="shop.html?category=ظ…ظ„ط§ط¨ط³" class="category-pill"><i class="fas fa-tshirt"></i> ط£ط²ظٹط§ط، 
+ظˆظ…ظ„ط§ط¨ط³</a>
+            <a href="shop.html?category=ظƒطھط¨" class="category-pill"><i class="fas fa-book"></i> ظƒطھط¨ 
+ظˆظ…ط±ط§ط¬ط¹</a>
+                    <h2 style="font-size: 1.8rem; font-weight: 900; margin: 0; color: 
+var(--dark-color);">ط§ظ„ظ…ظ†طھط¬ط§طھ ط§ظ„ظ…ظ…ظٹط²ط©</h2>
+                    <p style="margin: 4px 0 0; color: var(--light-text); font-size: 0.95rem;">ط§ط®طھط±ظ†ط§ ظ„ظƒ 
+ط£ظپط¶ظ„ ط§ظ„ظ…ظ†طھط¬ط§طھ ط°ط§طھ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ ط§ظ„ط¹ط§ظ„ظٹط©</p>
+                    ط¹ط±ط¶ ظƒظ„ ط§ظ„ظ…ظ†طھط¬ط§طھ <i class="fas fa-chevron-left" style="font-size: 0.8rem;"></i>
+                    <h2 style="font-size: 1.8rem; font-weight: 900; margin: 0; color: var(--dark-color);">ط¹ط±ظˆط¶ 
+ظˆطھط®ظپظٹط¶ط§طھ ط®ط§طµط© ًں”¥</h2>
+                    <p style="margin: 4px 0 0; color: var(--light-text); font-size: 0.95rem;">ط®طµظˆظ…ط§طھ ططµط±ظٹط© 
+ظ„ظپطھط±ط© ظ…طط¯ظˆط¯ط© ط¹ظ„ظ‰ طھط´ظƒظٹظ„ط© ظ…ط®طھط§ط±ط©</p>
+                    ط§ظƒطھط´ظپ ط¬ظ…ظٹط¹ ط§ظ„ط¹ط±ظˆط¶ <i class="fas fa-chevron-left" style="font-size: 0.8rem;"></i>
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> ط§ظ„ظ…طھط¬ط± 
+ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ
+                        ظˆط¬ظ‡طھظƒ ط§ظ„ط£ظˆظ„ظ‰ ط§ظ„ظ…ظˆط«ظˆظ‚ط© ظ„ظ„طھط³ظˆظ‚ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ ظپظٹ 
+ط§ظ„ط¬ط²ط§ط¦ط±. ظ†ظ‚ط¯ظ… ظ…ظ†طھط¬ط§طھ طھظ‚ظ†ظٹط© ط£طµظ„ظٹط© ط¨ط£ظپط¶ظ„ ط§ظ„ط£ط³ط¹ط§ط± ظ…ط¹ طھظˆطµظٹظ„ ط³ط±ظٹط¹ ظ„ظ€ 58 
+ظˆظ„ط§ظٹط© ظˆط¯ظپط¹ ط¢ظ…ظ† ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ….
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; 
+font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-truck"></i> 58 ظˆظ„ط§ظٹط©</span>
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; 
+font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-shield-alt"></i> ط¶ظ…ط§ظ† 100%</span>
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; 
+font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-hand-holding-usd"></i> ط§ظ„ط¯ظپط¹ ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ…</span>
+                    <h3>ط±ظˆط§ط¨ط· ط³ط±ظٹط¹ط©</h3>
+                        <li><a href="index.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 
+6px;"></i> ط§ظ„ط±ط¦ظٹط³ظٹط©</a></li>
+                        <li><a href="shop.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 
+6px;"></i> ظ…طھط¬ط± ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
+                        <li><a href="cart.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 
+6px;"></i> ط³ظ„ط© ط§ظ„طھط³ظˆظ‚</a></li>
+                        <li><a href="wishlist.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; 
+margin-left: 6px;"></i> ظ‚ط§ط¦ظ…ط© ط§ظ„ظ…ظپط¶ظ„ط©</a></li>
+                        <li><a href="track-order.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; 
+margin-left: 6px;"></i> طھطھط¨ط¹ ط·ظ„ط¨ظٹطھظƒ</a></li>
+                    <h3>ط®ط¯ظ…ط© ط§ظ„ط¹ظ…ظ„ط§ط، ظˆط§ظ„طھظˆط§طµظ„</h3>
+                        <li><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-left: 
+8px;"></i> ط§ظ„ط¬ط²ط§ط¦ط± ط§ظ„ط¹ط§طµظ…ط©طŒ ط§ظ„ط¬ط²ط§ط¦ط±</li>
+                        <li><i class="fas fa-clock" style="color: var(--primary-color); margin-left: 8px;"></i> 
+ط§ظ„ط³ط¨طھ - ط§ظ„ط®ظ…ظٹط³: 9:00 طµ - 6:00 ظ…</li>
+                    <h3>ط·ط±ظ‚ ط§ظ„ط¯ظپط¹ ظˆط§ظ„ط´ط­ظ†</h3>
+                    <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 12px;">ظ†ظ‚ط¨ظ„ ط§ظ„ط¯ظپط¹ ط§ظ„ط¢ظ…ظ† 
+ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ… ط£ظˆ ط¹ط¨ط± ط§ظ„ط¨ط·ط§ظ‚ط§طھ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹط© ط§ظ„ط¬ط²ط§ط¦ط±ظٹط©:</p>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 
+6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave" style="color: 
+var(--success-color);"></i> COD ظ†ظ‚ط¯ط§ظ‹</span>
+                    <h3>طھط§ط¨ط¹ظ†ط§ ط¹ظ„ظ‰ ط§ظ„ط´ط¨ظƒط§طھ</h3>
+                <p style="margin: 0; font-size: 0.88rem; color: #94a3b8;">&copy; 2026 ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ 
+(MYSHOP). ط¬ظ…ظٹط¹ ط§ظ„طظ‚ظˆظ‚ ظ…طظپظˆط¸ط©.</p>
+                <p style="margin: 0; font-size: 0.88rem; color: #94a3b8;">طµظڈظ…ظ… ط¨ط£ط¹ظ„ظ‰ ظ…ط¹ط§ظٹظٹط± 
+ط§ظ„ط£ظ…ط§ظ† ظˆط§ظ„طھط¬ط§ط±ط© ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹط© ظپظٹ ط§ظ„ط¬ط²ط§ط¦ط± ًں‡©ًں‡؟</p>
+                        const safeCat = window.escapeHtml ? window.escapeHtml(p.category || 'ط¹ط§ظ…') : (p.category || 
+'ط¹ط§ظ…');
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" 
+data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" aria-label="ط§ظ„ظ…ظپط¶ظ„ط©">
+                                    <span class="product-price">${Number(p.price).toLocaleString()} <small 
+style="font-size: 0.85rem; font-weight: 600;">ط¯ط¬</small></span>
+                                        <i class="fas fa-box"></i> ${p.stock > 0 ? `ظ…طھظˆظپط± (${p.stock})` : 'ظ†ظپط¯ 
+ط§ظ„ظ…ط®ط²ظˆظ†'}
+                                    <a href="product.html?id=${p.id}" class="btn btn-secondary" style="flex: 1; 
+padding: 10px; font-size: 0.88rem; justify-content: center;">ط§ظ„طھظپط§طµظٹظ„</a>
+                                        <i class="fas fa-cart-plus"></i> ط£ط¶ظپ ظ„ظ„ط³ظ„ط©
+                        const safeCat = window.escapeHtml ? window.escapeHtml(p.category || 'ط¹ط±ط¶ ططµط±ظٹ') : 
+(p.category || 'ط¹ط±ط¶ ططµط±ظٹ');
+                            <span class="product-badge" style="background: var(--accent-gradient);">طھط®ظپظٹط¶ ط®ط§طµ 
+ًں”¥</span>
+                            <button type="button" class="product-wishlist ${isFav ? 'active' : ''}" 
+data-wishlist-id="${p.id}" onclick="handleHomeToggleWishlist(${p.id})" aria-label="ط§ظ„ظ…ظپط¶ظ„ط©">
+                                    <span class="product-price" style="color: 
+var(--primary-color);">${Number(p.price).toLocaleString()} <small style="font-size: 0.85rem;">ط¯ط¬</small></span>
+                                    <span class="product-old-price" style="text-decoration: line-through; color: 
+var(--light-text); font-size: 0.88rem;">${Number(p.price * 1.25).toLocaleString()} ط¯ط¬</span>
+                                    <i class="fas fa-bolt"></i> ط§ط·ظ„ط¨ ط§ظ„ط¢ظ† ط¨ط§ظ„ط¹ط±ط¶
+                        window.showToast('طھظ…طھ ط¥ط¶ط§ظپط© ط§ظ„ظ…ظ†طھط¬ ط¥ظ„ظ‰ ط§ظ„ط³ظ„ط© ط¨ظ†ط¬ط§ط! ًں›’', 
+'success');
+                    window.showToast('ط­ط¯ط« ط®ط·ط£ ط£ط«ظ†ط§ط، ط¥ط¶ط§ظپط© ط§ظ„ظ…ظ†طھط¬', 'error');
+
+

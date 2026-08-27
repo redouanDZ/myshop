@@ -321,9 +321,9 @@ function syncCartCounter() {
 function initNetworkStatusWatcher() {
   const banner = document.createElement('div');
   banner.id = 'offline-notification-banner';
-  banner.style.cssText = 'display:none; position:fixed; top:0; left:0; right:0; z-index:10000; background:#dc2626; color:#fff; text-align:center; padding:10px 15px; font-weight:bold; font-size:0.92rem; box-shadow:0 4px 12px rgba(0,0,0,0.2);';
+  banner.style.cssText = 'display:none; position:relative; width:100%; z-index:10000; background:#dc2626; color:#fff; text-align:center; padding:10px 15px; font-weight:bold; font-size:0.92rem; box-shadow:0 4px 12px rgba(0,0,0,0.2);';
   banner.innerHTML = '<i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت حالياً (وضع التصفح دون اتصال). يلزم الاتصال لتأكيد الطلبات.';
-  document.body.appendChild(banner);
+  document.body.prepend(banner);
 
   function updateStatus() {
     if (!navigator.onLine) {
@@ -435,7 +435,7 @@ function initMobileNavigation() {
       </ul>
       <div class="mobile-drawer-footer">
         <a href="account.html" class="btn btn-outline" style="width: 100%; justify-content: center; font-size: 0.92rem; padding: 10px;">
-          <i class="fas fa-user-circle"></i> حسابي الشخصي
+          <i class="fas fa-user-circle"></i> <span data-i18n="nav.account">حسابي الشخصي</span>
         </a>
       </div>
     `;
@@ -483,13 +483,38 @@ function applyGlobalStoreSettings(settings) {
     }
     link.href = settings.store_favicon;
   }
+  
+  if (settings.store_name) {
+    // Update document title suffix safely without removing the page name
+    const currentTitle = document.title;
+    if (currentTitle.includes('-')) {
+        document.title = currentTitle.split('-')[0] + '- ' + settings.store_name;
+    } else {
+        document.title = settings.store_name;
+    }
+
+    // Update footer brand or other hardcoded store names
+    document.querySelectorAll('[data-i18n="footer.brand"], .footer-brand').forEach(el => {
+        el.textContent = settings.store_name;
+    });
+  }
 
   // 2. Update Header Brand Name & Logo
   document.querySelectorAll('.logo a').forEach(logoLink => {
+    let content = '';
     if (settings.store_logo) {
-      logoLink.innerHTML = `<img src="${settings.store_logo}" alt="${settings.store_name || 'MYSHOP'}" style="max-height: 42px; width: auto; vertical-align: middle;">`;
-    } else if (settings.store_name) {
-      logoLink.textContent = settings.store_name;
+      // User wants circular logo, adding border-radius: 50% and object-fit: cover
+      const altText = window.escapeHtml ? window.escapeHtml(settings.store_name || '') || 'MYSHOP' : (settings.store_name || 'MYSHOP');
+      content += `<img src="${settings.store_logo}" alt="${altText}" onerror="this.style.display='none'" style="max-height: 42px; width: 42px; height: 42px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-inline-end: 10px;">`;
+    }
+    if (settings.store_name) {
+      content += `<span class="store-name-text" style="vertical-align: middle;">${settings.store_name}</span>`;
+    }
+    
+    if (content) {
+        logoLink.innerHTML = content;
+        logoLink.style.display = 'flex';
+        logoLink.style.alignItems = 'center';
     }
   });
 
@@ -514,7 +539,7 @@ function applyGlobalStoreSettings(settings) {
     }
   });
 
-  document.querySelectorAll('.footer-address, .contact-address').forEach(el => {
+  document.querySelectorAll('.footer-address, .contact-address, [data-i18n="footer.address"]').forEach(el => {
     if (settings.store_address) el.textContent = settings.store_address;
   });
 

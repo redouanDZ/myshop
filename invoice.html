@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاتورة الطلب - المتجر الإلكتروني</title>
+    <title data-i18n="invoice.title">الفاتورة - متجر الجزائر بريميوم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
@@ -183,36 +183,47 @@
             .actions-bar { display: none !important; }
         }
     </style>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+
+    <!-- Theme Anti-Flicker -->
+    <script>
+        (function(){
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
 
     <div class="invoice-wrapper" id="invoiceArea">
         <div class="invoice-header">
             <div class="store-brand">
-                <h1 id="invStoreName">المتجر الإلكتروني</h1>
-                <p id="invStoreTagline">خدمة تسوق موثوقة في الجزائر</p>
-                <p style="margin-top: 5px; font-size: 0.85rem; color: #64748b;" id="invStoreContact">هاتف: 0550000000 | بريد: contact@myshop.dz</p>
+                <h1 id="invStoreName"><span data-i18n="footer.brand">المتجر الإلكتروني</span></h1>
+                <p id="invStoreTagline"><span data-i18n="invoice.store_tagline">خدمة تسوق موثوقة في الجزائر</span></p>
+                <p style="margin-top: 5px; font-size: 0.85rem; color: #64748b;" id="invStoreContact"><span data-i18n="invoice.store_contact">هاتف: 0550000000 | بريد: contact@myshop.dz</span></p>
             </div>
             <div class="invoice-meta">
-                <div class="invoice-title">فاتورة بيع</div>
-                <div class="invoice-meta-item">رقم الفاتورة: <strong id="invNumber">INV-2026-0000</strong></div>
-                <div class="invoice-meta-item">رقم الطلب: <strong id="invOrderNum">-</strong></div>
-                <div class="invoice-meta-item">التاريخ: <strong id="invDate">-</strong></div>
+                <div class="invoice-title"><span data-i18n="invoice.title">فاتورة بيع</span></div>
+                <div class="invoice-meta-item"><span data-i18n="invoice.invoice_num">رقم الفاتورة:</span> <strong id="invNumber">INV-2026-0000</strong></div>
+                <div class="invoice-meta-item"><span data-i18n="invoice.order_num"><span data-i18n="invoice.order_num">رقم الطلب:</span></span> <strong id="invOrderNum">-</strong></div>
+                <div class="invoice-meta-item"><span data-i18n="invoice.date">التاريخ:</span> <strong id="invDate">-</strong></div>
             </div>
         </div>
 
         <div class="party-details">
             <div class="party-col">
-                <h3>معلومات المشتري (العميل):</h3>
-                <p><strong>الاسم:</strong> <span id="custName">-</span></p>
-                <p><strong>الهاتف:</strong> <span id="custPhone">-</span></p>
-                <p><strong>البريد:</strong> <span id="custEmail">-</span></p>
+                <h3><span data-i18n="invoice.customer_info">معلومات المشتري (العميل):</span></h3>
+                <p><strong><span data-i18n="invoice.name">الاسم:</span></strong> <span id="custName">-</span></p>
+                <p><strong><span data-i18n="invoice.phone">الهاتف:</span></strong> <span id="custPhone">-</span></p>
+                <p><strong><span data-i18n="invoice.email">البريد:</span></strong> <span id="custEmail">-</span></p>
             </div>
             <div class="party-col">
-                <h3>عنوان وجهة التوصيل:</h3>
-                <p><strong>الولاية:</strong> <span id="custWilaya">-</span></p>
-                <p><strong>العنوان الكامل:</strong> <span id="custAddress">-</span></p>
-                <p><strong>نوع التوصيل:</strong> <span id="custDeliveryType">توصيل للمنزل</span></p>
+                <h3><span data-i18n="invoice.address_info">عنوان وجهة التوصيل:</span></h3>
+                <p><strong><span data-i18n="invoice.wilaya">الولاية:</span></strong> <span id="custWilaya">-</span></p>
+                <p><strong><span data-i18n="invoice.full_address">العنوان الكامل:</span></strong> <span id="custAddress">-</span></p>
+                <p><strong><span data-i18n="invoice.delivery_type">نوع التوصيل:</span></strong> <span id="custDeliveryType">توصيل للمنزل</span></p>
             </div>
         </div>
 
@@ -220,10 +231,10 @@
             <thead>
                 <tr>
                     <th style="width: 50px;">#</th>
-                    <th>المنتج / الوصف</th>
-                    <th style="text-align: center; width: 100px;">الكمية</th>
-                    <th style="text-align: left; width: 120px;">السعر الفردي</th>
-                    <th style="text-align: left; width: 140px;">الإجمالي</th>
+                    <th><span data-i18n="invoice.col_product">المنتج / الوصف</span></th>
+                    <th style="text-align: center; width: 100px;"><span data-i18n="invoice.col_qty">الكمية</span></th>
+                    <th style="text-align: left; width: 120px;"><span data-i18n="invoice.col_price">السعر الفردي</span></th>
+                    <th style="text-align: left; width: 140px;"><span data-i18n="invoice.col_total">الإجمالي</span></th>
                 </tr>
             </thead>
             <tbody id="invoiceItemsBody">
@@ -233,29 +244,29 @@
 
         <div class="summary-container">
             <div class="payment-status-box">
-                <h4>طريقة وحالة الدفع:</h4>
-                <p style="margin: 0 0 5px 0;"><strong>الطريقة:</strong> <span id="invPayMethod">الدفع عند الاستلام (COD)</span></p>
-                <p style="margin: 0;"><strong>حالة الدفع:</strong> <span id="invPayStatus" style="color: #0284c7; font-weight: bold;">قيد التحصيل عند التسليم</span></p>
+                <h4><span data-i18n="invoice.payment_info">طريقة وحالة الدفع:</span></h4>
+                <p style="margin: 0 0 5px 0;"><strong><span data-i18n="invoice.method">الطريقة:</span></strong> <span id="invPayMethod"><span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)</span></p>
+                <p style="margin: 0;"><strong><span data-i18n="invoice.status">حالة الدفع:</span></strong> <span id="invPayStatus" style="color: #0284c7; font-weight: bold;">قيد التحصيل عند التسليم</span></p>
             </div>
 
             <table class="totals-table">
                 <tr>
-                    <td>المجموع الفرعي للمنتجات:</td>
-                    <td id="invSubtotal">0 دج</td>
+                    <td><span data-i18n="invoice.subtotal">المجموع الفرعي للمنتجات:</span></td>
+                    <td id="invSubtotal">0 <span data-i18n="common.currency">دج</span></td>
                 </tr>
                 <tr>
-                    <td>رسوم الشحن والتوصيل:</td>
-                    <td id="invShipping">0 دج</td>
+                    <td><span data-i18n="invoice.shipping_fee">رسوم الشحن والتوصيل:</span></td>
+                    <td id="invShipping">0 <span data-i18n="common.currency">دج</span></td>
                 </tr>
                 <tr class="grand-total">
-                    <td>المبلغ الإجمالي المستحق:</td>
-                    <td id="invGrandTotal">0 دج</td>
+                    <td><span data-i18n="invoice.grand_total">المبلغ الإجمالي المستحق:</span></td>
+                    <td id="invGrandTotal">0 <span data-i18n="common.currency">دج</span></td>
                 </tr>
             </table>
         </div>
 
         <div class="invoice-footer">
-            <p>شكراً لثقتكم وتسوّقكم معنا! إذا كان لديكم أي استفسار يرجى التواصل معنا عبر الهاتف أو البريد الإلكتروني الموضح أعلاه.</p>
+            <p><span data-i18n="invoice.thank_you">شكراً لثقتكم وتسوّقكم معنا! إذا كان لديكم أي استفسار يرجى التواصل معنا عبر الهاتف أو البريد الإلكتروني الموضح أعلاه.</span></p>
             <p>&copy; 2026 جميع الحقوق محفوظة.</p>
         </div>
     </div>
@@ -290,7 +301,7 @@
                 if (queryParts.length) url += `?${queryParts.join('&')}`;
 
                 const res = await fetch(url);
-                if (!res.ok) throw new Error('تعذر تحميل بيانات الفاتورة');
+                if (!res.ok) throw new Error(window.I18n.t('messages.load_invoice_error', 'تعذر تحميل بيانات الفاتورة'));
                 const order = await res.json();
 
                 // Fill Meta
@@ -299,16 +310,16 @@
                 document.getElementById('invDate').textContent = new Date(order.created_at || Date.now()).toLocaleDateString('ar-DZ');
 
                 // Customer info
-                document.getElementById('custName').textContent = order.shipping_full_name || 'عميل المتجر';
+                document.getElementById('custName').textContent = order.shipping_full_name || window.I18n.t('product.store_customer', 'عميل المتجر');
                 document.getElementById('custPhone').textContent = order.phone || '-';
                 document.getElementById('custEmail').textContent = order.email || '-';
-                document.getElementById('custWilaya').textContent = order.wilaya_name || order.city || 'الجزائر';
+                document.getElementById('custWilaya').textContent = order.wilaya_name || order.city || window.I18n.t('wilayas.algiers', 'الجزائر');
                 document.getElementById('custAddress').textContent = order.address || '-';
-                document.getElementById('custDeliveryType').textContent = order.delivery_type === 'desk' ? 'استلام من مكتب التوصيل' : 'توصيل للمنزل';
+                document.getElementById('custDeliveryType').textContent = order.delivery_type === 'desk' ? window.I18n.t('invoice.desk_pickup', 'استلام من مكتب التوصيل') : window.I18n.t('invoice.home_delivery', 'توصيل للمنزل');
 
                 // Payment info
-                document.getElementById('invPayMethod').textContent = order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : 'الدفع عند الاستلام (COD)';
-                document.getElementById('invPayStatus').textContent = order.payment_status === 'paid' ? 'مدفوع إلكترونياً بالكامل ✅' : 'قيد التحصيل نقداً عند الاستلام 📦';
+                document.getElementById('invPayMethod').textContent = order.payment_method === 'chargily' ? window.I18n.t('conf.epay', 'دفع إلكتروني (بطاقة ذهبية / CIB)') : '<span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)';
+                document.getElementById('invPayStatus').textContent = order.payment_status === 'paid' ? window.I18n.t('invoice.status_paid', 'مدفوع إلكترونياً بالكامل ✅') : window.I18n.t('invoice.status_unpaid', 'قيد التحصيل نقداً عند الاستلام 📦');
 
                 // Items list
                 const items = order.items || [];
@@ -324,8 +335,8 @@
                             <td>${index + 1}</td>
                             <td>${safeName}</td>
                             <td style="text-align: center;">${item.quantity}</td>
-                            <td style="text-align: left;">${Number(item.price).toLocaleString()} دج</td>
-                            <td>${lineTotal.toLocaleString()} دج</td>
+                            <td style="text-align: left;">${Number(item.price).toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</td>
+                            <td>${lineTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</td>
                         </tr>
                     `;
                 }).join('');
@@ -333,15 +344,15 @@
                 const shippingCost = Number(order.shipping_cost || 0);
                 const grandTotal = Number(order.total || (subtotal + shippingCost));
 
-                document.getElementById('invSubtotal').textContent = `${subtotal.toLocaleString()} دج`;
-                document.getElementById('invShipping').textContent = `${shippingCost.toLocaleString()} دج`;
-                document.getElementById('invGrandTotal').textContent = `${grandTotal.toLocaleString()} دج`;
+                document.getElementById('invSubtotal').textContent = `${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('invShipping').textContent = `${shippingCost.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('invGrandTotal').textContent = `${grandTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
 
                 // Set track link
                 document.getElementById('trackLinkBtn').href = `track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}`;
 
             } catch (err) {
-                document.getElementById('invoiceItemsBody').innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">خطأ في تحميل الفاتورة: ${window.escapeHtml ? window.escapeHtml(err.message) : err.message}</td></tr>`;
+                document.getElementById('invoiceItemsBody').innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">${window.I18n.t('invoice.error_loading', 'حدث خطأ أثناء جلب الفاتورة: {error}').replace('{error}', window.escapeHtml ? window.escapeHtml(err.message) : err.message)} </td></tr>`;
             }
         }
 

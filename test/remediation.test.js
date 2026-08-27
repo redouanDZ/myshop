@@ -1260,51 +1260,310 @@ test('Phase 5 — Cloud Media Storage & Image Upload Pipeline (Magic Bytes & Pro
     assert.ok(uploadData.storageProvider, 'Storage provider must be returned');
 });
 
-test('Phase 6 — Google Authentication & OAuth Sign-In Integration', async () => {
-    // 1. Test Google Sign-in with payload (new user creation)
-    const googleEmail = `google_user_${Date.now()}@gmail.com`;
-    const googleId = `gid_${Date.now()}`;
-    const googleName = 'مستخدم قوقل تجريبي';
+test('Phase 6 — Google Authentication Security & Account Takeover Prevention', async () => {
+    // 1. When GOOGLE_CLIENT_ID is not configured, endpoint returns 503
+    const originalClientId = process.env.GOOGLE_CLIENT_ID;
+    delete process.env.GOOGLE_CLIENT_ID;
 
-    const loginRes = await fetch(`${baseUrl}/api/auth/google`, {
+    const unconfiguredRes = await fetch(`${baseUrl}/api/auth/google`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            googleId,
-            email: googleEmail,
-            name: googleName,
-            avatarUrl: 'https://lh3.googleusercontent.com/a/default-user'
-        })
+        body: JSON.stringify({ credential: 'any_token' })
     });
+    assert.strictEqual(unconfiguredRes.status, 503, 'Unconfigured Google login should return 503');
+    const unconfigData = await unconfiguredRes.json();
+    assert.ok(unconfigData.message.includes('غير مُفعَّل'));
 
-    assert.strictEqual(loginRes.status, 200, 'Google login should succeed with 200');
-    const loginData = await loginRes.json();
-    assert.ok(loginData.user, 'User object should be returned');
-    assert.strictEqual(loginData.user.email, googleEmail);
-    assert.strictEqual(loginData.user.google_id, googleId);
+    // Enable test Google Client ID
+    process.env.GOOGLE_CLIENT_ID = 'test-client-id.apps.googleusercontent.com';
 
-    // 2. Test Google Sign-in again (existing user should log in seamlessly)
-    const secondLoginRes = await fetch(`${baseUrl}/api/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            googleId,
-            email: googleEmail
-        })
-    });
+    try {
+        // 2. Missing credential in body (e.g. attempting to send raw email/googleId) -> Must return 400
+        const noCredRes = await fetch(`${baseUrl}/api/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: 'admin@myshop.dz',
+                googleId: `spoofed_admin_${Date.now()}`
+            })
+        });
+        assert.strictEqual(noCredRes.status, 400, 'Direct body with missing credential must return 400');
 
-    assert.strictEqual(secondLoginRes.status, 200, 'Existing Google user login should succeed');
-    const secondData = await secondLoginRes.json();
-    assert.strictEqual(secondData.user.id, loginData.user.id, 'Should return the exact same user ID');
+        // 3. Forged JWT with base64 payload (Unsigned/Spoofed token) -> Must return 401
+        const fakeHeader = Buffer.from(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).toString('base64');
+        const fakePayload = Buffer.from(JSON.stringify({
+            sub: '1234567890',
+            email: 'admin@myshop.dz',
+            email_verified: true,
+            name: 'Hacked Admin'
+        })).toString('base64');
+        const fakeSignature = Buffer.from('invalid_signature').toString('base64');
+        const forgedToken = `${fakeHeader}.${fakePayload}.${fakeSignature}`;
 
-    // 3. Test invalid payload rejection
-    const badRes = await fetch(`${baseUrl}/api/auth/google`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({})
-    });
-    assert.strictEqual(badRes.status, 400, 'Empty Google payload should return 400');
+        const fakeTokenRes = await fetch(`${baseUrl}/api/auth/google`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ credential: forgedToken })
+        });
+        assert.strictEqual(fakeTokenRes.status, 401, 'Forged/Unverified Google credential must return 401');
+
+        // 4. Verify no authentication cookies or valid sessions were issued
+        const setCookieHeader = fakeTokenRes.headers.get('set-cookie') || '';
+        assert.ok(!setCookieHeader.includes('access_token='), 'Must not issue access_token on failed Google auth');
+    } finally {
+        // Restore original env
+        if (originalClientId) {
+            process.env.GOOGLE_CLIENT_ID = originalClientId;
+        } else {
+            delete process.env.GOOGLE_CLIENT_ID;
+        }
+    }
 });
+
+test('Phase 7 — Admin Dashboard CRUD: Category Management Lifecycle & Authorization', async () => {
+    const uniqueSlug = `cat_${Date.now()}`;
+    const uniqueName = `قسم تجريبي ${Date.now()}`;
+
+    // 1. Unauthorized Guest cannot create category (401)
+    const guestRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(guestRes.status, 401, 'Guest cannot create category');
+
+    // 2. Normal Customer cannot create category (403)
+    const userRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userAToken}` },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(userRes.status, 403, 'Normal customer cannot create category');
+
+    // 3. Admin can create category (201)
+    const createRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(createRes.status, 201, 'Admin should create category with 201');
+    const createdCat = await createRes.json();
+    assert.ok(createdCat.id, 'Created category must return ID');
+
+    // 4. Duplicate Category creation should be rejected (400)
+    const dupRes = await fetch(`${baseUrl}/api/admin/categories`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ name: uniqueName, slug: uniqueSlug })
+    });
+    assert.strictEqual(dupRes.status, 400, 'Duplicate category name/slug must be rejected');
+
+    // 5. Read Category list
+    const listRes = await fetch(`${baseUrl}/api/categories`);
+    assert.strictEqual(listRes.status, 200, 'Category list should be public');
+    const categories = await listRes.json();
+    assert.ok(Array.isArray(categories), 'Categories must be an array');
+    const found = categories.find(c => Number(c.id) === Number(createdCat.id));
+    assert.ok(found, 'Created category should exist in categories list');
+
+    // 6. Update Category as Admin
+    const updateRes = await fetch(`${baseUrl}/api/admin/categories/${createdCat.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ name: `${uniqueName} محدث` })
+    });
+    assert.strictEqual(updateRes.status, 200, 'Category update must succeed');
+
+    // 7. Delete Category as Admin
+    const deleteRes = await fetch(`${baseUrl}/api/admin/categories/${createdCat.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(deleteRes.status, 200, 'Category deletion must succeed');
+});
+
+test('Phase 8 — Admin Dashboard CRUD: User Role Management & Lockout Protection', async () => {
+    // 1. Customer cannot update user role (403)
+    const forbidRes = await fetch(`${baseUrl}/api/admin/users/${userBId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${userAToken}` },
+        body: JSON.stringify({ role: 'admin' })
+    });
+    assert.strictEqual(forbidRes.status, 403, 'Customer cannot update user role');
+
+    // 2. Admin can promote customer to admin (200)
+    const promoteRes = await fetch(`${baseUrl}/api/admin/users/${userBId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ role: 'admin' })
+    });
+    assert.strictEqual(promoteRes.status, 200, 'Admin can promote user');
+
+    // 3. Admin can demote user back to customer (200)
+    const demoteRes = await fetch(`${baseUrl}/api/admin/users/${userBId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ role: 'customer' })
+    });
+    assert.strictEqual(demoteRes.status, 200, 'Admin can demote user');
+
+    // 4. Admin cannot demote themselves (Lockout protection 400)
+    const selfDemoteRes = await fetch(`${baseUrl}/api/admin/users/${adminId}/role`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({ role: 'customer' })
+    });
+    assert.strictEqual(selfDemoteRes.status, 400, 'Admin cannot demote own account');
+
+    // 5. Admin cannot delete themselves (Lockout protection 400)
+    const selfDeleteRes = await fetch(`${baseUrl}/api/admin/users/${adminId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(selfDeleteRes.status, 400, 'Admin cannot delete own account');
+});
+
+test('Phase 9 — Admin Dashboard CRUD: Product Deletion Protection & Error Handling', async () => {
+    // 1. Create a standalone test product
+    const createProdRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: `منتج اختبار الحذف ${Date.now()}`,
+            category: 'إلكترونيات',
+            price: 4500,
+            stock: 10,
+            status: 'active',
+            description: 'وصف تجريبي'
+        })
+    });
+    assert.strictEqual(createProdRes.status, 201, 'Product creation should succeed');
+    const prodData = await createProdRes.json();
+
+    // 2. Delete standalone product as Admin (200)
+    const delProdRes = await fetch(`${baseUrl}/api/products/${prodData.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delProdRes.status, 200, 'Standalone product deletion should succeed with 200');
+
+    // 3. Deleting non-existent product should return 404
+    const delNonExistent = await fetch(`${baseUrl}/api/products/999999`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delNonExistent.status, 404, 'Deleting non-existent product returns 404');
+});
+
+test('Phase 10 — Admin Dashboard CRUD: Product Variants CRUD & Coupon Lifecycle', async () => {
+    // 1. Create a base product
+    const createProdRes = await fetch(`${baseUrl}/api/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: `منتج تجربة المتغيرات ${Date.now()}`,
+            category: 'ملابس',
+            price: 3200,
+            stock: 20,
+            status: 'active',
+            description: 'وصف المنتج'
+        })
+    });
+    assert.strictEqual(createProdRes.status, 201);
+    const prod = await createProdRes.json();
+
+    // 2. Add variant to product
+    const createVariantRes = await fetch(`${baseUrl}/api/products/${prod.id}/variants`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: 'المقاس: XL - اللون: أسود',
+            sku: `SKU-XL-BLK-${Date.now()}`,
+            priceModifier: 300,
+            stock: 8
+        })
+    });
+    assert.strictEqual(createVariantRes.status, 201, 'Variant creation should succeed');
+    const variantData = await createVariantRes.json();
+    assert.ok(variantData.id, 'Variant ID must be returned');
+
+    // 3. Get product variants
+    const listVariantsRes = await fetch(`${baseUrl}/api/products/${prod.id}/variants`);
+    assert.strictEqual(listVariantsRes.status, 200);
+    const variants = await listVariantsRes.json();
+    assert.ok(variants.length > 0, 'Variants list must not be empty');
+
+    // 4. Update variant
+    const updateVariantRes = await fetch(`${baseUrl}/api/products/variants/${variantData.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            name: 'المقاس: XXL - اللون: أسود',
+            priceModifier: 500,
+            stock: 12
+        })
+    });
+    assert.strictEqual(updateVariantRes.status, 200, 'Variant update must succeed');
+
+    // 5. Delete variant
+    const delVariantRes = await fetch(`${baseUrl}/api/products/variants/${variantData.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delVariantRes.status, 200, 'Variant deletion must succeed');
+
+    // 6. Clean up base product
+    await fetch(`${baseUrl}/api/products/${prod.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+
+    // 7. Coupon Lifecycle: Create coupon
+    const couponCode = `E2ECOUPON_${Date.now()}`;
+    const createCouponRes = await fetch(`${baseUrl}/api/admin/coupons`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            code: couponCode,
+            discountPercent: 15,
+            minOrderAmount: 2000,
+            maxUses: 50,
+            status: 'active'
+        })
+    });
+    assert.strictEqual(createCouponRes.status, 201, 'Coupon creation should return 201');
+    const couponData = await createCouponRes.json();
+
+    // 8. Validate coupon via public endpoint
+    const validateRes = await fetch(`${baseUrl}/api/coupons/validate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode, orderTotal: 5000 })
+    });
+    assert.strictEqual(validateRes.status, 200, 'Coupon validation should succeed');
+    const valData = await validateRes.json();
+    assert.strictEqual(valData.discountPercent, 15);
+    assert.strictEqual(valData.calculatedDiscount, 750);
+
+    // 9. Update Coupon discount
+    const updateCouponRes = await fetch(`${baseUrl}/api/admin/coupons/${couponData.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+        body: JSON.stringify({
+            discountPercent: 25
+        })
+    });
+    assert.strictEqual(updateCouponRes.status, 200, 'Coupon update should succeed');
+
+    // 10. Delete Coupon
+    const delCouponRes = await fetch(`${baseUrl}/api/admin/coupons/${couponData.id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${adminToken}` }
+    });
+    assert.strictEqual(delCouponRes.status, 200, 'Coupon deletion should succeed');
+});
+
+
 
 
 

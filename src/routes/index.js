@@ -23,6 +23,7 @@ router.use('/admin', adminRoutes);
 router.use('/payments', paymentRoutes);
 router.use('/wishlist', wishlistRoutes);
 router.use('/coupons', couponRoutes);
+router.get('/categories', require('../controllers/adminController').getCategories);
 router.get('/settings', require('../controllers/adminController').getStoreSettings);
 
 module.exports = router;

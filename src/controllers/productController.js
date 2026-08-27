@@ -116,6 +116,9 @@ async function deleteProduct(req, res) {
         res.json({ message: 'تم حذف المنتج بنجاح' });
     } catch (error) {
         console.error('Error deleting product:', error);
+        if (error.code === 'ER_ROW_IS_REFERENCED_2' || error.errno === 1451) {
+            return res.status(409).json({ error: 'لا يمكن حذف هذا المنتج لوجود طلبات سابقة مرتبطة به في سجل المبيعات. يمكنك تغيير حالة المنتج إلى "غير نشط" لإخفائه من المتجر.' });
+        }
         res.status(500).json({ error: 'خطأ في حذف المنتج' });
     }
 }

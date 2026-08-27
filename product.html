@@ -3,12 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تفاصيل المنتج - متجر الإلكتروني</title>
+    <title data-i18n="product.meta_title">تفاصيل المنتج - متجر الإلكتروني</title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         /* CSS كما في النسخة السابقة (بدون تغيير) */
     </style>
+  <meta name="theme-color" content="#2563eb">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+
+    <!-- Theme Anti-Flicker -->
+    <script>
+        (function(){
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
     <!-- رأس الموقع -->
@@ -17,7 +28,7 @@
             <div class="logo">
                 <a href="index.html">
                     <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
-                    <span data-i18n="common.store_name">المتجر الإلكتروني</span>
+                    <span data-i18n="common.store_name"><span data-i18n="footer.brand">المتجر الإلكتروني</span></span>
                 </a>
             </div>
             <nav class="main-nav">
@@ -30,21 +41,21 @@
                 </ul>
             </nav>
             <div class="user-actions">
-                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" data-i18n-title="common.toggle_theme" title="تبديل الوضع">
                     <i class="fas fa-moon"></i>
                 </button>
-                <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+                <a href="wishlist.html" class="wishlist-icon" data-i18n-title="common.wishlist" title="المفضلة">
                     <i class="fas fa-heart" style="color: var(--danger-color);"></i>
                     <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
-                <a href="cart.html" class="cart-icon" title="السلة">
+                <a href="cart.html" class="cart-icon" data-i18n-title="common.cart_title" title="السلة">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <a href="account.html" class="user-icon" title="حسابي">
+                <a href="account.html" class="user-icon" data-i18n-title="common.my_account" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
-                <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+                <button type="button" class="mobile-menu-btn" data-i18n-title="common.menu" aria-label="القائمة">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -55,7 +66,7 @@
         <div class="container">
             <h1 id="product-title">تفاصيل المنتج</h1>
             <div class="breadcrumb">
-                <a href="index.html">الرئيسية</a> <i class="fas fa-chevron-left"></i> <a href="shop.html">التسوق</a> <i class="fas fa-chevron-left"></i> <span id="product-breadcrumb">تفاصيل المنتج</span>
+                <a href="index.html" data-i18n="footer.link_home">الرئيسية</a> <i class="fas fa-chevron-left"></i> <a href="shop.html" data-i18n="shop.title">التسوق</a> <i class="fas fa-chevron-left"></i> <span id="product-breadcrumb" data-i18n="product.page_title">تفاصيل المنتج</span>
             </div>
         </div>
     </div>
@@ -64,69 +75,69 @@
         <div class="container">
             <div class="product-container">
                 <div class="product-images">
-                    <div class="main-image"><img id="main-image" src="images/product-placeholder.jpg" alt="المنتج الرئيسي"></div>
+                    <div class="main-image"><img id="main-image" src="images/product-placeholder.jpg" data-i18n="product.main_image_alt" alt="المنتج الرئيسي"></div>
                     <div class="thumbnail-images" id="thumbnail-images"></div>
                 </div>
                 <div class="product-info">
                     <h2 id="product-name">اسم المنتج هنا</h2>
                     <div class="product-rating" id="product-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><span id="rating-score">(4.0)</span></div>
-                    <div class="product-price"><span class="price" id="product-price">299.00 دج</span><span class="old-price" id="old-price">399.00 دج</span><span class="discount" id="discount">-25%</span></div>
+                    <div class="product-price"><span class="price" id="product-price">299.00 <span data-i18n="common.currency">دج</span></span><span class="old-price" id="old-price">399.00 <span data-i18n="common.currency">دج</span></span><span class="discount" id="discount">-25%</span></div>
                     <div class="product-description" id="product-description"><p>وصف المنتج...</p></div>
                     <div class="product-options">
-                        <div class="color-options"><h3>اللون:</h3><div class="color-select" id="color-select"></div></div>
-                        <div class="size-options"><h3>المقاس:</h3><div class="size-select" id="size-select"></div></div>
+                        <div class="color-options"><h3 data-i18n="product.color_label">اللون:</h3><div class="color-select" id="color-select"></div></div>
+                        <div class="size-options"><h3 data-i18n="product.size_label">المقاس:</h3><div class="size-select" id="size-select"></div></div>
                     </div>
                     <div class="product-actions">
                         <div class="quantity"><button class="quantity-btn decrease" onclick="changeQuantity(-1)">-</button><input type="number" id="quantity" value="1" min="1" max="10" onchange="updateExpressCalculations()"><button class="quantity-btn increase" onclick="changeQuantity(1)">+</button></div>
                         <button class="add-to-cart" onclick="addToCartFromProduct()" data-i18n="common.add_to_cart"><i class="fas fa-cart-plus"></i> أضف إلى السلة</button>
-                        <button class="add-to-wishlist" onclick="addToWishlist()" title="أضف للمفضلة"><i class="far fa-heart"></i></button>
+                        <button class="add-to-wishlist" onclick="addToWishlist()" data-i18n-title="product.add_wishlist_title" title="أضف للمفضلة"><i class="far fa-heart"></i></button>
                     </div>
 
                     <!-- ===== ⚡ 1-Click Direct COD Checkout Box ===== -->
                     <div class="express-checkout-box" id="express-checkout-box" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid var(--primary-color, #2563eb); border-radius: 12px; padding: 20px; margin-top: 24px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.08);">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
                             <h3 style="margin: 0; font-size: 1.12rem; color: #1e293b; display: flex; align-items: center; gap: 8px;">
-                                <i class="fas fa-bolt" style="color: #f59e0b;"></i> الشراء السريع (الدفع عند الاستلام)
+                                <i class="fas fa-bolt" style="color: #f59e0b;"></i> <span data-i18n="product.quick_buy_title">الشراء السريع (<span data-i18n="features.cod_title">الدفع عند الاستلام</span>)</span>
                             </h3>
                             <span style="background: #e0f2fe; color: #0369a1; font-size: 0.78rem; font-weight: bold; padding: 3px 8px; border-radius: 20px;">
-                                <i class="fas fa-shield-alt"></i> طلب مباشر
+                                <i class="fas fa-shield-alt"></i> <span data-i18n="product.direct_order">طلب مباشر</span>
                             </span>
                         </div>
 
                         <form id="express-order-form" onsubmit="handleExpressOrder(event)" style="display: grid; gap: 12px;">
                             <div>
-                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">الاسم الكامل <span style="color:#ef4444;">*</span></label>
-                                <input type="text" id="express-name" required placeholder="مثال: أحمد بن علي" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;">
+                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;"><span data-i18n="checkout.full_name">الاسم الكامل</span> <span style="color:#ef4444;">*</span></label>
+                                <input type="text" id="express-name" required data-i18n="product.name_placeholder" placeholder="مثال: أحمد بن علي" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;">
                             </div>
 
                             <div>
-                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">رقم الهاتف <span style="color:#ef4444;">*</span></label>
+                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;"><span data-i18n="checkout.phone">رقم الهاتف</span> <span style="color:#ef4444;">*</span></label>
                                 <input type="tel" id="express-phone" required placeholder="05 / 06 / 07 XX XX XX XX" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;" dir="ltr">
                             </div>
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                 <div>
-                                    <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">الولاية <span style="color:#ef4444;">*</span></label>
+                                    <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;"><span data-i18n="checkout.wilaya">الولاية</span> <span style="color:#ef4444;">*</span></label>
                                     <select id="express-wilaya" required onchange="onExpressWilayaChange()" style="width: 100%; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
-                                        <option value="">-- اختر الولاية --</option>
+                                        <option value="" data-i18n="product.select_wilaya">-- اختر الولاية --</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">البلدية / العنوان</label>
-                                    <input type="text" id="express-address" placeholder="البلدية أو العنوان" style="width: 100%; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
+                                    <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;" data-i18n="checkout.address">البلدية / العنوان</label>
+                                    <input type="text" id="express-address" data-i18n="product.address_placeholder" placeholder="البلدية أو العنوان" style="width: 100%; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
                                 </div>
                             </div>
 
                             <div>
-                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;">نوع التوصيل</label>
+                                <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;" data-i18n="product.delivery_type">نوع التوصيل</label>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                     <label style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.84rem;">
                                         <input type="radio" name="express-delivery" value="home" checked onchange="updateExpressCalculations()">
-                                        <span>🏠 للمنزل (<span id="express-home-price">500 دج</span>)</span>
+                                        <span>🏠 للمنزل (<span id="express-home-price">500 <span data-i18n="common.currency">دج</span></span>)</span>
                                     </label>
                                     <label style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.84rem;">
                                         <input type="radio" name="express-delivery" value="desk" onchange="updateExpressCalculations()">
-                                        <span>🏢 للمكتب (<span id="express-desk-price">350 دج</span>)</span>
+                                        <span>🏢 للمكتب (<span id="express-desk-price">350 <span data-i18n="common.currency">دج</span></span>)</span>
                                     </label>
                                 </div>
                             </div>
@@ -135,21 +146,21 @@
                             <div style="background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px; margin-top: 2px; font-size: 0.9rem;">
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; color: #64748b;">
                                     <span>سعر المنتجات (<span id="express-qty-display">1</span>x):</span>
-                                    <span id="express-subtotal-display" style="font-weight: 600; color: #1e293b;">0 دج</span>
+                                    <span id="express-subtotal-display" style="font-weight: 600; color: #1e293b;">0 <span data-i18n="common.currency">دج</span></span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 6px; color: #64748b;">
-                                    <span>تكلفة التوصيل:</span>
-                                    <span id="express-shipping-display" style="font-weight: 600; color: #1e293b;">500 دج</span>
+                                    <span data-i18n="product.delivery_cost">تكلفة التوصيل:</span>
+                                    <span id="express-shipping-display" style="font-weight: 600; color: #1e293b;">500 <span data-i18n="common.currency">دج</span></span>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; border-top: 1px dashed #cbd5e1; padding-top: 8px; font-size: 1.05rem; font-weight: 800; color: var(--primary-color, #2563eb);">
-                                    <span>المجموع الإجمالي:</span>
-                                    <span id="express-total-display">0 دج</span>
+                                    <span data-i18n="product.total_price">المجموع الإجمالي:</span>
+                                    <span id="express-total-display">0 <span data-i18n="common.currency">دج</span></span>
                                 </div>
                             </div>
 
                             <!-- زر الإرسال -->
                             <button type="submit" id="express-submit-btn" style="width: 100%; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #fff; border: none; border-radius: 10px; padding: 14px 20px; font-size: 1.08rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); transition: all 0.2s ease;">
-                                <i class="fas fa-check-circle"></i> اضغط هنا لتأكيد الطلب الآن ⚡
+                                <i class="fas fa-check-circle"></i> <span data-i18n="product.confirm_order_now">اضغط هنا لتأكيد الطلب الآن ⚡</span>
                             </button>
                         </form>
                     </div>
@@ -158,15 +169,15 @@
                     <div class="product-guarantees" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color, #e2e8f0);">
                         <div style="display: flex; align-items: center; gap: 10px; font-size: 0.86rem; color: var(--text-color);">
                             <i class="fas fa-truck" style="color: var(--primary-color); font-size: 1.1rem;"></i>
-                            <span>شحن متوفر لـ 58 ولاية</span>
+                            <span data-i18n="product.shipping_58_wilayas">شحن متوفر لـ 58 ولاية</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 10px; font-size: 0.86rem; color: var(--text-color);">
                             <i class="fas fa-money-bill-wave" style="color: var(--success-color); font-size: 1.1rem;"></i>
-                            <span>الدفع نقداً عند الاستلام</span>
+                            <span data-i18n="product.cod_available">الدفع نقداً عند الاستلام</span>
                         </div>
                         <div style="display: flex; align-items: center; gap: 10px; font-size: 0.86rem; color: var(--text-color);">
                             <i class="fas fa-shield-alt" style="color: var(--secondary-color); font-size: 1.1rem;"></i>
-                            <span>منتج أصلي ومضمون 100%</span>
+                            <span data-i18n="product.authentic_guarantee">منتج أصلي ومضمون 100%</span>
                         </div>
                     </div>
                 </div>
@@ -180,9 +191,9 @@
                 </div>
                 <div class="tabs-content">
                     <div class="tab-panel active" id="description"><h3 data-i18n="product.desc_tab">وصف المنتج</h3><div id="description-content"><p>وصف المنتج...</p></div></div>
-                    <div class="tab-panel" id="specifications"><h3 data-i18n="product.specs_tab">مواصفات المنتج</h3><table class="spec-table" id="spec-table"><tr><td>العلامة التجارية</td><td>منتج معتمد</td></tr><tr><td>الضمان</td><td>ضمان الجودة ضد عيوب الصناعة</td></tr></table></div>
-                    <div class="tab-panel" id="reviews"><h3 data-i18n="product.reviews_tab">المراجعات</h3><div class="reviews-container" id="reviews-container"></div><div class="add-review"><h4 data-i18n="product.add_review">أضف مراجعة</h4><div class="review-form"><div class="rating-input"><span data-i18n="product.rating_label">التقييم:</span><div class="stars" id="review-stars"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i><i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i></div><input type="hidden" id="review-rating" value="0"></div><div class="comment-input"><textarea id="review-comment" placeholder="اكتب مراجعتك هنا..." data-i18n-placeholder="product.comment_placeholder"></textarea></div><button class="submit-review" onclick="submitReview()" data-i18n="product.submit_review">إرسال المراجعة</button></div></div></div>
-                    <div class="tab-panel" id="shipping"><h3 data-i18n="cart.shipping">سياسة الشحن والتوصيل</h3><p>نوفر خدمة التوصيل السريع والآمن إلى كافة ولايات الجزائر (58 ولاية). يتم حساب سعر الشحن تلقائياً عند الدفع بناءً على الولاية المختارة ونوع التوصيل (منزلي أو مكتب استلام).</p></div>
+                    <div class="tab-panel" id="specifications"><h3 data-i18n="product.specs_tab">مواصفات المنتج</h3><table class="spec-table" id="spec-table"><tr><td data-i18n="product.brand">العلامة التجارية</td><td data-i18n="product.certified_product">منتج معتمد</td></tr><tr><td data-i18n="product.warranty">الضمان</td><td data-i18n="product.warranty_desc">ضمان الجودة ضد عيوب الصناعة</td></tr></table></div>
+                    <div class="tab-panel" id="reviews"><h3 data-i18n="product.reviews_tab">المراجعات</h3><div class="reviews-container" id="reviews-container"></div><div class="add-review"><h4 data-i18n="product.add_review">أضف مراجعة</h4><div class="review-form"><div class="rating-input"><span data-i18n="product.rating_label">التقييم:</span><div class="stars" id="review-stars"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i><i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i></div><input type="hidden" id="review-rating" value="0"></div><div class="comment-input"><textarea id="review-comment" data-i18n="product.review_placeholder" placeholder="اكتب مراجعتك هنا..." data-i18n-placeholder="product.comment_placeholder"></textarea></div><button class="submit-review" onclick="submitReview()" data-i18n="product.submit_review">إرسال المراجعة</button></div></div></div>
+                    <div class="tab-panel" id="shipping"><h3 data-i18n="cart.shipping">سياسة الشحن والتوصيل</h3><p data-i18n="product.shipping_policy">نوفر خدمة التوصيل السريع والآمن إلى كافة ولايات الجزائر (58 ولاية). يتم حساب سعر الشحن تلقائياً عند الدفع بناءً على الولاية المختارة ونوع التوصيل (منزلي أو مكتب استلام).</p></div>
                 </div>
             </div>
             <div class="similar-products"><h2 data-i18n="product.similar_products">منتجات مشابهة</h2><div class="products-grid" id="similar-products"></div></div>
@@ -195,39 +206,39 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
                     </div>
                     <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-                        وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.
+                        <span data-i18n="footer.description">وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، و<span data-i18n="features.cod_title">الدفع عند الاستلام</span>.</span>
                     </p>
                 </div>
                 <div class="footer-col">
-                    <h3>روابط سريعة</h3>
+                    <h3 data-i18n="footer.quick_links">روابط سريعة</h3>
                     <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="shop.html">التسوق</a></li>
-                        <li><a href="cart.html">عربة التسوق</a></li>
-                        <li><a href="track-order.html">تتبع طلبي</a></li>
+                        <li><a href="index.html" data-i18n="footer.link_home">الرئيسية</a></li>
+                        <li><a href="shop.html" data-i18n="shop.title">التسوق</a></li>
+                        <li><a href="cart.html" data-i18n="footer.link_cart">عربة التسوق</a></li>
+                        <li><a href="track-order.html" data-i18n="footer.link_track">تتبع طلبي</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>تواصل معنا</h3>
+                    <h3 data-i18n="footer.contact">تواصل معنا</h3>
                     <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> الجزائر العاصمة، الجزائر</li>
+                        <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer.address">الجزائر العاصمة، الجزائر</span></li>
                         <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
                         <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>طرق الدفع</h3>
+                    <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
                     <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
                         <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+                <p data-i18n="footer.copyright">&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>
@@ -241,15 +252,16 @@
 
             try {
                 const response = await fetch(`/api/products/${productId}`);
-                if (!response.ok) throw new Error('خطأ في جلب المنتج');
+                if (!response.ok) throw new Error(window.I18n.t('messages.fetch_product_error', 'خطأ في جلب المنتج'));
                 currentProduct = await response.json();
 
                 document.getElementById('product-title').textContent = currentProduct.name;
                 document.getElementById('product-breadcrumb').textContent = currentProduct.name;
                 document.getElementById('product-name').textContent = currentProduct.name;
-                document.getElementById('product-price').textContent = `${Number(currentProduct.price).toLocaleString()} دج`;
-                document.getElementById('product-description').innerHTML = `<p>${currentProduct.description || 'وصف غير متوفر'}</p>`;
-                document.title = `${currentProduct.name} - المتجر الإلكتروني`;
+                document.getElementById('product-price').textContent = `${Number(currentProduct.price).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
+                const safeDescription = window.escapeHtml ? window.escapeHtml(currentProduct.description || window.I18n.t('product.no_description', 'وصف غير متوفر')).replace(/\n/g, '<br>') : (currentProduct.description || window.I18n.t('product.no_description', 'وصف غير متوفر'));
+                document.getElementById('product-description').innerHTML = `<p>${safeDescription}</p>`;
+                document.title = `${currentProduct.name} - <span data-i18n="footer.brand">المتجر الإلكتروني</span>`;
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc && currentProduct.description) metaDesc.content = currentProduct.description.substring(0, 160);
                 
@@ -263,13 +275,13 @@
                         addBtn.disabled = true;
                         addBtn.style.background = '#94a3b8';
                         addBtn.style.cursor = 'not-allowed';
-                        addBtn.textContent = 'نفد المخزون حالياً';
+                        addBtn.textContent = window.I18n.t('product.out_of_stock_now', 'نفد المخزون حالياً');
                     }
                 } else if (stockNum <= 3) {
                     const priceBox = document.querySelector('.product-price');
                     const warning = document.createElement('span');
                     warning.style.cssText = 'display:block; color:#d97706; font-size:0.9rem; font-weight:bold; margin-top:5px;';
-                    warning.textContent = `⚠️ سارع بالطلب! متبقي ${stockNum} قطع فقط في المخزون`;
+                    warning.textContent = window.I18n.t('product.hurry_stock', '⚠️ سارع بالطلب! متبقي {count} قطع فقط في المخزون').replace('{count}', stockNum);
                     priceBox.appendChild(warning);
                 }
 
@@ -283,7 +295,7 @@
                 loadSimilarProducts(currentProduct.category);
                 loadProductReviews(currentProduct.id);
             } catch (error) {
-                alert('خطأ في تحميل المنتج');
+                alert(window.I18n.t('messages.load_product_error', 'خطأ في تحميل المنتج'));
             }
         }
 
@@ -295,11 +307,11 @@
                 if (!res.ok) return;
                 const reviews = await res.json();
                 if (!reviews || !reviews.length) {
-                    container.innerHTML = '<p style="color:#64748b; padding:15px;">لا توجد تقييمات لهذا المنتج بعد. كن أول من يقيّم هذا المنتج!</p>';
+                    container.innerHTML = '<p style="color:#64748b; padding:15px;">' + window.I18n.t('product.no_reviews_yet', 'لا توجد تقييمات لهذا المنتج بعد. كن أول من يقيّم هذا المنتج!') + '</p>';
                     return;
                 }
                 container.innerHTML = reviews.map(r => {
-                    const safeUser = window.escapeHtml ? window.escapeHtml(r.username || 'عميل المتجر') : (r.username || 'عميل المتجر');
+                    const safeUser = window.escapeHtml ? window.escapeHtml(r.username || window.I18n.t('product.store_customer', 'عميل المتجر')) : (r.username || window.I18n.t('product.store_customer', 'عميل المتجر'));
                     const safeComment = window.escapeHtml ? window.escapeHtml(r.comment || '') : (r.comment || '');
                     return `
                     <div class="review-item" style="border-bottom: 1px solid #f1f5f9; padding: 12px 0;">
@@ -340,7 +352,7 @@
                 // Render real dynamic variants
                 optionsContainer.innerHTML = `
                     <div class="variant-options">
-                        <h3 style="font-size: 1rem; color: #1e293b; margin-bottom: 8px;">الخيارات المتاحة (المقاس / اللون / السعة):</h3>
+                        <h3 style="font-size: 1rem; color: #1e293b; margin-bottom: 8px;"><span data-i18n="product.available_options">الخيارات المتاحة (المقاس / اللون / السعة):</span></h3>
                         <div class="variant-select" style="display: flex; gap: 8px; flex-wrap: wrap;">
                             ${product.variants.map((v, idx) => `
                                 <button type="button" class="variant-btn ${idx === 0 ? 'active' : ''}" 
@@ -371,17 +383,17 @@
                         selectedVariant = product.variants.find(v => Number(v.id) === vId);
                         if (selectedVariant) {
                             const unitPrice = Number(product.price) + Number(selectedVariant.priceModifier || 0);
-                            document.getElementById('product-price').textContent = `${unitPrice.toLocaleString()} دج`;
+                            document.getElementById('product-price').textContent = `${unitPrice.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
                             updateExpressCalculations();
                         }
                     });
                 });
             } else {
-                const colors = ['أسود', 'أبيض', 'أزرق'];
+                const colors = [window.I18n.t('colors.black', window.I18n.t('colors.black', 'أسود')), window.I18n.t('colors.white', 'أبيض'), window.I18n.t('colors.blue', 'أزرق')];
                 const sizes = ['S', 'M', 'L', 'XL'];
                 const colorEl = document.getElementById('color-select');
                 const sizeEl = document.getElementById('size-select');
-                if (colorEl) colorEl.innerHTML = colors.map(color => `<button class="color-btn ${color === 'أسود' ? 'active' : ''}" data-color="${color}">${color}</button>`).join('');
+                if (colorEl) colorEl.innerHTML = colors.map(color => `<button class="color-btn ${color === window.I18n.t('colors.black', 'أسود') ? 'active' : ''}" data-color="${color}">${color}</button>`).join('');
                 if (sizeEl) sizeEl.innerHTML = sizes.map(size => `<button class="size-btn ${size === 'M' ? 'active' : ''}" data-size="${size}">${size}</button>`).join('');
                 document.querySelectorAll('.color-btn').forEach(btn => btn.addEventListener('click', e => {
                     e.target.parentNode.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
@@ -425,11 +437,11 @@
                     localStorage.setItem('cart', JSON.stringify(cart));
                     window.cart = cart;
                     if (window.showToast) {
-                        window.showToast('تمت إضافة المنتج إلى السلة بنجاح! 🛒', 'success');
+                        window.showToast(window.I18n.t('messages.add_cart_success', 'تمت إضافة المنتج إلى السلة بنجاح! 🛒'), 'success');
                     }
                 } catch (error) {
                     if (window.showToast) {
-                        window.showToast('حدث خطأ أثناء إضافة المنتج', 'error');
+                        window.showToast(window.I18n.t('messages.add_cart_error', 'حدث خطأ أثناء إضافة المنتج'), 'error');
                     }
                 }
             }
@@ -449,7 +461,7 @@
                     heartBtn.style.color = added ? '#ef4444' : '';
                 }
             } else {
-                alert('تمت إضافة المنتج إلى قائمة الرغبات');
+                alert(window.I18n.t('messages.add_wishlist_success', 'تمت إضافة المنتج إلى قائمة الرغبات'));
             }
         }
 
@@ -470,8 +482,8 @@
             const rating = parseInt(document.getElementById('review-rating').value, 10);
             const comment = document.getElementById('review-comment').value.trim();
             if (isNaN(rating) || rating < 1 || !comment) {
-                if (window.showToast) window.showToast('يرجى اختيار التقييم بالنجوم وكتابة تعليقك', 'warning');
-                else alert('يرجى اختيار التقييم بالنجوم وكتابة تعليقك');
+                if (window.showToast) window.showToast(window.I18n.t('messages.review_validation', 'يرجى اختيار التقييم بالنجوم وكتابة تعليقك'), 'warning');
+                else alert(window.I18n.t('messages.review_validation', 'يرجى اختيار التقييم بالنجوم وكتابة تعليقك'));
                 return;
             }
 
@@ -479,7 +491,7 @@
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.dataset.origText = submitBtn.innerHTML;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + window.I18n.t('common.sending', 'جاري الإرسال...');
             }
 
             try {
@@ -503,16 +515,16 @@
                 });
 
                 if (res.status === 401 || res.status === 403) {
-                    if (window.showToast) window.showToast('يرجى تسجيل الدخول أولاً لإضافة تقييمك ⭐', 'warning');
-                    else alert('يرجى تسجيل الدخول أولاً لإضافة تقييمك');
+                    if (window.showToast) window.showToast(window.I18n.t('messages.login_to_review', 'يرجى تسجيل الدخول أولاً لإضافة تقييمك ⭐'), 'warning');
+                    else alert(window.I18n.t('messages.login_to_review_alt', 'يرجى تسجيل الدخول أولاً لإضافة تقييمك'));
                     return;
                 }
 
                 const data = await res.json();
-                if (!res.ok) throw new Error(data.error || 'فشل إرسال التقييم');
+                if (!res.ok) throw new Error(data.error || window.I18n.t('messages.submit_review_fail', 'فشل إرسال التقييم'));
 
-                if (window.showToast) window.showToast(data.message || 'تمت إضافة تقييمك بنجاح! ⭐', 'success');
-                else alert(data.message || 'تمت إضافة تقييمك بنجاح! ⭐');
+                if (window.showToast) window.showToast(data.message || window.I18n.t('messages.submit_review_success', 'تمت إضافة تقييمك بنجاح! ⭐'), 'success');
+                else alert(data.message || window.I18n.t('messages.submit_review_success', 'تمت إضافة تقييمك بنجاح! ⭐'));
 
                 document.getElementById('review-comment').value = '';
                 document.getElementById('review-rating').value = 0;
@@ -524,7 +536,7 @@
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = submitBtn.dataset.origText || 'إرسال التقييم';
+                    submitBtn.innerHTML = submitBtn.dataset.origText || window.I18n.t('product.submit_review', 'إرسال التقييم');
                 }
             }
         }
@@ -540,28 +552,28 @@
         async function loadSimilarProducts(category) {
             try {
                 const response = await fetch(`/api/products?category=${encodeURIComponent(category || '')}`);
-                if (!response.ok) throw new Error('خطأ في جلب المنتجات');
+                if (!response.ok) throw new Error(window.I18n.t('messages.fetch_products_error', 'خطأ في جلب المنتجات'));
                 const data = await response.json();
                 const allProducts = Array.isArray(data) ? data : (Array.isArray(data && data.products) ? data.products : []);
                 const similar = allProducts.filter(p => p.id !== currentProduct.id).slice(0, 4);
                 const container = document.getElementById('similar-products');
                 if (!container) return;
                 if (!similar.length) {
-                    container.innerHTML = '<p style="color: #64748b; padding: 15px;">لا توجد منتجات مشابهة حالياً</p>';
+                    container.innerHTML = '<p style="color: #64748b; padding: 15px;">' + window.I18n.t('product.no_similar_products', 'لا توجد منتجات مشابهة حالياً') + '</p>';
                     return;
                 }
                 container.innerHTML = similar.map(p => `
                     <div class="similar-product">
                         <img src="${p.image_url || 'images/product-placeholder.jpg'}" alt="${p.name}">
                         <h3>${p.name}</h3>
-                        <p class="price">${Number(p.price).toLocaleString()} دج</p>
-                        <a href="product.html?id=${p.id}">عرض التفاصيل</a>
+                        <p class="price">${Number(p.price).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</p>
+                        <a href="product.html?id=${p.id}"><span data-i18n="product.view_details">عرض التفاصيل</span></a>
                     </div>
                 `).join('');
             } catch (error) {
                 const container = document.getElementById('similar-products');
                 if (container) {
-                    container.innerHTML = '<p style="color: #64748b; padding: 15px;">لا توجد منتجات مشابهة</p>';
+                    container.innerHTML = '<p style="color: #64748b; padding: 15px;">' + window.I18n.t('product.no_similar_products_alt', 'لا توجد منتجات مشابهة') + '</p>';
                 }
             }
         }
@@ -580,15 +592,15 @@
 
             if (!wilayasList || !wilayasList.length) {
                 wilayasList = [
-                    { id: 16, name_ar: 'الجزائر', home_delivery_price: 400, desk_delivery_price: 250 },
-                    { id: 31, name_ar: 'وهران', home_delivery_price: 500, desk_delivery_price: 350 },
-                    { id: 25, name_ar: 'قسنطينة', home_delivery_price: 500, desk_delivery_price: 350 },
-                    { id: 19, name_ar: 'سطيف', home_delivery_price: 500, desk_delivery_price: 350 },
-                    { id: 9, name_ar: 'البليدة', home_delivery_price: 450, desk_delivery_price: 300 }
+                    { id: 16, name_ar: window.I18n.t('wilayas.algiers', window.I18n.t('wilayas.algiers', 'الجزائر')), home_delivery_price: 400, desk_delivery_price: 250 },
+                    { id: 31, name_ar: window.I18n.t('wilayas.oran', 'وهران'), home_delivery_price: 500, desk_delivery_price: 350 },
+                    { id: 25, name_ar: window.I18n.t('wilayas.constantine', 'قسنطينة'), home_delivery_price: 500, desk_delivery_price: 350 },
+                    { id: 19, name_ar: window.I18n.t('wilayas.setif', 'سطيف'), home_delivery_price: 500, desk_delivery_price: 350 },
+                    { id: 9, name_ar: window.I18n.t('wilayas.blida', 'البليدة'), home_delivery_price: 450, desk_delivery_price: 300 }
                 ];
             }
 
-            select.innerHTML = '<option value="">-- اختر الولاية --</option>' + wilayasList.map(w => 
+            select.innerHTML = '<option value="" data-i18n="product.select_wilaya">-- اختر الولاية --</option>' + wilayasList.map(w => 
                 `<option value="${w.id}" data-name="${w.name_ar || w.name}" data-home="${w.home_delivery_price || 500}" data-desk="${w.desk_delivery_price || 350}">
                     ${w.id} - ${w.name_ar || w.name}
                 </option>`
@@ -608,8 +620,8 @@
             if (!select) return;
             const selectedOpt = select.options[select.selectedIndex];
             if (selectedOpt && selectedOpt.dataset.home) {
-                document.getElementById('express-home-price').textContent = `${Number(selectedOpt.dataset.home).toLocaleString()} دج`;
-                document.getElementById('express-desk-price').textContent = `${Number(selectedOpt.dataset.desk).toLocaleString()} دج`;
+                document.getElementById('express-home-price').textContent = `${Number(selectedOpt.dataset.home).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
+                document.getElementById('express-desk-price').textContent = `${Number(selectedOpt.dataset.desk).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
             }
             updateExpressCalculations();
         }
@@ -637,9 +649,9 @@
             const totalEl = document.getElementById('express-total-display');
 
             if (qtyEl) qtyEl.textContent = qty;
-            if (subEl) subEl.textContent = `${subtotal.toLocaleString()} دج`;
-            if (shipEl) shipEl.textContent = `${shipping.toLocaleString()} دج`;
-            if (totalEl) totalEl.textContent = `${total.toLocaleString()} دج`;
+            if (subEl) subEl.textContent = `${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
+            if (shipEl) shipEl.textContent = `${shipping.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
+            if (totalEl) totalEl.textContent = `${total.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
         }
 
         async function handleExpressOrder(event) {
@@ -651,31 +663,31 @@
             const wilayaSelect = document.getElementById('express-wilaya');
             const wilayaId = wilayaSelect.value;
             const selectedOpt = wilayaSelect.options[wilayaSelect.selectedIndex];
-            const wilayaName = selectedOpt ? (selectedOpt.dataset.name || selectedOpt.text) : 'الجزائر';
+            const wilayaName = selectedOpt ? (selectedOpt.dataset.name || selectedOpt.text) : window.I18n.t('wilayas.algiers', window.I18n.t('wilayas.algiers', 'الجزائر'));
             const address = document.getElementById('express-address').value.trim();
             const deliveryType = document.querySelector('input[name="express-delivery"]:checked')?.value || 'home';
             const quantity = parseInt(document.getElementById('quantity').value, 10) || 1;
 
             if (!name) {
-                alert('يرجى إدخال الاسم الكامل');
+                alert(window.I18n.t('messages.enter_full_name', 'يرجى إدخال الاسم الكامل'));
                 return;
             }
 
             const cleanPhone = phone.replace(/[\s-]/g, '');
             if (!/^(0[567][0-9]{8}|0[2-49][0-9]{7}|\+213[567][0-9]{8})$/.test(cleanPhone)) {
-                alert('يرجى إدخال رقم هاتف جزائري صحيح (مثال: 0555123456 أو 0666123456 أو 0777123456)');
+                alert(window.I18n.t('messages.enter_valid_phone', 'يرجى إدخال رقم هاتف جزائري صحيح'));
                 return;
             }
 
             if (!wilayaId) {
-                alert('يرجى اختيار الولاية');
+                alert(window.I18n.t('messages.select_wilaya', 'يرجى اختيار الولاية'));
                 return;
             }
 
             const submitBtn = document.getElementById('express-submit-btn');
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تأكيد طلبك...';
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + window.I18n.t('messages.confirming_order', 'جاري تأكيد طلبك...');
             }
 
             try {
@@ -722,15 +734,15 @@
 
                 const data = await res.json();
                 if (!res.ok) {
-                    throw new Error(data.error || data.message || 'تعذر تأكيد الطلب، يرجى المحاولة لاحقاً');
+                    throw new Error(data.error || data.message || window.I18n.t('messages.order_confirm_fail', 'تعذر تأكيد الطلب، يرجى المحاولة لاحقاً'));
                 }
 
                 window.location.href = `order-confirmation.html?orderId=${data.id}&orderNumber=${encodeURIComponent(data.orderNumber || '')}&token=${encodeURIComponent(data.trackingToken || '')}`;
             } catch (err) {
-                alert(err.message || 'حدث خطأ أثناء تأكيد الطلب');
+                alert(err.message || window.I18n.t('messages.order_error', 'حدث خطأ أثناء تأكيد الطلب'));
                 if (submitBtn) {
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> اضغط هنا لتأكيد الطلب الآن ⚡';
+                    submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> <span data-i18n="product.confirm_order_now">اضغط هنا لتأكيد الطلب الآن ⚡</span>';
                 }
             }
         }

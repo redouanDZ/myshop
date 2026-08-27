@@ -205,11 +205,130 @@ async function uploadMedia(req, res) {
     }
 }
 
+async function updateUserRole(req, res) {
+    try {
+        const userId = parseInt(req.params.id, 10);
+        const { role } = req.body;
+        if (isNaN(userId)) return res.status(400).json({ error: 'معرف المستخدم غير صالح' });
+        if (!['customer', 'admin'].includes(role)) {
+            return res.status(400).json({ error: 'نوع الدور غير صالح (customer أو admin)' });
+        }
+
+        // Safety: Prevent admin from changing their own role to prevent lockout
+        if (req.userId && Number(req.userId) === userId && role !== 'admin') {
+            return res.status(400).json({ error: 'لا يمكنك تغيير صلاحيات حسابك الخاص كمسؤول' });
+        }
+
+        const success = await db.updateUserRole(userId, role);
+        if (!success) return res.status(404).json({ error: 'المستخدم غير موجود' });
+        res.json({ message: 'تم تحديث دور المستخدم بنجاح' });
+    } catch (error) {
+        console.error('Error updating user role:', error);
+        res.status(500).json({ error: 'خطأ في تحديث دور المستخدم' });
+    }
+}
+
+async function deleteUser(req, res) {
+    try {
+        const userId = parseInt(req.params.id, 10);
+        if (isNaN(userId)) return res.status(400).json({ error: 'معرف المستخدم غير صالح' });
+
+        // Safety: Prevent admin from deleting their own account
+        if (req.userId && Number(req.userId) === userId) {
+            return res.status(400).json({ error: 'لا يمكنك حذف حسابك الخاص كمسؤول' });
+        }
+
+        const success = await db.deleteUser(userId);
+        if (!success) return res.status(404).json({ error: 'المستخدم غير موجود' });
+        res.json({ message: 'تم حذف المستخدم بنجاح' });
+    } catch (error) {
+        console.error('Error deleting user:', error);
+        res.status(500).json({ error: 'خطأ في حذف المستخدم' });
+    }
+}
+
+// --- Categories Handlers ---
+async function getCategories(req, res) {
+    try {
+        const categories = await db.getCategories();
+        res.json(categories);
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+        res.status(500).json({ error: 'خطأ في جلب الأقسام' });
+    }
+}
+
+async function getCategoryById(req, res) {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) return res.status(400).json({ error: 'معرف القسم غير صالح' });
+        const category = await db.getCategoryById(id);
+        if (!category) return res.status(404).json({ error: 'القسم غير موجود' });
+        res.json(category);
+    } catch (error) {
+        console.error('Error fetching category:', error);
+        res.status(500).json({ error: 'خطأ في جلب بيانات القسم' });
+    }
+}
+
+async function createCategory(req, res) {
+    try {
+        const { name, slug } = req.body;
+        if (!name || !String(name).trim()) {
+            return res.status(400).json({ error: 'اسم القسم مطلوب' });
+        }
+        const id = await db.createCategory({ name: String(name).trim(), slug });
+        res.status(201).json({ message: 'تم إنشاء القسم بنجاح', id });
+    } catch (error) {
+        console.error('Error creating category:', error);
+        if (error.code === 'ER_DUP_ENTRY') {
+            return res.status(400).json({ error: 'اسم القسم أو الرابط المرجعي موجود بالفعل' });
+        }
+        res.status(500).json({ error: error.message || 'خطأ في إنشاء القسم' });
+    }
+}
+
+async function updateCategory(req, res) {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) return res.status(400).json({ error: 'معرف القسم غير صالح' });
+        const success = await db.updateCategory(id, req.body);
+        if (!success) return res.status(404).json({ error: 'القسم غير موجود' });
+        res.json({ message: 'تم تحديث القسم بنجاح' });
+    } catch (error) {
+        console.error('Error updating category:', error);
+        res.status(500).json({ error: 'خطأ في تحديث القسم' });
+    }
+}
+
+async function deleteCategory(req, res) {
+    try {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) return res.status(400).json({ error: 'معرف القسم غير صالح' });
+        const success = await db.deleteCategory(id);
+        if (!success) return res.status(404).json({ error: 'القسم غير موجود' });
+        res.json({ message: 'تم حذف القسم بنجاح' });
+    } catch (error) {
+        console.error('Error deleting category:', error);
+        if (error.code === 'CATEGORY_HAS_PRODUCTS') {
+            return res.status(409).json({ error: error.message });
+        }
+        res.status(500).json({ error: 'خطأ في حذف القسم' });
+    }
+}
+
 module.exports = {
     getDashboardStats,
     getPublicConfig,
     getAdminUsers,
     getAdminUserById,
+    updateUserRole,
+    deleteUser,
+    getCategories,
+    getCategoryById,
+    createCategory,
+    updateCategory,
+    deleteCategory,
     getAdminCoupons,
     createCoupon,
     updateCoupon,

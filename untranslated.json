@@ -1,0 +1,3540 @@
+[
+  {
+    "file": "index.html",
+    "text": "متجري - المتجر الإلكتروني التقني المتكامل",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "index.html",
+    "text": "متجر إلكتروني حديث يقدم أفضل الأجهزة الإلكترونية والتقنية في الجزائر بأسعار تنافسية وتوصيل سريع.",
+    "tag": "meta",
+    "type": "description"
+  },
+  {
+    "file": "index.html",
+    "text": "متجري - متجر الإلكترونيات العصرية",
+    "tag": "meta",
+    "type": "meta"
+  },
+  {
+    "file": "index.html",
+    "text": "تسوق أحدث الحواسيب والملحقات التقنية بأفضل الأسعار.",
+    "tag": "meta",
+    "type": "meta"
+  },
+  {
+    "file": "index.html",
+    "text": "متجري - متجر الإلكترونيات العصرية",
+    "tag": "meta",
+    "type": "twitter:title"
+  },
+  {
+    "file": "index.html",
+    "text": "تسوق أحدث الحواسيب والملحقات التقنية بأفضل الأسعار.",
+    "tag": "meta",
+    "type": "twitter:description"
+  },
+  {
+    "file": "index.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "index.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "index.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "index.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "index.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "index.html",
+    "text": "ابحث عن هاتف، حاسوب، ملحقات تقنية...",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "🇩🇿 المتجر الإلكتروني الموثوق في الجزائر",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "تسوق أفضل الأجهزة والمنتجات التقنية بأسعار منافسة",
+    "tag": "h1",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "توصيل سريع وموثوق إلى 58 ولاية مع إمكانية الدفع عند الاستلام وضمان الجودة وأصالة المنتجات 100%.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "ابدأ التسوق الآن",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "btn btn-hero-primary"
+  },
+  {
+    "file": "index.html",
+    "text": "تتبع طلبك الحالي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "btn btn-hero-secondary"
+  },
+  {
+    "file": "index.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "ادفع براحة وأمان بعد استلام وفحص طلبك في منزلك",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "توصيل لكافة 58 ولاية",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "شحن سريع إلى باب منزلك أو أقرب مكتب استلام",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "منتجات أصلية 100%",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "ضمان رسمي وجودة عالية مفحوصة بدقة",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "دعم عملاء ومتابعة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "فريق متخصص لمساعدتك ومتابعة الشحنة حتى وصولها",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "جميع المنتجات",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "category-pill active"
+  },
+  {
+    "file": "index.html",
+    "text": "إلكترونيات",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "category-pill"
+  },
+  {
+    "file": "index.html",
+    "text": "هواتف وملحقات",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "category-pill"
+  },
+  {
+    "file": "index.html",
+    "text": "صوتيات وسماعات",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "category-pill"
+  },
+  {
+    "file": "index.html",
+    "text": "أزياء وملابس",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "category-pill"
+  },
+  {
+    "file": "index.html",
+    "text": "كتب ومراجع",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "category-pill"
+  },
+  {
+    "file": "index.html",
+    "text": "المنتجات المميزة",
+    "tag": "h2",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "اخترنا لك أفضل المنتجات ذات التقييمات العالية",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "عرض كل المنتجات",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "عروض وتخفيضات خاصة 🔥",
+    "tag": "h2",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "خصومات حصرية لفترة محدودة على تشكيلة مختارة",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "اكتشف جميع العروض",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "وجهتك الأولى الموثوقة للتسوق الإلكتروني في الجزائر. نقدم منتجات تقنية أصلية بأفضل الأسعار مع توصيل سريع لـ 58 ولاية ودفع آمن عند الاستلام.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "58 ولاية",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "ضمان 100%",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "روابط سريعة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "متجر المنتجات",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "سلة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "قائمة المفضلة",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "تتبع طلبيتك",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "خدمة العملاء والتواصل",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "الجزائر العاصمة، الجزائر",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "السبت - الخميس: 9:00 ص - 6:00 م",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "طرق الدفع والشحن",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "نقبل الدفع الآمن عند الاستلام أو عبر البطاقات الإلكترونية الجزائرية:",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "COD نقداً",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "تابعنا على الشبكات",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "© 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "index.html",
+    "text": "صُمم بأعلى معايير الأمان والتجارة الإلكترونية في الجزائر 🇩🇿",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "التسوق - متجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "shop.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "shop.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "shop.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "shop.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "shop.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "shop.html",
+    "text": "التسوق",
+    "tag": "h1",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "التسوق",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "breadcrumb"
+  },
+  {
+    "file": "shop.html",
+    "text": "فلاتر المنتجات",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "إعادة ضبط",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "reset-filters-btn"
+  },
+  {
+    "file": "shop.html",
+    "text": "التصنيفات",
+    "tag": "h4",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "الكل",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "إلكترونيات",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "ملابس",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "كتب",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "أقصى سعر (دج)",
+    "tag": "h4",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "0 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "حتى:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "200,000 دج",
+    "tag": "strong",
+    "type": "text",
+    "id": "priceRangeValue",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "التقييم",
+    "tag": "h4",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "جميع التقييمات",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "⭐ 4.5 فما فوق (ممتاز)",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "⭐ 4.0 فما فوق (جيد جداً)",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "⭐ 3.0 فما فوق",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "التوفر في المتجر",
+    "tag": "h4",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "المتوفر في المخزون فقط",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "ابحث عن منتج بالاسم...",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "searchInput",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "الأحدث أولاً",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "التقييم: الأعلى تقييماً ⭐",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "السعر: الأقل إلى الأعلى",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "السعر: الأعلى إلى الأقل",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "الاسم: أ-ي",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "الاسم: ي-أ",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "shop.html",
+    "text": "© 2025 متجر الإلكتروني. جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "عربة التسوق - متجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "cart.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "cart.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "cart.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "cart.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "cart.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "cart.html",
+    "text": "المنتجات المضافة",
+    "tag": "h2",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "عربة التسوق فارغة حالياً",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": "empty-state-title"
+  },
+  {
+    "file": "cart.html",
+    "text": "لم تقم بإضافة أي منتجات إلى سلتك بعد. استكشف تشكيلتنا الواسعة وابدأ التسوق الآن.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": "empty-state-desc"
+  },
+  {
+    "file": "cart.html",
+    "text": "تصفح متجر المنتجات",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "btn btn-primary"
+  },
+  {
+    "file": "cart.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "روابط سريعة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "تواصل معنا",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "الجزائر العاصمة، الجزائر",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "طرق الدفع",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "cart.html",
+    "text": "© 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "إتمام الطلب والدفع - المتجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "checkout.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "checkout.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "checkout.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "checkout.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "checkout.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "checkout.html",
+    "text": "معلومات الشحن والتوصيل",
+    "tag": "h2",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الاسم الكامل",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "أدخل اسمك الكامل",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "fullname",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "رقم الهاتف (الجزائر)",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "مثال: 0550123456 أو 0660123456",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "phone",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "البريد الإلكتروني (اختياري لاستلام الفاتورة)",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الولاية (58 ولاية)",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "جاري تحميل الولايات...",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "العنوان الكامل / البلدية",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "البلدية، اسم الشارع، رقم العمارة أو المنزل...",
+    "tag": "textarea",
+    "type": "placeholder",
+    "id": "address",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "نوع التوصيل المفضل:",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "توصيل للمنزل (Home Delivery)",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "السعر: حسب الولاية",
+    "tag": "span",
+    "type": "text",
+    "id": "homeDeliveryPriceLabel",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "استلام من المكتب (Stop Desk)",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "السعر: خيار اقتصادي",
+    "tag": "span",
+    "type": "text",
+    "id": "deskDeliveryPriceLabel",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "ملاحظات خاصة بالموزع (اختياري)",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "أوقات التواجد المفضلة، تفاصيل إضافية...",
+    "tag": "textarea",
+    "type": "placeholder",
+    "id": "notes",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "التالي: اختيار طريقة الدفع",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "next-step-btn"
+  },
+  {
+    "file": "checkout.html",
+    "text": "طريقة الدفع",
+    "tag": "h2",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الدفع عند الاستلام (COD)",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الأكثر استخداماً",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": "payment-badge"
+  },
+  {
+    "file": "checkout.html",
+    "text": "ادفع نقداً ومباشرة عند استلام الطلب من موزع شركة التوصيل.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الدفع الإلكتروني (البطاقة الذهبية / CIB)",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "دفع فوري وآمن عبر بوابة الدفع الإلكتروني الجزائرية الرسمية.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "تحويل بريدي / بنكي (CCP / BaridiMob)",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "إرسال المبلغ إلى الحساب البريدي وتأكيد الطلب بإرسال الوصل.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "معلومات الحساب البريدي (CCP / BaridiMob)",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "يرجى تحويل إجمالي الطلب إلى الحساب التالي وإرسال صورة الوصل عبر واتساب أو البريد:",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "رقم الحساب البريدي (CCP):",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "0012345678 المفتاح 90",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الاسم:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "السابق: معلومات الشحن",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "prev-step-btn"
+  },
+  {
+    "file": "checkout.html",
+    "text": "التالي: مراجعة الطلب",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "next-step-btn"
+  },
+  {
+    "file": "checkout.html",
+    "text": "مراجعة وتأكيد الطلب",
+    "tag": "h2",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "ملخص المنتجات والتوصيل",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "المجموع الفرعي للمنتجات:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "0 دج",
+    "tag": "strong",
+    "type": "text",
+    "id": "reviewSubtotal",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "تكلفة الشحن والتوصيل (",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الولاية",
+    "tag": "span",
+    "type": "text",
+    "id": "reviewWilayaName",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "0 دج",
+    "tag": "strong",
+    "type": "text",
+    "id": "reviewShippingCost",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الخصم المطبق:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "-0 دج",
+    "tag": "strong",
+    "type": "text",
+    "id": "reviewDiscount",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "المبلغ الإجمالي المستحق:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "0 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "reviewGrandTotal",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "أوافق على",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "شروط الخدمة",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "وسياسة الاسترجاع الخاصة بالمتجر.",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "السابق: طريقة الدفع",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "prev-step-btn"
+  },
+  {
+    "file": "checkout.html",
+    "text": "تأكيد الطلب الآن",
+    "tag": "button",
+    "type": "text",
+    "id": "confirmOrderBtn",
+    "class": "submit-order-btn"
+  },
+  {
+    "file": "checkout.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "تسوق آمن وموثوق لـ 58 ولاية جزائرية مع ضمان الدفع عند الاستلام وسرعة الشحن.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "روابط هامة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "دعم الطلبات",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "حماية تامة للبيانات والطلبات",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "طرق الدفع",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "checkout.html",
+    "text": "© 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "تفاصيل المنتج - متجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "product.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "product.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "product.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "product.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "product.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "product.html",
+    "text": "تفاصيل المنتج",
+    "tag": "h1",
+    "type": "text",
+    "id": "product-title",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "تفاصيل المنتج",
+    "tag": "span",
+    "type": "text",
+    "id": "product-breadcrumb",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "المنتج الرئيسي",
+    "tag": "img",
+    "type": "alt",
+    "id": "main-image",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "اسم المنتج هنا",
+    "tag": "h2",
+    "type": "text",
+    "id": "product-name",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "299.00 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "product-price",
+    "class": "price"
+  },
+  {
+    "file": "product.html",
+    "text": "399.00 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "old-price",
+    "class": "old-price"
+  },
+  {
+    "file": "product.html",
+    "text": "وصف المنتج...",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "اللون:",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "المقاس:",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "أضف للمفضلة",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "add-to-wishlist"
+  },
+  {
+    "file": "product.html",
+    "text": "الشراء السريع (الدفع عند الاستلام)",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "طلب مباشر",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الاسم الكامل",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "مثال: أحمد بن علي",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "express-name",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "رقم الهاتف",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الولاية",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "-- اختر الولاية --",
+    "tag": "option",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "البلدية / العنوان",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "البلدية أو العنوان",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "express-address",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "نوع التوصيل",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "🏠 للمنزل (",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "500 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "express-home-price",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "🏢 للمكتب (",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "350 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "express-desk-price",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "سعر المنتجات (",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "0 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "express-subtotal-display",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "تكلفة التوصيل:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "500 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "express-shipping-display",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "المجموع الإجمالي:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "0 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "express-total-display",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "اضغط هنا لتأكيد الطلب الآن ⚡",
+    "tag": "button",
+    "type": "text",
+    "id": "express-submit-btn",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "شحن متوفر لـ 58 ولاية",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الدفع نقداً عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "منتج أصلي ومضمون 100%",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "وصف المنتج...",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "العلامة التجارية",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "منتج معتمد",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الضمان",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "ضمان الجودة ضد عيوب الصناعة",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "اكتب مراجعتك هنا...",
+    "tag": "textarea",
+    "type": "placeholder",
+    "id": "review-comment",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "نوفر خدمة التوصيل السريع والآمن إلى كافة ولايات الجزائر (58 ولاية). يتم حساب سعر الشحن تلقائياً عند الدفع بناءً على الولاية المختارة ونوع التوصيل (منزلي أو مكتب استلام).",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "روابط سريعة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "تواصل معنا",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الجزائر العاصمة، الجزائر",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "طرق الدفع",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "product.html",
+    "text": "© 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "حسابي - متجر التجارة الإلكترونية",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "account.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "account.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "account.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "account.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon active"
+  },
+  {
+    "file": "account.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "account.html",
+    "text": "زائر",
+    "tag": "h3",
+    "type": "text",
+    "id": "sidebar-user-name",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "لم يتم تسجيل الدخول",
+    "tag": "p",
+    "type": "text",
+    "id": "sidebar-user-email",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "الملف الشخصي",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "عناوين الشحن",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "طلباتي",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "قائمة المفضلة",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "تسجيل الخروج",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "بيانات الملف الشخصي",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "الاسم الكامل",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "مثال: أحمد محمد",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "profile-name",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "رقم الهاتف",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "البريد الإلكتروني",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "تغيير كلمة المرور",
+    "tag": "h4",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "كلمة المرور الجديدة",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "اتركه فارغاً إذا لم ترد التغيير",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "profile-new-pass",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "تأكيد كلمة المرور الجديدة",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "تأكيد كلمة المرور",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "profile-confirm-pass",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "حفظ التغيرات",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "btn"
+  },
+  {
+    "file": "account.html",
+    "text": "عناوين الشحن المكتوبة",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "إضافة عنوان جديد",
+    "tag": "button",
+    "type": "text",
+    "id": "open-add-address-btn",
+    "class": "btn"
+  },
+  {
+    "file": "account.html",
+    "text": "سجل الطلبات",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "قائمة المفضلة",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "إضافة عنوان شحن جديد",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "اسم العنوان (مثال: المنزل، العمل)",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "المنزل",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "addr-title",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "الاسم الكامل للمستلم",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "الاسم الكامل",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "addr-fullname",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "رقم الهاتف",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "المدينة / الولاية",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "الجزائر العاصمة",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "addr-city",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "العنوان التفصيلي",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "اسم الشارع، رقم العمارة، الشقة...",
+    "tag": "textarea",
+    "type": "placeholder",
+    "id": "addr-street",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "تعيين كعنوان افتراضي",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "إلغاء",
+    "tag": "button",
+    "type": "text",
+    "id": "cancel-address-btn",
+    "class": "btn"
+  },
+  {
+    "file": "account.html",
+    "text": "حفظ العنوان",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "btn"
+  },
+  {
+    "file": "account.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "لوحة التحكم وإدارة الحساب والطلبات السابقة وعناوين الشحن بكل سهولة وأمان.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "روابط هامة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "خدمة العملاء",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "بيانات مشفرة ومحمية",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "طرق الدفع",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "account.html",
+    "text": "© 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "قائمة الرغبات والمفضلة - المتجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "قائمة الرغبات والمفضلة",
+    "tag": "h1",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "المفضلة",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "breadcrumb"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "المنتجات المحفوظة",
+    "tag": "h1",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "0 منتجات",
+    "tag": "span",
+    "type": "text",
+    "id": "wishlistHeaderCount",
+    "class": "wishlist-count-badge"
+  },
+  {
+    "file": "wishlist.html",
+    "text": "جاري تحميل قائمة الرغبات...",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "احفظ منتجاتك المفضلة وتتبع توفرها وعروضها الخاصة في أي وقت.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "روابط هامة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "خدمة العملاء",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "تجربة تسوق موثوقة 100%",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "طرق الدفع",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "wishlist.html",
+    "text": "© 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "تتبع طلبي - المتجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "track-order.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "active"
+  },
+  {
+    "file": "track-order.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "track-order.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "track-order.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "track-order.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "track-order.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "track-order.html",
+    "text": "تتبّع مسار شحنتك",
+    "tag": "h1",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "أدخل رقم الطلب ورقم هاتفك للاطلاع على آخر مستجدات حالة الطلب وموعد التوصيل",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "رقم الطلب (Order ID / DZ-xxxx)",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "مثال: DZ-2026-12345 أو 1001",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "orderInput",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "رقم الهاتف المسجل في الطلب",
+    "tag": "label",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "مثال: 0550000000",
+    "tag": "input",
+    "type": "placeholder",
+    "id": "phoneInput",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "تتبع الطلب",
+    "tag": "button",
+    "type": "text",
+    "id": "trackSubmitBtn",
+    "class": "btn-track"
+  },
+  {
+    "file": "track-order.html",
+    "text": "تم استلام الطلب",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "step-label"
+  },
+  {
+    "file": "track-order.html",
+    "text": "قيد التجهيز والتأكيد",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "step-label"
+  },
+  {
+    "file": "track-order.html",
+    "text": "تم الشحن للتوصيل",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "step-label"
+  },
+  {
+    "file": "track-order.html",
+    "text": "تم التسليم بنجاح",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "step-label"
+  },
+  {
+    "file": "track-order.html",
+    "text": "رقم الطلب",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "تاريخ الطلب",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "الولاية والعنوان",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "طريقة الدفع",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "حالة الطلب",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "المنتج",
+    "tag": "th",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "الكمية",
+    "tag": "th",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "السعر الإجمالي",
+    "tag": "th",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "المبلغ الإجمالي (شامل التوصيل):",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "0 دج",
+    "tag": "td",
+    "type": "text",
+    "id": "resOrderTotal",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "فتح الفاتورة",
+    "tag": "a",
+    "type": "text",
+    "id": "viewInvoiceBtn",
+    "class": "btn-outline"
+  },
+  {
+    "file": "track-order.html",
+    "text": "مواصلة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "btn-outline"
+  },
+  {
+    "file": "track-order.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "تسوق آمن وموثوق لـ 58 ولاية جزائرية مع متابعة دقيقة لمسار شحنتك لحظة بلحظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "روابط هامة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "دعم الشحن والمتابعة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "توصيل سريع إلى 58 ولاية",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "طرق الدفع",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "track-order.html",
+    "text": "© 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تأكيد استلام الطلب - المتجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تبديل الوضع",
+    "tag": "button",
+    "type": "title",
+    "id": "",
+    "class": "theme-toggle-btn"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "المفضلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "wishlist-icon"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "السلة",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "cart-icon"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "حسابي",
+    "tag": "a",
+    "type": "title",
+    "id": "",
+    "class": "user-icon"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "القائمة",
+    "tag": "button",
+    "type": "aria-label",
+    "id": "",
+    "class": "mobile-menu-btn"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تأكيد الطلب",
+    "tag": "h1",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تأكيد الطلب",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "breadcrumb"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تم تسجيل طلبك بنجاح!",
+    "tag": "h2",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "شكراً لتسوقك معنا. سنتصل بك قريباً لتأكيد تفاصيل الشحن والتوصيل.",
+    "tag": "p",
+    "type": "text",
+    "id": "confirmMessageText",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تفاصيل الطلب",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "رقم الطلب:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": "info-label"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تاريخ الطلب:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": "info-label"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "طريقة الدفع:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": "info-label"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "confPaymentMethod",
+    "class": "info-value"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "حالة الطلب:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": "info-label"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "قيد المعالجة",
+    "tag": "span",
+    "type": "text",
+    "id": "confStatusBadge",
+    "class": "status-badge-custom status-pending"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "المستلم:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": "info-label"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "الولاية والتوصيل:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": "info-label"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "المنتجات المطلوبة",
+    "tag": "h4",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "إجمالي المنتجات:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "0 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "confSubtotal",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تكلفة الشحن والتوصيل:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "0 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "confShipping",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "المبلغ الإجمالي للدفع:",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "0 دج",
+    "tag": "span",
+    "type": "text",
+    "id": "confTotal",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تتبع مسار الشحنة",
+    "tag": "a",
+    "type": "text",
+    "id": "trackOrderBtn",
+    "class": "btn-action btn-primary"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "عرض وطباعة الفاتورة",
+    "tag": "a",
+    "type": "text",
+    "id": "viewInvoiceBtn",
+    "class": "btn-action btn-invoice"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "مواصلة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "btn-action btn-outline"
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "شكراً لثقتكم بالمتجر الإلكتروني. تم حفظ طلبكم بنجاح ومزامنته مع نظام التوصيل.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "روابط هامة",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "الرئيسية",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "عربة التسوق",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "تتبع طلبي",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "دعم واستفسارات",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "ضمان الجودة والتسليم",
+    "tag": "li",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "طرق الدفع",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "الدفع عند الاستلام",
+    "tag": "span",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "order-confirmation.html",
+    "text": "© 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "فاتورة الطلب - المتجر الإلكتروني",
+    "tag": "title",
+    "type": "text"
+  },
+  {
+    "file": "invoice.html",
+    "text": "المتجر الإلكتروني",
+    "tag": "h1",
+    "type": "text",
+    "id": "invStoreName",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "خدمة تسوق موثوقة في الجزائر",
+    "tag": "p",
+    "type": "text",
+    "id": "invStoreTagline",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "هاتف: 0550000000 | بريد: contact@myshop.dz",
+    "tag": "p",
+    "type": "text",
+    "id": "invStoreContact",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "فاتورة بيع",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "invoice-title"
+  },
+  {
+    "file": "invoice.html",
+    "text": "رقم الفاتورة:",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "invoice-meta-item"
+  },
+  {
+    "file": "invoice.html",
+    "text": "رقم الطلب:",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "invoice-meta-item"
+  },
+  {
+    "file": "invoice.html",
+    "text": "التاريخ:",
+    "tag": "div",
+    "type": "text",
+    "id": "",
+    "class": "invoice-meta-item"
+  },
+  {
+    "file": "invoice.html",
+    "text": "معلومات المشتري (العميل):",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "الاسم:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "الهاتف:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "البريد:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "عنوان وجهة التوصيل:",
+    "tag": "h3",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "الولاية:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "العنوان الكامل:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "نوع التوصيل:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "توصيل للمنزل",
+    "tag": "span",
+    "type": "text",
+    "id": "custDeliveryType",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "المنتج / الوصف",
+    "tag": "th",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "الكمية",
+    "tag": "th",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "السعر الفردي",
+    "tag": "th",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "الإجمالي",
+    "tag": "th",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "طريقة وحالة الدفع:",
+    "tag": "h4",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "الطريقة:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "الدفع عند الاستلام (COD)",
+    "tag": "span",
+    "type": "text",
+    "id": "invPayMethod",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "حالة الدفع:",
+    "tag": "strong",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "قيد التحصيل عند التسليم",
+    "tag": "span",
+    "type": "text",
+    "id": "invPayStatus",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "المجموع الفرعي للمنتجات:",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "0 دج",
+    "tag": "td",
+    "type": "text",
+    "id": "invSubtotal",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "رسوم الشحن والتوصيل:",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "0 دج",
+    "tag": "td",
+    "type": "text",
+    "id": "invShipping",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "المبلغ الإجمالي المستحق:",
+    "tag": "td",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "0 دج",
+    "tag": "td",
+    "type": "text",
+    "id": "invGrandTotal",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "شكراً لثقتكم وتسوّقكم معنا! إذا كان لديكم أي استفسار يرجى التواصل معنا عبر الهاتف أو البريد الإلكتروني الموضح أعلاه.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "© 2026 جميع الحقوق محفوظة.",
+    "tag": "p",
+    "type": "text",
+    "id": "",
+    "class": ""
+  },
+  {
+    "file": "invoice.html",
+    "text": "العودة للمتجر",
+    "tag": "a",
+    "type": "text",
+    "id": "",
+    "class": "btn btn-secondary"
+  },
+  {
+    "file": "invoice.html",
+    "text": "تتبع الطلب",
+    "tag": "a",
+    "type": "text",
+    "id": "trackLinkBtn",
+    "class": "btn btn-secondary"
+  },
+  {
+    "file": "invoice.html",
+    "text": "طباعة / تحميل PDF",
+    "tag": "button",
+    "type": "text",
+    "id": "",
+    "class": "btn btn-primary"
+  }
+]
