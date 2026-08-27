@@ -505,7 +505,7 @@ function applyGlobalStoreSettings(settings) {
     if (settings.store_logo) {
       // User wants circular logo, adding border-radius: 50% and object-fit: cover
       const altText = window.escapeHtml ? window.escapeHtml(settings.store_name || '') || 'MYSHOP' : (settings.store_name || 'MYSHOP');
-      content += `<img src="${settings.store_logo}" alt="${altText}" style="max-height: 42px; width: 42px; height: 42px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-inline-end: 10px;">`;
+      content += `<img src="${settings.store_logo}" alt="${altText}" onerror="this.style.display='none'" style="max-height: 42px; width: 42px; height: 42px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-inline-end: 10px;">`;
     }
     if (settings.store_name) {
       content += `<span class="store-name-text" style="vertical-align: middle;">${settings.store_name}</span>`;
