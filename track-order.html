@@ -394,7 +394,7 @@
                 document.getElementById('resOrderDate').textContent = new Date(order.created_at).toLocaleDateString('ar-DZ');
                 document.getElementById('resWilaya').textContent = `${order.wilaya_name || order.city || window.I18n.t('wilayas.algiers', 'الجزائر')} (${order.delivery_type === 'desk' ? window.I18n.t('invoice.desk_pickup', 'استلام من المكتب') : window.I18n.t('invoice.home_delivery', 'توصيل للمنزل')})`;
                 document.getElementById('resPaymentMethod').textContent = order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : '<span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)';
-                document.getElementById('resOrderTotal').textContent = `${Number(order.total).toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '`;
+                document.getElementById('resOrderTotal').textContent = `${Number(order.total).toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
 
                 // Status Badge & Stepper
                 renderOrderStatus(order.status);

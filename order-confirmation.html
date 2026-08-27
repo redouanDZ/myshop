@@ -278,7 +278,7 @@
                                     <span style="font-size: 0.85rem; color: #64748b;">' + window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity) + '</span>
                                 </div>
                             </div>
-                            <strong style="color: #2563eb;">${lineTotal.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</strong>
+                            <strong style="color: #2563eb;">${lineTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</strong>
                         </div>
                     `;
                 }).join('');
@@ -286,9 +286,9 @@
                 const shipping = Number(order.shipping_cost || 0);
                 const total = Number(order.total || (subtotal + shipping));
 
-                document.getElementById('confSubtotal').textContent = `${subtotal.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '`;
-                document.getElementById('confShipping').textContent = `${shipping.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '`;
-                document.getElementById('confTotal').textContent = `${total.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '`;
+                document.getElementById('confSubtotal').textContent = `${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('confShipping').textContent = `${shipping.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('confTotal').textContent = `${total.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
 
                 // Set Action Links
                 const custPhone = order.phone || phone || '';

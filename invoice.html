@@ -327,8 +327,8 @@
                             <td>${index + 1}</td>
                             <td>${safeName}</td>
                             <td style="text-align: center;">${item.quantity}</td>
-                            <td style="text-align: left;">${Number(item.price).toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</td>
-                            <td>${lineTotal.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</td>
+                            <td style="text-align: left;">${Number(item.price).toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</td>
+                            <td>${lineTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</td>
                         </tr>
                     `;
                 }).join('');
@@ -336,15 +336,15 @@
                 const shippingCost = Number(order.shipping_cost || 0);
                 const grandTotal = Number(order.total || (subtotal + shippingCost));
 
-                document.getElementById('invSubtotal').textContent = `${subtotal.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '`;
-                document.getElementById('invShipping').textContent = `${shippingCost.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '`;
-                document.getElementById('invGrandTotal').textContent = `${grandTotal.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '`;
+                document.getElementById('invSubtotal').textContent = `${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('invShipping').textContent = `${shippingCost.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('invGrandTotal').textContent = `${grandTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
 
                 // Set track link
                 document.getElementById('trackLinkBtn').href = `track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}`;
 
             } catch (err) {
-                document.getElementById('invoiceItemsBody').innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">' + window.I18n.t('invoice.error_loading', 'خطأ في تحميل الفاتورة: {error}').replace('{error}', window.escapeHtml ? window.escapeHtml(err.message) : err.message) + ' </td></tr>`;
+                document.getElementById('invoiceItemsBody').innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">${window.I18n.t('invoice.error_loading', 'حدث خطأ أثناء جلب الفاتورة: {error}').replace('{error}', window.escapeHtml ? window.escapeHtml(err.message) : err.message)} </td></tr>`;
             }
         }
 

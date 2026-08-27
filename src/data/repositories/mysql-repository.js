@@ -1090,7 +1090,7 @@ class MysqlRepository {
     const cleanPhone = String(phone || '').trim();
     const [rows] = await this.pool.query(query, [
       isNaN(Number(orderIdOrNumber)) ? 0 : Number(orderIdOrNumber),
-      String(orderIdOrNumber).trim(),
+      String(orderIdOrNumber).replace(/^#/, '').trim(),
       cleanPhone,
       cleanPhone
     ]);
