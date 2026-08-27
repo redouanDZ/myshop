@@ -359,7 +359,7 @@ nav ul li a:hover, nav ul li a.active {
 .user-dropdown {
     position: absolute !important;
     top: calc(100% + 12px) !important;
-    inset-inline-start: 0 !important;
+    inset-inline-end: 0 !important;
     min-width: 220px !important;
     background: var(--card-bg, #ffffff) !important;
     border-radius: 14px !important;

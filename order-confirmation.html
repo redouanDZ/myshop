@@ -238,7 +238,7 @@
                 if (phone) q.push(`phone=${encodeURIComponent(phone)}`);
                 if (q.length) fetchUrl += `?${q.join('&')}`;
 
-                const response = await fetch(fetchUrl);
+                const response = await fetch(fetchUrl, { credentials: 'include' });
                 if (!response.ok) throw new Error('فشل جلب الطلب');
                 const order = await response.json();
 
