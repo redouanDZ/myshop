@@ -82,7 +82,7 @@ window.WishlistManager = {
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    this.showToast(data.message || (inList ? 'تم الحذف من المفضلة' : 'تمت الإضافة للمفضلة ❤️'), 'success');
+                    this.showToast(data.message || (inList ? window.I18n.t('messages.removed_wishlist', 'تم الحذف من المفضلة') : window.I18n.t('messages.added_wishlist', 'تمت الإضافة للمفضلة ❤️')), 'success');
                     this.updateBadgeCount();
                     return !inList;
                 }
@@ -98,19 +98,19 @@ window.WishlistManager = {
 
         if (index > -1) {
             local.splice(index, 1);
-            this.showToast('تمت إزالة المنتج من قائمة الرغبات', 'info');
+            this.showToast(window.I18n.t('messages.removed_wishlist_alt', 'تمت إزالة المنتج من قائمة الرغبات'), 'info');
         } else {
             local.push({
                 id: prodId,
-                name: product.name || 'منتج',
+                name: product.name || window.I18n.t('product.store_customer', 'منتج'),
                 price: Number(product.price || 0),
                 stock: Number(product.stock || 10),
                 image_url: product.image_url || product.image || '/images/product-placeholder.jpg',
-                category: product.category || 'إلكترونيات',
+                category: product.category || window.I18n.t('categories.electronics', 'إلكترونيات'),
                 added_at: new Date().toISOString()
             });
             nowInList = true;
-            this.showToast('تمت إضافة المنتج إلى قائمة الرغبات ❤️', 'success');
+            this.showToast(window.I18n.t('messages.added_wishlist_alt', 'تمت إضافة المنتج إلى قائمة الرغبات ❤️'), 'success');
         }
 
         this.saveLocalItems(local);

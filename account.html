@@ -408,7 +408,7 @@
             <div class="logo">
                 <a href="index.html">
                     <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
-                    <span data-i18n="common.store_name">المتجر الإلكتروني</span>
+                    <span data-i18n="common.store_name"><span data-i18n="footer.brand">المتجر الإلكتروني</span></span>
                 </a>
             </div>
             <nav class="main-nav">
@@ -421,21 +421,21 @@
                 </ul>
             </nav>
             <div class="user-actions">
-                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" data-i18n="common.toggle_theme" title="تبديل الوضع">
                     <i class="fas fa-moon"></i>
                 </button>
-                <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+                <a href="wishlist.html" class="wishlist-icon" data-i18n="common.wishlist" title="المفضلة">
                     <i class="fas fa-heart" style="color: var(--danger-color);"></i>
                     <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
-                <a href="cart.html" class="cart-icon" title="السلة">
+                <a href="cart.html" class="cart-icon" data-i18n="common.cart_title" title="' + window.I18n.t('common.cart_title', 'السلة') + '">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count">0</span>
                 </a>
-                <a href="account.html" class="user-icon active" title="حسابي">
+                <a href="account.html" class="user-icon active" data-i18n="common.my_account" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
-                <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+                <button type="button" class="mobile-menu-btn" data-i18n="common.menu" aria-label="القائمة">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -476,7 +476,7 @@
                 <li>
                     <button type="button" class="account-nav-btn" data-tab="wishlist">
                         <i class="fas fa-heart"></i>
-                        <span>قائمة المفضلة</span>
+                        <span><span data-i18n="account.wishlist_tab">قائمة المفضلة</span></span>
                     </button>
                 </li>
                 <li style="margin-top: 15px; border-top: 1px solid rgba(0,0,0,0.08); padding-top: 15px;">
@@ -522,14 +522,14 @@
                             </div>
                             <div class="form-group">
                                 <label for="profile-confirm-pass">تأكيد كلمة المرور الجديدة</label>
-                                <input type="password" id="profile-confirm-pass" placeholder="تأكيد كلمة المرور">
+                                <input type="password" id="profile-confirm-pass" data-i18n="account.confirm_pass_placeholder" placeholder="تأكيد كلمة المرور">
                             </div>
                         </div>
                     </div>
 
                     <div style="margin-top: 25px; text-align: left;">
                         <button type="submit" class="btn" style="padding: 12px 30px; font-weight: bold;">
-                            <i class="fas fa-save" style="margin-left: 8px;"></i>حفظ التغيرات
+                            <i class="fas fa-save" style="margin-left: 8px;"></i><span data-i18n="account.save_changes_btn">حفظ التغيرات</span>
                         </button>
                     </div>
                 </form>
@@ -538,9 +538,9 @@
             <!-- TAB 2: Addresses -->
             <div class="tab-section" id="tab-addresses">
                 <div class="section-title">
-                    <span><i class="fas fa-map-marked-alt" style="color: var(--primary-color); margin-left: 8px;"></i>عناوين الشحن المكتوبة</span>
+                    <span><i class="fas fa-map-marked-alt" style="color: var(--primary-color); margin-left: 8px;"></i><span data-i18n="account.saved_addresses">عناوين الشحن المكتوبة</span></span>
                     <button type="button" class="btn" id="open-add-address-btn" style="font-size: 0.88rem; padding: 8px 16px;">
-                        <i class="fas fa-plus" style="margin-left: 6px;"></i>إضافة عنوان جديد
+                        <i class="fas fa-plus" style="margin-left: 6px;"></i><span data-i18n="account.add_address">إضافة عنوان جديد</span>
                     </button>
                 </div>
 
@@ -552,7 +552,7 @@
             <!-- TAB 3: Orders -->
             <div class="tab-section" id="tab-orders">
                 <div class="section-title">
-                    <span><i class="fas fa-shopping-bag" style="color: var(--primary-color); margin-left: 8px;"></i>سجل الطلبات</span>
+                    <span><i class="fas fa-shopping-bag" style="color: var(--primary-color); margin-left: 8px;"></i><span data-i18n="account.order_history">سجل الطلبات</span></span>
                 </div>
 
                 <div class="order-history-list" id="orders-container">
@@ -563,7 +563,7 @@
             <!-- TAB 4: Wishlist -->
             <div class="tab-section" id="tab-wishlist">
                 <div class="section-title">
-                    <span><i class="fas fa-heart" style="color: var(--danger-color); margin-left: 8px;"></i>قائمة المفضلة</span>
+                    <span><i class="fas fa-heart" style="color: var(--danger-color); margin-left: 8px;"></i><span data-i18n="account.wishlist_tab">قائمة المفضلة</span></span>
                 </div>
 
                 <div class="products-grid" id="wishlist-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px;">
@@ -577,36 +577,36 @@
     <div class="account-modal" id="add-address-modal">
         <div class="account-modal-content">
             <button class="close-modal-btn" id="close-address-modal">&times;</button>
-            <h3 style="margin-bottom: 20px;"><i class="fas fa-map-marker-alt" style="color:var(--primary-color); margin-left:8px;"></i>إضافة عنوان شحن جديد</h3>
+            <h3 style="margin-bottom: 20px;"><i class="fas fa-map-marker-alt" style="color:var(--primary-color); margin-left:8px;"></i><span data-i18n="account.add_new_address">إضافة عنوان شحن جديد</span></h3>
             <form id="add-address-form">
                 <div class="form-group">
-                    <label for="addr-title">اسم العنوان (مثال: المنزل، العمل)</label>
-                    <input type="text" id="addr-title" required placeholder="المنزل">
+                    <label for="addr-title"><span data-i18n="account.address_title">اسم العنوان (مثال: المنزل، العمل)</span></label>
+                    <input type="text" id="addr-title" required data-i18n="account.address_title_placeholder" placeholder="المنزل">
                 </div>
                 <div class="form-group">
-                    <label for="addr-fullname">الاسم الكامل للمستلم</label>
-                    <input type="text" id="addr-fullname" required placeholder="الاسم الكامل">
+                    <label for="addr-fullname"><span data-i18n="account.recipient_name">الاسم الكامل للمستلم</span></label>
+                    <input type="text" id="addr-fullname" required data-i18n="account.recipient_name_placeholder" placeholder="الاسم الكامل">
                 </div>
                 <div class="form-group">
                     <label for="addr-phone">رقم الهاتف</label>
                     <input type="tel" id="addr-phone" required placeholder="0550000000">
                 </div>
                 <div class="form-group">
-                    <label for="addr-city">المدينة / الولاية</label>
-                    <input type="text" id="addr-city" required placeholder="الجزائر العاصمة">
+                    <label for="addr-city"><span data-i18n="account.city_wilaya">المدينة / الولاية</span></label>
+                    <input type="text" id="addr-city" required data-i18n="account.algiers_placeholder" placeholder="الجزائر العاصمة">
                 </div>
                 <div class="form-group">
-                    <label for="addr-street">العنوان التفصيلي</label>
-                    <textarea id="addr-street" rows="3" required placeholder="اسم الشارع، رقم العمارة، الشقة..."></textarea>
+                    <label for="addr-street"><span data-i18n="account.detailed_address">العنوان التفصيلي</span></label>
+                    <textarea id="addr-street" rows="3" required data-i18n="account.detailed_address_placeholder" placeholder="اسم الشارع، رقم العمارة، الشقة..."></textarea>
                 </div>
                 <div style="margin-top: 10px;">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
-                        <input type="checkbox" id="addr-default"> تعيين كعنوان افتراضي
+                        <input type="checkbox" id="addr-default"> <span data-i18n="account.set_default">تعيين كعنوان افتراضي</span>
                     </label>
                 </div>
                 <div style="margin-top: 25px; display:flex; justify-content:flex-end; gap:10px;">
-                    <button type="button" class="btn" style="background:#95a5a6;" id="cancel-address-btn">إلغاء</button>
-                    <button type="submit" class="btn">حفظ العنوان</button>
+                    <button type="button" class="btn" style="background:#95a5a6;" id="cancel-address-btn"><span data-i18n="common.cancel">إلغاء</span></button>
+                    <button type="submit" class="btn"><span data-i18n="account.save_address">حفظ العنوان</span></button>
                 </div>
             </form>
         </div>
@@ -618,39 +618,39 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
                     </div>
                     <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-                        لوحة التحكم وإدارة الحساب والطلبات السابقة وعناوين الشحن بكل سهولة وأمان.
+                        <span data-i18n="account.footer_desc">لوحة التحكم وإدارة الحساب والطلبات السابقة وعناوين الشحن بكل سهولة وأمان.</span>
                     </p>
                 </div>
                 <div class="footer-col">
                     <h3>روابط هامة</h3>
                     <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="shop.html">التسوق</a></li>
-                        <li><a href="cart.html">عربة التسوق</a></li>
-                        <li><a href="track-order.html">تتبع طلبي</a></li>
+                        <li><a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a></li>
+                        <li><a href="shop.html"><span data-i18n="footer.link_shop">التسوق</span></a></li>
+                        <li><a href="cart.html"><span data-i18n="footer.link_cart">عربة التسوق</span></a></li>
+                        <li><a href="track-order.html"><span data-i18n="footer.link_track">تتبع طلبي</span></a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>خدمة العملاء</h3>
+                    <h3><span data-i18n="footer.customer_service">خدمة العملاء</span></h3>
                     <ul>
                         <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
                         <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
-                        <li><i class="fas fa-user-shield"></i> بيانات مشفرة ومحمية</li>
+                        <li><i class="fas fa-user-shield"></i> <span data-i18n="footer.data_protected">بيانات مشفرة ومحمية</span></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>طرق الدفع</h3>
+                    <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
                     <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
                         <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+                <p>&copy; 2026 <span data-i18n="footer.brand">المتجر الإلكتروني</span> (MYSHOP). جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>
@@ -721,7 +721,7 @@
                     });
                     if (res.ok) {
                         const user = await res.json();
-                        document.getElementById('sidebar-user-name').textContent = user.username || user.name || 'مستخدم';
+                        document.getElementById('sidebar-user-name').textContent = user.username || user.name || window.I18n.t('account.user_default', 'مستخدم');
                         document.getElementById('sidebar-user-email').textContent = user.email || '';
                         document.getElementById('profile-name').value = user.username || user.name || '';
                         document.getElementById('profile-email').value = user.email || '';
@@ -750,7 +750,7 @@
                 const confirmPass = document.getElementById('profile-confirm-pass').value;
 
                 if (newPass && newPass !== confirmPass) {
-                    showToast('كلمتا المرور غير متطابقتين', 'error');
+                    showToast(window.I18n.t('messages.pass_mismatch', 'كلمتا المرور غير متطابقتين'), 'error');
                     return;
                 }
 
@@ -769,16 +769,16 @@
 
                     const data = await res.json();
                     if (res.ok) {
-                        showToast('تم تحديث البيانات بنجاح 🎉', 'success');
+                        showToast(window.I18n.t('messages.data_update_success', 'تم تحديث البيانات بنجاح 🎉'), 'success');
                         localStorage.setItem('currentUser', JSON.stringify(data.user));
                         loadProfile();
                         document.getElementById('profile-new-pass').value = '';
                         document.getElementById('profile-confirm-pass').value = '';
                     } else {
-                        showToast(data.message || 'حدث خطأ في تحديث البيانات', 'error');
+                        showToast(data.message || window.I18n.t('messages.data_update_error', 'حدث خطأ في تحديث البيانات'), 'error');
                     }
                 } catch (err) {
-                    showToast('خطأ في الاتصال بالخادم', 'error');
+                    showToast(window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم'), 'error');
                 }
             });
 
@@ -794,21 +794,21 @@
                         const addresses = user.addresses || [];
 
                         if (addresses.length === 0) {
-                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">لا توجد عناوين شحن محفوظة حتى الآن.</div>`;
+                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">' + window.I18n.t('account.no_addresses', 'لا توجد عناوين شحن محفوظة حتى الآن.') + '</div>`;
                             return;
                         }
 
                         container.innerHTML = addresses.map(addr => `
                             <div class="address-card ${addr.isDefault ? 'default-address' : ''}">
                                 ${addr.isDefault ? '<span class="address-badge">العنوان الافتراضي</span>' : ''}
-                                <h4>${addr.title || 'عنوان'}</h4>
-                                <p><strong>المستلم:</strong> ${addr.fullName}</p>
-                                <p><strong>الهاتف:</strong> ${addr.phone}</p>
-                                <p><strong>المدينة:</strong> ${addr.city}</p>
-                                <p><strong>العنوان:</strong> ${addr.address}</p>
+                                <h4>${addr.title || window.I18n.t('account.address_fallback', 'عنوان')}</h4>
+                                <p><strong>' + window.I18n.t('account.recipient_label', 'المستلم:') + '</strong> ${addr.fullName}</p>
+                                <p><strong>' + window.I18n.t('account.phone_label', 'الهاتف:') + '</strong> ${addr.phone}</p>
+                                <p><strong>' + window.I18n.t('account.city_label', 'المدينة:') + '</strong> ${addr.city}</p>
+                                <p><strong>' + window.I18n.t('account.address_label', 'العنوان:') + '</strong> ${addr.address}</p>
                                 <div class="address-actions">
                                     <button class="btn-sm-danger" onclick="deleteAddress(${addr.id})">
-                                        <i class="fas fa-trash"></i> حذف
+                                        <i class="fas fa-trash"></i> ' + window.I18n.t('common.delete', 'حذف') + '
                                     </button>
                                 </div>
                             </div>
@@ -846,31 +846,31 @@
                         body: JSON.stringify(payload)
                     });
                     if (res.ok) {
-                        showToast('تم حفظ العنوان بنجاح', 'success');
+                        showToast(window.I18n.t('messages.address_saved', 'تم حفظ العنوان بنجاح'), 'success');
                         addressModal.classList.remove('show');
                         document.getElementById('add-address-form').reset();
                         loadAddresses();
                     } else {
-                        showToast('حدث خطأ أثناء حفظ العنوان', 'error');
+                        showToast(window.I18n.t('messages.address_save_error', 'حدث خطأ أثناء حفظ العنوان'), 'error');
                     }
                 } catch (e) {
-                    showToast('خطأ في الاتصال بالخادم', 'error');
+                    showToast(window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم'), 'error');
                 }
             });
 
             window.deleteAddress = async function(id) {
-                if (!confirm('هل أنت تأكد من إزالة هذا العنوان؟')) return;
+                if (!confirm(window.I18n.t('messages.confirm_delete_address', 'هل أنت تأكد من إزالة هذا العنوان؟'))) return;
                 try {
                     const res = await fetch(`/api/user/addresses/${id}`, {
                         method: 'DELETE',
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (res.ok) {
-                        showToast('تم حذف العنوان بنجاح', 'info');
+                        showToast('تم ' + window.I18n.t('common.delete', 'حذف') + ' العنوان بنجاح', 'info');
                         loadAddresses();
                     }
                 } catch (e) {
-                    showToast('حدث خطأ في الحذف', 'error');
+                    showToast('حدث خطأ في ال' + window.I18n.t('common.delete', 'حذف') + '', 'error');
                 }
             };
 
@@ -882,7 +882,7 @@
                     if (res.ok) {
                         const orders = await res.json();
                         if (orders.length === 0) {
-                            container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;">لم تقم بإجراء أي طلبات بعد.</div>`;
+                            container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;">' + window.I18n.t('account.no_orders_yet', 'لم تقم بإجراء أي طلبات بعد.') + '</div>`;
                             return;
                         }
 
@@ -890,36 +890,36 @@
                             <div class="order-item-card">
                                 <div class="order-header-row">
                                     <div>
-                                        <span class="order-id-tag">طلب #${ord.id}</span>
+                                        <span class="order-id-tag">' + window.I18n.t('account.order_id', 'طلب #{id}').replace('{id}', ord.id) + '</span>
                                         <span style="font-size: 0.85rem; color: #7f8c8d; margin-right: 12px;">
                                             ${new Date(ord.created_at || Date.now()).toLocaleDateString('ar-EG')}
                                         </span>
                                     </div>
                                     <div>
                                         <span class="order-status-badge status-${ord.status}">${getStatusLabel(ord.status)}</span>
-                                        <strong style="margin-right: 15px; font-size: 1.1rem; color: var(--success-color);">${ord.total ? ord.total.toLocaleString() : '0'} د.ج</strong>
+                                        <strong style="margin-right: 15px; font-size: 1.1rem; color: var(--success-color);">${ord.total ? ord.total.toLocaleString() : '0'} ' + window.I18n.t('common.currency_alt', 'د.ج') + '</strong>
                                     </div>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
                                     <p style="margin: 0; font-size: 0.9rem; color: #555;">
-                                        <strong>طريقة الدفع:</strong> ${ord.shippingInfo && ord.shippingInfo.paymentMethod === 'cod' ? 'الدفع عند الاستلام' : 'بطاقة إلكترونية'}
+                                        <strong>طريقة الدفع:</strong> ${ord.shippingInfo && ord.shippingInfo.paymentMethod === 'cod' ? '<span data-i18n="features.cod_title">الدفع عند الاستلام</span>' : 'بطاقة إلكترونية'}
                                     </p>
                                     <a href="order-confirmation.html?id=${ord.id}" class="order-details-btn">
-                                        عرض التفاصيل <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+                                        ' + window.I18n.t('account.view_details', 'عرض التفاصيل') + ' <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
                                     </a>
                                 </div>
                             </div>
                         `).join('');
                     }
                 } catch (e) {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px;">خطأ في تحميل الطلبات</div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 20px;">' + window.I18n.t('messages.load_orders_error', 'خطأ في تحميل الطلبات') + '</div>`;
                 }
             }
 
             function getStatusLabel(status) {
                 switch(status) {
-                    case 'pending': return 'قيد الانتظار';
-                    case 'processing': return 'جاري المعالجة';
+                    case 'pending': return window.I18n.t('account.status_pending_alt', 'قيد الانتظار');
+                    case 'processing': return window.I18n.t('account.status_processing_alt', 'جاري المعالجة');
                     case 'shipped': return 'تم الشحن';
                     case 'delivered': return 'تم التسليم';
                     default: return status || 'قيد المعالجة';
@@ -932,7 +932,7 @@
                 const wishlistIds = window.getWishlist ? window.getWishlist() : [];
 
                 if (wishlistIds.length === 0) {
-                    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">قائمة المفضلة فارغة حالياً.</div>`;
+                    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><span data-i18n="account.wishlist_tab">قائمة المفضلة</span> فارغة حالياً.</div>`;
                     return;
                 }
 
@@ -944,7 +944,7 @@
                         const favoritedProducts = products.filter(p => wishlistIds.includes(p.id));
 
                         if (favoritedProducts.length === 0) {
-                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">قائمة المفضلة فارغة حالياً.</div>`;
+                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><span data-i18n="account.wishlist_tab">قائمة المفضلة</span> فارغة حالياً.</div>`;
                             return;
                         }
 
@@ -953,11 +953,11 @@
                                 <div>
                                     <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
                                     <h4 style="font-size: 0.95rem; margin-bottom: 8px;">${p.name}</h4>
-                                    <p style="font-weight: bold; color: var(--primary-color); margin-bottom: 12px;">${p.price.toLocaleString()} د.ج</p>
+                                    <p style="font-weight: bold; color: var(--primary-color); margin-bottom: 12px;">${p.price.toLocaleString()} ' + window.I18n.t('common.currency_alt', 'د.ج') + '</p>
                                 </div>
                                 <div style="display: flex; gap: 8px;">
                                     <button class="btn" style="flex: 1; font-size: 0.8rem; padding: 6px;" onclick="addToCart(${p.id})">
-                                        <i class="fas fa-shopping-cart"></i> السلة
+                                        <i class="fas fa-shopping-cart"></i> ' + window.I18n.t('common.cart_title', 'السلة') + '
                                     </button>
                                     <button class="btn-sm-danger" style="padding: 6px 10px;" onclick="removeFromWishlist(${p.id}, '${p.name}')">
                                         <i class="fas fa-trash"></i>

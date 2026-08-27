@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قائمة الرغبات والمفضلة - المتجر الإلكتروني</title>
+    <title>قائمة الرغبات والمفضلة - <span data-i18n="footer.brand">المتجر الإلكتروني</span></title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -169,7 +169,7 @@
             <div class="logo">
                 <a href="index.html">
                     <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
-                    <span data-i18n="common.store_name">المتجر الإلكتروني</span>
+                    <span data-i18n="common.store_name"><span data-i18n="footer.brand">المتجر الإلكتروني</span></span>
                 </a>
             </div>
             <nav class="main-nav">
@@ -182,21 +182,21 @@
                 </ul>
             </nav>
             <div class="user-actions">
-                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" title="تبديل الوضع">
+                <button type="button" class="theme-toggle-btn" onclick="toggleTheme()" data-i18n="common.toggle_theme" title="تبديل الوضع">
                     <i class="fas fa-moon"></i>
                 </button>
-                <a href="wishlist.html" class="wishlist-icon" title="المفضلة">
+                <a href="wishlist.html" class="wishlist-icon" data-i18n="common.wishlist" title="المفضلة">
                     <i class="fas fa-heart" style="color: var(--danger-color);"></i>
                     <span class="wishlist-count" id="wishlist-count">0</span>
                 </a>
-                <a href="cart.html" class="cart-icon" title="السلة">
+                <a href="cart.html" class="cart-icon" data-i18n="common.cart_title" title="السلة">
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cart-count">0</span>
                 </a>
-                <a href="account.html" class="user-icon" title="حسابي">
+                <a href="account.html" class="user-icon" data-i18n="common.my_account" title="حسابي">
                     <i class="fas fa-user"></i>
                 </a>
-                <button type="button" class="mobile-menu-btn" aria-label="القائمة">
+                <button type="button" class="mobile-menu-btn" data-i18n="common.menu" aria-label="القائمة">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
@@ -206,9 +206,9 @@
     <!-- Page Title -->
     <div class="page-title">
         <div class="container">
-            <h1>قائمة الرغبات والمفضلة</h1>
+            <h1><span data-i18n="wishlist.page_title_alt">قائمة الرغبات والمفضلة</span></h1>
             <div class="breadcrumb">
-                <a href="index.html">الرئيسية</a> <i class="fas fa-chevron-left"></i> المفضلة
+                <a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a> <i class="fas fa-chevron-left"></i> المفضلة
             </div>
         </div>
     </div>
@@ -217,14 +217,14 @@
     <section class="wishlist-section">
         <div class="container">
             <div class="wishlist-header">
-                <h1>المنتجات المحفوظة</h1>
-                <span class="wishlist-count-badge" id="wishlistHeaderCount">0 منتجات</span>
+                <h1><span data-i18n="wishlist.saved_products">المنتجات المحفوظة</span></h1>
+                <span class="wishlist-count-badge" id="wishlistHeaderCount">0 <span data-i18n="wishlist.products_count">منتجات</span></span>
             </div>
 
             <div id="wishlistContainer">
                 <div style="text-align: center; padding: 40px; color: #64748b;">
                     <i class="fas fa-spinner fa-spin fa-2x"></i>
-                    <p>جاري تحميل قائمة الرغبات...</p>
+                    <p><span data-i18n="wishlist.loading">جاري تحميل قائمة الرغبات...</span></p>
                 </div>
             </div>
         </div>
@@ -236,19 +236,19 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> المتجر الإلكتروني
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
                     </div>
                     <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-                        احفظ منتجاتك المفضلة وتتبع توفرها وعروضها الخاصة في أي وقت.
+                        <span data-i18n="wishlist.footer_desc">احفظ منتجاتك المفضلة وتتبع توفرها وعروضها الخاصة في أي وقت.</span>
                     </p>
                 </div>
                 <div class="footer-col">
                     <h3>روابط هامة</h3>
                     <ul>
-                        <li><a href="index.html">الرئيسية</a></li>
-                        <li><a href="shop.html">التسوق</a></li>
-                        <li><a href="cart.html">عربة التسوق</a></li>
-                        <li><a href="track-order.html">تتبع طلبي</a></li>
+                        <li><a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a></li>
+                        <li><a href="shop.html"><span data-i18n="footer.link_shop">التسوق</span></a></li>
+                        <li><a href="cart.html"><span data-i18n="footer.link_cart">عربة التسوق</span></a></li>
+                        <li><a href="track-order.html"><span data-i18n="footer.link_track">تتبع طلبي</span></a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -256,19 +256,19 @@
                     <ul>
                         <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
                         <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
-                        <li><i class="fas fa-shield-alt"></i> تجربة تسوق موثوقة 100%</li>
+                        <li><i class="fas fa-shield-alt"></i> <span data-i18n="footer.reliable_shopping">تجربة تسوق موثوقة 100%</span></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3>طرق الدفع</h3>
+                    <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
                     <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> الدفع عند الاستلام</span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
                         <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
                     </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 المتجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+                <p>&copy; 2026 <span data-i18n="footer.brand">المتجر الإلكتروني</span> (MYSHOP). جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>
@@ -287,15 +287,15 @@
             const headerCount = document.getElementById('wishlistHeaderCount');
             wishlistProducts = await window.WishlistManager.getItems();
 
-            headerCount.textContent = `${wishlistProducts.length} منتجات`;
+            headerCount.textContent = `${wishlistProducts.length} ' + window.I18n.t('wishlist.products_count', 'منتجات') + '`;
 
             if (!wishlistProducts.length) {
                 container.innerHTML = `
                     <div class="empty-wishlist">
                         <i class="far fa-heart"></i>
-                        <h3>قائمة الرغبات فارغة</h3>
-                        <p>لم تقم بحفظ أي منتجات في المفضلة بعد. استكشف متجرنا وأضف المنتجات التي تنال إعجابك!</p>
-                        <a href="shop.html" class="btn-explore"><i class="fas fa-shopping-bag"></i> تصفح المنتجات الآن</a>
+                        <h3><span data-i18n="wishlist.empty_title">قائمة الرغبات فارغة</span></h3>
+                        <p>' + window.I18n.t('wishlist.empty_msg_alt', 'لم تقم بحفظ أي منتجات في المفضلة بعد. استكشف متجرنا وأضف المنتجات التي تنال إعجابك!') + '</p>
+                        <a href="shop.html" class="btn-explore"><i class="fas fa-shopping-bag"></i> <span data-i18n="wishlist.empty_btn">تصفح المنتجات الآن</span></a>
                     </div>
                 `;
                 return;
@@ -306,12 +306,12 @@
                     ${wishlistProducts.map(p => {
                         const isOutOfStock = Number(p.stock) === 0;
                         const safeName = window.escapeHtml ? window.escapeHtml(p.name) : p.name;
-                        const safeCat = window.escapeHtml ? window.escapeHtml(p.category || 'عام') : (p.category || 'عام');
+                        const safeCat = window.escapeHtml ? window.escapeHtml(p.category || window.I18n.t('categories.general', 'عام')) : (p.category || window.I18n.t('categories.general', 'عام'));
                         return `
                             <div class="wishlist-card" id="wishlist-card-${p.id}">
                                 <div class="card-img-wrapper">
                                     <img src="${p.image_url || p.image || '/images/product-placeholder.jpg'}" alt="${safeName}">
-                                    <button class="btn-remove-wishlist" onclick="removeItem(${p.id})" title="حذف من المفضلة">
+                                    <button class="btn-remove-wishlist" onclick="removeItem(${p.id})" data-i18n="wishlist.remove_btn" title="حذف من المفضلة">
                                         <i class="fas fa-times"></i>
                                     </button>
                                 </div>
@@ -320,10 +320,10 @@
                                     <a href="product.html?id=${p.id}" style="text-decoration: none;">
                                         <h3 class="card-title">${safeName}</h3>
                                     </a>
-                                    <div class="card-price">${Number(p.price).toLocaleString()} دج</div>
+                                    <div class="card-price">${Number(p.price).toLocaleString()} ${window.I18n.t("common.currency", "دج")}</div>
                                     <div class="card-actions">
                                         <button class="btn-add-cart-card" ${isOutOfStock ? 'disabled' : ''} onclick="addToCartFromWishlist(${p.id})">
-                                            <i class="fas fa-cart-plus"></i> ${isOutOfStock ? 'نفد المخزون' : 'أضف للسلة'}
+                                            <i class="fas fa-cart-plus"></i> ${isOutOfStock ? window.I18n.t('product.out_of_stock', 'نفد المخزون') : window.I18n.t('product.add_to_cart', 'أضف للسلة')}
                                         </button>
                                     </div>
                                 </div>
@@ -354,7 +354,7 @@
                     cart.push({ id: p.id, name: p.name, price: p.price, quantity: 1, image: p.image_url || p.image });
                 }
                 localStorage.setItem('cart', JSON.stringify(cart));
-                if (window.showToast) window.showToast('تمت إضافة المنتج إلى سلة التسوق 🛒', 'success');
+                if (window.showToast) window.showToast(window.I18n.t('messages.add_cart_success', 'تمت إضافة المنتج إلى سلة التسوق 🛒'), 'success');
             }
         }
 
