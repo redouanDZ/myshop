@@ -1105,6 +1105,12 @@
 }
 
 .table-responsive {
+    -webkit-overflow-scrolling: touch;
+}
+.table-responsive .table {
+    min-width: 800px;
+}
+.table-responsive {
     width: 100%;
     overflow-x: auto;
     background: var(--card-bg, #ffffff);
@@ -1168,6 +1174,7 @@
 }
 
 @media (max-width: 900px) {
+    header { display: none !important; }
     .admin-menu-toggle {
         display: inline-flex;
         align-items: center;

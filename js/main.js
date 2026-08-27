@@ -483,13 +483,38 @@ function applyGlobalStoreSettings(settings) {
     }
     link.href = settings.store_favicon;
   }
+  
+  if (settings.store_name) {
+    // Update document title suffix safely without removing the page name
+    const currentTitle = document.title;
+    if (currentTitle.includes('-')) {
+        document.title = currentTitle.split('-')[0] + '- ' + settings.store_name;
+    } else {
+        document.title = settings.store_name;
+    }
+
+    // Update footer brand or other hardcoded store names
+    document.querySelectorAll('[data-i18n="footer.brand"], .footer-brand').forEach(el => {
+        el.textContent = settings.store_name;
+    });
+  }
 
   // 2. Update Header Brand Name & Logo
   document.querySelectorAll('.logo a').forEach(logoLink => {
+    let content = '';
     if (settings.store_logo) {
-      logoLink.innerHTML = `<img src="${settings.store_logo}" alt="${window.escapeHtml ? window.escapeHtml(settings.store_name || '') || 'MYSHOP' : (settings.store_name || 'MYSHOP')}" style="max-height: 42px; width: auto; vertical-align: middle;">`;
-    } else if (settings.store_name) {
-      logoLink.textContent = settings.store_name;
+      // User wants circular logo, adding border-radius: 50% and object-fit: cover
+      const altText = window.escapeHtml ? window.escapeHtml(settings.store_name || '') || 'MYSHOP' : (settings.store_name || 'MYSHOP');
+      content += `<img src="${settings.store_logo}" alt="${altText}" style="max-height: 42px; width: 42px; height: 42px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-inline-end: 10px;">`;
+    }
+    if (settings.store_name) {
+      content += `<span class="store-name-text" style="vertical-align: middle;">${settings.store_name}</span>`;
+    }
+    
+    if (content) {
+        logoLink.innerHTML = content;
+        logoLink.style.display = 'flex';
+        logoLink.style.alignItems = 'center';
     }
   });
 
@@ -514,7 +539,7 @@ function applyGlobalStoreSettings(settings) {
     }
   });
 
-  document.querySelectorAll('.footer-address, .contact-address').forEach(el => {
+  document.querySelectorAll('.footer-address, .contact-address, [data-i18n="footer.address"]').forEach(el => {
     if (settings.store_address) el.textContent = settings.store_address;
   });
 
