@@ -12,8 +12,8 @@
   "common": {
     "store_name": "Boutique Électronique",
     "search": "Recherche...",
-    "search_placeholder": "Rechercher un produit par nom...",
-    "currency": "DZD",
+    "search_placeholder": "Rechercher un téléphone, ordinateur, accessoires...",
+    "currency": "DA",
     "add_to_cart": "Ajouter au panier",
     "in_stock": "En stock",
     "out_of_stock": "Épuisé",
@@ -30,7 +30,12 @@
     "save": "Enregistrer",
     "cancel": "Annuler",
     "remove": "Supprimer",
-    "close": "Fermer"
+    "close": "Fermer",
+    "toggle_theme": "Changer le thème",
+    "wishlist": "Favoris",
+    "cart_title": "Panier",
+    "my_account": "Mon Compte",
+    "menu": "Menu"
   },
   "filters": {
     "title": "Filtres des produits",
@@ -125,7 +130,12 @@
     "rating_label": "Votre note :",
     "comment_placeholder": "Rédigez votre avis honnête sur ce produit...",
     "quantity": "Quantité souhaitée :",
-    "no_reviews": "Aucun avis pour ce produit pour le moment. Soyez le premier à donner votre avis !"
+    "no_reviews": "Aucun avis pour ce produit pour le moment. Soyez le premier à donner votre avis !",
+    "in_stock_count": "En Stock ({count})",
+    "out_of_stock": "Rupture de stock",
+    "details": "Détails",
+    "add_to_cart": "Ajouter au panier",
+    "order_now_offer": "Commander l'offre"
   },
   "account": {
     "title": "Mon Compte",
@@ -149,5 +159,73 @@
     "total_revenue": "Chiffre d'affaires total",
     "total_orders": "Commandes totales",
     "new_orders": "Nouvelles commandes"
+  },
+  "home": {
+    "meta": {
+      "title": "MyShop - La Boutique High-Tech Complète",
+      "description": "Une boutique moderne offrant les meilleurs appareils électroniques en Algérie avec des prix compétitifs et livraison rapide.",
+      "og_title": "MyShop - Magasin d'électronique moderne",
+      "og_desc": "Achetez les derniers ordinateurs et accessoires tech aux meilleurs prix.",
+      "twitter_title": "MyShop - Magasin d'électronique moderne",
+      "twitter_desc": "Achetez les derniers ordinateurs et accessoires tech aux meilleurs prix."
+    },
+    "trusted_badge": "🇩🇿 La boutique de confiance en Algérie",
+    "hero_title": "Achetez les meilleurs appareils et produits tech à des prix compétitifs",
+    "hero_subtitle": "Livraison rapide et fiable vers 58 wilayas avec paiement à la livraison et garantie d'authenticité à 100%.",
+    "start_shopping": "Commencez vos achats",
+    "track_order_btn": "Suivre votre commande",
+    "featured_title": "Produits en vedette",
+    "featured_subtitle": "Nous avons choisi pour vous les meilleurs produits bien notés",
+    "view_all": "Voir tous les produits",
+    "offers_title": "Offres Spéciales & Réductions 🔥",
+    "offers_subtitle": "Réductions exclusives à durée limitée sur certains articles",
+    "discover_offers": "Découvrir toutes les offres",
+    "special_discount": "Réduction Spéciale 🔥"
+  },
+  "features": {
+    "cod_title": "Paiement à la livraison",
+    "cod_desc": "Payez confortablement et en toute sécurité à la livraison",
+    "delivery_title": "Livraison vers les 58 Wilayas",
+    "delivery_desc": "Expédition rapide à votre porte ou bureau",
+    "authentic_title": "Produits 100% Authentiques",
+    "authentic_desc": "Garantie officielle et haute qualité soigneusement inspectée",
+    "support_title": "Support Client & Suivi",
+    "support_desc": "Équipe spécialisée pour aider et suivre votre envoi jusqu'à l'arrivée"
+  },
+  "categories": {
+    "all": "Tous les produits",
+    "electronics": "Électronique",
+    "phones": "Téléphones & Accessoires",
+    "audio": "Audio & Écouteurs",
+    "fashion": "Mode & Vêtements",
+    "books": "Livres & Références",
+    "general": "Général",
+    "exclusive_offer": "Offre exclusive"
+  },
+  "footer": {
+    "brand": "MyShop",
+    "description": "Votre destination de confiance pour les achats en ligne en Algérie. Nous proposons des produits authentiques avec livraison vers 58 wilayas.",
+    "badge_wilayas": "58 Wilayas",
+    "badge_warranty": "100% Garantie",
+    "badge_cod": "Paiement à la livraison",
+    "quick_links": "Liens Rapides",
+    "link_home": "Accueil",
+    "link_shop": "Boutique",
+    "link_cart": "Panier",
+    "link_wishlist": "Favoris",
+    "link_track": "Suivi Commande",
+    "contact": "Service Client & Contact",
+    "address": "Alger, Algérie",
+    "hours": "Sam - Jeu: 9:00 - 18:00",
+    "payment_shipping": "Paiement & Livraison",
+    "payment_desc": "Nous acceptons le paiement sécurisé à la livraison ou les cartes de paiement algériennes:",
+    "cod_cash": "Espèces (COD)",
+    "follow": "Suivez-nous",
+    "copyright": "© 2026 MyShop. Tous droits réservés.",
+    "made_in": "Conçu avec les normes de sécurité et e-commerce les plus élevées en Algérie 🇩🇿"
+  },
+  "messages": {
+    "add_cart_success": "Produit ajouté au panier avec succès ! 🛒",
+    "add_cart_error": "Erreur lors de l'ajout du produit au panier"
   }
 }
