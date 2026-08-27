@@ -45,6 +45,14 @@
         }
         .stars-gold { color: #f59e0b; }
     </style>
+
+    <!-- Theme Anti-Flicker -->
+    <script>
+        (function(){
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -59,7 +67,7 @@
                     <li><a href="index.html">لوحة التحكم</a></li>
                     <li><a href="orders.html">الطلبات</a></li>
                     <li><a href="products.html">المنتجات</a></li>
-                    <li><a href="customers.html">العملاء</a></li>
+                    <li><a href="users.html">العملاء</a></li>
                     <li><a href="coupons.html">الكوبونات</a></li>
                     <li><a href="reviews.html" class="active">التقييمات</a></li>
                 </ul>
@@ -84,7 +92,7 @@
                 <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
                 <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
                 <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
-                <li><a href="customers.html"><i class="fas fa-users"></i> إدارة العملاء</a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> إدارة المستخدمين</a></li>
                 <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
                 <li><a href="reviews.html" class="active"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
                 <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>

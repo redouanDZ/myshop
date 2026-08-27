@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>فاتورة الطلب - <span data-i18n="footer.brand">المتجر الإلكتروني</span></title>
+    <title data-i18n="invoice.title">الفاتورة - متجر الجزائر بريميوم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
@@ -186,6 +186,14 @@
   <meta name="theme-color" content="#2563eb">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+
+    <!-- Theme Anti-Flicker -->
+    <script>
+        (function(){
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
 
@@ -199,7 +207,7 @@
             <div class="invoice-meta">
                 <div class="invoice-title"><span data-i18n="invoice.title">فاتورة بيع</span></div>
                 <div class="invoice-meta-item"><span data-i18n="invoice.invoice_num">رقم الفاتورة:</span> <strong id="invNumber">INV-2026-0000</strong></div>
-                <div class="invoice-meta-item"><span data-i18n="invoice.order_num">رقم الطلب:</span> <strong id="invOrderNum">-</strong></div>
+                <div class="invoice-meta-item"><span data-i18n="invoice.order_num"><span data-i18n="invoice.order_num">رقم الطلب:</span></span> <strong id="invOrderNum">-</strong></div>
                 <div class="invoice-meta-item"><span data-i18n="invoice.date">التاريخ:</span> <strong id="invDate">-</strong></div>
             </div>
         </div>

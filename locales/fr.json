@@ -594,5 +594,12 @@
     "status_paid": "Entièrement payé en ligne ✅",
     "status_unpaid": "A encaisser en espèces à la livraison 📦",
     "error_loading": "Erreur de chargement de la facture: {error}"
+  },
+  "confirmation": {
+    "title": "Commande Confirmée",
+    "msg": "Votre commande a été reçue avec succès et sera traitée prochainement.",
+    "order_num": "Commande N°:",
+    "track": "Suivre votre Commande",
+    "continue": "Continuer vos Achats"
   }
 }

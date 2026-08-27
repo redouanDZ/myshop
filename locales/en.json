@@ -594,5 +594,12 @@
     "status_paid": "Fully paid online ✅",
     "status_unpaid": "To be collected in cash on delivery 📦",
     "error_loading": "Error loading invoice: {error}"
+  },
+  "confirmation": {
+    "title": "Order Confirmed",
+    "msg": "Your order has been successfully received and will be processed soon.",
+    "order_num": "Order #:",
+    "track": "Track Your Order",
+    "continue": "Continue Shopping"
   }
 }

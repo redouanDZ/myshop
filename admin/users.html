@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة العملاء والمستخدمين - لوحة التحكم</title>
+    <title>إدارة المستخدمين - لوحة التحكم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="css/dashboard.css">
@@ -41,6 +41,14 @@
             border: 1px solid #e2e8f0;
         }
     </style>
+
+    <!-- Theme Anti-Flicker -->
+    <script>
+        (function(){
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -55,7 +63,7 @@
                     <li><a href="index.html">لوحة التحكم</a></li>
                     <li><a href="orders.html">الطلبات</a></li>
                     <li><a href="products.html">المنتجات</a></li>
-                    <li><a href="customers.html" class="active">العملاء</a></li>
+                    <li><a href="users.html" class="active">العملاء</a></li>
                     <li><a href="coupons.html">الكوبونات</a></li>
                     <li><a href="reviews.html">التقييمات</a></li>
                 </ul>
@@ -80,7 +88,7 @@
                 <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
                 <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
                 <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
-                <li><a href="customers.html" class="active"><i class="fas fa-users"></i> إدارة العملاء</a></li>
+                <li><a href="users.html" class="active"><i class="fas fa-users"></i> إدارة المستخدمين</a></li>
                 <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
                 <li><a href="reviews.html"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
                 <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
@@ -93,7 +101,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h1>إدارة العملاء والمستخدمين</h1>
+                <h1>إدارة المستخدمين</h1>
                 <div>
                     <span id="customersCountDisplay" style="font-weight: bold; color: #2563eb;"></span>
                 </div>
@@ -146,7 +154,7 @@
     <div id="customerModal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto; padding: 20px;">
         <div style="background: #fff; max-width: 700px; margin: 40px auto; border-radius: 10px; padding: 25px; position: relative;">
             <button onclick="closeCustomerModal()" style="position: absolute; left: 20px; top: 20px; background: transparent; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;">&times;</button>
-            <h2 id="modalCustomerName" style="margin-top: 0; color: #1e293b; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">تفاصيل العميل</h2>
+            <h2 id="modalCustomerName" style="margin-top: 0; color: #1e293b; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">تفاصيل المستخدم</h2>
             <div id="modalCustomerBody" style="margin-top: 15px;">
                 <!-- Filled dynamically -->
             </div>
@@ -234,12 +242,12 @@
             const modal = document.getElementById('customerModal');
             const body = document.getElementById('modalCustomerBody');
             modal.style.display = 'block';
-            body.innerHTML = '<p style="text-align:center; color:#64748b; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل بيانات العميل...</p>';
+            body.innerHTML = '<p style="text-align:center; color:#64748b; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل بيانات المستخدم...</p>';
 
             try {
                 const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/admin/users/${userId}`, { credentials: 'include', headers });
-                if (!res.ok) throw new Error('فشل جلب تفاصيل العميل');
+                if (!res.ok) throw new Error('فشل جلب تفاصيل المستخدم');
                 const user = await res.json();
 
                 document.getElementById('modalCustomerName').textContent = `ملف العميل: ${user.username}`;
