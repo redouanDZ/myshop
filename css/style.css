@@ -3889,3 +3889,11 @@ body.dark-mode .page-title h1 {
 }
 
 @media print { .mobile-bottom-nav, #mobile-nav-overlay, #mobile-nav-drawer, .offline-notification-banner, #offline-notification-banner { display: none !important; } }
+
+/* Dark mode mobile menu button fix */
+[data-theme="dark"] .mobile-menu-btn,
+body.dark-mode .mobile-menu-btn {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #fff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
