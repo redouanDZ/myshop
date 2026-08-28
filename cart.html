@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -475,7 +475,7 @@
         </p>
         
         <div class="promo-code" style="margin-top: 10px;">
-          <input type="text" id="promo-code" placeholder="رمز <span data-i18n="checkout.discount">الخصم</span> (مثال: SAVE10)" value="${discountRate === 0.1 ? 'SAVE10' : discountRate === 0.2 ? 'SAVE20' : ''}">
+          <input type="text" id="promo-code" placeholder="${window.I18n ? window.I18n.t('checkout.promo_placeholder', 'رمز الخصم (مثال: SAVE10)') : 'رمز الخصم (مثال: SAVE10)'}" value="${discountRate === 0.1 ? 'SAVE10' : discountRate === 0.2 ? 'SAVE20' : ''}">
           <button type="button" class="apply-promo" onclick="applyPromoCode()"><span data-i18n="cart.apply_promo">تطبيق</span></button>
         </div>
         <button type="button" class="checkout-btn" onclick="proceedToCheckout()" style="margin-top: 15px;"><span data-i18n="cart.checkout_btn">متابعة إلى الدفع</span> <i class="fas fa-arrow-left" style="margin-right: 8px;"></i></button>
