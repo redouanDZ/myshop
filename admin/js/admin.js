@@ -110,7 +110,7 @@ const AdminUI = {
 
     initMobileNav() {
         const sidebar = document.querySelector('.sidebar');
-        const dashboardHeader = document.querySelector('.dashboard-header');
+        const dashboardHeader = document.querySelector('.dashboard-header, .page-header');
         if (!sidebar || !dashboardHeader) return;
 
         // Add toggle button if not exists
