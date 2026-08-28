@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myshop-pwa-v3';
+const CACHE_NAME = 'myshop-pwa-v4';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -91,6 +91,7 @@ self.addEventListener('fetch', (event) => {
           if (event.request.headers.get('accept')?.includes('text/html')) {
             return caches.match(event.request).then((cached) => cached || caches.match('/index.html'));
           }
+          return new Response('', { status: 503, statusText: 'Service Unavailable' });
         });
 
       return cachedResponse || fetchPromise;
