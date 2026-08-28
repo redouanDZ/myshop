@@ -74,6 +74,13 @@ test.after(async () => {
     if (server) {
         await new Promise(resolve => server.close(resolve));
     }
+    if (db && db.pool) {
+        await db.pool.end();
+    }
+    setTimeout(() => {
+        console.log('Active handles:', process._getActiveHandles().map(h => h.constructor.name));
+        process.exit(0);
+    }, 100);
 });
 
 // ==========================================
