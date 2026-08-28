@@ -232,28 +232,7 @@ class MysqlRepository {
     this.pool = pool;
   }
 
-  async initializeSchema() {
-    const migrations = readMigrationFiles();
-    for (const migration of migrations) {
-      for (const statement of splitSqlStatements(migration)) {
-        try {
-          await this.pool.query(statement);
-        } catch (e) {
-          const ignorableCodes = [
-            'ER_TABLE_EXISTS_ERROR',
-            'ER_DUP_KEYNAME',
-            'ER_DUP_FIELDNAME',
-            'ER_CANT_DROP_FIELD_OR_KEY'
-          ];
-          if (!ignorableCodes.includes(e.code) && !e.message.includes('already exists') && !e.message.includes('Duplicate')) {
-            console.error(`❌ Migration error in SQL statement [${statement.slice(0, 100)}...]:`, e.message);
-            throw e;
-          }
-        }
-      }
-    }
-    await this.seedDefaultData();
-  }
+  async initializeSchema() { const runMigrations = require('../../../database/migrate'); await runMigrations(); await this.seedDefaultData(); }
 
   async seedDefaultData() {
     const isProduction = process.env.NODE_ENV === 'production';
