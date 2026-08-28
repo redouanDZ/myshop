@@ -1,3 +1,6 @@
+const { describe } = require('node:test');
+
+describe('API Integration Suite', () => {
 const test = require('node:test');
 const assert = require('node:assert');
 const db = require('../src/data/db-connection.js');
@@ -313,4 +316,6 @@ test('Order Confirmation and Cart Access with Async Auth Test', async () => {
 
 test.after(async () => {
     // Teardown
+});
+
 });

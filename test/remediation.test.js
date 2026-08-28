@@ -1,3 +1,6 @@
+const { describe } = require('node:test');
+
+describe('Remediation Suite', () => {
 const test = require('node:test');
 const assert = require('node:assert');
 const http = require('http');
@@ -1582,3 +1585,5 @@ test('Phase 10 — Admin Dashboard CRUD: Product Variants CRUD & Coupon Lifecycl
 
 
 
+
+});
