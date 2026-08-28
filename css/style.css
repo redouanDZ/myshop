@@ -722,7 +722,7 @@ nav ul li a:hover, nav ul li a.active {
 }
 
 .banner .btn-hero-primary {
-    background: white;
+    background: var(--card-bg, #ffffff);
     color: var(--primary-color);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
     font-size: 16px;
@@ -991,7 +991,7 @@ nav ul li a:hover, nav ul li a.active {
 
 .product-wishlist:hover {
     transform: scale(1.15);
-    background: #ffffff;
+    background: var(--card-bg, #ffffff);
 }
 
 .product-wishlist i {
@@ -1101,7 +1101,7 @@ nav ul li a:hover, nav ul li a.active {
 .add-to-wishlist {
     width: 45px;
     height: 45px;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border: 1px solid #ddd;
     border-radius: var(--border-radius);
     margin-left: 5px;
@@ -1295,7 +1295,7 @@ footer {
 
 .filter-btn {
     padding: 8px 15px;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border: 1px solid #ddd;
     border-radius: var(--border-radius);
     cursor: pointer;
@@ -1321,7 +1321,7 @@ footer {
     padding: 8px 10px;
     border: 1px solid #ddd;
     border-radius: var(--border-radius);
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     cursor: pointer;
 }
 
@@ -1336,7 +1336,7 @@ footer {
     width: 40px;
     height: 40px;
     border: 1px solid #ddd;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     display: flex;
     align-items: center;
@@ -1360,7 +1360,7 @@ footer {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 40px;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     padding: 30px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -1487,7 +1487,7 @@ footer {
 }
 
 .color-btn {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
 }
 
 .size-btn {
@@ -1518,7 +1518,7 @@ footer {
     width: 40px;
     height: 40px;
     border: none;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     cursor: pointer;
     transition: var(--transition);
 }
@@ -1556,7 +1556,7 @@ footer {
 .add-to-wishlist {
     width: 45px;
     height: 45px;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border: 1px solid #ddd;
     border-radius: var(--border-radius);
     margin-left: 10px;
@@ -1749,7 +1749,7 @@ footer {
 }
 
 .cart-items {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     padding: 30px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -1820,7 +1820,7 @@ footer {
     width: 35px;
     height: 35px;
     border: none;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     cursor: pointer;
     transition: var(--transition);
 }
@@ -1848,7 +1848,7 @@ footer {
 .remove-item {
     width: 35px;
     height: 35px;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border: 1px solid #ddd;
     border-radius: var(--border-radius);
     display: flex;
@@ -1864,7 +1864,7 @@ footer {
 }
 
 .cart-summary {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     padding: 30px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -1963,7 +1963,7 @@ footer {
 }
 
 .checkout-container {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     padding: 30px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -2173,7 +2173,7 @@ footer {
 }
 
 .bank-info {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     padding: 15px;
     border-radius: var(--border-radius);
     margin: 15px 0;
@@ -2200,7 +2200,7 @@ footer {
 }
 
 .confirmation-container {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     padding: 30px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -2453,7 +2453,7 @@ footer {
     display: flex;
     align-items: center;
     padding: 10px 15px;
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     transition: var(--transition);
@@ -2511,7 +2511,7 @@ footer {
 }
 
 .dashboard-card {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     padding: 25px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -2541,7 +2541,7 @@ footer {
 }
 
 .admin-content {
-    background-color: white;
+    background-color: var(--card-bg, #ffffff);
     border-radius: var(--border-radius);
     padding: 30px;
     box-shadow: 0 3px 10px rgba(0,0,0,0.1);
@@ -2944,7 +2944,7 @@ footer {
 }
 
 .product-skeleton-card {
-  background: white;
+  background: var(--card-bg, #ffffff);
   border: 1px solid #edf2f7;
   border-radius: 12px;
   padding: 18px;
@@ -3006,7 +3006,7 @@ footer {
   justify-content: space-between;
   padding: 14px 18px;
   border-radius: 10px;
-  background: #ffffff;
+  background: var(--card-bg, #ffffff);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
   border-right: 5px solid #2ecc71;
   color: #1e293b;
