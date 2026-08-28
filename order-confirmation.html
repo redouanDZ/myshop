@@ -283,7 +283,7 @@
                                 <img src="${item.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}">
                                 <div>
                                     <strong style="display: block; color: #1e293b;">${safeName}</strong>
-                                    <span style="font-size: 0.85rem; color: #64748b;">' + window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity) + '</span>
+                                    <span style="font-size: 0.85rem; color: #64748b;">${window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity)}</span>
                                 </div>
                             </div>
                             <strong style="color: #2563eb;">${lineTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</strong>

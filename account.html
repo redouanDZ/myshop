@@ -802,7 +802,7 @@
                         const addresses = user.addresses || [];
 
                         if (addresses.length === 0) {
-                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">' + window.I18n.t('account.no_addresses', 'لا توجد عناوين شحن محفوظة حتى الآن.') + '</div>`;
+                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">${window.I18n.t('account.no_addresses', 'لا توجد عناوين شحن محفوظة حتى الآن.')}</div>`;
                             return;
                         }
 
@@ -810,13 +810,13 @@
                             <div class="address-card ${addr.isDefault ? 'default-address' : ''}">
                                 ${addr.isDefault ? '<span class="address-badge">العنوان الافتراضي</span>' : ''}
                                 <h4>${addr.title || window.I18n.t('account.address_fallback', 'عنوان')}</h4>
-                                <p><strong>' + window.I18n.t('account.recipient_label', 'المستلم:') + '</strong> ${addr.fullName}</p>
-                                <p><strong>' + window.I18n.t('account.phone_label', 'الهاتف:') + '</strong> ${addr.phone}</p>
-                                <p><strong>' + window.I18n.t('account.city_label', 'المدينة:') + '</strong> ${addr.city}</p>
-                                <p><strong>' + window.I18n.t('account.address_label', 'العنوان:') + '</strong> ${addr.address}</p>
+                                <p><strong>${window.I18n.t('account.recipient_label', 'المستلم:')}</strong> ${addr.fullName}</p>
+                                <p><strong>${window.I18n.t('account.phone_label', 'الهاتف:')}</strong> ${addr.phone}</p>
+                                <p><strong>${window.I18n.t('account.city_label', 'المدينة:')}</strong> ${addr.city}</p>
+                                <p><strong>${window.I18n.t('account.address_label', 'العنوان:')}</strong> ${addr.address}</p>
                                 <div class="address-actions">
                                     <button class="btn-sm-danger" onclick="deleteAddress(${addr.id})">
-                                        <i class="fas fa-trash"></i> ' + window.I18n.t('common.delete', 'حذف') + '
+                                        <i class="fas fa-trash"></i> {window.I18n.t()}
                                     </button>
                                 </div>
                             </div>
@@ -874,11 +874,11 @@
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     if (res.ok) {
-                        showToast('تم ' + window.I18n.t('common.delete', 'حذف') + ' العنوان بنجاح', 'info');
+                        showToast('تم {window.I18n.t()} العنوان بنجاح', 'info');
                         loadAddresses();
                     }
                 } catch (e) {
-                    showToast('حدث خطأ في ال' + window.I18n.t('common.delete', 'حذف') + '', 'error');
+                    showToast('حدث خطأ في ال{window.I18n.t()}', 'error');
                 }
             };
 
@@ -890,7 +890,7 @@
                     if (res.ok) {
                         const orders = await res.json();
                         if (orders.length === 0) {
-                            container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;">' + window.I18n.t('account.no_orders_yet', 'لم تقم بإجراء أي طلبات بعد.') + '</div>`;
+                            container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;">{window.I18n.t()}</div>`;
                             return;
                         }
 
@@ -920,7 +920,7 @@
                         `).join('');
                     }
                 } catch (e) {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px;">' + window.I18n.t('messages.load_orders_error', 'خطأ في تحميل الطلبات') + '</div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 20px;">{window.I18n.t()}</div>`;
                 }
             }
 
@@ -965,7 +965,7 @@
                                 </div>
                                 <div style="display: flex; gap: 8px;">
                                     <button class="btn" style="flex: 1; font-size: 0.8rem; padding: 6px;" onclick="addToCart(${p.id})">
-                                        <i class="fas fa-shopping-cart"></i> ' + window.I18n.t('common.cart_title', 'السلة') + '
+                                        <i class="fas fa-shopping-cart"></i> {window.I18n.t()}
                                     </button>
                                     <button class="btn-sm-danger" style="padding: 6px 10px;" onclick="removeFromWishlist(${p.id}, '${p.name}')">
                                         <i class="fas fa-trash"></i>
