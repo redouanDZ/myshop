@@ -110,8 +110,8 @@ const AdminUI = {
 
     initMobileNav() {
         const sidebar = document.querySelector('.sidebar');
-        const header = document.querySelector('header .container');
-        if (!sidebar || !header) return;
+        const dashboardHeader = document.querySelector('.dashboard-header');
+        if (!sidebar || !dashboardHeader) return;
 
         // Add toggle button if not exists
         let toggleBtn = document.getElementById('adminSidebarToggle');
@@ -119,9 +119,23 @@ const AdminUI = {
             toggleBtn = document.createElement('button');
             toggleBtn.id = 'adminSidebarToggle';
             toggleBtn.className = 'admin-menu-toggle';
-            toggleBtn.setAttribute('aria-label', 'فتح القائمة الجانبية');
+            toggleBtn.setAttribute('aria-label', 'تبديل القائمة الجانبية');
+            toggleBtn.style.marginInlineEnd = '15px';
             toggleBtn.innerHTML = '<i class="fas fa-bars"></i>';
-            header.insertBefore(toggleBtn, header.firstChild);
+            
+            // Wrap the title and button in a div to preserve flex space-between layout
+            const titleElement = dashboardHeader.querySelector('h1, h2, h3');
+            if (titleElement) {
+                const wrapper = document.createElement('div');
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'center';
+                dashboardHeader.insertBefore(wrapper, titleElement);
+                wrapper.appendChild(toggleBtn);
+                wrapper.appendChild(titleElement);
+                titleElement.style.margin = '0';
+            } else {
+                dashboardHeader.insertBefore(toggleBtn, dashboardHeader.firstChild);
+            }
         }
 
         // Overlay
