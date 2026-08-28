@@ -3653,6 +3653,10 @@ body.dark-mode .mobile-nav-item.active {
         padding-bottom: calc(100px + env(safe-area-inset-bottom)) !important;
     }
 
+    .back-to-top-btn {
+        bottom: calc(80px + env(safe-area-inset-bottom)) !important;
+    }
+
     header nav.main-nav {
         display: none !important;
     }
