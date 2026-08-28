@@ -72,15 +72,17 @@ test.beforeEach(async () => {
 
 test.after(async () => {
     if (server) {
+        if (server.closeAllConnections) server.closeAllConnections();
         await new Promise(resolve => server.close(resolve));
     }
     if (db && db.pool) {
         await db.pool.end();
     }
+    // Force exit after 2 seconds if dangling sockets (like fetch keep-alive) keep the process open.
+    // Unref ensures this timer itself doesn't keep the process open if it can exit cleanly.
     setTimeout(() => {
-        console.log('Active handles:', process._getActiveHandles().map(h => h.constructor.name));
         process.exit(0);
-    }, 100);
+    }, 2000).unref();
 });
 
 // ==========================================
