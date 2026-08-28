@@ -5,27 +5,33 @@ const { createStoreService } = require('./services/store-service');
 
 let serviceInstance = null;
 let poolInstance = null;
+let initPromise = null;
 
 async function initializeDatabase() {
     if (serviceInstance) return serviceInstance;
+    if (initPromise) return initPromise;
 
-    const dbConfig = require('../config/database.js').getConfig();
-    const connectionConfig = {
-        ...dbConfig,
-        connectTimeout: 20000,
-        charset: 'utf8mb4'
-    };
+    initPromise = (async () => {
+        const dbConfig = require('../config/database.js').getConfig();
+        const connectionConfig = {
+            ...dbConfig,
+            connectTimeout: 20000,
+            charset: 'utf8mb4'
+        };
 
-    try {
-        poolInstance = mysql.createPool(connectionConfig);
-        const repository = createMysqlRepository(poolInstance);
-        await repository.initializeSchema();
-        serviceInstance = createStoreService(repository);
-        return serviceInstance;
-    } catch (error) {
-        console.error('❌ MySQL connection failed:', error.message);
-        throw error;
-    }
+        try {
+            poolInstance = mysql.createPool(connectionConfig);
+            const repository = createMysqlRepository(poolInstance);
+            await repository.initializeSchema();
+            serviceInstance = createStoreService(repository);
+            return serviceInstance;
+        } catch (error) {
+            initPromise = null;
+            console.error('❌ MySQL connection failed:', error.message);
+            throw error;
+        }
+    })();
+    return initPromise;
 }
 
 function buildProxy(methodName) {
