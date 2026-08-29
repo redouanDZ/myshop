@@ -98,7 +98,8 @@
     "remove_item": "Retirer le produit",
     "shipping_calc": "Calculé par Wilaya à la caisse",
     "total_pre_shipping": "Total (Avant expédition)",
-    "shipping_note": "* Le coût exact de livraison (400 - 900 DA) sera calculé et ajouté au total final après avoir sélectionné votre Wilaya à la caisse."
+    "shipping_note": "* Le coût exact de livraison (400 - 900 DA) sera calculé et ajouté au total final après avoir sélectionné votre Wilaya à la caisse.",
+    "remove_promo": "Annuler le code"
   },
   "checkout": {
     "title": "Finaliser la commande",
@@ -434,7 +435,7 @@
     "cart_empty": "Le panier est vide",
     "promo_canceled": "Code de réduction annulé",
     "promo_success": "Réduction appliquée avec succès ! ({discount}%)",
-    "promo_invalid": "Code de réduction invalide. Utilisez SAVE10 ou SAVE20",
+    "promo_invalid": "Code promo invalide ou expiré",
     "fetch_wilayas_error": "Échec de la récupération des wilayas",
     "enter_address": "Veuillez entrer votre adresse détaillée",
     "cart_empty_redirect": "Le panier est vide, redirection vers la boutique...",

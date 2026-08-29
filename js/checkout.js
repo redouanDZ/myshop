@@ -211,7 +211,7 @@ function updateOrderSummary() {
     
     // Promo discount if applicable
     const promo = getSavedPromo();
-    const discount = promo ? subtotal * promo.discount : 0;
+    const discount = promo ? (promo.calculatedDiscount && promo.calculatedDiscount > 0 ? Math.min(subtotal, promo.calculatedDiscount) : (promo.discount ? Math.round(subtotal * promo.discount) : 0)) : 0;
     const grandTotal = Math.max(0, subtotal + currentShippingCost - discount);
 
     const subtotalEl = document.getElementById('reviewSubtotal');
@@ -277,7 +277,7 @@ async function placeOrderNow() {
 
     const subtotal = cart.reduce((sum, item) => sum + (Number(item.price) * Number(item.quantity)), 0);
     const promo = getSavedPromo();
-    const discount = promo ? subtotal * promo.discount : 0;
+    const discount = promo ? (promo.calculatedDiscount && promo.calculatedDiscount > 0 ? Math.min(subtotal, promo.calculatedDiscount) : (promo.discount ? Math.round(subtotal * promo.discount) : 0)) : 0;
     const grandTotal = Math.max(0, subtotal + currentShippingCost - discount);
 
     const paymentMethod = document.querySelector('input[name="payment-method"]:checked')?.value || 'cod';

@@ -98,7 +98,8 @@
     "remove_item": "Remove Product",
     "shipping_calc": "Calculated by Wilaya at checkout",
     "total_pre_shipping": "Total (Before Shipping)",
-    "shipping_note": "* Exact delivery cost (400 - 900 DZD) will be calculated and added to final total after selecting your Wilaya at checkout."
+    "shipping_note": "* Exact delivery cost (400 - 900 DZD) will be calculated and added to final total after selecting your Wilaya at checkout.",
+    "remove_promo": "Remove code"
   },
   "checkout": {
     "title": "Complete Your Purchase",
@@ -434,7 +435,7 @@
     "cart_empty": "Shopping cart is empty",
     "promo_canceled": "Discount code canceled",
     "promo_success": "Discount applied successfully! ({discount}%)",
-    "promo_invalid": "Invalid discount code. Use SAVE10 or SAVE20",
+    "promo_invalid": "Invalid or expired promo code",
     "fetch_wilayas_error": "Failed to fetch wilayas",
     "enter_address": "Please enter your detailed address",
     "cart_empty_redirect": "Cart is empty, redirecting to store...",

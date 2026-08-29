@@ -221,7 +221,8 @@ function updateOrderSummary(subtotal = null) {
     }
 }
 
-function applyPromoCode(code) {
+async function applyPromoCode(code) {
+    if (window.location.pathname.endsWith("cart.html") || window.location.pathname.endsWith("/cart")) return;
     if (!code) {
         localStorage.removeItem('promoCode');
         showNotification(window.I18n.t('messages.promo_canceled', 'تم إلغاء كود الخصم'), 'info');
