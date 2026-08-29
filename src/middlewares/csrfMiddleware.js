@@ -20,10 +20,13 @@ function requireCsrf(req, res, next) {
         '/api/orders',
         '/api/cart/add',
         '/api/payments/chargily/checkout',
-        '/api/payments/chargily/webhook'
+        '/api/payments/chargily/webhook',
+        '/api/coupons/validate',
+        '/coupons/validate'
     ];
 
-    if (exemptPaths.includes(req.path)) {
+    const currentPath = req.originalUrl ? req.originalUrl.split('?')[0] : req.path;
+    if (exemptPaths.some(p => currentPath === p || req.path === p || currentPath.endsWith(p))) {
         return next();
     }
 
