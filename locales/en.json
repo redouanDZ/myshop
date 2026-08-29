@@ -10,7 +10,7 @@
     "account": "Account"
   },
   "common": {
-    "store_name": "E-Commerce Store",
+    "store_name": "Online Store (MYSHOP)",
     "search": "Search...",
     "search_placeholder": "Search for phone, laptop, tech accessories...",
     "currency": "DZD",
@@ -339,15 +339,15 @@
   },
   "home": {
     "meta": {
-      "title": "MyShop - The Complete Tech E-Store",
-      "description": "A modern e-store offering the best electronics in Algeria with competitive prices and fast delivery.",
-      "og_title": "MyShop - Modern Electronics Store",
-      "og_desc": "Shop the latest computers and tech accessories at the best prices.",
-      "twitter_title": "MyShop - Modern Electronics Store",
-      "twitter_desc": "Shop latest computers and accessories at best prices."
+      "title": "Integrated Online Store",
+      "description": "A modern online store offering the best diverse products in Algeria with competitive prices and fast delivery.",
+      "og_title": "Comprehensive Online Store",
+      "og_desc": "Shop the best and latest products at the best prices.",
+      "twitter_title": "Comprehensive Online Store",
+      "twitter_desc": "Shop the best and latest products at the best prices."
     },
     "trusted_badge": "🇩🇿 The trusted e-store in Algeria",
-    "hero_title": "Shop the best tech devices and products at competitive prices",
+    "hero_title": "Discover our best diverse products at competitive prices",
     "hero_subtitle": "Fast and reliable delivery to 58 wilayas with cash on delivery and 100% authentic products guarantee.",
     "start_shopping": "Start Shopping Now",
     "track_order_btn": "Track your order",

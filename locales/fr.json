@@ -10,7 +10,7 @@
     "account": "Mon compte"
   },
   "common": {
-    "store_name": "Boutique Électronique",
+    "store_name": "Boutique en Ligne (MYSHOP)",
     "search": "Recherche...",
     "search_placeholder": "Rechercher un téléphone, ordinateur, accessoires...",
     "currency": "DA",
@@ -339,15 +339,15 @@
   },
   "home": {
     "meta": {
-      "title": "MyShop - La Boutique High-Tech Complète",
-      "description": "Une boutique moderne offrant les meilleurs appareils électroniques en Algérie avec des prix compétitifs et livraison rapide.",
-      "og_title": "MyShop - Magasin d'électronique moderne",
-      "og_desc": "Achetez les derniers ordinateurs et accessoires tech aux meilleurs prix.",
-      "twitter_title": "MyShop - Magasin d'électronique moderne",
-      "twitter_desc": "Achetez les derniers ordinateurs et accessoires tech aux meilleurs prix."
+      "title": "Boutique en Ligne Intégrée",
+      "description": "Une boutique en ligne moderne proposant les meilleurs produits en Algérie avec des prix compétitifs et une livraison rapide.",
+      "og_title": "La Boutique en Ligne Globale",
+      "og_desc": "Achetez les meilleurs produits aux meilleurs prix.",
+      "twitter_title": "La Boutique en Ligne Globale",
+      "twitter_desc": "Achetez les meilleurs produits aux meilleurs prix."
     },
     "trusted_badge": "🇩🇿 La boutique de confiance en Algérie",
-    "hero_title": "Achetez les meilleurs appareils et produits tech à des prix compétitifs",
+    "hero_title": "Découvrez nos meilleurs produits à des prix compétitifs",
     "hero_subtitle": "Livraison rapide et fiable vers 58 wilayas avec paiement à la livraison et garantie d'authenticité à 100%.",
     "start_shopping": "Commencez vos achats",
     "track_order_btn": "Suivre votre commande",
