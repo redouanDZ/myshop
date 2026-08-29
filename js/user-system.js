@@ -40,6 +40,15 @@ function saveSessionUser(user) {
     localStorage.setItem('currentUser', JSON.stringify(user));
 }
 
+function clearSessionAuthState() {
+    sessionStorage.removeItem('currentUser');
+    localStorage.removeItem('currentUser');
+    const userIcon = document.querySelector('.user-icon');
+    if (userIcon) {
+        userIcon.innerHTML = '<i class="fas fa-user"></i>';
+    }
+}
+
 function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
@@ -667,7 +676,7 @@ async function handleSignup() {
         return;
     }
 
-    try {
+        try {
         const response = await fetchJson(`${API_BASE_URL}/register`, {
             method: 'POST',
             body: JSON.stringify({ username: name, email, phone, password })
@@ -676,33 +685,25 @@ async function handleSignup() {
         const data = await response.json();
 
         if (response.ok) {
-            const loginResponse = await fetchJson(`${API_BASE_URL}/login`, {
-                method: 'POST',
-                body: JSON.stringify({ email, password })
-            });
-
-            const loginData = await loginResponse.json();
-
-            if (loginResponse.ok) {
-                saveSessionUser(loginData.user);
-                document.getElementById('auth-modal').style.display = 'none';
-                updateUIForLoggedInUser(loginData.user);
-                showNotification(data.message || 'Account created successfully!');
-
-                setTimeout(() => {
-                    const redirectUrl = localStorage.getItem('redirectAfterLogin') || '../index.html';
-                    localStorage.removeItem('redirectAfterLogin');
-                    window.location.href = redirectUrl;
-                }, 1500);
-            } else {
-                showNotification(loginData.message || 'Account created but login failed. Please login manually.', 'error');
-                document.getElementById('auth-modal').style.display = 'none';
+            if (data.user) {
+                saveSessionUser(data.user);
+                updateUIForLoggedInUser(data.user);
             }
+            const modal = document.getElementById('auth-modal');
+            if (modal) modal.style.display = 'none';
+
+            showNotification(data.message || (window.I18n ? window.I18n.t('auth.register_success', 'تم إنشاء الحساب بنجاح!') : 'تم إنشاء الحساب بنجاح!'));
+
+            setTimeout(() => {
+                const redirectUrl = localStorage.getItem('redirectAfterLogin') || 'index.html';
+                localStorage.removeItem('redirectAfterLogin');
+                window.location.href = redirectUrl;
+            }, 800);
         } else {
-            showNotification(data.message || 'An error occurred while creating the account', 'error');
+            showNotification(data.message || (window.I18n ? window.I18n.t('messages.server_error', 'حدث خطأ أثناء إنشاء الحساب') : 'حدث خطأ أثناء إنشاء الحساب'), 'error');
         }
     } catch (error) {
-        showNotification('An error occurred while creating the account. Please try again.', 'error');
+        showNotification(window.I18n ? window.I18n.t('messages.server_error', 'حدث خطأ في الاتصال بالخادم') : 'حدث خطأ في الاتصال بالخادم', 'error');
     }
 }
 
@@ -719,17 +720,13 @@ async function logoutUser() {
     }
 
     clearSessionAuthState();
-    const userIcon = document.querySelector('.user-icon');
-    if (userIcon) {
-        userIcon.innerHTML = '<i class="fas fa-user"></i>';
-    }
 
-    showNotification('Logged out successfully');
+    showNotification(window.I18n ? window.I18n.t('messages.logout_success', 'تم تسجيل الخروج بنجاح') : 'تم تسجيل الخروج بنجاح');
     updateCartUI();
 
     setTimeout(() => {
-        window.location.href = '../index.html';
-    }, 1500);
+        window.location.href = 'index.html';
+    }, 600);
 }
 
 /**
