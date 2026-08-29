@@ -298,6 +298,7 @@
                 loadProductOptions(currentProduct);
                 loadSimilarProducts(currentProduct.category);
                 loadProductReviews(currentProduct.id);
+                if (window.I18n) window.I18n.translatePage();
             } catch (error) {
                 alert(window.I18n.t('messages.load_product_error', 'خطأ في تحميل المنتج'));
             }
@@ -574,6 +575,7 @@
                         <a href="product.html?id=${p.id}"><span data-i18n="product.view_details">عرض التفاصيل</span></a>
                     </div>
                 `).join('');
+                if (window.I18n) window.I18n.translatePage();
             } catch (error) {
                 const container = document.getElementById('similar-products');
                 if (container) {

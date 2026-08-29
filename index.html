@@ -118,10 +118,10 @@
                 <p data-i18n="home.hero_subtitle">توصيل سريع وموثوق إلى 58 ولاية مع إمكانية الدفع عند الاستلام وضمان الجودة وأصالة المنتجات 100%.</p>
                 <div class="hero-cta-group">
                     <a href="shop.html" class="btn btn-hero-primary">
-                        <i class="fas fa-shopping-bag"></i data-i18n="home.start_shopping">> ابدأ التسوق الآن
+                        <i class="fas fa-shopping-bag"></i> <span data-i18n="home.start_shopping">ابدأ التسوق الآن</span>
                     </a>
                     <a href="track-order.html" class="btn btn-hero-secondary">
-                        <i class="fas fa-truck"></i data-i18n="home.track_order_btn">> تتبع طلبك الحالي
+                        <i class="fas fa-truck"></i> <span data-i18n="home.track_order_btn">تتبع طلبك الحالي</span>
                     </a>
                 </div>
             </div>
@@ -432,6 +432,7 @@
                         </div>
                     `}).join('');
                 }
+                if (window.I18n) window.I18n.translatePage();
             } catch (error) {
                 // Silent error handling
             }
