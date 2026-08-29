@@ -450,11 +450,18 @@ class MysqlRepository {
     const randomPassword = crypto.randomBytes(20).toString('hex');
     const hashedPassword = await bcrypt.hash(randomPassword, 10);
 
-    const [result] = await this.pool.query(
-      'INSERT INTO users (username, email, phone, password, google_id, avatar_url, role, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [username, email, '', hashedPassword, googleId, avatarUrl, 'customer', true]
-    );
-    return this.findUserById(result.insertId);
+    try {
+        const [result] = await this.pool.query(
+        'INSERT INTO users (username, email, phone, password, google_id, avatar_url, role, is_verified) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [username, email, '', hashedPassword, googleId, avatarUrl, 'customer', true]
+        );
+        return this.findUserById(result.insertId);
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            throw new Error('البريد الإلكتروني مسجل مسبقاً بطريقة أخرى. يرجى تسجيل الدخول بالطريقة العادية وربط حساب جوجل لاحقاً.');
+        }
+        throw error;
+    }
   }
 
   async createUser(userData) {
@@ -464,12 +471,23 @@ class MysqlRepository {
     const hashedPassword = await bcrypt.hash(String(userData.password || ''), 10);
     const isVerified = userData.is_verified !== undefined ? (userData.is_verified ? 1 : 0) : 1;
 
-    const [result] = await this.pool.query(
-      'INSERT INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, ?)',
-      [username, email, phone, hashedPassword, userData.role || 'customer', isVerified]
-    );
+    try {
+        const [result] = await this.pool.query(
+        'INSERT INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, ?)',
+        [username, email, phone, hashedPassword, userData.role || 'customer', isVerified]
+        );
 
-    return this.findUserById(result.insertId);
+        return this.findUserById(result.insertId);
+    } catch (error) {
+        if (error.code === 'ER_DUP_ENTRY') {
+            if (error.sqlMessage && error.sqlMessage.includes('email')) {
+                throw new Error('البريد الإلكتروني مسجل مسبقاً. يرجى تسجيل الدخول أو استخدام بريد آخر.');
+            } else {
+                throw new Error('هذه البيانات مسجلة مسبقاً (ربما رقم الهاتف).');
+            }
+        }
+        throw error;
+    }
   }
 
   async updateUserVerificationToken(userId, token, expiresAt) {

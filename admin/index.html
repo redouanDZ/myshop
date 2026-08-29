@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ… ظˆط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ - ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</title>
+    <title>لوحة التحكم والإحصائيات - المتجر الإلكتروني</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,27 +25,25 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="../index.html">ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</a>
+                <a href="../index.html">المتجر الإلكتروني</a>
             </div>
             <nav>
                 <ul>
-                    <li><a href="../index.html">ط²ظٹط§ط±ط© ط§ظ„ظ…طھط¬ط±</a></li>
-                    <li><a href="index.html" class="active">ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</a></li>
-                    <li><a href="orders.html">ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
-                    <li><a href="products.html">ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
-                    <li><a href="users.html">ط§ظ„ط¹ظ…ظ„ط§ط،</a></li>
-                    <li><a href="coupons.html">ط§ظ„ظƒظˆط¨ظˆظ†ط§طھ</a></li>
-                    <li><a href="reviews.html">ط§ظ„طھظ‚ظٹظٹظ…ط§طھ</a></li>
-                    <li><a href="settings.html">ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ</a></li>
+                    <li><a href="../index.html">زيارة المتجر</a></li>
+                    <li><a href="index.html" class="active">لوحة التحكم</a></li>
+                    <li><a href="orders.html">الطلبات</a></li>
+                    <li><a href="products.html">المنتجات</a></li>
+                    <li><a href="users.html">العملاء</a></li>
+                    <li><a href="coupons.html">الكوبونات</a></li>
+                    <li><a href="reviews.html">التقييمات</a></li>
+                    <li><a href="settings.html">الإعدادات</a></li>
                 </ul>
             </nav>
             <div class="user-actions" style="display: flex; gap: 15px; align-items: center;">
-
-                <a href="../account.html" class="user-icon" title="ط­ط³ط§ط¨ ط§ظ„ط£ط¯ظ…ظ†">
+                <a href="../account.html" class="user-icon" title="حساب الأدمن">
                     <i class="fas fa-user-shield"></i>
                 </a>
-            
-                <a href="#" class="admin-logout-btn" title="����� ������" style="color: #ef4444; font-size: 1.2rem; transition: color 0.3s;">
+                <a href="#" class="admin-logout-btn" title="تسجيل الخروج" style="color: #ef4444; font-size: 1.2rem; transition: color 0.3s;">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
             </div>
@@ -57,20 +55,20 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>ظ„ظˆط­ط© ط§ظ„ط¥ط¯ط§ط±ط©</h2>
-                <p id="adminUserTag">ظ…ط¯ظٹط± ط§ظ„ظ†ط¸ط§ظ…</p>
+                <h2>لوحة الإدارة</h2>
+                <p id="adminUserTag">مدير النظام</p>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="index.html" class="active"><i class="fas fa-tachometer-alt"></i> ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ ط§ظ„ط¹ط§ظ…ط©</a></li>
-                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> ط¥ط¯ط§ط±ط© ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
-                <li><a href="products.html"><i class="fas fa-box"></i> ط§ظ„ظ…ظ†طھط¬ط§طھ ظˆط§ظ„ظ…ط®ط²ظˆظ†</a></li>
-                <li><a href="users.html"><i class="fas fa-users"></i> ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†</a></li>
-                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> ظ‚ط³ط§ط¦ظ… ط§ظ„ط®طµظ…</a></li>
-                <li><a href="reviews.html"><i class="fas fa-star"></i> طھظ‚ظٹظٹظ…ط§طھ ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
-                <li><a href="settings.html"><i class="fas fa-cog"></i> ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ ظˆط§ظ„ط¨ظƒط³ظ„ط§طھ</a></li>
-                <li><a href="../index.html"><i class="fas fa-store"></i> ظˆط§ط¬ظ‡ط© ط§ظ„ظ…طھط¬ط±</a></li>
+                <li><a href="index.html" class="active"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> إدارة المستخدمين</a></li>
+                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
+                <li><a href="reviews.html"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> الإعدادات والبكسلات</a></li>
+                <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
                 <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬</a>
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
                 </li>
             </ul>
         </div>
@@ -78,7 +76,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h1>ظ†ط¸ط±ط© ط¹ط§ظ…ط© ط¹ظ„ظ‰ ط§ظ„ظ…ط¨ظٹط¹ط§طھ ظˆط§ظ„ظ…ط®ط²ظˆظ†</h1>
+                <h1>نظرة عامة على المبيعات والمخزون</h1>
                 <div>
                     <span id="currentDateDisplay" style="color: #64748b; font-size: 0.95rem;"></span>
                 </div>
@@ -88,8 +86,8 @@
             <div class="stats-container">
                 <div class="stat-card">
                     <div class="stat-info">
-                        <h3 id="statTotalRevenue">0 ط¯ط¬</h3>
-                        <p>ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظ…ط¨ظٹط¹ط§طھ ط§ظ„ظ…ط­ظ‚ظ‚ط©</p>
+                        <h3 id="statTotalRevenue">0 دج</h3>
+                        <p>إجمالي المبيعات المحققة</p>
                     </div>
                     <div class="stat-icon green">
                         <i class="fas fa-wallet"></i>
@@ -99,7 +97,7 @@
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3 id="statTotalOrders">0</h3>
-                        <p>ط¥ط¬ظ…ط§ظ„ظٹ ط¹ط¯ط¯ ط§ظ„ط·ظ„ط¨ط§طھ</p>
+                        <p>إجمالي عدد الطلبات</p>
                     </div>
                     <div class="stat-icon blue">
                         <i class="fas fa-shopping-cart"></i>
@@ -109,7 +107,7 @@
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3 id="statNewOrders">0</h3>
-                        <p>ط·ظ„ط¨ط§طھ ط¬ط¯ظٹط¯ط© ظ‚ظٹط¯ ط§ظ„ظ…ط¹ط§ظ„ط¬ط©</p>
+                        <p>طلبات جديدة قيد المعالجة</p>
                     </div>
                     <div class="stat-icon orange">
                         <i class="fas fa-clock"></i>
@@ -119,7 +117,7 @@
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3 id="statLowStock">0</h3>
-                        <p>طھظ†ط¨ظٹظ‡: ظ…ظ†طھط¬ط§طھ ظ‚ط§ط±ط¨طھ ط¹ظ„ظ‰ ط§ظ„ظ†ظپط§ط¯</p>
+                        <p>تنبيه: منتجات قاربت على النفاد</p>
                     </div>
                     <div class="stat-icon red">
                         <i class="fas fa-exclamation-triangle"></i>
@@ -130,11 +128,11 @@
             <!-- Live Charts -->
             <div class="charts-container">
                 <div class="chart-box">
-                    <h2>ظ†ظ…ظˆ ط§ظ„ظ…ط¨ظٹط¹ط§طھ (ط´ظ‡ط±ظٹط§ظ‹)</h2>
+                    <h2>نمو المبيعات (شهرياً)</h2>
                     <div style="position: relative; height: 300px; width: 100%;"><canvas id="ordersChart"></canvas></div>
                 </div>
                 <div class="chart-box">
-                    <h2>طھظˆط²ظٹط¹ ط­ط§ظ„ط§طھ ط§ظ„ط·ظ„ط¨ط§طھ</h2>
+                    <h2>توزيع حالات الطلبات</h2>
                     <div style="position: relative; height: 300px; width: 100%;"><canvas id="statusChart"></canvas></div>
                 </div>
             </div>
@@ -142,16 +140,16 @@
             <!-- Low Stock & Top Products Grid -->
             <div class="charts-container">
                 <div class="chart-box">
-                    <h2 style="margin-top: 0; font-size: 1.15rem; color: #dc2626;"><i class="fas fa-exclamation-circle"></i> طھظ†ط¨ظٹظ‡ط§طھ ط§ظ„ظ…ط®ط²ظˆظ† ط§ظ„ط­ط±ط¬ (ط£ظ‚ظ„ ظ…ظ† 3 ظ‚ط·ط¹)</h2>
+                    <h2 style="margin-top: 0; font-size: 1.15rem; color: #dc2626;"><i class="fas fa-exclamation-circle"></i> تنبيهات المخزون الحرج (أقل من 3 قطع)</h2>
                     <div id="lowStockItemsList">
-                        <p style="color: #64748b;">ط¬ط§ط±ظٹ ظپط­طµ ط§ظ„ظ…ط®ط²ظˆظ†...</p>
+                        <p style="color: #64748b;">جاري فحص المخزون...</p>
                     </div>
                 </div>
 
                 <div class="chart-box">
-                    <h2 style="margin-top: 0; font-size: 1.15rem; color: #2563eb;"><i class="fas fa-fire"></i> ط§ظ„ظ…ظ†طھط¬ط§طھ ط§ظ„ط£ظƒط«ط± ط·ظ„ط¨ط§ظ‹ ظˆظ…ط¨ظٹط¹ط§ظ‹</h2>
+                    <h2 style="margin-top: 0; font-size: 1.15rem; color: #2563eb;"><i class="fas fa-fire"></i> المنتجات الأكثر طلباً ومبيعاً</h2>
                     <div id="topSoldItemsList">
-                        <p style="color: #64748b;">ط¬ط§ط±ظٹ ط¬ظ„ط¨ ط¥ط­طµط§ط¦ظٹط§طھ ط§ظ„ظ…ط¨ظٹط¹ط§طھ...</p>
+                        <p style="color: #64748b;">جاري جلب إحصائيات المبيعات...</p>
                     </div>
                 </div>
             </div>
@@ -176,17 +174,17 @@
                 const res = await fetch('/api/admin/dashboard-stats', { credentials: 'include', headers });
                 if (!res.ok) {
                     if (res.status === 401 || res.status === 403) {
-                        AdminUI.showToast('ظٹط±ط¬ظ‰ طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„ ط¨ط­ط³ط§ط¨ ظ…ط³ط¤ظˆظ„', 'error');
+                        AdminUI.showToast('يرجى تسجيل الدخول بحساب مسؤول', 'error');
                         window.location.href = '../account.html';
                         return;
                     }
-                    throw new Error('ظپط´ظ„ ط¬ظ„ط¨ ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ');
+                    throw new Error('فشل جلب الإحصائيات');
                 }
 
                 const stats = await res.json();
 
                 // Fill KPI cards
-                document.getElementById('statTotalRevenue').textContent = `${Number(stats.totalRevenue || 0).toLocaleString()} ط¯ط¬`;
+                document.getElementById('statTotalRevenue').textContent = `${Number(stats.totalRevenue || 0).toLocaleString()} دج`;
                 document.getElementById('statTotalOrders').textContent = stats.totalOrders || 0;
                 document.getElementById('statNewOrders').textContent = stats.newOrders || 0;
                 document.getElementById('statLowStock').textContent = (stats.outOfStockCount || 0) + (stats.lowStockCount || 0);
@@ -203,7 +201,7 @@
 
             } catch (err) {
                 console.error('Error loading dashboard stats:', err);
-                AdminUI.showToast('ط®ط·ط£ ط£ط«ظ†ط§ط، ط¬ظ„ط¨ ط¥ط­طµط§ط¦ظٹط§طھ ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…', 'error');
+                AdminUI.showToast('خطأ أثناء جلب إحصائيات لوحة التحكم', 'error');
             }
         }
 
@@ -220,7 +218,7 @@
                 labels = trends.map(t => t.month);
                 revenues = trends.map(t => Number(t.revenue || 0));
             } else {
-                const months = ['ط¬ط§ظ†ظپظٹ', 'ظپظٹظپط±ظٹ', 'ظ…ط§ط±ط³', 'ط£ظپط±ظٹظ„', 'ظ…ط§ظٹ', 'ط¬ظˆط§ظ†', 'ط¬ظˆظٹظ„ظٹط©', 'ط£ظˆطھ', 'ط³ط¨طھظ…ط¨ط±', 'ط£ظƒطھظˆط¨ط±', 'ظ†ظˆظپظ…ط¨ط±', 'ط¯ظٹط³ظ…ط¨ط±'];
+                const months = ['جانفي', 'فيفري', 'مارس', 'أفريل', 'ماي', 'جوان', 'جويلية', 'أوت', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
                 const now = new Date();
                 for (let i = 5; i >= 0; i--) {
                     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -236,7 +234,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظ…ط¨ظٹط¹ط§طھ (ط¯ط¬)',
+                        label: 'إجمالي المبيعات (دج)',
                         data: revenues,
                         backgroundColor: 'rgba(37, 99, 235, 0.75)',
                         borderColor: '#2563eb',
@@ -267,7 +265,7 @@
             statusChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['ظ‚ظٹط¯ ط§ظ„ظ…ط¹ط§ظ„ط¬ط©', 'ظ‚ظٹط¯ ط§ظ„طھط¬ظ‡ظٹط²', 'طھظ… ط§ظ„ط´ط­ظ†', 'طھظ… ط§ظ„طھط³ظ„ظٹظ…', 'ظ…ظ„ط؛ظٹ'],
+                    labels: ['قيد المعالجة', 'قيد التجهيز', 'تم الشحن', 'تم التسليم', 'ملغي'],
                     datasets: [{
                         data: [pending, processing, shipped, delivered, cancelled],
                         backgroundColor: ['#f59e0b', '#0284c7', '#7c3aed', '#10b981', '#ef4444']
@@ -283,7 +281,7 @@
         function renderLowStockList(products) {
             const container = document.getElementById('lowStockItemsList');
             if (!products || !products.length) {
-                container.innerHTML = '<p style="color: #10b981;">âœ… ط¬ظ…ظٹط¹ ط§ظ„ظ…ظ†طھط¬ط§طھ ظ…طھظˆظپط±ط© ط¨ظ…ط®ط²ظˆظ† ظƒط§ظپظچ ظˆظ„ط§ طھظˆط¬ط¯ ظ†ظˆط§ظ‚طµ.</p>';
+                container.innerHTML = '<p style="color: #10b981;">✅ جميع المنتجات متوفرة بمخزون كافٍ ولا توجد نواقص.</p>';
                 return;
             }
 
@@ -293,12 +291,12 @@
                         <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${p.name}" style="width: 42px; height: 42px; border-radius: 6px; object-fit: cover;">
                         <div>
                             <strong style="display: block; font-size: 0.95rem;">${p.name}</strong>
-                            <span style="font-size: 0.85rem; color: #64748b;">ط§ظ„ط³ط¹ط±: ${Number(p.price).toLocaleString()} ط¯ط¬</span>
+                            <span style="font-size: 0.85rem; color: #64748b;">السعر: ${Number(p.price).toLocaleString()} دج</span>
                         </div>
                     </div>
                     <div>
                         <span style="background: ${p.stock === 0 ? '#fee2e2' : '#fef3c7'}; color: ${p.stock === 0 ? '#dc2626' : '#d97706'}; padding: 4px 10px; border-radius: 12px; font-weight: bold; font-size: 0.85rem;">
-                            ${p.stock === 0 ? 'ظ†ظپط¯ ط§ظ„ظ…ط®ط²ظˆظ† (0)' : 'ظ…طھط¨ظ‚ظٹ ' + p.stock + ' ظپظ‚ط·'}
+                            ${p.stock === 0 ? 'نفد المخزون (0)' : 'متبقي ' + p.stock + ' فقط'}
                         </span>
                     </div>
                 </div>
@@ -308,7 +306,7 @@
         function renderTopProductsList(products) {
             const container = document.getElementById('topSoldItemsList');
             if (!products || !products.length) {
-                container.innerHTML = '<p style="color: #64748b;">ظ„ط§ طھظˆط¬ط¯ ظ…ط¨ظٹط¹ط§طھ ظ…ط³ط¬ظ„ط© ط­طھظ‰ ط§ظ„ط¢ظ†.</p>';
+                container.innerHTML = '<p style="color: #64748b;">لا توجد مبيعات مسجلة حتى الآن.</p>';
                 return;
             }
 
@@ -316,9 +314,9 @@
                 <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
                     <div>
                         <strong style="font-size: 0.95rem;">#${idx + 1} ${p.name}</strong>
-                        <span style="display: block; font-size: 0.85rem; color: #64748b;">ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظƒظ…ظٹط© ط§ظ„ظ…ط¨ط§ط¹ط©: ${p.total_sold} ظ‚ط·ط¹ط©</span>
+                        <span style="display: block; font-size: 0.85rem; color: #64748b;">إجمالي الكمية المباعة: ${p.total_sold} قطعة</span>
                     </div>
-                    <strong style="color: #2563eb;">${Number(p.total_sales).toLocaleString()} ط¯ط¬</strong>
+                    <strong style="color: #2563eb;">${Number(p.total_sales).toLocaleString()} دج</strong>
                 </div>
             `).join('');
         }
@@ -327,4 +325,3 @@
     </script>
 </body>
 </html>
-

@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ط¥ط¯ط§ط±ط© ظˆظ…طھط§ط¨ط¹ط© ط§ظ„ط·ظ„ط¨ط§طھ - ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</title>
+    <title>إدارة ومتابعة الطلبات - لوحة التحكم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -79,27 +79,25 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="../index.html">ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</a>
+                <a href="../index.html">المتجر الإلكتروني</a>
             </div>
             <nav>
                 <ul>
-                    <li><a href="../index.html">ط²ظٹط§ط±ط© ط§ظ„ظ…طھط¬ط±</a></li>
-                    <li><a href="index.html">ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</a></li>
-                    <li><a href="orders.html" class="active">ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
-                    <li><a href="products.html">ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
-                    <li><a href="users.html">ط§ظ„ط¹ظ…ظ„ط§ط،</a></li>
-                    <li><a href="coupons.html">ط§ظ„ظƒظˆط¨ظˆظ†ط§طھ</a></li>
-                    <li><a href="reviews.html">ط§ظ„طھظ‚ظٹظٹظ…ط§طھ</a></li>
-                    <li><a href="settings.html">ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ</a></li>
+                    <li><a href="../index.html">زيارة المتجر</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
+                    <li><a href="orders.html" class="active">الطلبات</a></li>
+                    <li><a href="products.html">المنتجات</a></li>
+                    <li><a href="users.html">العملاء</a></li>
+                    <li><a href="coupons.html">الكوبونات</a></li>
+                    <li><a href="reviews.html">التقييمات</a></li>
+                    <li><a href="settings.html">الإعدادات</a></li>
                 </ul>
             </nav>
             <div class="user-actions" style="display: flex; gap: 15px; align-items: center;">
-
-                <a href="../account.html" class="user-icon" title="ط­ط³ط§ط¨ ط§ظ„ط£ط¯ظ…ظ†">
+                <a href="../account.html" class="user-icon" title="حساب الأدمن">
                     <i class="fas fa-user-shield"></i>
                 </a>
-            
-                <a href="#" class="admin-logout-btn" title="����� ������" style="color: #ef4444; font-size: 1.2rem; transition: color 0.3s;">
+                <a href="#" class="admin-logout-btn" title="تسجيل الخروج" style="color: #ef4444; font-size: 1.2rem; transition: color 0.3s;">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
             </div>
@@ -111,20 +109,20 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>ظ„ظˆط­ط© ط§ظ„ط¥ط¯ط§ط±ط©</h2>
-                <p id="adminUserTag">ظ…ط¯ظٹط± ط§ظ„ظ†ط¸ط§ظ…</p>
+                <h2>لوحة الإدارة</h2>
+                <p id="adminUserTag">مدير النظام</p>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ ط§ظ„ط¹ط§ظ…ط©</a></li>
-                <li><a href="orders.html" class="active"><i class="fas fa-shopping-bag"></i> ط¥ط¯ط§ط±ط© ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
-                <li><a href="products.html"><i class="fas fa-box"></i> ط§ظ„ظ…ظ†طھط¬ط§طھ ظˆط§ظ„ظ…ط®ط²ظˆظ†</a></li>
-                <li><a href="users.html"><i class="fas fa-users"></i> ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†</a></li>
-                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> ظ‚ط³ط§ط¦ظ… ط§ظ„ط®طµظ…</a></li>
-                <li><a href="reviews.html"><i class="fas fa-star"></i> طھظ‚ظٹظٹظ…ط§طھ ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
-                <li><a href="settings.html"><i class="fas fa-cog"></i> ط§ظ„ط¥ط¹ط¯ط§ط¯ط§طھ ظˆط§ظ„ط¨ظƒط³ظ„ط§طھ</a></li>
-                <li><a href="../index.html"><i class="fas fa-store"></i> ظˆط§ط¬ظ‡ط© ط§ظ„ظ…طھط¬ط±</a></li>
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
+                <li><a href="orders.html" class="active"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> إدارة المستخدمين</a></li>
+                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
+                <li><a href="reviews.html"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> الإعدادات والبكسلات</a></li>
+                <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
                 <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬</a>
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
                 </li>
             </ul>
         </div>
@@ -132,27 +130,27 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h1>ط¥ط¯ط§ط±ط© ظˆطھط¬ظ‡ظٹط² ط§ظ„ط·ظ„ط¨ط§طھ</h1>
+                <h1>إدارة وتجهيز الطلبات</h1>
                 <div style="display: flex; gap: 10px; align-items: center;">
                     <button onclick="exportOrdersToCsv()" class="btn" style="background: #10b981; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px;">
-                        <i class="fas fa-file-excel"></i> طھطµط¯ظٹط± ط§ظ„ط·ظ„ط¨ط§طھ (CSV / Excel)
+                        <i class="fas fa-file-excel"></i> تصدير الطلبات (CSV / Excel)
                     </button>
-                    <span id="ordersCountBadge" style="background: #2563eb; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">0 ط·ظ„ط¨</span>
+                    <span id="ordersCountBadge" style="background: #2563eb; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 0.9rem; font-weight: bold;">0 طلب</span>
                 </div>
             </div>
 
             <div class="orders-container" style="background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 15px; flex-wrap: wrap;">
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                        <button class="status-tab-btn active" onclick="filterByStatus('all', this)">ط§ظ„ظƒظ„</button>
-                        <button class="status-tab-btn" onclick="filterByStatus('pending', this)">ظ‚ظٹط¯ ط§ظ„ظ…ط±ط§ط¬ط¹ط©</button>
-                        <button class="status-tab-btn" onclick="filterByStatus('processing', this)">ظ‚ظٹط¯ ط§ظ„طھط¬ظ‡ظٹط²</button>
-                        <button class="status-tab-btn" onclick="filterByStatus('shipped', this)">طھظ… ط§ظ„ط´ط­ظ†</button>
-                        <button class="status-tab-btn" onclick="filterByStatus('delivered', this)">طھظ… ط§ظ„طھط³ظ„ظٹظ…</button>
-                        <button class="status-tab-btn" onclick="filterByStatus('cancelled', this)">ظ…ظ„ط؛ظٹ</button>
+                        <button class="status-tab-btn active" onclick="filterByStatus('all', this)">الكل</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('pending', this)">قيد المراجعة</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('processing', this)">قيد التجهيز</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('shipped', this)">تم الشحن</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('delivered', this)">تم التسليم</button>
+                        <button class="status-tab-btn" onclick="filterByStatus('cancelled', this)">ملغي</button>
                     </div>
                     <div style="position: relative; min-width: 280px;">
-                        <input type="text" id="orderSearchInput" oninput="filterOrders()" placeholder="ط¨ط­ط« ط¨ط±ظ‚ظ… ط§ظ„ط·ظ„ط¨طŒ ط§ظ„ط¹ظ…ظٹظ„طŒ ط§ظ„ظ‡ط§طھظپطŒ ط§ظ„ظˆظ„ط§ظٹط©..." style="width: 100%; padding: 8px 15px 8px 35px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
+                        <input type="text" id="orderSearchInput" oninput="filterOrders()" placeholder="بحث برقم الطلب، العميل، الهاتف، الولاية..." style="width: 100%; padding: 8px 15px 8px 35px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.9rem;">
                         <i class="fas fa-search" style="position: absolute; left: 12px; top: 11px; color: #94a3b8;"></i>
                     </div>
                 </div>
@@ -160,19 +158,19 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: right;">
-                            <th style="padding: 12px 10px;">ط±ظ‚ظ… ط§ظ„ط·ظ„ط¨</th>
-                            <th style="padding: 12px 10px;">ط§ظ„ط¹ظ…ظٹظ„ ظˆط§ظ„ظ‡ط§طھظپ</th>
-                            <th style="padding: 12px 10px;">ط§ظ„ظˆظ„ط§ظٹط© ظˆط§ظ„طھظˆطµظٹظ„</th>
-                            <th style="padding: 12px 10px;">ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ</th>
-                            <th style="padding: 12px 10px;">ط·ط±ظٹظ‚ط© ط§ظ„ط¯ظپط¹</th>
-                            <th style="padding: 12px 10px;">ط§ظ„طھط§ط±ظٹط®</th>
-                            <th style="padding: 12px 10px; width: 170px;">ط­ط§ظ„ط© ط§ظ„ط·ظ„ط¨ ظˆط§ظ„طھط¬ظ‡ظٹط²</th>
-                            <th style="padding: 12px 10px; text-align: center;">ط¥ط¬ط±ط§ط،ط§طھ</th>
+                            <th style="padding: 12px 10px;">رقم الطلب</th>
+                            <th style="padding: 12px 10px;">العميل والهاتف</th>
+                            <th style="padding: 12px 10px;">الولاية والتوصيل</th>
+                            <th style="padding: 12px 10px;">الإجمالي</th>
+                            <th style="padding: 12px 10px;">طريقة الدفع</th>
+                            <th style="padding: 12px 10px;">التاريخ</th>
+                            <th style="padding: 12px 10px; width: 170px;">حالة الطلب والتجهيز</th>
+                            <th style="padding: 12px 10px; text-align: center;">إجراءات</th>
                         </tr>
                     </thead>
                     <tbody id="admin-orders-tbody">
                         <tr>
-                            <td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">ط¬ط§ط±ظٹ ط¬ظ„ط¨ ظ‚ط§ط¦ظ…ط© ط§ظ„ط·ظ„ط¨ط§طھ...</td>
+                            <td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">جاري جلب قائمة الطلبات...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -180,20 +178,20 @@
         </div>
     </div>
 
-    <!-- ظ†ط§ظپط°ط© ظ…ظ†ط¨ط«ظ‚ط© ظ„طھظپط§طµظٹظ„ ظˆظ…ط­طھظˆظٹط§طھ ط§ظ„ط·ظ„ط¨ -->
+    <!-- نافذة منبثقة لتفاصيل ومحتويات الطلب -->
     <div class="modal" id="orderDetailsModal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5);">
         <div class="modal-content" style="background-color: #fefefe; margin: 40px auto; padding: 25px; border-radius: 8px; width: 90%; max-width: 700px; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
             <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 15px; margin-bottom: 20px;">
-                <h2 id="modalOrderTitle" style="margin: 0; font-size: 1.3rem; color: #1e293b;">طھظپط§طµظٹظ„ ط§ظ„ط·ظ„ط¨</h2>
+                <h2 id="modalOrderTitle" style="margin: 0; font-size: 1.3rem; color: #1e293b;">تفاصيل الطلب</h2>
                 <button class="close-modal" onclick="closeOrderDetailsModal()" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #64748b;">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body" id="modalOrderContent">
-                <p style="text-align: center; padding: 20px; color: #64748b;">ط¬ط§ط±ظٹ ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط§ظ„ط·ظ„ط¨...</p>
+                <p style="text-align: center; padding: 20px; color: #64748b;">جاري جلب بيانات الطلب...</p>
             </div>
             <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #e2e8f0; padding-top: 15px; margin-top: 20px;">
-                <button type="button" class="btn" onclick="closeOrderDetailsModal()" style="background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">ط¥ط؛ظ„ط§ظ‚</button>
+                <button type="button" class="btn" onclick="closeOrderDetailsModal()" style="background: #2563eb; color: #fff; border: none; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold;">إغلاق</button>
             </div>
         </div>
     </div>
@@ -222,19 +220,19 @@
                 const response = await fetch('/api/orders', { credentials: 'include', headers });
                 if (!response.ok) {
                     if (response.status === 401 || response.status === 403) {
-                        AdminUI.showToast('ظٹط±ط¬ظ‰ طھط³ط¬ظٹظ„ ط§ظ„ط¯ط®ظˆظ„ ط¨ط­ط³ط§ط¨ ظ…ط³ط¤ظˆظ„ ظ„ط¹ط±ط¶ ط§ظ„ط·ظ„ط¨ط§طھ', 'error');
+                        AdminUI.showToast('يرجى تسجيل الدخول بحساب مسؤول لعرض الطلبات', 'error');
                         window.location.href = '../account.html';
                         return;
                     }
-                    throw new Error('ط®ط·ط£ ظپظٹ ط¬ظ„ط¨ ط§ظ„ط·ظ„ط¨ط§طھ');
+                    throw new Error('خطأ في جلب الطلبات');
                 }
 
                 cachedOrders = await response.json();
-                document.getElementById('ordersCountBadge').textContent = `${cachedOrders.length} ط·ظ„ط¨`;
+                document.getElementById('ordersCountBadge').textContent = `${cachedOrders.length} طلب`;
                 filterOrders();
             } catch (error) {
-                document.getElementById('admin-orders-tbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: red;">ظپط´ظ„ ظپظٹ ط¬ظ„ط¨ ط§ظ„ط·ظ„ط¨ط§طھ: ${AdminTable.escapeHtml(error.message)}</td></tr>`;
-                AdminUI.showToast('ظپط´ظ„ ظپظٹ ط¬ظ„ط¨ ط§ظ„ط·ظ„ط¨ط§طھ', 'error');
+                document.getElementById('admin-orders-tbody').innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px; color: red;">فشل في جلب الطلبات: ${AdminTable.escapeHtml(error.message)}</td></tr>`;
+                AdminUI.showToast('فشل في جلب الطلبات', 'error');
             }
         }
 
@@ -271,7 +269,7 @@
             if (!tbody) return;
 
             if (!orders || orders.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: #64748b;">ظ„ط§ طھظˆط¬ط¯ ط·ظ„ط¨ط§طھ ظ…ط·ط§ط¨ظ‚ط© ظ„ط®ظٹط§ط±ط§طھ ط§ظ„ظپط±ط² ط§ظ„ط­ط§ظ„ظٹط©</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 30px; color: #64748b;">لا توجد طلبات مطابقة لخيارات الفرز الحالية</td></tr>';
                 return;
             }
 
@@ -281,19 +279,19 @@
                         ${AdminTable.escapeHtml(order.order_number || '#' + order.id)}
                     </td>
                     <td style="padding: 12px 10px;">
-                        <strong style="display: block; color: #1e293b;">${AdminTable.escapeHtml(order.shipping_full_name || 'ط¹ظ…ظٹظ„ #' + (order.user_id || 'ط¶ظٹظپ'))}</strong>
+                        <strong style="display: block; color: #1e293b;">${AdminTable.escapeHtml(order.shipping_full_name || 'عميل #' + (order.user_id || 'ضيف'))}</strong>
                         <span style="font-size: 0.85rem; color: #64748b;"><i class="fas fa-phone"></i> ${AdminTable.escapeHtml(order.phone || '-')}</span>
                     </td>
                     <td style="padding: 12px 10px;">
-                        <strong style="display: block;">${AdminTable.escapeHtml(order.wilaya_name || order.city || 'ط§ظ„ط¬ط²ط§ط¦ط±')}</strong>
-                        <span style="font-size: 0.85rem; color: #64748b;">${order.delivery_type === 'desk' ? 'ط§ط³طھظ„ط§ظ… ظ…ظƒطھط¨' : 'طھظˆطµظٹظ„ ظ…ظ†ط²ظ„ظٹ'}</span>
+                        <strong style="display: block;">${AdminTable.escapeHtml(order.wilaya_name || order.city || 'الجزائر')}</strong>
+                        <span style="font-size: 0.85rem; color: #64748b;">${order.delivery_type === 'desk' ? 'استلام مكتب' : 'توصيل منزلي'}</span>
                     </td>
                     <td style="padding: 12px 10px; font-weight: bold; color: #059669;">
-                        ${Number(order.total).toLocaleString()} ط¯ط¬
+                        ${Number(order.total).toLocaleString()} دج
                     </td>
                     <td style="padding: 12px 10px;">
                         <span style="font-size: 0.85rem; background: #f1f5f9; padding: 3px 8px; border-radius: 4px;">
-                            ${order.payment_method === 'chargily' ? 'ًں’³ ط¨ط·ط§ظ‚ط© ط°ظ‡ط¨ظٹط©/CIB' : 'ًں’µ ط§ظ„ط¯ظپط¹ ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ…'}
+                            ${order.payment_method === 'chargily' ? '💳 بطاقة ذهبية/CIB' : '💵 الدفع عند الاستلام'}
                         </span>
                     </td>
                     <td style="padding: 12px 10px; font-size: 0.9rem; color: #64748b;">
@@ -301,18 +299,18 @@
                     </td>
                     <td style="padding: 12px 10px;">
                         <select class="status-select ${order.status}" onchange="changeOrderStatus(${order.id}, this.value, this)">
-                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>ظ‚ظٹط¯ ط§ظ„ظ…ط±ط§ط¬ط¹ط©</option>
-                            <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>ظ‚ظٹط¯ ط§ظ„طھط¬ظ‡ظٹط²</option>
-                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>طھظ… ط§ظ„ط´ط­ظ†</option>
-                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>طھظ… ط§ظ„طھط³ظ„ظٹظ…</option>
-                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>ظ…ظ„ط؛ظٹ</option>
+                            <option value="pending" ${order.status === 'pending' ? 'selected' : ''}>قيد المراجعة</option>
+                            <option value="processing" ${order.status === 'processing' ? 'selected' : ''}>قيد التجهيز</option>
+                            <option value="shipped" ${order.status === 'shipped' ? 'selected' : ''}>تم الشحن</option>
+                            <option value="delivered" ${order.status === 'delivered' ? 'selected' : ''}>تم التسليم</option>
+                            <option value="cancelled" ${order.status === 'cancelled' ? 'selected' : ''}>ملغي</option>
                         </select>
                     </td>
                     <td style="padding: 12px 10px; text-align: center;">
-                        <button class="order-action-btn view-btn" onclick="viewOrderDetails(${order.id})" title="ظ…ط¹ط§ظٹظ†ط© طھظپط§طµظٹظ„ ظˆظ…ط­طھظˆظٹط§طھ ط§ظ„ط·ظ„ط¨"><i class="fas fa-eye"></i></button>
-                        <button class="order-action-btn" onclick="printThermalLabel(${order.id})" style="color: #ea580c;" title="ط·ط¨ط§ط¹ط© ط¨ظˆظ„ظٹطµط© ط§ظ„ط´ط­ظ† ط§ظ„ط­ط±ط§ط±ظٹط© (Thermal Label)"><i class="fas fa-tag"></i></button>
-                        <a href="../invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn invoice-btn" title="ط·ط¨ط§ط¹ط© ط§ظ„ظپط§طھظˆط±ط©"><i class="fas fa-file-invoice"></i></a>
-                        <a href="../track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn" title="طھطھط¨ط¹ ط§ظ„ط´ط­ظ†ط©"><i class="fas fa-truck"></i></a>
+                        <button class="order-action-btn view-btn" onclick="viewOrderDetails(${order.id})" title="معاينة تفاصيل ومحتويات الطلب"><i class="fas fa-eye"></i></button>
+                        <button class="order-action-btn" onclick="printThermalLabel(${order.id})" style="color: #ea580c;" title="طباعة بوليصة الشحن الحرارية (Thermal Label)"><i class="fas fa-tag"></i></button>
+                        <a href="../invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn invoice-btn" title="طباعة الفاتورة"><i class="fas fa-file-invoice"></i></a>
+                        <a href="../track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn" title="تتبع الشحنة"><i class="fas fa-truck"></i></a>
                     </td>
                 </tr>
             `).join('');
@@ -326,21 +324,21 @@
             try {
                 const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/orders/${orderId}`, { credentials: 'include', headers });
-                if (!res.ok) throw new Error('ظپط´ظ„ ط¬ظ„ط¨ ط¨ظٹط§ظ†ط§طھ ط¨ظˆظ„ظٹطµط© ط§ظ„ط´ط­ظ†');
+                if (!res.ok) throw new Error('فشل جلب بيانات بوليصة الشحن');
                 const order = await res.json();
 
                 const printWindow = window.open('', '_blank', 'width=500,height=700');
                 if (!printWindow) {
-                    alert('ظٹط±ط¬ظ‰ ط§ظ„ط³ظ…ط§ط­ ط¨ط§ظ„ظ†ظˆط§ظپط° ط§ظ„ظ…ظ†ط¨ط«ظ‚ط© ظ„ظ„ط·ط¨ط§ط¹ط©');
+                    alert('يرجى السماح بالنوافذ المنبثقة للطباعة');
                     return;
                 }
 
                 const orderNum = order.order_number || ('DZ-' + order.id);
-                const customerName = order.shipping_full_name || 'ط§ظ„ط¹ظ…ظٹظ„';
+                const customerName = order.shipping_full_name || 'العميل';
                 const phone = order.phone || '-';
-                const wilaya = order.wilaya_name || order.city || 'ط§ظ„ط¬ط²ط§ط¦ط±';
+                const wilaya = order.wilaya_name || order.city || 'الجزائر';
                 const address = order.address || '-';
-                const deliveryType = order.delivery_type === 'desk' ? 'ًںڈ¢ ط§ط³طھظ„ط§ظ… ظ…ظ† ط§ظ„ظ…ظƒطھط¨ (Stop Desk)' : 'ًںڈ  طھظˆطµظٹظ„ ظ„ظ„ظ…ظ†ط²ظ„ (Home)';
+                const deliveryType = order.delivery_type === 'desk' ? '🏢 استلام من المكتب (Stop Desk)' : '🏠 توصيل للمنزل (Home)';
                 const total = Number(order.total || 0).toLocaleString();
                 const date = new Date(order.created_at || Date.now()).toLocaleDateString('ar-DZ');
 
@@ -349,7 +347,7 @@
                     <html lang="ar" dir="rtl">
                     <head>
                         <meta charset="UTF-8">
-                        <title>ط¨ظˆظ„ظٹطµط© ط´ط­ظ† - ${orderNum}</title>
+                        <title>بوليصة شحن - ${orderNum}</title>
                         <style>
                             @page {
                                 size: 100mm 150mm;
@@ -462,27 +460,27 @@
                             <div class="header">
                                 <div>
                                     <div class="store-title">MYSHOP DZ</div>
-                                    <div style="font-size: 8pt;">ط®ط¯ظ…ط© ط§ظ„طھظˆطµظٹظ„ ط§ظ„ط³ط±ظٹط¹ ظ„ظ€ 58 ظˆظ„ط§ظٹط©</div>
+                                    <div style="font-size: 8pt;">خدمة التوصيل السريع لـ 58 ولاية</div>
                                 </div>
                                 <div class="order-badge">${orderNum}</div>
                             </div>
 
                             <div class="recipient-section">
-                                <div style="font-size: 9pt; color: #555;">ط§ظ„ظ…ط³طھظ„ظ… (Recipient):</div>
+                                <div style="font-size: 9pt; color: #555;">المستلم (Recipient):</div>
                                 <div class="recipient-name">${customerName}</div>
                                 <div class="recipient-phone" dir="ltr">${phone}</div>
-                                <div class="wilaya-box">ًں“چ ظˆظ„ط§ظٹط©: ${wilaya}</div>
-                                <div class="recipient-address">ط§ظ„ط¹ظ†ظˆط§ظ†: ${address}</div>
+                                <div class="wilaya-box">📍 ولاية: ${wilaya}</div>
+                                <div class="recipient-address">العنوان: ${address}</div>
                                 <div class="delivery-badge">${deliveryType}</div>
                             </div>
 
                             <div class="cod-box">
-                                <div class="cod-title">ط§ظ„ظ…ط¨ظ„ط؛ ط§ظ„ظ…ط·ظ„ظˆط¨ طھط­طµظٹظ„ظ‡ (COD AMOUNT)</div>
-                                <div class="cod-amount">${total} ط¯ط¬</div>
+                                <div class="cod-title">المبلغ المطلوب تحصيله (COD AMOUNT)</div>
+                                <div class="cod-amount">${total} دج</div>
                             </div>
 
                             <div class="barcode-area">
-                                <div style="font-size: 8pt; letter-spacing: 0; margin-bottom: 2px;">طھط§ط±ظٹط® ط§ظ„ط´ط­ظ†: ${date}</div>
+                                <div style="font-size: 8pt; letter-spacing: 0; margin-bottom: 2px;">تاريخ الشحن: ${date}</div>
                                 <div>*${orderNum}*</div>
                             </div>
                         </div>
@@ -496,7 +494,7 @@
                 `);
                 printWindow.document.close();
             } catch (err) {
-                alert('ط®ط·ط£ ظپظٹ طھط­ط¶ظٹط± ط¨ظˆظ„ظٹطµط© ط§ظ„ط´ط­ظ†: ' + err.message);
+                alert('خطأ في تحضير بوليصة الشحن: ' + err.message);
             }
         }
 
@@ -514,15 +512,15 @@
 
                 if (!response.ok) {
                     const data = await response.json().catch(() => ({}));
-                    throw new Error(data.error || 'ظپط´ظ„ طھط­ط¯ظٹط« ط§ظ„ط­ط§ظ„ط©');
+                    throw new Error(data.error || 'فشل تحديث الحالة');
                 }
 
                 if (selectEl) selectEl.className = `status-select ${newStatus}`;
                 const item = cachedOrders.find(o => o.id === orderId);
                 if (item) item.status = newStatus;
-                AdminUI.showToast('طھظ… طھط­ط¯ظٹط« ط­ط§ظ„ط© ط§ظ„ط·ظ„ط¨ ط¨ظ†ط¬ط§ط­', 'success');
+                AdminUI.showToast('تم تحديث حالة الطلب بنجاح', 'success');
             } catch (err) {
-                AdminUI.showToast('ط®ط·ط£: ' + err.message, 'error');
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
                 loadAdminOrders();
             } finally {
                 if (selectEl) selectEl.disabled = false;
@@ -535,15 +533,15 @@
             const title = document.getElementById('modalOrderTitle');
 
             modal.style.display = 'block';
-            content.innerHTML = '<p style="text-align:center; padding: 30px; color:#64748b;"><i class="fas fa-spinner fa-spin"></i> ط¬ط§ط±ظٹ طھط­ظ…ظٹظ„ طھظپط§طµظٹظ„ ط§ظ„ط·ظ„ط¨...</p>';
+            content.innerHTML = '<p style="text-align:center; padding: 30px; color:#64748b;"><i class="fas fa-spinner fa-spin"></i> جاري تحميل تفاصيل الطلب...</p>';
 
             try {
                 const headers = AdminAuth.getHeaders(false);
                 const res = await fetch(`/api/orders/${orderId}`, { credentials: 'include', headers });
-                if (!res.ok) throw new Error('ظپط´ظ„ ط¬ظ„ط¨ طھظپط§طµظٹظ„ ط§ظ„ط·ظ„ط¨');
+                if (!res.ok) throw new Error('فشل جلب تفاصيل الطلب');
 
                 const order = await res.json();
-                title.textContent = `طھظپط§طµظٹظ„ ط§ظ„ط·ظ„ط¨: ${order.order_number || '#' + order.id}`;
+                title.textContent = `تفاصيل الطلب: ${order.order_number || '#' + order.id}`;
 
                 const items = order.items || [];
                 const itemsHtml = items.map(item => `
@@ -552,52 +550,52 @@
                             <img src="${item.image_url || '../images/product-placeholder.jpg'}" style="width: 40px; height: 40px; border-radius: 4px; object-fit: cover;">
                             <strong>${item.name}</strong>
                         </td>
-                        <td style="padding: 10px; text-align: center;">${Number(item.price).toLocaleString()} ط¯ط¬</td>
+                        <td style="padding: 10px; text-align: center;">${Number(item.price).toLocaleString()} دج</td>
                         <td style="padding: 10px; text-align: center;">${item.quantity}</td>
-                        <td style="padding: 10px; text-align: left; font-weight: bold; color: #059669;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ط¯ط¬</td>
+                        <td style="padding: 10px; text-align: left; font-weight: bold; color: #059669;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} دج</td>
                     </tr>
                 `).join('');
 
                 content.innerHTML = `
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 6px; border: 1px solid #e2e8f0; font-size: 0.95rem;">
                         <div>
-                            <p style="margin: 4px 0;"><strong>ط§ط³ظ… ط§ظ„ط¹ظ…ظٹظ„:</strong> ${order.shipping_full_name || 'ط¶ظٹظپ'}</p>
-                            <p style="margin: 4px 0;"><strong>ط±ظ‚ظ… ط§ظ„ظ‡ط§طھظپ:</strong> ${order.phone || '-'}</p>
-                            <p style="margin: 4px 0;"><strong>ط§ظ„ط¨ط±ظٹط¯ ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ:</strong> ${order.email || '-'}</p>
+                            <p style="margin: 4px 0;"><strong>اسم العميل:</strong> ${order.shipping_full_name || 'ضيف'}</p>
+                            <p style="margin: 4px 0;"><strong>رقم الهاتف:</strong> ${order.phone || '-'}</p>
+                            <p style="margin: 4px 0;"><strong>البريد الإلكتروني:</strong> ${order.email || '-'}</p>
                         </div>
                         <div>
-                            <p style="margin: 4px 0;"><strong>ط§ظ„ظˆظ„ط§ظٹط© ظˆط§ظ„ظ…ط¯ظٹظ†ط©:</strong> ${order.wilaya_name || order.city || 'ط§ظ„ط¬ط²ط§ط¦ط±'}</p>
-                            <p style="margin: 4px 0;"><strong>ط§ظ„ط¹ظ†ظˆط§ظ† ط§ظ„طھظپطµظٹظ„ظٹ:</strong> ${order.address || '-'}</p>
-                            <p style="margin: 4px 0;"><strong>ظ†ظˆط¹ ط§ظ„طھظˆطµظٹظ„:</strong> ${order.delivery_type === 'desk' ? 'ط§ط³طھظ„ط§ظ… ظ…ظ† ط§ظ„ظ…ظƒطھط¨' : 'طھظˆطµظٹظ„ ظ…ظ†ط²ظ„ظٹ'}</p>
+                            <p style="margin: 4px 0;"><strong>الولاية والمدينة:</strong> ${order.wilaya_name || order.city || 'الجزائر'}</p>
+                            <p style="margin: 4px 0;"><strong>العنوان التفصيلي:</strong> ${order.address || '-'}</p>
+                            <p style="margin: 4px 0;"><strong>نوع التوصيل:</strong> ${order.delivery_type === 'desk' ? 'استلام من المكتب' : 'توصيل منزلي'}</p>
                         </div>
                     </div>
 
-                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">ط¹ظ†ط§طµط± ط§ظ„ط·ظ„ط¨</h3>
+                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;">عناصر الطلب</h3>
                     <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px;">
                         <thead>
                             <tr style="background: #f1f5f9; text-align: right; font-size: 0.9rem;">
-                                <th style="padding: 8px 10px;">ط§ظ„ظ…ظ†طھط¬</th>
-                                <th style="padding: 8px 10px; text-align: center;">ط§ظ„ط³ط¹ط± ط§ظ„ظپط±ط¯ظٹ</th>
-                                <th style="padding: 8px 10px; text-align: center;">ط§ظ„ظƒظ…ظٹط©</th>
-                                <th style="padding: 8px 10px; text-align: left;">ط§ظ„ظ…ط¬ظ…ظˆط¹</th>
+                                <th style="padding: 8px 10px;">المنتج</th>
+                                <th style="padding: 8px 10px; text-align: center;">السعر الفردي</th>
+                                <th style="padding: 8px 10px; text-align: center;">الكمية</th>
+                                <th style="padding: 8px 10px; text-align: left;">المجموع</th>
                             </tr>
                         </thead>
                         <tbody>
-                            ${itemsHtml || '<tr><td colspan="4" style="text-align:center; padding: 15px;">ظ„ط§ طھظˆط¬ط¯ ط¹ظ†ط§طµط±</td></tr>'}
+                            ${itemsHtml || '<tr><td colspan="4" style="text-align:center; padding: 15px;">لا توجد عناصر</td></tr>'}
                         </tbody>
                     </table>
 
                     <div style="display: flex; justify-content: space-between; align-items: center; background: #ecfdf5; padding: 12px 15px; border-radius: 6px; border: 1px solid #a7f3d0;">
                         <div>
-                            <span style="font-size: 0.9rem; color: #065f46;"><strong>ط·ط±ظٹظ‚ط© ط§ظ„ط¯ظپط¹:</strong> ${order.payment_method === 'chargily' ? 'ط¨ط·ط§ظ‚ط© ط¨ظ†ظƒظٹط© (Chargily)' : 'ط§ظ„ط¯ظپط¹ ط¹ظ†ط¯ ط§ظ„ط§ط³طھظ„ط§ظ… (COD)'}</span>
+                            <span style="font-size: 0.9rem; color: #065f46;"><strong>طريقة الدفع:</strong> ${order.payment_method === 'chargily' ? 'بطاقة بنكية (Chargily)' : 'الدفع عند الاستلام (COD)'}</span>
                         </div>
                         <div>
-                            <strong style="font-size: 1.15rem; color: #047857;">ط§ظ„ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„ظƒظ„ظٹ: ${Number(order.total).toLocaleString()} ط¯ط¬</strong>
+                            <strong style="font-size: 1.15rem; color: #047857;">الإجمالي الكلي: ${Number(order.total).toLocaleString()} دج</strong>
                         </div>
                     </div>
                 `;
             } catch(err) {
-                content.innerHTML = `<p style="text-align:center; padding: 20px; color: red;">ظپط´ظ„ ط¬ظ„ط¨ طھظپط§طµظٹظ„ ط§ظ„ط·ظ„ط¨: ${err.message}</p>`;
+                content.innerHTML = `<p style="text-align:center; padding: 20px; color: red;">فشل جلب تفاصيل الطلب: ${err.message}</p>`;
             }
         }
 
@@ -607,4 +605,3 @@
     </script>
 </body>
 </html>
-

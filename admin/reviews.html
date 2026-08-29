@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ط¥ط¯ط§ط±ط© ظˆظ…ط±ط§ط¬ط¹ط© طھظ‚ظٹظٹظ…ط§طھ ط§ظ„ظ…ظ†طھط¬ط§طھ - ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</title>
+    <title>إدارة ومراجعة تقييمات المنتجات - لوحة التحكم</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,26 +63,24 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="../index.html">ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</a>
+                <a href="../index.html">المتجر الإلكتروني</a>
             </div>
             <nav>
                 <ul>
-                    <li><a href="../index.html">ط²ظٹط§ط±ط© ط§ظ„ظ…طھط¬ط±</a></li>
-                    <li><a href="index.html">ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</a></li>
-                    <li><a href="orders.html">ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
-                    <li><a href="products.html">ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
-                    <li><a href="users.html">ط§ظ„ط¹ظ…ظ„ط§ط،</a></li>
-                    <li><a href="coupons.html">ط§ظ„ظƒظˆط¨ظˆظ†ط§طھ</a></li>
-                    <li><a href="reviews.html" class="active">ط§ظ„طھظ‚ظٹظٹظ…ط§طھ</a></li>
+                    <li><a href="../index.html">زيارة المتجر</a></li>
+                    <li><a href="index.html">لوحة التحكم</a></li>
+                    <li><a href="orders.html">الطلبات</a></li>
+                    <li><a href="products.html">المنتجات</a></li>
+                    <li><a href="users.html">العملاء</a></li>
+                    <li><a href="coupons.html">الكوبونات</a></li>
+                    <li><a href="reviews.html" class="active">التقييمات</a></li>
                 </ul>
             </nav>
             <div class="user-actions" style="display: flex; gap: 15px; align-items: center;">
-
-                <a href="../account.html" class="user-icon" title="ط­ط³ط§ط¨ ط§ظ„ط£ط¯ظ…ظ†">
+                <a href="../account.html" class="user-icon" title="حساب الأدمن">
                     <i class="fas fa-user-shield"></i>
                 </a>
-            
-                <a href="#" class="admin-logout-btn" title="����� ������" style="color: #ef4444; font-size: 1.2rem; transition: color 0.3s;">
+                <a href="#" class="admin-logout-btn" title="تسجيل الخروج" style="color: #ef4444; font-size: 1.2rem; transition: color 0.3s;">
                     <i class="fas fa-sign-out-alt"></i>
                 </a>
             </div>
@@ -94,19 +92,19 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>ظ„ظˆط­ط© ط§ظ„ط¥ط¯ط§ط±ط©</h2>
-                <p id="adminUserTag">ظ…ط¯ظٹط± ط§ظ„ظ†ط¸ط§ظ…</p>
+                <h2>لوحة الإدارة</h2>
+                <p id="adminUserTag">مدير النظام</p>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ ط§ظ„ط¹ط§ظ…ط©</a></li>
-                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> ط¥ط¯ط§ط±ط© ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
-                <li><a href="products.html"><i class="fas fa-box"></i> ط§ظ„ظ…ظ†طھط¬ط§طھ ظˆط§ظ„ظ…ط®ط²ظˆظ†</a></li>
-                <li><a href="users.html"><i class="fas fa-users"></i> ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†</a></li>
-                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> ظ‚ط³ط§ط¦ظ… ط§ظ„ط®طµظ…</a></li>
-                <li><a href="reviews.html" class="active"><i class="fas fa-star"></i> طھظ‚ظٹظٹظ…ط§طھ ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
-                <li><a href="../index.html"><i class="fas fa-store"></i> ظˆط§ط¬ظ‡ط© ط§ظ„ظ…طھط¬ط±</a></li>
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> إدارة المستخدمين</a></li>
+                <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
+                <li><a href="reviews.html" class="active"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
+                <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
                 <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬</a>
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
                 </li>
             </ul>
         </div>
@@ -114,7 +112,7 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h1>ط¥ط¯ط§ط±ط© ظˆظ…ط±ط§ظ‚ط¨ط© طھظ‚ظٹظٹظ…ط§طھ ط§ظ„ط¹ظ…ظ„ط§ط،</h1>
+                <h1>إدارة ومراقبة تقييمات العملاء</h1>
                 <div>
                     <span id="reviewsCountDisplay" style="font-weight: bold; color: #2563eb;"></span>
                 </div>
@@ -123,19 +121,19 @@
             <!-- Filters Bar -->
             <div class="filters-bar" style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
                 <div style="flex: 1; min-width: 200px;">
-                    <input type="text" id="searchInput" placeholder="ط§ظ„ط¨ط­ط« ط¨ط§ط³ظ… ط§ظ„ظ…ظ†طھط¬طŒ ط§ظ„ط¹ظ…ظٹظ„ ط£ظˆ ط§ظ„طھط¹ظ„ظٹظ‚..." style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
+                    <input type="text" id="searchInput" placeholder="البحث باسم المنتج، العميل أو التعليق..." style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
                 </div>
                 <div>
                     <select id="statusFilter" style="padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
-                        <option value="all">ط¬ظ…ظٹط¹ ط§ظ„ط­ط§ظ„ط§طھ</option>
-                        <option value="approved">ظ…ظˆط§ظپظ‚ ط¹ظ„ظٹظ‡</option>
-                        <option value="pending">ظ‚ظٹط¯ ط§ظ„ظ…ط±ط§ط¬ط¹ط©</option>
-                        <option value="rejected">ظ…ط±ظپظˆط¶</option>
+                        <option value="all">جميع الحالات</option>
+                        <option value="approved">موافق عليه</option>
+                        <option value="pending">قيد المراجعة</option>
+                        <option value="rejected">مرفوض</option>
                     </select>
                 </div>
                 <div>
                     <button onclick="loadAdminReviews(1)" class="btn" style="background: #2563eb; color: #fff; padding: 9px 18px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold;">
-                        <i class="fas fa-filter"></i> طھطµظپظٹط©
+                        <i class="fas fa-filter"></i> تصفية
                     </button>
                 </div>
             </div>
@@ -146,19 +144,19 @@
                     <thead>
                         <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: right;">
                             <th style="padding: 12px 15px;">#</th>
-                            <th style="padding: 12px 15px;">ط§ظ„ظ…ظ†طھط¬</th>
-                            <th style="padding: 12px 15px;">ط§ظ„ط¹ظ…ظٹظ„</th>
-                            <th style="padding: 12px 15px; text-align: center;">ط§ظ„طھظ‚ظٹظٹظ…</th>
-                            <th style="padding: 12px 15px;">ط§ظ„طھط¹ظ„ظٹظ‚ ظˆط§ظ„ظ…ظ„ط§ط­ط¸ط§طھ</th>
-                            <th style="padding: 12px 15px; text-align: center;">ط§ظ„طھط§ط±ظٹط®</th>
-                            <th style="padding: 12px 15px; text-align: center;">ط§ظ„ط­ط§ظ„ط©</th>
-                            <th style="padding: 12px 15px; text-align: center;">ط¥ط¬ط±ط§ط،ط§طھ ط§ظ„ظ…ط±ط§ظ‚ط¨ط©</th>
+                            <th style="padding: 12px 15px;">المنتج</th>
+                            <th style="padding: 12px 15px;">العميل</th>
+                            <th style="padding: 12px 15px; text-align: center;">التقييم</th>
+                            <th style="padding: 12px 15px;">التعليق والملاحظات</th>
+                            <th style="padding: 12px 15px; text-align: center;">التاريخ</th>
+                            <th style="padding: 12px 15px; text-align: center;">الحالة</th>
+                            <th style="padding: 12px 15px; text-align: center;">إجراءات المراقبة</th>
                         </tr>
                     </thead>
                     <tbody id="reviews-tbody">
                         <tr>
                             <td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">
-                                <i class="fas fa-spinner fa-spin"></i> ط¬ط§ط±ظٹ طھط­ظ…ظٹظ„ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ...
+                                <i class="fas fa-spinner fa-spin"></i> جاري تحميل التقييمات...
                             </td>
                         </tr>
                     </tbody>
@@ -200,32 +198,32 @@
 
             try {
                 const res = await fetch(url, { credentials: 'include', headers });
-                if (!res.ok) throw new Error('ظپط´ظ„ ط¬ظ„ط¨ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ');
+                if (!res.ok) throw new Error('فشل جلب التقييمات');
                 const data = await res.json();
 
                 const reviews = data.reviews || [];
                 totalPages = data.totalPages || 1;
-                document.getElementById('reviewsCountDisplay').textContent = `ط¥ط¬ظ…ط§ظ„ظٹ ط§ظ„طھظ‚ظٹظٹظ…ط§طھ: ${data.total || reviews.length}`;
+                document.getElementById('reviewsCountDisplay').textContent = `إجمالي التقييمات: ${data.total || reviews.length}`;
 
                 renderReviewsTable(reviews);
                 renderPagination(currentPage, totalPages);
             } catch (err) {
                 const tbody = document.getElementById('reviews-tbody');
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">ط®ط·ط£: ${AdminTable.escapeHtml(err.message)}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">خطأ: ${AdminTable.escapeHtml(err.message)}</td></tr>`;
             }
         }
 
         function renderReviewsTable(reviews) {
             const tbody = document.getElementById('reviews-tbody');
             if (!reviews || !reviews.length) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">ظ„ط§ طھظˆط¬ط¯ طھظ‚ظٹظٹظ…ط§طھ ظ…ط·ط§ط¨ظ‚ط©</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">لا توجد تقييمات مطابقة</td></tr>';
                 return;
             }
 
-            const statusLabels = { 'approved': 'ظ…ظˆط§ظپظ‚ ط¹ظ„ظٹظ‡ âœ…', 'pending': 'ظ‚ظٹط¯ ط§ظ„ظ…ط±ط§ط¬ط¹ط© âڈ³', 'rejected': 'ظ…ط±ظپظˆط¶ â‌Œ' };
+            const statusLabels = { 'approved': 'موافق عليه ✅', 'pending': 'قيد المراجعة ⏳', 'rejected': 'مرفوض ❌' };
 
             tbody.innerHTML = reviews.map(r => {
-                const stars = 'âک…'.repeat(r.rating) + 'âک†'.repeat(5 - r.rating);
+                const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
                 return `
                     <tr style="border-bottom: 1px solid #f1f5f9;">
                         <td style="padding: 12px 15px; font-weight: bold;">${r.id}</td>
@@ -240,13 +238,13 @@
                             <div style="font-size: 0.8rem; color: #64748b;">${AdminTable.escapeHtml(r.email || '')}</div>
                         </td>
                         <td style="padding: 12px 15px; text-align: center; font-size: 1.1rem;" class="stars-gold">${stars}</td>
-                        <td style="padding: 12px 15px; max-width: 250px; font-size: 0.9rem; color: #334155;">${AdminTable.escapeHtml(r.comment) || '<span style="color:#94a3b8;">ط¨ط¯ظˆظ† طھط¹ظ„ظٹظ‚ ظ†طµظٹ</span>'}</td>
+                        <td style="padding: 12px 15px; max-width: 250px; font-size: 0.9rem; color: #334155;">${AdminTable.escapeHtml(r.comment) || '<span style="color:#94a3b8;">بدون تعليق نصي</span>'}</td>
                         <td style="padding: 12px 15px; text-align: center; color: #64748b; font-size: 0.85rem;">${new Date(r.created_at).toLocaleDateString('ar-DZ')}</td>
                         <td style="padding: 12px 15px; text-align: center;"><span class="status-badge status-${r.status}">${statusLabels[r.status] || r.status}</span></td>
                         <td style="padding: 12px 15px; text-align: center;">
-                            ${r.status !== 'approved' ? `<button class="review-action-btn approve-btn" onclick="updateReviewStatus(${r.id}, 'approved')" title="ط§ظ„ظ…ظˆط§ظپظ‚ط© ط¹ظ„ظ‰ ط§ظ„ظ†ط´ط±"><i class="fas fa-check"></i></button>` : ''}
-                            ${r.status !== 'rejected' ? `<button class="review-action-btn reject-btn" onclick="updateReviewStatus(${r.id}, 'rejected')" title="ط±ظپط¶ ظˆط­ط¬ط¨"><i class="fas fa-ban"></i></button>` : ''}
-                            <button class="review-action-btn delete-btn" onclick="deleteReview(${r.id})" title="ط­ط°ظپ ظ†ظ‡ط§ط¦ظٹ"><i class="fas fa-trash-alt"></i></button>
+                            ${r.status !== 'approved' ? `<button class="review-action-btn approve-btn" onclick="updateReviewStatus(${r.id}, 'approved')" title="الموافقة على النشر"><i class="fas fa-check"></i></button>` : ''}
+                            ${r.status !== 'rejected' ? `<button class="review-action-btn reject-btn" onclick="updateReviewStatus(${r.id}, 'rejected')" title="رفض وحجب"><i class="fas fa-ban"></i></button>` : ''}
+                            <button class="review-action-btn delete-btn" onclick="deleteReview(${r.id})" title="حذف نهائي"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 `;
@@ -273,16 +271,16 @@
                     body: JSON.stringify({ status: newStatus })
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.error || 'ظپط´ظ„ طھط­ط¯ظٹط« ط§ظ„ط­ط§ظ„ط©');
-                AdminUI.showToast('طھظ… طھط­ط¯ظٹط« ط­ط§ظ„ط© ط§ظ„طھظ‚ظٹظٹظ… ط¨ظ†ط¬ط§ط­', 'success');
+                if (!res.ok) throw new Error(data.error || 'فشل تحديث الحالة');
+                AdminUI.showToast('تم تحديث حالة التقييم بنجاح', 'success');
                 loadAdminReviews(currentPage);
             } catch (err) {
-                AdminUI.showToast('ط®ط·ط£: ' + err.message, 'error');
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
             }
         }
 
         async function deleteReview(id) {
-            const confirmed = await AdminUI.confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط±ط؛ط¨طھظƒ ظپظٹ ط­ط°ظپ ظ‡ط°ط§ ط§ظ„طھظ‚ظٹظٹظ… ظ†ظ‡ط§ط¦ظٹط§ظ‹طں', 'ط­ط°ظپ ط§ظ„طھظ‚ظٹظٹظ…');
+            const confirmed = await AdminUI.confirm('هل أنت متأكد من رغبتك في حذف هذا التقييم نهائياً؟', 'حذف التقييم');
             if (!confirmed) return;
 
             try {
@@ -293,14 +291,13 @@
                     headers
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.error || 'ظپط´ظ„ ط­ط°ظپ ط§ظ„طھظ‚ظٹظٹظ…');
-                AdminUI.showToast('طھظ… ط­ط°ظپ ط§ظ„طھظ‚ظٹظٹظ… ط¨ظ†ط¬ط§ط­', 'success');
+                if (!res.ok) throw new Error(data.error || 'فشل حذف التقييم');
+                AdminUI.showToast('تم حذف التقييم بنجاح', 'success');
                 loadAdminReviews(currentPage);
             } catch (err) {
-                AdminUI.showToast('ط®ط·ط£: ' + err.message, 'error');
+                AdminUI.showToast('خطأ: ' + err.message, 'error');
             }
         }
     </script>
 </body>
 </html>
-
