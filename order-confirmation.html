@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تأكيد استلام الطلب - <span data-i18n="footer.brand">المتجر الإلكتروني</span></title>
+    <title>تأكيد استلام الطلب - المتجر الإلكتروني</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -69,7 +68,7 @@
             <div class="logo">
                 <a href="index.html">
                     <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i>
-                    <span data-i18n="common.store_name"><span data-i18n="footer.brand">المتجر الإلكتروني</span></span>
+                    <span data-i18n="common.store_name">المتجر الإلكتروني</span>
                 </a>
             </div>
             <nav class="main-nav">
@@ -108,7 +107,7 @@
         <div class="container">
             <h1><span data-i18n="conf.page_title">تأكيد الطلب</span></h1>
             <div class="breadcrumb">
-                <a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a> <i class="fas fa-chevron-left"></i> تأكيد الطلب
+                <a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a> <i class="fas fa-chevron-left"></i> <span data-i18n="conf.page_title">تأكيد الطلب</span>
             </div>
         </div>
     </div>
@@ -130,27 +129,27 @@
 
                     <div class="info-grid">
                         <div class="info-row">
-                            <span class="info-label"><span data-i18n="conf.order_number">رقم الطلب:</span>
+                            <span class="info-label"><span data-i18n="conf.order_number">رقم الطلب:</span></span>
                             <span class="info-value" id="confOrderNumber">-</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label"><span data-i18n="account.col_date">تاريخ الطلب:</span>
+                            <span class="info-label"><span data-i18n="account.col_date">تاريخ الطلب:</span></span>
                             <span class="info-value" id="confOrderDate">-</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label"><span data-i18n="conf.payment_method">طريقة الدفع:</span>
-                            <span class="info-value" id="confPaymentMethod"><span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
+                            <span class="info-label"><span data-i18n="conf.payment_method">طريقة الدفع:</span></span>
+                            <span class="info-value" id="confPaymentMethod">الدفع عند الاستلام</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label"><span data-i18n="account.col_status">حالة الطلب:</span>
-                            <span id="confStatusBadge" class="status-badge-custom status-pending"><span data-i18n="conf.status_pending">قيد المعالجة</span>
+                            <span class="info-label"><span data-i18n="account.col_status">حالة الطلب:</span></span>
+                            <span id="confStatusBadge" class="status-badge-custom status-pending"><span data-i18n="conf.status_pending">قيد المعالجة</span></span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label"><span data-i18n="conf.customer_name">المستلم:</span>
+                            <span class="info-label"><span data-i18n="conf.customer_name">المستلم:</span></span>
                             <span class="info-value" id="confCustomerName">-</span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label"><span data-i18n="conf.delivery_address">الولاية والتوصيل:</span>
+                            <span class="info-label"><span data-i18n="conf.delivery_address">الولاية والتوصيل:</span></span>
                             <span class="info-value" id="confWilaya">-</span>
                         </div>
                     </div>
@@ -162,15 +161,19 @@
 
                     <div class="summary-totals-box">
                         <div class="summary-line">
-                            <span><span data-i18n="cart.total_products">إجمالي المنتجات:</span>
+                            <span><span data-i18n="cart.total_products">إجمالي المنتجات:</span></span>
                             <span id="confSubtotal">0 <span data-i18n="common.currency">دج</span></span>
                         </div>
+                        <div class="summary-line" id="confDiscountRow" style="display: none; color: #16a34a; font-weight: bold;">
+                            <span><span data-i18n="checkout.discount">الخصم:</span></span>
+                            <span id="confDiscount">0 <span data-i18n="common.currency">دج</span></span>
+                        </div>
                         <div class="summary-line">
-                            <span><span data-i18n="checkout.shipping_cost">تكلفة الشحن والتوصيل:</span>
+                            <span><span data-i18n="checkout.shipping_cost">تكلفة الشحن والتوصيل:</span></span>
                             <span id="confShipping">0 <span data-i18n="common.currency">دج</span></span>
                         </div>
                         <div class="summary-line grand-total">
-                            <span><span data-i18n="checkout.total">المبلغ الإجمالي للدفع:</span>
+                            <span><span data-i18n="checkout.total">المبلغ الإجمالي للدفع:</span></span>
                             <span id="confTotal">0 <span data-i18n="common.currency">دج</span></span>
                         </div>
                     </div>
@@ -178,13 +181,13 @@
 
                 <div class="action-buttons-group">
                     <a href="#" id="trackOrderBtn" class="btn-action btn-primary">
-                        <i class="fas fa-truck"></i> تتبع مسار الشحنة
+                        <i class="fas fa-truck"></i> <span data-i18n="conf.track_shipment">تتبع مسار الشحنة</span>
                     </a>
                     <a href="#" id="viewInvoiceBtn" target="_blank" class="btn-action btn-invoice">
-                        <i class="fas fa-file-invoice-dollar"></i> عرض وطباعة الفاتورة
+                        <i class="fas fa-file-invoice-dollar"></i> <span data-i18n="conf.view_invoice">عرض وطباعة الفاتورة</span>
                     </a>
                     <a href="shop.html" class="btn-action btn-outline">
-                        <i class="fas fa-shopping-bag"></i> مواصلة التسوق
+                        <i class="fas fa-shopping-bag"></i> <span data-i18n="cart.continue_shopping">مواصلة التسوق</span>
                     </a>
                 </div>
             </div>
@@ -197,14 +200,14 @@
             <div class="footer-grid">
                 <div class="footer-col">
                     <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
+                        <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="common.store_name">المتجر الإلكتروني</span>
                     </div>
                     <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-                        شكراً لثقتكم ب<span data-i18n="footer.brand">المتجر الإلكتروني</span>. تم حفظ طلبكم بنجاح ومزامنته مع نظام التوصيل.
+                        <span data-i18n="footer.description">وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.</span>
                     </p>
                 </div>
                 <div class="footer-col">
-                    <h3><span data-i18n="checkout.footer_links">روابط هامة</span></h3>
+                    <h3><span data-i18n="footer.quick_links">روابط سريعة</span></h3>
                     <ul>
                         <li><a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a></li>
                         <li><a href="shop.html"><span data-i18n="footer.link_shop">التسوق</span></a></li>
@@ -213,11 +216,11 @@
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h3><span data-i18n="conf.support_title">دعم واستفسارات</span></h3>
+                    <h3><span data-i18n="footer.contact">خدمة العملاء والتواصل</span></h3>
                     <ul>
                         <li><i class="fas fa-phone-alt"></i> 0550 00 00 00</li>
                         <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
-                        <li><i class="fas fa-shield-alt"></i> <span data-i18n="conf.guarantee">ضمان الجودة والتسليم</span></li>
+                        <li><i class="fas fa-shield-alt"></i> <span data-i18n="features.authentic_title">منتجات أصلية 100%</span></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -229,19 +232,25 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 <span data-i18n="footer.brand">المتجر الإلكتروني</span> (MYSHOP). جميع الحقوق محفوظة.</p>
+                <p>&copy; 2026 <span data-i18n="common.store_name">المتجر الإلكتروني</span>. جميع الحقوق محفوظة.</p>
             </div>
         </div>
     </footer>
 
     <script src="js/api-client.js"></script>
     <script src="js/main.js"></script>
+    <script src="js/wishlist.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
         async function loadOrderConfirmation() {
             const urlParams = new URLSearchParams(window.location.search);
-            const orderId = urlParams.get('id') || localStorage.getItem('lastOrderId') || 1001;
+            const orderId = urlParams.get('id') || localStorage.getItem('lastOrderId');
             const token = urlParams.get('token') || localStorage.getItem('lastOrderToken');
             const phone = urlParams.get('phone') || localStorage.getItem('lastOrderPhone');
+
+            if (!orderId) return;
+
+            const t = (key, fallback) => (window.I18n && typeof window.I18n.t === 'function') ? window.I18n.t(key, fallback) : fallback;
 
             try {
                 let fetchUrl = `/api/orders/${orderId}`;
@@ -250,24 +259,31 @@
                 if (phone) q.push(`phone=${encodeURIComponent(phone)}`);
                 if (q.length) fetchUrl += `?${q.join('&')}`;
 
-                const response = await fetch(fetchUrl, { credentials: 'include' });
-                if (!response.ok) throw new Error(window.I18n.t('messages.fetch_order_fail', 'فشل جلب الطلب'));
+                const headers = {};
+                if (token) headers['X-Tracking-Token'] = token;
+                if (phone) headers['X-Verification-Phone'] = phone;
+
+                const response = await fetch(fetchUrl, { credentials: 'include', headers });
+                if (!response.ok) {
+                    const errData = await response.json().catch(() => ({}));
+                    throw new Error(errData.error || t('messages.fetch_order_fail', 'فشل جلب الطلب'));
+                }
                 const order = await response.json();
 
                 // Fill details
                 document.getElementById('confOrderNumber').textContent = order.order_number || `#${order.id}`;
                 document.getElementById('confOrderDate').textContent = new Date(order.created_at || Date.now()).toLocaleDateString('ar-DZ');
-                document.getElementById('confPaymentMethod').textContent = order.payment_method === 'chargily' ? window.I18n.t('conf.epay', 'دفع إلكتروني (بطاقة ذهبية / CIB)') : '<span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)';
-                document.getElementById('confCustomerName').textContent = order.shipping_full_name || window.I18n.t('product.store_customer', 'عميل المتجر');
-                document.getElementById('confWilaya').textContent = `${order.wilaya_name || order.city || window.I18n.t('wilayas.algiers', 'الجزائر')} (${order.delivery_type === 'desk' ? window.I18n.t('checkout.desk_delivery', 'مكتب') : window.I18n.t('checkout.home_delivery', 'منزل')})`;
+                document.getElementById('confPaymentMethod').textContent = order.payment_method === 'chargily' ? t('conf.epay', 'دفع إلكتروني (بطاقة ذهبية / CIB)') : t('features.cod_title', 'الدفع عند الاستلام') + ' (COD)';
+                document.getElementById('confCustomerName').textContent = order.shipping_full_name || t('product.store_customer', 'عميل المتجر');
+                document.getElementById('confWilaya').textContent = `${order.wilaya_name || order.city || t('wilayas.algiers', 'الجزائر')} (${order.delivery_type === 'desk' ? t('checkout.desk_delivery', 'مكتب') : t('checkout.home_delivery', 'منزل')})`;
 
                 // Status Badge
                 const badge = document.getElementById('confStatusBadge');
                 const statusMap = {
-                    'pending': { text: window.I18n.t('conf.status_pending', 'قيد المعالجة'), class: 'status-pending' },
-                    'processing': { text: window.I18n.t('conf.status_processing', 'قيد التجهيز والتأكيد'), class: 'status-processing' },
-                    'shipped': { text: window.I18n.t('conf.status_shipped', 'تم الشحن'), class: 'status-shipped' },
-                    'delivered': { text: window.I18n.t('conf.status_delivered', 'تم التسليم بنجاح'), class: 'status-delivered' }
+                    'pending': { text: t('conf.status_pending', 'قيد المعالجة'), class: 'status-pending' },
+                    'processing': { text: t('conf.status_processing', 'قيد التجهيز والتأكيد'), class: 'status-processing' },
+                    'shipped': { text: t('conf.status_shipped', 'تم الشحن'), class: 'status-shipped' },
+                    'delivered': { text: t('conf.status_delivered', 'تم التسليم بنجاح'), class: 'status-delivered' }
                 };
                 const st = statusMap[order.status] || { text: order.status, class: 'status-pending' };
                 badge.textContent = st.text;
@@ -287,26 +303,37 @@
                                 <img src="${item.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}">
                                 <div>
                                     <strong style="display: block; color: #1e293b;">${safeName}</strong>
-                                    <span style="font-size: 0.85rem; color: #64748b;">${window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity)}</span>
+                                    <span style="font-size: 0.85rem; color: #64748b;">${t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity)}</span>
                                 </div>
                             </div>
-                            <strong style="color: #2563eb;">${lineTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</strong>
+                            <strong style="color: #2563eb;">${lineTotal.toLocaleString()} ${t('common.currency', 'دج')}</strong>
                         </div>
                     `;
                 }).join('');
 
                 const shipping = Number(order.shipping_cost || 0);
                 const total = Number(order.total || (subtotal + shipping));
+                const discount = Math.max(0, subtotal + shipping - total);
 
-                document.getElementById('confSubtotal').textContent = `${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
-                document.getElementById('confShipping').textContent = `${shipping.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
-                document.getElementById('confTotal').textContent = `${total.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('confSubtotal').textContent = `${subtotal.toLocaleString()} ${t('common.currency', 'دج')}`;
+                document.getElementById('confShipping').textContent = `${shipping.toLocaleString()} ${t('common.currency', 'دج')}`;
+                document.getElementById('confTotal').textContent = `${total.toLocaleString()} ${t('common.currency', 'دج')}`;
+
+                const discRow = document.getElementById('confDiscountRow');
+                const discEl = document.getElementById('confDiscount');
+                if (discount > 0 && discRow && discEl) {
+                    discRow.style.display = 'flex';
+                    discEl.textContent = `-${discount.toLocaleString()} ${t('common.currency', 'دج')}`;
+                }
 
                 // Set Action Links
                 const custPhone = order.phone || phone || '';
                 document.getElementById('trackOrderBtn').href = `track-order.html?orderId=${order.id}&phone=${encodeURIComponent(custPhone)}`;
                 document.getElementById('viewInvoiceBtn').href = `invoice.html?id=${order.id}&phone=${encodeURIComponent(custPhone)}&token=${token || ''}`;
 
+                if (window.I18n && typeof window.I18n.translatePage === 'function') {
+                    window.I18n.translatePage();
+                }
             } catch (err) {
                 console.error('Confirmation load error:', err);
             }
@@ -314,7 +341,5 @@
 
         document.addEventListener('DOMContentLoaded', loadOrderConfirmation);
     </script>
-    <script src="js/wishlist.js"></script>
-    <script src="js/i18n.js"></script>
 </body>
 </html>

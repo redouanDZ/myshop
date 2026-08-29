@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><span data-i18n="footer.link_track">تتبع طلبي</span> - <span data-i18n="footer.brand">المتجر الإلكتروني</span></title>
+    <title>تتبع طلبي - المتجر الإلكتروني</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
@@ -405,7 +405,7 @@
                 document.getElementById('resOrderNumber').textContent = order.order_number || `#${order.id}`;
                 document.getElementById('resOrderDate').textContent = new Date(order.created_at).toLocaleDateString('ar-DZ');
                 document.getElementById('resWilaya').textContent = `${order.wilaya_name || order.city || window.I18n.t('wilayas.algiers', 'الجزائر')} (${order.delivery_type === 'desk' ? window.I18n.t('invoice.desk_pickup', 'استلام من المكتب') : window.I18n.t('invoice.home_delivery', 'توصيل للمنزل')})`;
-                document.getElementById('resPaymentMethod').textContent = order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : '<span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)';
+                document.getElementById('resPaymentMethod').textContent = order.payment_method === 'chargily' ? (window.I18n ? window.I18n.t('conf.epay', 'دفع إلكتروني (بطاقة ذهبية / CIB)') : 'دفع إلكتروني (بطاقة ذهبية / CIB)') : (window.I18n ? window.I18n.t('features.cod_title', 'الدفع عند الاستلام') + ' (COD)' : 'الدفع عند الاستلام (COD)');
                 document.getElementById('resOrderTotal').textContent = `${Number(order.total).toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
 
                 // Status Badge & Stepper
@@ -501,10 +501,10 @@
                 <div class="footer-col">
                     <h3><span data-i18n="checkout.footer_links">روابط هامة</span></h3>
                     <ul>
-                        <li><a href="index.html"><span data-i18n="footer.link_home"><span data-i18n="footer.link_home">الرئيسية</span></span></a></li>
-                        <li><a href="shop.html"><span data-i18n="footer.link_shop"><span data-i18n="footer.link_shop">التسوق</span></span></a></li>
-                        <li><a href="cart.html"><span data-i18n="footer.link_cart">عربة <span data-i18n="footer.link_shop">التسوق</span></span></a></li>
-                        <li><a href="track-order.html"><span data-i18n="footer.link_track"><span data-i18n="footer.link_track">تتبع طلبي</span></span></a></li>
+                        <li><a href="index.html"><span data-i18n="footer.link_home">الرئيسية</span></a></li>
+                        <li><a href="shop.html"><span data-i18n="footer.link_shop">التسوق</span></a></li>
+                        <li><a href="cart.html"><span data-i18n="footer.link_cart">عربة التسوق</span></a></li>
+                        <li><a href="track-order.html"><span data-i18n="footer.link_track">تتبع طلبي</span></a></li>
                     </ul>
                 </div>
                 <div class="footer-col">

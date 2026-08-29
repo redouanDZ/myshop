@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="invoice.title">الفاتورة - متجر الجزائر بريميوم</title>
+    <title>فاتورة الطلب - المتجر الإلكتروني</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
@@ -207,7 +207,7 @@
             <div class="invoice-meta">
                 <div class="invoice-title"><span data-i18n="invoice.title">فاتورة بيع</span></div>
                 <div class="invoice-meta-item"><span data-i18n="invoice.invoice_num">رقم الفاتورة:</span> <strong id="invNumber">INV-2026-0000</strong></div>
-                <div class="invoice-meta-item"><span data-i18n="invoice.order_num"><span data-i18n="invoice.order_num">رقم الطلب:</span></span> <strong id="invOrderNum">-</strong></div>
+                <div class="invoice-meta-item"><span data-i18n="invoice.order_num">رقم الطلب:</span> <strong id="invOrderNum">-</strong></div>
                 <div class="invoice-meta-item"><span data-i18n="invoice.date">التاريخ:</span> <strong id="invDate">-</strong></div>
             </div>
         </div>
@@ -245,7 +245,7 @@
         <div class="summary-container">
             <div class="payment-status-box">
                 <h4><span data-i18n="invoice.payment_info">طريقة وحالة الدفع:</span></h4>
-                <p style="margin: 0 0 5px 0;"><strong><span data-i18n="invoice.method">الطريقة:</span></strong> <span id="invPayMethod"><span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)</span></p>
+                <p style="margin: 0 0 5px 0;"><strong><span data-i18n="invoice.method">الطريقة:</span></strong> <span id="invPayMethod">الدفع عند الاستلام (COD)</span></p>
                 <p style="margin: 0;"><strong><span data-i18n="invoice.status">حالة الدفع:</span></strong> <span id="invPayStatus" style="color: #0284c7; font-weight: bold;">قيد التحصيل عند التسليم</span></p>
             </div>
 
@@ -253,6 +253,10 @@
                 <tr>
                     <td><span data-i18n="invoice.subtotal">المجموع الفرعي للمنتجات:</span></td>
                     <td id="invSubtotal">0 <span data-i18n="common.currency">دج</span></td>
+                </tr>
+                <tr id="invDiscountRow" style="display: none; color: #16a34a; font-weight: bold;">
+                    <td><span data-i18n="checkout.discount">الخصم:</span></td>
+                    <td id="invDiscount">0 <span data-i18n="common.currency">دج</span></td>
                 </tr>
                 <tr>
                     <td><span data-i18n="invoice.shipping_fee">رسوم الشحن والتوصيل:</span></td>
@@ -272,36 +276,45 @@
     </div>
 
     <div class="actions-bar">
-        <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> العودة للمتجر</a>
+        <a href="index.html" class="btn btn-secondary"><i class="fas fa-arrow-right"></i> <span data-i18n="invoice.back_to_shop">العودة للمتجر</span></a>
         <div>
-            <a href="#" id="trackLinkBtn" class="btn btn-secondary" style="margin-left: 10px;"><i class="fas fa-truck"></i> تتبع الطلب</a>
-            <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> طباعة / تحميل PDF</button>
+            <a href="#" id="trackLinkBtn" class="btn btn-secondary" style="margin-left: 10px;"><i class="fas fa-truck"></i> <span data-i18n="footer.link_track">تتبع الطلب</span></a>
+            <button onclick="window.print()" class="btn btn-primary"><i class="fas fa-print"></i> <span data-i18n="invoice.print_btn">طباعة / تحميل PDF</span></button>
         </div>
     </div>
 
     <script src="js/main.js"></script>
+    <script src="js/i18n.js"></script>
     <script>
         async function loadInvoice() {
             const urlParams = new URLSearchParams(window.location.search);
             const orderId = urlParams.get('id') || urlParams.get('orderId') || localStorage.getItem('lastOrderId');
-            const token = urlParams.get('token');
-            const phone = urlParams.get('phone');
+            const token = urlParams.get('token') || localStorage.getItem('lastOrderToken');
+            const phone = urlParams.get('phone') || localStorage.getItem('lastOrderPhone');
 
             if (!orderId) {
                 document.getElementById('invoiceItemsBody').innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">لم يتم تحديد رقم الطلب</td></tr>';
                 return;
             }
 
+            const t = (key, fallback) => (window.I18n && typeof window.I18n.t === 'function') ? window.I18n.t(key, fallback) : fallback;
+
             try {
-                // Try fetching order
                 let url = `/api/orders/${orderId}`;
                 const queryParts = [];
                 if (token) queryParts.push(`token=${encodeURIComponent(token)}`);
                 if (phone) queryParts.push(`phone=${encodeURIComponent(phone)}`);
                 if (queryParts.length) url += `?${queryParts.join('&')}`;
 
-                const res = await fetch(url);
-                if (!res.ok) throw new Error(window.I18n.t('messages.load_invoice_error', 'تعذر تحميل بيانات الفاتورة'));
+                const headers = {};
+                if (token) headers['X-Tracking-Token'] = token;
+                if (phone) headers['X-Verification-Phone'] = phone;
+
+                const res = await fetch(url, { credentials: 'include', headers });
+                if (!res.ok) {
+                    const errData = await res.json().catch(() => ({}));
+                    throw new Error(errData.error || t('messages.load_invoice_error', 'تعذر تحميل بيانات الفاتورة'));
+                }
                 const order = await res.json();
 
                 // Fill Meta
@@ -310,16 +323,16 @@
                 document.getElementById('invDate').textContent = new Date(order.created_at || Date.now()).toLocaleDateString('ar-DZ');
 
                 // Customer info
-                document.getElementById('custName').textContent = order.shipping_full_name || window.I18n.t('product.store_customer', 'عميل المتجر');
+                document.getElementById('custName').textContent = order.shipping_full_name || t('product.store_customer', 'عميل المتجر');
                 document.getElementById('custPhone').textContent = order.phone || '-';
                 document.getElementById('custEmail').textContent = order.email || '-';
-                document.getElementById('custWilaya').textContent = order.wilaya_name || order.city || window.I18n.t('wilayas.algiers', 'الجزائر');
+                document.getElementById('custWilaya').textContent = order.wilaya_name || order.city || t('wilayas.algiers', 'الجزائر');
                 document.getElementById('custAddress').textContent = order.address || '-';
-                document.getElementById('custDeliveryType').textContent = order.delivery_type === 'desk' ? window.I18n.t('invoice.desk_pickup', 'استلام من مكتب التوصيل') : window.I18n.t('invoice.home_delivery', 'توصيل للمنزل');
+                document.getElementById('custDeliveryType').textContent = order.delivery_type === 'desk' ? t('invoice.desk_pickup', 'استلام من مكتب التوصيل') : t('invoice.home_delivery', 'توصيل للمنزل');
 
                 // Payment info
-                document.getElementById('invPayMethod').textContent = order.payment_method === 'chargily' ? window.I18n.t('conf.epay', 'دفع إلكتروني (بطاقة ذهبية / CIB)') : '<span data-i18n="features.cod_title">الدفع عند الاستلام</span> (COD)';
-                document.getElementById('invPayStatus').textContent = order.payment_status === 'paid' ? window.I18n.t('invoice.status_paid', 'مدفوع إلكترونياً بالكامل ✅') : window.I18n.t('invoice.status_unpaid', 'قيد التحصيل نقداً عند الاستلام 📦');
+                document.getElementById('invPayMethod').textContent = order.payment_method === 'chargily' ? t('conf.epay', 'دفع إلكتروني (بطاقة ذهبية / CIB)') : t('features.cod_title', 'الدفع عند الاستلام') + ' (COD)';
+                document.getElementById('invPayStatus').textContent = order.payment_status === 'paid' ? t('invoice.status_paid', 'مدفوع إلكترونياً بالكامل ✅') : t('invoice.status_unpaid', 'قيد التحصيل نقداً عند الاستلام 📦');
 
                 // Items list
                 const items = order.items || [];
@@ -335,24 +348,40 @@
                             <td>${index + 1}</td>
                             <td>${safeName}</td>
                             <td style="text-align: center;">${item.quantity}</td>
-                            <td style="text-align: left;">${Number(item.price).toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</td>
-                            <td>${lineTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}</td>
+                            <td style="text-align: left;">${Number(item.price).toLocaleString()} ${t('common.currency', 'دج')}</td>
+                            <td>${lineTotal.toLocaleString()} ${t('common.currency', 'دج')}</td>
                         </tr>
                     `;
                 }).join('');
 
                 const shippingCost = Number(order.shipping_cost || 0);
                 const grandTotal = Number(order.total || (subtotal + shippingCost));
+                const discount = Math.max(0, subtotal + shippingCost - grandTotal);
 
-                document.getElementById('invSubtotal').textContent = `${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
-                document.getElementById('invShipping').textContent = `${shippingCost.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
-                document.getElementById('invGrandTotal').textContent = `${grandTotal.toLocaleString()} ${window.I18n.t('common.currency', 'د.ج')}`;
+                document.getElementById('invSubtotal').textContent = `${subtotal.toLocaleString()} ${t('common.currency', 'دج')}`;
+                document.getElementById('invShipping').textContent = `${shippingCost.toLocaleString()} ${t('common.currency', 'دج')}`;
+                document.getElementById('invGrandTotal').textContent = `${grandTotal.toLocaleString()} ${t('common.currency', 'دج')}`;
+
+                const discRow = document.getElementById('invDiscountRow');
+                const discEl = document.getElementById('invDiscount');
+                if (discount > 0 && discRow && discEl) {
+                    discRow.style.display = 'table-row';
+                    discEl.textContent = `-${discount.toLocaleString()} ${t('common.currency', 'دج')}`;
+                }
 
                 // Set track link
-                document.getElementById('trackLinkBtn').href = `track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}`;
+                const custPhone = order.phone || phone || '';
+                document.getElementById('trackLinkBtn').href = `track-order.html?orderId=${order.id}&phone=${encodeURIComponent(custPhone)}`;
 
+                if (window.I18n && typeof window.I18n.translatePage === 'function') {
+                    window.I18n.translatePage();
+                }
             } catch (err) {
-                document.getElementById('invoiceItemsBody').innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">${window.I18n.t('invoice.error_loading', 'حدث خطأ أثناء جلب الفاتورة: {error}').replace('{error}', window.escapeHtml ? window.escapeHtml(err.message) : err.message)} </td></tr>`;
+                console.error('Invoice error:', err);
+                const tbody = document.getElementById('invoiceItemsBody');
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:#ef4444;">${t('messages.load_invoice_error', 'تعذر تحميل بيانات الفاتورة')}: ${window.escapeHtml ? window.escapeHtml(err.message) : err.message}</td></tr>`;
+                }
             }
         }
 
