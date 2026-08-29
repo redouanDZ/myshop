@@ -1,5 +1,96 @@
 
 /**
+ * User Account Management System
+ * Provides functions for login, logout, and user profile management
+ */
+
+// API endpoint URLs
+const API_BASE_URL = '/api';
+
+// Notification helper
+function showNotification(msg, type = 'success') {
+    if (window.showToast) {
+        window.showToast(msg, type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'success');
+    } else {
+        alert(msg);
+    }
+}
+
+// Helper to safely update cart UI if available
+function updateCartUI() {
+    if (window.loadCart) window.loadCart();
+}
+
+function readSessionUser() {
+    try {
+        const raw = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+        return raw ? JSON.parse(raw) : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function saveSessionUser(user) {
+    if (!user) {
+        sessionStorage.removeItem('currentUser');
+        localStorage.removeItem('currentUser');
+        return;
+    }
+    sessionStorage.setItem('currentUser', JSON.stringify(user));
+    localStorage.setItem('currentUser', JSON.stringify(user));
+}
+
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return '';
+}
+
+async function getCsrfToken() {
+    const cookieToken = getCookie('csrf_token');
+    if (cookieToken) return cookieToken;
+
+    try {
+        const response = await fetch('/api/csrf-token', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        if (!response.ok) return '';
+        const data = await response.json();
+        return data.csrfToken || '';
+    } catch (error) {
+        return '';
+    }
+}
+
+async function fetchJson(url, options = {}) {
+    const method = (options.method || 'GET').toUpperCase();
+    const isMutatingRequest = !['GET', 'HEAD', 'OPTIONS'].includes(method);
+    const csrfToken = isMutatingRequest ? await getCsrfToken() : '';
+
+    const headers = {
+        ...(options.headers || {})
+    };
+
+    if (!(headers['Content-Type'] || headers['content-type'])) {
+        if (options.body && typeof options.body === 'string') {
+            headers['Content-Type'] = 'application/json';
+        }
+    }
+
+    if (csrfToken && !headers['X-CSRF-Token'] && !headers['x-csrf-token']) {
+        headers['X-CSRF-Token'] = csrfToken;
+    }
+
+    return fetch(url, {
+        credentials: 'include',
+        ...options,
+        headers
+    });
+}
+
+/**
  * تهيئة نموذج تسجيل الدخول
  */
 function initLoginForm() {
