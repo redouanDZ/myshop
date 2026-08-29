@@ -107,7 +107,7 @@ body {
 
 .container {
     width: 100%;
-    max-width: 1280px;
+    max-width: 1536px;
     margin: 0 auto;
     padding: 0 24px;
 }
@@ -217,6 +217,7 @@ header .container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     padding: 12px 24px;
     min-height: 68px;
     gap: 20px;
@@ -244,6 +245,7 @@ header .container {
 
 /* القائمة الرئيسية */
 header nav, nav.main-nav {
+    margin: 0 auto;
     display: flex !important;
     align-items: center !important;
 }
@@ -4003,4 +4005,25 @@ body.dark-mode .theme-toggle-btn {
     background: rgba(255, 255, 255, 0.1) !important;
     color: #fff !important;
     border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+@media (max-width: 1300px) {
+    header .container {
+        gap: 10px;
+        padding: 10px;
+    }
+    header nav ul li a, nav.main-nav ul li a {
+        padding: 8px 10px !important;
+        font-size: 14px !important;
+    }
+    header nav ul li a i, nav.main-nav ul li a i {
+        display: none !important;
+    }
+    .user-actions {
+        gap: 5px !important;
+    }
+    .cart-icon, .user-icon, .wishlist-icon, .theme-toggle-btn {
+        width: 38px !important;
+        height: 38px !important;
+    }
 }
