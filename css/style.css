@@ -4059,3 +4059,9 @@ body.dark-mode .theme-toggle-btn {
 }
 
 #express-checkout-box { scroll-margin-top: 100px; }
+
+/* Fix phone number input alignment */
+input[type="tel"] {
+    text-align: right;
+    direction: ltr;
+}
