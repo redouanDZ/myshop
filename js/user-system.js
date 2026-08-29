@@ -146,6 +146,25 @@ function updateUIForLoggedInUser(user) {
 window.updateUIForLoggedInUser = updateUIForLoggedInUser;
 
 /**
+ * تفعيل أيقونة إظهار/إخفاء كلمة المرور لكل حقول .toggle-password-btn داخل container
+ */
+function initPasswordToggles(container) {
+    (container || document).querySelectorAll('.toggle-password-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const targetId = this.getAttribute('data-target');
+            const input = (container || document).querySelector('#' + targetId);
+            if (!input) return;
+            const isHidden = input.type === 'password';
+            input.type = isHidden ? 'text' : 'password';
+            const icon = this.querySelector('i');
+            if (icon) {
+                icon.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+            }
+        });
+    });
+}
+
+/**
  * تهيئة نموذج تسجيل الدخول
  */
 function initLoginForm() {
@@ -198,7 +217,10 @@ function showLoginForm() {
                     </div>
                     <div class="form-group">
                         <label for="login-password" data-i18n="auth.password">كلمة المرور</label>
-                        <input type="password" id="login-password" required placeholder="******">
+                        <div class="password-input-wrap" style="position:relative;display:flex;align-items:center;">
+                            <input type="password" id="login-password" required placeholder="******" style="flex:1;padding-inline-end:42px;">
+                            <button type="button" class="toggle-password-btn" data-target="login-password" title="إظهار/إخفاء كلمة المرور" style="position:absolute;inset-inline-end:10px;background:none;border:none;cursor:pointer;color:var(--light-text,#94a3b8);font-size:1rem;padding:4px;"><i class="fas fa-eye"></i></button>
+                        </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 12px;">
                         <label style="font-size: 0.85rem; font-weight: normal; cursor: pointer;">
@@ -251,6 +273,8 @@ function showLoginForm() {
             handleLogin();
         });
     }
+
+    initPasswordToggles(modal);
 
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', function() {
@@ -311,11 +335,17 @@ function showSignupForm() {
                     <div class="form-row">
                         <div class="form-group">
                             <label for="signup-password" data-i18n="auth.password">كلمة المرور</label>
-                            <input type="password" id="signup-password" required minlength="6" placeholder="******">
+                            <div class="password-input-wrap" style="position:relative;display:flex;align-items:center;">
+                                <input type="password" id="signup-password" required minlength="6" placeholder="******" style="flex:1;padding-inline-end:42px;">
+                                <button type="button" class="toggle-password-btn" data-target="signup-password" title="إظهار/إخفاء" style="position:absolute;inset-inline-end:10px;background:none;border:none;cursor:pointer;color:var(--light-text,#94a3b8);font-size:1rem;padding:4px;"><i class="fas fa-eye"></i></button>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="signup-confirm-password" data-i18n="auth.confirm_new_password">تأكيد كلمة المرور</label>
-                            <input type="password" id="signup-confirm-password" required minlength="6" placeholder="******">
+                            <div class="password-input-wrap" style="position:relative;display:flex;align-items:center;">
+                                <input type="password" id="signup-confirm-password" required minlength="6" placeholder="******" style="flex:1;padding-inline-end:42px;">
+                                <button type="button" class="toggle-password-btn" data-target="signup-confirm-password" title="إظهار/إخفاء" style="position:absolute;inset-inline-end:10px;background:none;border:none;cursor:pointer;color:var(--light-text,#94a3b8);font-size:1rem;padding:4px;"><i class="fas fa-eye"></i></button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group" style="margin-bottom: 12px;">
@@ -365,6 +395,8 @@ function showSignupForm() {
             handleSignup();
         });
     }
+
+    initPasswordToggles(modal);
 
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', function() {
@@ -496,11 +528,17 @@ function showResetPasswordForm(prefilledToken = '', userEmail = '') {
                     </div>
                     <div class="form-group">
                         <label for="reset-password" data-i18n="auth.new_password">كلمة المرور الجديدة</label>
-                        <input type="password" id="reset-password" required minlength="6" placeholder="******">
+                        <div class="password-input-wrap" style="position:relative;display:flex;align-items:center;">
+                            <input type="password" id="reset-password" required minlength="6" placeholder="******" style="flex:1;padding-inline-end:42px;">
+                            <button type="button" class="toggle-password-btn" data-target="reset-password" title="إظهار/إخفاء" style="position:absolute;inset-inline-end:10px;background:none;border:none;cursor:pointer;color:var(--light-text,#94a3b8);font-size:1rem;padding:4px;"><i class="fas fa-eye"></i></button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="reset-confirm-password" data-i18n="auth.confirm_new_password">تأكيد كلمة المرور</label>
-                        <input type="password" id="reset-confirm-password" required minlength="6" placeholder="******">
+                        <div class="password-input-wrap" style="position:relative;display:flex;align-items:center;">
+                            <input type="password" id="reset-confirm-password" required minlength="6" placeholder="******" style="flex:1;padding-inline-end:42px;">
+                            <button type="button" class="toggle-password-btn" data-target="reset-confirm-password" title="إظهار/إخفاء" style="position:absolute;inset-inline-end:10px;background:none;border:none;cursor:pointer;color:var(--light-text,#94a3b8);font-size:1rem;padding:4px;"><i class="fas fa-eye"></i></button>
+                        </div>
                     </div>
                     <button type="submit" id="reset-submit-btn" class="btn" style="width: 100%; margin-top: 10px;">
                         <span data-i18n="auth.reset_password_btn">حفظ كلمة المرور الجديدة</span>
@@ -520,6 +558,8 @@ function showResetPasswordForm(prefilledToken = '', userEmail = '') {
 
     const closeModalBtn = modal.querySelector('.close-modal');
     if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+    initPasswordToggles(modal);
 
     const backToLogin = modal.querySelector('#reset-back-to-login');
     if (backToLogin) backToLogin.addEventListener('click', (e) => {
