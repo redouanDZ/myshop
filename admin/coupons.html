@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إدارة قسائم الخصم والكوبونات - لوحة التحكم</title>
+    <title>ط¥ط¯ط§ط±ط© ظ‚ط³ط§ط¦ظ… ط§ظ„ط®طµظ… ظˆط§ظ„ظƒظˆط¨ظˆظ†ط§طھ - ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -62,22 +62,27 @@
     <header>
         <div class="container">
             <div class="logo">
-                <a href="../index.html">المتجر الإلكتروني</a>
+                <a href="../index.html">ط§ظ„ظ…طھط¬ط± ط§ظ„ط¥ظ„ظƒطھط±ظˆظ†ظٹ</a>
             </div>
             <nav>
                 <ul>
-                    <li><a href="../index.html">زيارة المتجر</a></li>
-                    <li><a href="index.html">لوحة التحكم</a></li>
-                    <li><a href="orders.html">الطلبات</a></li>
-                    <li><a href="products.html">المنتجات</a></li>
-                    <li><a href="users.html">العملاء</a></li>
-                    <li><a href="coupons.html" class="active">الكوبونات</a></li>
-                    <li><a href="reviews.html">التقييمات</a></li>
+                    <li><a href="../index.html">ط²ظٹط§ط±ط© ط§ظ„ظ…طھط¬ط±</a></li>
+                    <li><a href="index.html">ظ„ظˆط­ط© ط§ظ„طھط­ظƒظ…</a></li>
+                    <li><a href="orders.html">ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
+                    <li><a href="products.html">ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
+                    <li><a href="users.html">ط§ظ„ط¹ظ…ظ„ط§ط،</a></li>
+                    <li><a href="coupons.html" class="active">ط§ظ„ظƒظˆط¨ظˆظ†ط§طھ</a></li>
+                    <li><a href="reviews.html">ط§ظ„طھظ‚ظٹظٹظ…ط§طھ</a></li>
                 </ul>
             </nav>
-            <div class="user-actions">
-                <a href="../account.html" class="user-icon" title="حساب الأدمن">
+            <div class="user-actions" style="display: flex; gap: 15px; align-items: center;">
+
+                <a href="../account.html" class="user-icon" title="ط­ط³ط§ط¨ ط§ظ„ط£ط¯ظ…ظ†">
                     <i class="fas fa-user-shield"></i>
+                </a>
+            
+                <a href="#" class="admin-logout-btn" title="����� ������" style="color: #ef4444; font-size: 1.2rem; transition: color 0.3s;">
+                    <i class="fas fa-sign-out-alt"></i>
                 </a>
             </div>
         </div>
@@ -88,19 +93,19 @@
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-header">
-                <h2>لوحة الإدارة</h2>
-                <p id="adminUserTag">مدير النظام</p>
+                <h2>ظ„ظˆط­ط© ط§ظ„ط¥ط¯ط§ط±ط©</h2>
+                <p id="adminUserTag">ظ…ط¯ظٹط± ط§ظ„ظ†ط¸ط§ظ…</p>
             </div>
             <ul class="sidebar-menu">
-                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> الإحصائيات العامة</a></li>
-                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> إدارة الطلبات</a></li>
-                <li><a href="products.html"><i class="fas fa-box"></i> المنتجات والمخزون</a></li>
-                <li><a href="users.html"><i class="fas fa-users"></i> إدارة المستخدمين</a></li>
-                <li><a href="coupons.html" class="active"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
-                <li><a href="reviews.html"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
-                <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
+                <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> ط§ظ„ط¥ط­طµط§ط¦ظٹط§طھ ط§ظ„ط¹ط§ظ…ط©</a></li>
+                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> ط¥ط¯ط§ط±ط© ط§ظ„ط·ظ„ط¨ط§طھ</a></li>
+                <li><a href="products.html"><i class="fas fa-box"></i> ط§ظ„ظ…ظ†طھط¬ط§طھ ظˆط§ظ„ظ…ط®ط²ظˆظ†</a></li>
+                <li><a href="users.html"><i class="fas fa-users"></i> ط¥ط¯ط§ط±ط© ط§ظ„ظ…ط³طھط®ط¯ظ…ظٹظ†</a></li>
+                <li><a href="coupons.html" class="active"><i class="fas fa-ticket-alt"></i> ظ‚ط³ط§ط¦ظ… ط§ظ„ط®طµظ…</a></li>
+                <li><a href="reviews.html"><i class="fas fa-star"></i> طھظ‚ظٹظٹظ…ط§طھ ط§ظ„ظ…ظ†طھط¬ط§طھ</a></li>
+                <li><a href="../index.html"><i class="fas fa-store"></i> ظˆط§ط¬ظ‡ط© ط§ظ„ظ…طھط¬ط±</a></li>
                 <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
-                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
+                    <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> طھط³ط¬ظٹظ„ ط§ظ„ط®ط±ظˆط¬</a>
                 </li>
             </ul>
         </div>
@@ -108,27 +113,27 @@
         <!-- Main Content -->
         <div class="main-content">
             <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
-                <h1>إدارة قسائم الخصم الترويجية</h1>
+                <h1>ط¥ط¯ط§ط±ط© ظ‚ط³ط§ط¦ظ… ط§ظ„ط®طµظ… ط§ظ„طھط±ظˆظٹط¬ظٹط©</h1>
                 <button onclick="openAddCouponModal()" class="btn" style="background: #10b981; color: #fff; padding: 10px 20px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-plus-circle"></i> إضافة كوبون جديد
+                    <i class="fas fa-plus-circle"></i> ط¥ط¶ط§ظپط© ظƒظˆط¨ظˆظ† ط¬ط¯ظٹط¯
                 </button>
             </div>
 
             <!-- Filters Bar -->
             <div class="filters-bar" style="background: #fff; padding: 15px 20px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
                 <div style="flex: 1; min-width: 200px;">
-                    <input type="text" id="searchInput" placeholder="البحث برمز الكوبون..." style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
+                    <input type="text" id="searchInput" placeholder="ط§ظ„ط¨ط­ط« ط¨ط±ظ…ط² ط§ظ„ظƒظˆط¨ظˆظ†..." style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
                 </div>
                 <div>
                     <select id="statusFilter" style="padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; outline: none;">
-                        <option value="all">جميع الحالات</option>
-                        <option value="active">نشط</option>
-                        <option value="inactive">غير نشط</option>
+                        <option value="all">ط¬ظ…ظٹط¹ ط§ظ„ط­ط§ظ„ط§طھ</option>
+                        <option value="active">ظ†ط´ط·</option>
+                        <option value="inactive">ط؛ظٹط± ظ†ط´ط·</option>
                     </select>
                 </div>
                 <div>
                     <button onclick="loadAdminCoupons()" class="btn" style="background: #2563eb; color: #fff; padding: 9px 18px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold;">
-                        <i class="fas fa-filter"></i> تصفية
+                        <i class="fas fa-filter"></i> طھطµظپظٹط©
                     </button>
                 </div>
             </div>
@@ -139,19 +144,19 @@
                     <thead>
                         <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0; text-align: right;">
                             <th style="padding: 12px 15px;">#</th>
-                            <th style="padding: 12px 15px;">رمز الكوبون</th>
-                            <th style="padding: 12px 15px;">قيمة الخصم</th>
-                            <th style="padding: 12px 15px;">الحد الأدنى للطلب</th>
-                            <th style="padding: 12px 15px; text-align: center;">الاستخدامات / الحد</th>
-                            <th style="padding: 12px 15px; text-align: center;">تاريخ الانتهاء</th>
-                            <th style="padding: 12px 15px; text-align: center;">الحالة</th>
-                            <th style="padding: 12px 15px; text-align: center;">إجراءات</th>
+                            <th style="padding: 12px 15px;">ط±ظ…ط² ط§ظ„ظƒظˆط¨ظˆظ†</th>
+                            <th style="padding: 12px 15px;">ظ‚ظٹظ…ط© ط§ظ„ط®طµظ…</th>
+                            <th style="padding: 12px 15px;">ط§ظ„ط­ط¯ ط§ظ„ط£ط¯ظ†ظ‰ ظ„ظ„ط·ظ„ط¨</th>
+                            <th style="padding: 12px 15px; text-align: center;">ط§ظ„ط§ط³طھط®ط¯ط§ظ…ط§طھ / ط§ظ„ط­ط¯</th>
+                            <th style="padding: 12px 15px; text-align: center;">طھط§ط±ظٹط® ط§ظ„ط§ظ†طھظ‡ط§ط،</th>
+                            <th style="padding: 12px 15px; text-align: center;">ط§ظ„ط­ط§ظ„ط©</th>
+                            <th style="padding: 12px 15px; text-align: center;">ط¥ط¬ط±ط§ط،ط§طھ</th>
                         </tr>
                     </thead>
                     <tbody id="coupons-tbody">
                         <tr>
                             <td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">
-                                <i class="fas fa-spinner fa-spin"></i> جاري تحميل قسائم الخصم...
+                                <i class="fas fa-spinner fa-spin"></i> ط¬ط§ط±ظٹ طھط­ظ…ظٹظ„ ظ‚ط³ط§ط¦ظ… ط§ظ„ط®طµظ…...
                             </td>
                         </tr>
                     </tbody>
@@ -164,53 +169,53 @@
     <div id="couponModal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto; padding: 20px;">
         <div style="background: #fff; max-width: 550px; margin: 40px auto; border-radius: 10px; padding: 25px; position: relative;">
             <button onclick="closeCouponModal()" style="position: absolute; left: 20px; top: 20px; background: transparent; border: none; font-size: 1.2rem; cursor: pointer; color: #64748b;">&times;</button>
-            <h2 id="modalCouponTitle" style="margin-top: 0; color: #1e293b; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">إضافة قسيمة خصم جديدة</h2>
+            <h2 id="modalCouponTitle" style="margin-top: 0; color: #1e293b; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;">ط¥ط¶ط§ظپط© ظ‚ط³ظٹظ…ط© ط®طµظ… ط¬ط¯ظٹط¯ط©</h2>
             
             <form id="couponForm" onsubmit="handleSaveCoupon(event)" style="margin-top: 15px;">
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 6px;">رمز الكوبون (Code) *</label>
-                    <input type="text" id="couponCode" required placeholder="مثال: SUMMER25" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase; font-weight: bold; font-size: 1rem;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 6px;">ط±ظ…ط² ط§ظ„ظƒظˆط¨ظˆظ† (Code) *</label>
+                    <input type="text" id="couponCode" required placeholder="ظ…ط«ط§ظ„: SUMMER25" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; text-transform: uppercase; font-weight: bold; font-size: 1rem;">
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">نسبة الخصم (%)</label>
-                        <input type="number" id="couponPercent" min="0" max="100" placeholder="مثال: 15" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">ظ†ط³ط¨ط© ط§ظ„ط®طµظ… (%)</label>
+                        <input type="number" id="couponPercent" min="0" max="100" placeholder="ظ…ط«ط§ظ„: 15" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
                     </div>
                     <div>
-                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">أو خصم ثابت (دج)</label>
-                        <input type="number" id="couponAmount" min="0" placeholder="مثال: 500" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">ط£ظˆ ط®طµظ… ط«ط§ط¨طھ (ط¯ط¬)</label>
+                        <input type="number" id="couponAmount" min="0" placeholder="ظ…ط«ط§ظ„: 500" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                     <div>
-                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">الحد الأدنى لقيمة الطلب (دج)</label>
+                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">ط§ظ„ط­ط¯ ط§ظ„ط£ط¯ظ†ظ‰ ظ„ظ‚ظٹظ…ط© ط§ظ„ط·ظ„ط¨ (ط¯ط¬)</label>
                         <input type="number" id="couponMinOrder" min="0" value="0" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
                     </div>
                     <div>
-                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">أقصى عدد استخدامات</label>
+                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">ط£ظ‚طµظ‰ ط¹ط¯ط¯ ط§ط³طھط®ط¯ط§ظ…ط§طھ</label>
                         <input type="number" id="couponMaxUses" min="1" value="100" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
                     </div>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                     <div>
-                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">تاريخ انتهاء الصلاحية</label>
+                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">طھط§ط±ظٹط® ط§ظ†طھظ‡ط§ط، ط§ظ„طµظ„ط§ط­ظٹط©</label>
                         <input type="date" id="couponExpiry" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
                     </div>
                     <div>
-                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">الحالة</label>
+                        <label style="display: block; font-weight: bold; margin-bottom: 6px;">ط§ظ„ط­ط§ظ„ط©</label>
                         <select id="couponStatus" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
-                            <option value="active">نشط</option>
-                            <option value="inactive">غير نشط</option>
+                            <option value="active">ظ†ط´ط·</option>
+                            <option value="inactive">ط؛ظٹط± ظ†ط´ط·</option>
                         </select>
                     </div>
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
-                    <button type="button" onclick="closeCouponModal()" class="btn" style="background: #f1f5f9; color: #334155; padding: 9px 18px; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer;">إلغاء</button>
-                    <button type="submit" class="btn" style="background: #10b981; color: #fff; padding: 9px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer;">حفظ الكوبون</button>
+                    <button type="button" onclick="closeCouponModal()" class="btn" style="background: #f1f5f9; color: #334155; padding: 9px 18px; border-radius: 6px; border: 1px solid #cbd5e1; cursor: pointer;">ط¥ظ„ط؛ط§ط،</button>
+                    <button type="submit" class="btn" style="background: #10b981; color: #fff; padding: 9px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer;">ط­ظپط¸ ط§ظ„ظƒظˆط¨ظˆظ†</button>
                 </div>
             </form>
         </div>
@@ -242,42 +247,42 @@
 
             try {
                 const res = await fetch(url, { credentials: 'include', headers });
-                if (!res.ok) throw new Error('فشل جلب القسائم');
+                if (!res.ok) throw new Error('ظپط´ظ„ ط¬ظ„ط¨ ط§ظ„ظ‚ط³ط§ط¦ظ…');
                 const coupons = await res.json();
 
                 renderCouponsTable(coupons);
             } catch (err) {
                 const tbody = document.getElementById('coupons-tbody');
-                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">خطأ: ${AdminTable.escapeHtml(err.message)}</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: red; padding: 20px;">ط®ط·ط£: ${AdminTable.escapeHtml(err.message)}</td></tr>`;
             }
         }
 
         function renderCouponsTable(coupons) {
             const tbody = document.getElementById('coupons-tbody');
             if (!coupons || !coupons.length) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">لا توجد قسائم خصم مضافة بعد</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px; color: #64748b;">ظ„ط§ طھظˆط¬ط¯ ظ‚ط³ط§ط¦ظ… ط®طµظ… ظ…ط¶ط§ظپط© ط¨ط¹ط¯</td></tr>';
                 return;
             }
 
             tbody.innerHTML = coupons.map(c => {
                 const isExpired = c.expires_at && new Date(c.expires_at) < new Date();
                 const displayStatus = isExpired ? 'expired' : c.status;
-                const statusLabels = { 'active': 'نشط', 'inactive': 'غير نشط', 'expired': 'منتهي' };
-                const discountText = c.discount_percent > 0 ? `${c.discount_percent}%` : `${Number(c.discount_amount).toLocaleString()} دج`;
+                const statusLabels = { 'active': 'ظ†ط´ط·', 'inactive': 'ط؛ظٹط± ظ†ط´ط·', 'expired': 'ظ…ظ†طھظ‡ظٹ' };
+                const discountText = c.discount_percent > 0 ? `${c.discount_percent}%` : `${Number(c.discount_amount).toLocaleString()} ط¯ط¬`;
 
                 return `
                     <tr style="border-bottom: 1px solid #f1f5f9;">
                         <td style="padding: 12px 15px; font-weight: bold;">${c.id}</td>
                         <td style="padding: 12px 15px; font-weight: bold; color: #2563eb; font-size: 1.05rem;">${AdminTable.escapeHtml(c.code)}</td>
                         <td style="padding: 12px 15px; font-weight: bold; color: #059669;">${discountText}</td>
-                        <td style="padding: 12px 15px;">${Number(c.min_order_amount) > 0 ? Number(c.min_order_amount).toLocaleString() + ' دج' : 'بدون حد'}</td>
+                        <td style="padding: 12px 15px;">${Number(c.min_order_amount) > 0 ? Number(c.min_order_amount).toLocaleString() + ' ط¯ط¬' : 'ط¨ط¯ظˆظ† ط­ط¯'}</td>
                         <td style="padding: 12px 15px; text-align: center;"><strong>${c.uses_count}</strong> / ${c.max_uses}</td>
-                        <td style="padding: 12px 15px; text-align: center; color: #64748b; font-size: 0.9rem;">${c.expires_at ? new Date(c.expires_at).toLocaleDateString('ar-DZ') : 'دائم'}</td>
+                        <td style="padding: 12px 15px; text-align: center; color: #64748b; font-size: 0.9rem;">${c.expires_at ? new Date(c.expires_at).toLocaleDateString('ar-DZ') : 'ط¯ط§ط¦ظ…'}</td>
                         <td style="padding: 12px 15px; text-align: center;"><span class="status-badge status-${displayStatus}">${statusLabels[displayStatus] || displayStatus}</span></td>
                         <td style="padding: 12px 15px; text-align: center;">
-                            <button class="coupon-action-btn" onclick='openEditCouponModal(${JSON.stringify(c)})' title="تعديل الكوبون"><i class="fas fa-edit"></i></button>
-                            <button class="coupon-action-btn toggle-btn" onclick="toggleCouponStatus(${c.id}, '${c.status === 'active' ? 'inactive' : 'active'}')" title="${c.status === 'active' ? 'تعطيل الكوبون' : 'تفعيل الكوبون'}"><i class="fas fa-power-off"></i></button>
-                            <button class="coupon-action-btn delete-btn" onclick="deleteCoupon(${c.id})" title="حذف الكوبون"><i class="fas fa-trash-alt"></i></button>
+                            <button class="coupon-action-btn" onclick='openEditCouponModal(${JSON.stringify(c)})' title="طھط¹ط¯ظٹظ„ ط§ظ„ظƒظˆط¨ظˆظ†"><i class="fas fa-edit"></i></button>
+                            <button class="coupon-action-btn toggle-btn" onclick="toggleCouponStatus(${c.id}, '${c.status === 'active' ? 'inactive' : 'active'}')" title="${c.status === 'active' ? 'طھط¹ط·ظٹظ„ ط§ظ„ظƒظˆط¨ظˆظ†' : 'طھظپط¹ظٹظ„ ط§ظ„ظƒظˆط¨ظˆظ†'}"><i class="fas fa-power-off"></i></button>
+                            <button class="coupon-action-btn delete-btn" onclick="deleteCoupon(${c.id})" title="ط­ط°ظپ ط§ظ„ظƒظˆط¨ظˆظ†"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     </tr>
                 `;
@@ -288,7 +293,7 @@
 
         function openAddCouponModal() {
             editingCouponId = null;
-            document.getElementById('modalCouponTitle').textContent = 'إضافة قسيمة خصم جديدة';
+            document.getElementById('modalCouponTitle').textContent = 'ط¥ط¶ط§ظپط© ظ‚ط³ظٹظ…ط© ط®طµظ… ط¬ط¯ظٹط¯ط©';
             document.getElementById('couponForm').reset();
             document.getElementById('couponCode').disabled = false;
             document.getElementById('couponModal').style.display = 'block';
@@ -296,7 +301,7 @@
 
         function openEditCouponModal(coupon) {
             editingCouponId = coupon.id;
-            document.getElementById('modalCouponTitle').textContent = `تعديل قسيمة الخصم #${coupon.id}`;
+            document.getElementById('modalCouponTitle').textContent = `طھط¹ط¯ظٹظ„ ظ‚ط³ظٹظ…ط© ط§ظ„ط®طµظ… #${coupon.id}`;
             document.getElementById('couponCode').value = coupon.code;
             document.getElementById('couponCode').disabled = true;
             document.getElementById('couponPercent').value = coupon.discount_percent || '';
@@ -323,13 +328,13 @@
             const expiresAt = document.getElementById('couponExpiry').value || null;
             const status = document.getElementById('couponStatus').value;
 
-            if (!code) { AdminUI.showToast('رمز الكوبون مطلوب', 'warning'); return; }
+            if (!code) { AdminUI.showToast('ط±ظ…ط² ط§ظ„ظƒظˆط¨ظˆظ† ظ…ط·ظ„ظˆط¨', 'warning'); return; }
             if (discountPercent <= 0 && discountAmount <= 0) {
-                AdminUI.showToast('يرجى تحديد نسبة الخصم أو قيمة الخصم الثابت', 'warning');
+                AdminUI.showToast('ظٹط±ط¬ظ‰ طھط­ط¯ظٹط¯ ظ†ط³ط¨ط© ط§ظ„ط®طµظ… ط£ظˆ ظ‚ظٹظ…ط© ط§ظ„ط®طµظ… ط§ظ„ط«ط§ط¨طھ', 'warning');
                 return;
             }
 
-            AdminUI.setButtonLoading(submitBtn, true, editingCouponId ? 'جاري التحديث...' : 'جاري الحفظ...');
+            AdminUI.setButtonLoading(submitBtn, true, editingCouponId ? 'ط¬ط§ط±ظٹ ط§ظ„طھط­ط¯ظٹط«...' : 'ط¬ط§ط±ظٹ ط§ظ„ط­ظپط¸...');
 
             try {
                 const headers = AdminAuth.getHeaders(true);
@@ -366,13 +371,13 @@
                 }
 
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.error || 'فشل حفظ الكوبون');
+                if (!res.ok) throw new Error(data.error || 'ظپط´ظ„ ط­ظپط¸ ط§ظ„ظƒظˆط¨ظˆظ†');
 
-                AdminUI.showToast(editingCouponId ? 'تم تحديث قسيمة الخصم بنجاح! 🎉' : 'تم إنشاء قسيمة الخصم بنجاح! 🎉', 'success');
+                AdminUI.showToast(editingCouponId ? 'طھظ… طھط­ط¯ظٹط« ظ‚ط³ظٹظ…ط© ط§ظ„ط®طµظ… ط¨ظ†ط¬ط§ط­! ًںژ‰' : 'طھظ… ط¥ظ†ط´ط§ط، ظ‚ط³ظٹظ…ط© ط§ظ„ط®طµظ… ط¨ظ†ط¬ط§ط­! ًںژ‰', 'success');
                 closeCouponModal();
                 loadAdminCoupons();
             } catch (err) {
-                AdminUI.showToast('خطأ: ' + err.message, 'error');
+                AdminUI.showToast('ط®ط·ط£: ' + err.message, 'error');
             } finally {
                 AdminUI.setButtonLoading(submitBtn, false);
             }
@@ -388,16 +393,16 @@
                     body: JSON.stringify({ status: newStatus })
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.error || 'فشل تحديث الحالة');
-                AdminUI.showToast('تم تحديث حالة الكوبون بنجاح', 'success');
+                if (!res.ok) throw new Error(data.error || 'ظپط´ظ„ طھط­ط¯ظٹط« ط§ظ„ط­ط§ظ„ط©');
+                AdminUI.showToast('طھظ… طھط­ط¯ظٹط« ط­ط§ظ„ط© ط§ظ„ظƒظˆط¨ظˆظ† ط¨ظ†ط¬ط§ط­', 'success');
                 loadAdminCoupons();
             } catch (err) {
-                AdminUI.showToast('خطأ: ' + err.message, 'error');
+                AdminUI.showToast('ط®ط·ط£: ' + err.message, 'error');
             }
         }
 
         async function deleteCoupon(id) {
-            const confirmed = await AdminUI.confirm('هل أنت متأكد من رغبتك في حذف هذا الكوبون؟', 'حذف الكوبون');
+            const confirmed = await AdminUI.confirm('ظ‡ظ„ ط£ظ†طھ ظ…طھط£ظƒط¯ ظ…ظ† ط±ط؛ط¨طھظƒ ظپظٹ ط­ط°ظپ ظ‡ط°ط§ ط§ظ„ظƒظˆط¨ظˆظ†طں', 'ط­ط°ظپ ط§ظ„ظƒظˆط¨ظˆظ†');
             if (!confirmed) return;
 
             try {
@@ -408,13 +413,14 @@
                     headers
                 });
                 const data = await res.json().catch(() => ({}));
-                if (!res.ok) throw new Error(data.error || 'فشل حذف الكوبون');
-                AdminUI.showToast('تم حذف الكوبون بنجاح', 'success');
+                if (!res.ok) throw new Error(data.error || 'ظپط´ظ„ ط­ط°ظپ ط§ظ„ظƒظˆط¨ظˆظ†');
+                AdminUI.showToast('طھظ… ط­ط°ظپ ط§ظ„ظƒظˆط¨ظˆظ† ط¨ظ†ط¬ط§ط­', 'success');
                 loadAdminCoupons();
             } catch (err) {
-                AdminUI.showToast('خطأ: ' + err.message, 'error');
+                AdminUI.showToast('ط®ط·ط£: ' + err.message, 'error');
                 }
     }
 </script>
 </body>
 </html>
+

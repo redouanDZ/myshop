@@ -69,7 +69,7 @@ const AdminAuth = {
             return user;
         } catch (e) {
             this.clearAuth();
-            window.location.href = '../account.html';
+            window.location.href = '../index.html';
             return null;
         }
     },
@@ -92,7 +92,7 @@ const AdminAuth = {
         } catch (e) {}
 
         this.clearAuth();
-        window.location.href = '../account.html';
+        window.location.href = '../index.html';
     }
 };
 
@@ -169,6 +169,7 @@ const AdminUI = {
     },
 
     initLogoutHandler() {
+        // Sidebar logout button
         const logoutBtn = document.getElementById('adminLogoutBtn');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', (e) => {
@@ -176,6 +177,15 @@ const AdminUI = {
                 AdminAuth.logout();
             });
         }
+        
+        // Header logout buttons
+        const headerLogoutBtns = document.querySelectorAll('.admin-logout-btn');
+        headerLogoutBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                AdminAuth.logout();
+            });
+        });
     },
 
     showToast(message, type = 'info', duration = 3500) {
