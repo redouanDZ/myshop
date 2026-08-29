@@ -3447,9 +3447,11 @@ body.dark-mode .back-to-top-btn:hover {
     background: var(--card-bg, #ffffff);
     color: var(--text-color, #1e293b);
     width: 100%;
-    max-width: 480px;
-    border-radius: 24px;
-    padding: 32px;
+    max-width: 460px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 20px;
+    padding: 24px 28px;
     box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border-color, #e2e8f0);
     position: relative;
@@ -3460,13 +3462,13 @@ body.dark-mode .back-to-top-btn:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
     border-bottom: 1px solid var(--border-color, #e2e8f0);
 }
 
 .modal-header h2 {
-    font-size: 24px;
+    font-size: 20px;
     font-weight: 800;
     margin: 0;
     color: var(--dark-color);
@@ -3475,7 +3477,7 @@ body.dark-mode .back-to-top-btn:hover {
 .close-modal {
     background: transparent;
     border: none;
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 300;
     color: var(--light-text);
     cursor: pointer;
@@ -3488,15 +3490,21 @@ body.dark-mode .back-to-top-btn:hover {
     transform: scale(1.15);
 }
 
+.modal-body .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
 .modal-body .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 13px;
 }
 
 .modal-body .form-group label {
     display: block;
-    font-weight: 700;
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 5px;
     color: var(--dark-color);
 }
 
@@ -3505,12 +3513,12 @@ body.dark-mode .back-to-top-btn:hover {
 .modal-body .form-group input[type="tel"],
 .modal-body .form-group input[type="password"] {
     width: 100%;
-    padding: 14px 18px;
-    border-radius: 14px;
+    padding: 10px 14px;
+    border-radius: 10px;
     border: 1px solid var(--border-color, #cbd5e1);
     background: var(--light-color, #f8fafc);
     color: var(--text-color);
-    font-size: 15px;
+    font-size: 14px;
     font-family: inherit;
     outline: none;
     transition: var(--transition);
@@ -3519,7 +3527,7 @@ body.dark-mode .back-to-top-btn:hover {
 .modal-body .form-group input:focus {
     border-color: var(--primary-color);
     background: var(--card-bg, #ffffff);
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
 }
 
 .modal-body .btn {

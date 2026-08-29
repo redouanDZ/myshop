@@ -1,232 +1,5 @@
 
 /**
- * User Account Management System
- * Provides functions for login, logout, and user profile management
- */
-
-// API endpoint URLs
-const API_BASE_URL = '/api';
-
-// Notification helper
-function showNotification(msg, type = 'success') {
-    if (window.showToast) {
-        window.showToast(msg, type === 'error' ? 'error' : type === 'warning' ? 'warning' : 'success');
-    } else {
-        alert(msg);
-    }
-}
-
-// Helper to safely update cart UI if available
-function updateCartUI() {
-    if (window.loadCart) window.loadCart();
-}
-
-function readSessionUser() {
-    try {
-        const raw = sessionStorage.getItem('currentUser');
-        return raw ? JSON.parse(raw) : null;
-    } catch (error) {
-        return null;
-    }
-}
-
-function saveSessionUser(user) {
-    if (!user) {
-        sessionStorage.removeItem('currentUser');
-        return;
-    }
-    sessionStorage.setItem('currentUser', JSON.stringify(user));
-}
-
-function clearSessionAuthState() {
-    sessionStorage.removeItem('currentUser');
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('rememberedUser');
-    localStorage.removeItem('redirectAfterLogin');
-}
-
-async function getCsrfToken() {
-    const cookieMatch = document.cookie.match(/(?:^|;\s*)csrf_token=([^;]+)/);
-    if (cookieMatch) {
-        return decodeURIComponent(cookieMatch[1]);
-    }
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/csrf-token`, { credentials: 'include' });
-        const data = await response.json();
-        return data.csrfToken || '';
-    } catch (error) {
-        return '';
-    }
-}
-
-async function fetchJson(url, options = {}) {
-    const method = (options.method || 'GET').toUpperCase();
-    const isMutatingRequest = !['GET', 'HEAD', 'OPTIONS'].includes(method);
-    const csrfToken = isMutatingRequest ? await getCsrfToken() : '';
-
-    const headers = {
-        ...(options.headers || {})
-    };
-
-    if (!(headers['Content-Type'] || headers['content-type'])) {
-        if (options.body && typeof options.body === 'string') {
-            headers['Content-Type'] = 'application/json';
-        }
-    }
-
-    if (isMutatingRequest && csrfToken) {
-        headers['X-CSRF-Token'] = csrfToken;
-    }
-
-    return fetch(url, {
-        ...options,
-        credentials: 'include',
-        headers
-    });
-}
-
-// Call functions when page loads
-document.addEventListener('DOMContentLoaded', function() {
-    checkUserLoginStatus();
-    initAuthButtons();
-    initLoginForm();
-    initSignupForm();
-});
-
-/**
- * Check user login status
- */
-async function checkUserLoginStatus() {
-    try {
-        const response = await fetchJson(`${API_BASE_URL}/auth/session`);
-        if (!response.ok) {
-            clearSessionAuthState();
-            return false;
-        }
-
-        const data = await response.json();
-        if (!data.user) {
-            clearSessionAuthState();
-            return false;
-        }
-
-        saveSessionUser(data.user);
-        updateUIForLoggedInUser(data.user);
-        return true;
-    } catch (error) {
-        clearSessionAuthState();
-        return false;
-    }
-}
-
-/**
- * Update UI for logged-in user
- * @param {Object} user - User data object
- */
-function updateUIForLoggedInUser(user) {
-    const userIcon = document.querySelector('.user-icon');
-    if (userIcon) {
-        let wrapper = userIcon.closest('.user-menu-wrapper');
-        if (!wrapper) {
-            wrapper = document.createElement('div');
-            wrapper.className = 'user-menu-wrapper';
-            wrapper.style.cssText = 'position: relative; display: inline-flex; align-items: center;';
-            userIcon.parentNode.insertBefore(wrapper, userIcon);
-            wrapper.appendChild(userIcon);
-        }
-
-        userIcon.innerHTML = '<i class="fas fa-user-check" style="color: var(--primary-color);"></i>';
-        userIcon.setAttribute('title', `مرحباً، ${user.username || user.name || 'حسابي'}`);
-        userIcon.removeAttribute('href');
-
-        const usernameDisplay = user.username || user.name || 'حسابي';
-        let dropdown = wrapper.querySelector('.user-dropdown');
-        if (!dropdown) {
-            dropdown = document.createElement('div');
-            dropdown.className = 'user-dropdown';
-            wrapper.appendChild(dropdown);
-        }
-
-        dropdown.innerHTML = `
-            <div class="user-info" style="padding: 12px 16px; border-bottom: 1px solid var(--border-color, #e2e8f0); font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-user-circle" style="font-size: 1.3rem; color: var(--primary-color);"></i>
-                <span style="color: var(--text-color); font-size: 0.95rem;">${usernameDisplay}</span>
-                ${user.role === 'admin' ? '<span class="admin-badge" style="background:#e74c3c; color:#fff; padding:2px 6px; border-radius:4px; font-size:10px; margin-inline-start: auto;">Admin</span>' : ''}
-            </div>
-            <ul style="list-style: none; padding: 6px 0; margin: 0;">
-                <li><a href="account.html?tab=profile"><i class="fas fa-user-cog" style="margin-left: 8px;"></i>الملف الشخصي</a></li>
-                <li><a href="account.html?tab=addresses"><i class="fas fa-map-marker-alt" style="margin-left: 8px;"></i>عناوين الشحن</a></li>
-                <li><a href="account.html?tab=orders"><i class="fas fa-box" style="margin-left: 8px;"></i>طلباتي</a></li>
-                <li><a href="wishlist.html"><i class="fas fa-heart" style="margin-left: 8px;"></i>المفضلة</a></li>
-                ${user.role === 'admin' ? '<li><a href="admin/index.html"><i class="fas fa-tachometer-alt" style="margin-left: 8px;"></i>لوحة التحكم</a></li>' : ''}
-                <li style="border-top: 1px solid var(--border-color, #e2e8f0); margin-top: 4px; padding-top: 4px;">
-                    <a href="#" id="logout-btn" style="color: #ef4444 !important;"><i class="fas fa-sign-out-alt" style="margin-left: 8px;"></i>تسجيل الخروج</a>
-                </li>
-            </ul>
-        `;
-
-        const logoutBtn = dropdown.querySelector('#logout-btn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                logoutUser();
-            });
-        }
-
-        userIcon.onclick = function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            dropdown.classList.toggle('show');
-        };
-
-        document.addEventListener('click', function(e) {
-            if (!wrapper.contains(e.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
-    }
-
-    updateCartUI();
-}
-
-/**
- * Initialize authentication buttons
- */
-function initAuthButtons() {
-    // Login button
-    const loginBtn = document.getElementById('login-btn');
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showLoginForm();
-        });
-    }
-
-    // Signup button
-    const signupBtn = document.getElementById('signup-btn');
-    if (signupBtn) {
-        signupBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            showSignupForm();
-        });
-    }
-
-    // User icon click when logged out
-    const userIcon = document.querySelector('.user-icon');
-    if (userIcon && !userIcon.querySelector('.user-dropdown')) {
-        userIcon.style.cursor = 'pointer';
-        userIcon.addEventListener('click', async function(e) {
-            const user = readSessionUser();
-            if (!user) {
-                e.preventDefault();
-                showLoginForm();
-            }
-        });
-    }
-}
-
-/**
  * تهيئة نموذج تسجيل الدخول
  */
 function initLoginForm() {
@@ -256,7 +29,6 @@ function initSignupForm() {
  * عرض نموذج تسجيل الدخول
  */
 function showLoginForm() {
-    // إنشاء أو العثور على نافذة منبثقة
     let modal = document.getElementById('auth-modal');
 
     if (!modal) {
@@ -269,34 +41,34 @@ function showLoginForm() {
     modal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
-                <h2>تسجيل الدخول</h2>
+                <h2 data-i18n="auth.login_title">تسجيل الدخول</h2>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="login-form">
                     <div class="form-group">
-                        <label for="login-email">البريد الإلكتروني</label>
-                        <input type="email" id="login-email" required>
+                        <label for="login-email" data-i18n="auth.email">البريد الإلكتروني</label>
+                        <input type="email" id="login-email" required placeholder="name@example.com">
                     </div>
                     <div class="form-group">
-                        <label for="login-password">كلمة المرور</label>
-                        <input type="password" id="login-password" required>
+                        <label for="login-password" data-i18n="auth.password">كلمة المرور</label>
+                        <input type="password" id="login-password" required placeholder="******">
                     </div>
-                    <div class="form-group">
-                        <label>
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="font-size: 0.85rem; font-weight: normal; cursor: pointer;">
                             <input type="checkbox" id="remember-me"> تذكرني
                         </label>
                     </div>
-                    <button type="submit" class="btn" style="width: 100%;">تسجيل الدخول</button>
+                    <button type="submit" class="btn" style="width: 100%;"><span data-i18n="auth.login_btn">تسجيل الدخول</span></button>
 
-                    <div style="display: flex; align-items: center; margin: 18px 0; text-align: center; color: var(--light-text, #94a3b8); font-size: 0.88rem;">
+                    <div style="display: flex; align-items: center; margin: 14px 0; text-align: center; color: var(--light-text, #94a3b8); font-size: 0.85rem;">
                         <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
-                        <span style="padding: 0 12px; font-weight: 600;">أو عبر</span>
+                        <span style="padding: 0 12px; font-weight: 600;">أو</span>
                         <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
                     </div>
 
-                    <button type="button" class="google-btn" onclick="initiateGoogleLogin()" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border: 1px solid #cbd5e1; border-radius: 12px; background: #ffffff; color: #1e293b; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                        <svg width="20" height="20" viewBox="0 0 24 24">
+                    <button type="button" class="google-btn" onclick="initiateGoogleLogin()" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 10px; background: #ffffff; color: #1e293b; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
                             <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
                             <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.04 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
@@ -305,9 +77,9 @@ function showLoginForm() {
                         <span>متابعة باستخدام Google</span>
                     </button>
 
-                    <div class="auth-links" style="margin-top: 18px;">
-                        <a href="#" id="show-signup">إنشاء حساب جديد</a>
-                        <a href="#">نسيت كلمة المرور؟</a>
+                    <div class="auth-links" style="margin-top: 14px;">
+                        <a href="#" id="show-signup" data-i18n="auth.create_account">إنشاء حساب جديد</a>
+                        <a href="#" id="show-forgot-password" data-i18n="auth.forgot_password">نسيت كلمة المرور؟</a>
                     </div>
                 </form>
             </div>
@@ -317,9 +89,14 @@ function showLoginForm() {
     // إظهار النافذة
     modal.style.display = 'block';
 
+    if (window.I18n && typeof window.I18n.translatePage === 'function') {
+        window.I18n.translatePage(modal);
+    }
+
     // إضافة مستمعي الأحداث
     const closeModalBtn = modal.querySelector('.close-modal');
     const showSignupLink = modal.querySelector('#show-signup');
+    const showForgotLink = modal.querySelector('#show-forgot-password');
     const loginForm = modal.querySelector('#login-form');
 
     if (loginForm) {
@@ -329,21 +106,31 @@ function showLoginForm() {
         });
     }
 
-    closeModalBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    }
 
-    showSignupLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        showSignupForm();
-    });
+    if (showSignupLink) {
+        showSignupLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showSignupForm();
+        });
+    }
+
+    if (showForgotLink) {
+        showForgotLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showForgotPasswordForm();
+        });
+    }
 }
 
 /**
  * عرض نموذج إنشاء حساب
  */
 function showSignupForm() {
-    // إنشاء أو العثور على نافذة منبثقة
     let modal = document.getElementById('auth-modal');
 
     if (!modal) {
@@ -356,46 +143,50 @@ function showSignupForm() {
     modal.innerHTML = `
         <div class="modal-content">
             <div class="modal-header">
-                <h2>إنشاء حساب جديد</h2>
+                <h2 data-i18n="auth.register_title">إنشاء حساب جديد</h2>
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="signup-form">
-                    <div class="form-group">
-                        <label for="signup-name">الاسم الكامل</label>
-                        <input type="text" id="signup-name" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="signup-name" data-i18n="auth.username">الاسم الكامل</label>
+                            <input type="text" id="signup-name" required placeholder="الاسم الكامل">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-phone" data-i18n="auth.phone">رقم الهاتف</label>
+                            <input type="tel" id="signup-phone" required placeholder="05/06/07...">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="signup-email">البريد الإلكتروني</label>
-                        <input type="email" id="signup-email" required>
+                        <label for="signup-email" data-i18n="auth.email">البريد الإلكتروني</label>
+                        <input type="email" id="signup-email" required placeholder="name@example.com">
                     </div>
-                    <div class="form-group">
-                        <label for="signup-phone">رقم الهاتف</label>
-                        <input type="tel" id="signup-phone" required>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="signup-password" data-i18n="auth.password">كلمة المرور</label>
+                            <input type="password" id="signup-password" required minlength="6" placeholder="******">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-confirm-password" data-i18n="auth.confirm_new_password">تأكيد كلمة المرور</label>
+                            <input type="password" id="signup-confirm-password" required minlength="6" placeholder="******">
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="signup-password">كلمة المرور</label>
-                        <input type="password" id="signup-password" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label for="signup-confirm-password">تأكيد كلمة المرور</label>
-                        <input type="password" id="signup-confirm-password" required minlength="6">
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="agree-terms" required> أوافق على الشروط والأحكام
+                    <div class="form-group" style="margin-bottom: 12px;">
+                        <label style="font-size: 0.85rem; font-weight: normal; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="agree-terms" required> <span>أوافق على الشروط والأحكام</span>
                         </label>
                     </div>
-                    <button type="submit" class="btn" style="width: 100%;">إنشاء الحساب</button>
+                    <button type="submit" class="btn" style="width: 100%;"><span data-i18n="auth.register_btn">إنشاء الحساب</span></button>
 
-                    <div style="display: flex; align-items: center; margin: 18px 0; text-align: center; color: var(--light-text, #94a3b8); font-size: 0.88rem;">
+                    <div style="display: flex; align-items: center; margin: 14px 0; text-align: center; color: var(--light-text, #94a3b8); font-size: 0.85rem;">
                         <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
-                        <span style="padding: 0 12px; font-weight: 600;">أو عبر</span>
+                        <span style="padding: 0 12px; font-weight: 600;">أو</span>
                         <div style="flex: 1; height: 1px; background: var(--border-color, #e2e8f0);"></div>
                     </div>
 
-                    <button type="button" class="google-btn" onclick="initiateGoogleLogin()" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 12px 18px; border: 1px solid #cbd5e1; border-radius: 12px; background: #ffffff; color: #1e293b; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
-                        <svg width="20" height="20" viewBox="0 0 24 24">
+                    <button type="button" class="google-btn" onclick="initiateGoogleLogin()" style="width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; padding: 10px 16px; border: 1px solid #cbd5e1; border-radius: 10px; background: #ffffff; color: #1e293b; font-size: 0.9rem; font-weight: 700; cursor: pointer; transition: all 0.2s ease;">
+                        <svg width="18" height="18" viewBox="0 0 24 24">
                             <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/>
                             <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.33 24 12 24z"/>
                             <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 10.04 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
@@ -404,18 +195,20 @@ function showSignupForm() {
                         <span>التسجيل باستخدام Google</span>
                     </button>
 
-                    <div class="auth-links" style="margin-top: 18px;">
-                        <a href="#" id="show-login">لديك حساب بالفعل؟ سجل الدخول</a>
+                    <div class="auth-links" style="margin-top: 14px; justify-content: center;">
+                        <a href="#" id="show-login" data-i18n="auth.have_account">لديك حساب بالفعل؟ سجل الدخول</a>
                     </div>
                 </form>
             </div>
         </div>
     `;
 
-    // إظهار النافذة
     modal.style.display = 'block';
 
-    // إضافة مستمعي الأحداث
+    if (window.I18n && typeof window.I18n.translatePage === 'function') {
+        window.I18n.translatePage(modal);
+    }
+
     const closeModalBtn = modal.querySelector('.close-modal');
     const showLoginLink = modal.querySelector('#show-login');
     const signupForm = modal.querySelector('#signup-form');
@@ -427,16 +220,19 @@ function showSignupForm() {
         });
     }
 
-    closeModalBtn.addEventListener('click', function() {
-        modal.style.display = 'none';
-    });
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+    }
 
-    showLoginLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        showLoginForm();
-    });
+    if (showLoginLink) {
+        showLoginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginForm();
+        });
+    }
 }
-
 /**
  * عرض نموذج استعادة كلمة المرور
  */
