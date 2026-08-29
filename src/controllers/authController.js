@@ -222,14 +222,23 @@ async function refreshSession(req, res) {
 
 async function getSession(req, res) {
     try {
-        const user = await db.findUserById(req.userId);
+        const token = getAccessTokenFromRequest(req);
+        if (!token) {
+            return res.json({ user: null });
+        }
+
+        const decoded = jwt.verify(token, config.JWT_SECRET);
+        if (!decoded || !decoded.userId) {
+            return res.json({ user: null });
+        }
+
+        const user = await db.findUserById(decoded.userId);
         if (!user) {
-            return res.status(404).json({ message: 'المستخدم غير موجود' });
+            return res.json({ user: null });
         }
         res.json({ user: sanitizeUser(user) });
     } catch (error) {
-        console.error('Session fetch error:', error);
-        res.status(500).json({ message: 'فشل في جلب جلسة المستخدم' });
+        res.json({ user: null });
     }
 }
 

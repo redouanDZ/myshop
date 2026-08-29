@@ -280,8 +280,10 @@
       appliedPromo = getSavedPromo();
       discountRate = appliedPromo ? (appliedPromo.discount || 0) : 0;
 
-      try {
-        const response = await fetch('/api/cart', { credentials: 'include' });
+      const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+      if (currentUser) {
+        try {
+          const response = await fetch('/api/cart', { credentials: 'include' });
         if (response.ok) {
           const apiItems = await response.json();
           if (Array.isArray(apiItems) && apiItems.length > 0) {
@@ -301,8 +303,9 @@
             return;
           }
         }
-      } catch (error) {
-        console.warn('Could not fetch remote cart, using local cart:', error);
+        } catch (error) {
+          console.warn('Could not fetch remote cart, using local cart:', error);
+        }
       }
 
       loadCartFromLocalStorage();
@@ -426,11 +429,15 @@
       updateSummary();
       updateHeaderCount();
 
-      fetch(`/api/cart/${item.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ quantity: newQty })
-      }).catch(() => {});
+      const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+      if (currentUser) {
+        fetch(`/api/cart/${item.id}`, {
+          method: 'PUT',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ quantity: newQty })
+        }).catch(() => {});
+      }
     }
 
     // حذف المنتج تفاعلياً وبسلاسة
@@ -449,7 +456,10 @@
         updateSummary();
         updateHeaderCount();
 
-        fetch(`/api/cart/${id}`, { method: 'DELETE' }).catch(() => {});
+        const currentUser = sessionStorage.getItem('currentUser') || localStorage.getItem('currentUser');
+        if (currentUser) {
+          fetch(`/api/cart/${id}`, { method: 'DELETE', credentials: 'include' }).catch(() => {});
+        }
       }, 250);
     }
 

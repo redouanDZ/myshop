@@ -12,7 +12,7 @@ router.post('/auth/verify-email', authController.verifyEmail);
 router.post('/auth/forgot-password', authController.forgotPassword);
 router.post('/auth/reset-password', authController.resetPassword);
 router.post('/auth/refresh', authController.refreshSession);
-router.get('/auth/session', requireAuth, authController.getSession);
+router.get('/auth/session', authController.getSession);
 router.get('/auth/sessions', requireAuth, authController.listSessions);
 router.post('/auth/sessions/:sessionId/revoke', requireAuth, authController.revokeUserSession);
 
