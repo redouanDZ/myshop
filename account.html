@@ -668,7 +668,7 @@
     </footer>
 
     <!-- Scripts -->
-    <script src="js/api-client.js"></script>
+        <script src="js/api-client.js"></script>
     <script src="js/main.js"></script>
     <script src="js/user-system.js"></script>
     <script src="js/cart.js"></script>
@@ -676,12 +676,56 @@
     <script src="js/i18n.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Check auth
-            const currentUser = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+            // Read or fetch current user
+            let currentUser = null;
+            try {
+                currentUser = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser') || 'null');
+            } catch (e) {}
+
+            // Populate UI with stored user immediately if present
+            if (currentUser) {
+                applyUserData(currentUser);
+            }
+
+            // Sync latest session/profile from server
+            try {
+                const sessionRes = await fetch('/api/auth/session', { credentials: 'include' });
+                if (sessionRes.ok) {
+                    const sessionData = await sessionRes.json();
+                    if (sessionData && sessionData.user) {
+                        currentUser = sessionData.user;
+                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                        applyUserData(currentUser);
+                    }
+                }
+            } catch (e) {}
+
             if (!currentUser) {
-                // Prompt login modal or notice
                 if (window.showLoginForm) {
                     window.showLoginForm();
+                }
+            }
+
+            function applyUserData(user) {
+                if (!user) return;
+                const name = user.username || user.name || (window.I18n ? window.I18n.t('account.user_default', 'مستخدم') : 'مستخدم');
+                const email = user.email || '';
+                const phone = user.phone || '';
+
+                const sidebarName = document.getElementById('sidebar-user-name');
+                const sidebarEmail = document.getElementById('sidebar-user-email');
+                const profileName = document.getElementById('profile-name');
+                const profileEmail = document.getElementById('profile-email');
+                const profilePhone = document.getElementById('profile-phone');
+                const avatarIcon = document.getElementById('avatar-icon');
+
+                if (sidebarName) sidebarName.textContent = name;
+                if (sidebarEmail) sidebarEmail.textContent = email;
+                if (profileName) profileName.value = name;
+                if (profileEmail) profileEmail.value = email;
+                if (profilePhone) profilePhone.value = phone;
+                if (avatarIcon && name) {
+                    avatarIcon.innerHTML = name.charAt(0).toUpperCase();
                 }
             }
 
@@ -725,176 +769,183 @@
                 switchTab(initialTab);
             }
 
-            // Load User Profile Data
-            async function loadProfile() {
-                try {
-                    const res = await fetch('/api/user/profile', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
-                    if (res.ok) {
-                        const user = await res.json();
-                        document.getElementById('sidebar-user-name').textContent = user.username || user.name || window.I18n.t('account.user_default', 'مستخدم');
-                        document.getElementById('sidebar-user-email').textContent = user.email || '';
-                        document.getElementById('profile-name').value = user.username || user.name || '';
-                        document.getElementById('profile-email').value = user.email || '';
-                        document.getElementById('profile-phone').value = user.phone || '';
-                        
-                        // Set avatar letter
-                        const avatarIcon = document.getElementById('avatar-icon');
-                        if (user.username) {
-                            avatarIcon.innerHTML = user.username.charAt(0).toUpperCase();
-                        }
-                    }
-                } catch (e) {
-
-                }
-            }
-
-            loadProfile();
-
             // Handle Profile Form Submission
-            document.getElementById('profile-update-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const username = document.getElementById('profile-name').value.trim();
-                const email = document.getElementById('profile-email').value.trim();
-                const phone = document.getElementById('profile-phone').value.trim();
-                const newPass = document.getElementById('profile-new-pass').value;
-                const confirmPass = document.getElementById('profile-confirm-pass').value;
+            const profileForm = document.getElementById('profile-update-form');
+            if (profileForm) {
+                profileForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const username = document.getElementById('profile-name').value.trim();
+                    const email = document.getElementById('profile-email').value.trim();
+                    const phone = document.getElementById('profile-phone').value.trim();
+                    const newPass = document.getElementById('profile-new-pass').value;
+                    const confirmPass = document.getElementById('profile-confirm-pass').value;
 
-                if (newPass && newPass !== confirmPass) {
-                    showToast(window.I18n.t('messages.pass_mismatch', 'كلمتا المرور غير متطابقتين'), 'error');
-                    return;
-                }
-
-                try {
-                    const payload = { username, email, phone };
-                    if (newPass) payload.password = newPass;
-
-                    const res = await fetch('/api/user/profile', {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    const data = await res.json();
-                    if (res.ok) {
-                        showToast(window.I18n.t('messages.data_update_success', 'تم تحديث البيانات بنجاح 🎉'), 'success');
-                        localStorage.setItem('currentUser', JSON.stringify(data.user));
-                        loadProfile();
-                        document.getElementById('profile-new-pass').value = '';
-                        document.getElementById('profile-confirm-pass').value = '';
-                    } else {
-                        showToast(data.message || window.I18n.t('messages.data_update_error', 'حدث خطأ في تحديث البيانات'), 'error');
+                    if (newPass && newPass !== confirmPass) {
+                        showToast(window.I18n ? window.I18n.t('messages.pass_mismatch', 'كلمتا المرور غير متطابقتين') : 'كلمتا المرور غير متطابقتين', 'error');
+                        return;
                     }
-                } catch (err) {
-                    showToast(window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم'), 'error');
-                }
-            });
+
+                    try {
+                        const payload = { username, email, phone };
+                        if (newPass) payload.password = newPass;
+
+                        const headers = { 'Content-Type': 'application/json' };
+                        try {
+                            const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                            if (csrfRes.ok) {
+                                const csrfData = await csrfRes.json();
+                                if (csrfData && csrfData.csrfToken) headers['X-CSRF-Token'] = csrfData.csrfToken;
+                            }
+                        } catch (e) {}
+
+                        const res = await fetch('/api/user/profile', {
+                            method: 'PUT',
+                            credentials: 'include',
+                            headers,
+                            body: JSON.stringify(payload)
+                        });
+
+                        const data = await res.json();
+                        if (res.ok) {
+                            showToast(window.I18n ? window.I18n.t('messages.data_update_success', 'تم تحديث البيانات بنجاح 🎉') : 'تم تحديث البيانات بنجاح 🎉', 'success');
+                            if (data.user) {
+                                localStorage.setItem('currentUser', JSON.stringify(data.user));
+                                applyUserData(data.user);
+                            }
+                            document.getElementById('profile-new-pass').value = '';
+                            document.getElementById('profile-confirm-pass').value = '';
+                        } else {
+                            showToast(data.message || (window.I18n ? window.I18n.t('messages.data_update_error', 'حدث خطأ في تحديث البيانات') : 'حدث خطأ في تحديث البيانات'), 'error');
+                        }
+                    } catch (err) {
+                        showToast(window.I18n ? window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم') : 'خطأ في الاتصال بالخادم', 'error');
+                    }
+                });
+            }
 
             // Load Saved Addresses
             async function loadAddresses() {
                 const container = document.getElementById('addresses-container');
+                if (!container) return;
                 try {
-                    const res = await fetch('/api/user/profile', {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    });
+                    const res = await fetch('/api/user/profile', { credentials: 'include' });
                     if (res.ok) {
                         const user = await res.json();
                         const addresses = user.addresses || [];
 
                         if (addresses.length === 0) {
-                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;">${window.I18n.t('account.no_addresses', 'لا توجد عناوين شحن محفوظة حتى الآن.')}</div>`;
+                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><i class="fas fa-map-marker-alt" style="font-size: 2.5rem; margin-bottom: 12px; display: block; color: #cbd5e1;"></i><span data-i18n="account.no_addresses">${window.I18n ? window.I18n.t('account.no_addresses', 'لا توجد عناوين شحن محفوظة حتى الآن.') : 'لا توجد عناوين شحن محفوظة حتى الآن.'}</span></div>`;
                             return;
                         }
 
                         container.innerHTML = addresses.map(addr => `
                             <div class="address-card ${addr.isDefault ? 'default-address' : ''}">
-                                ${addr.isDefault ? '<span class="address-badge">العنوان الافتراضي</span>' : ''}
-                                <h4>${addr.title || window.I18n.t('account.address_fallback', 'عنوان')}</h4>
-                                <p><strong>${window.I18n.t('account.recipient_label', 'المستلم:')}</strong> ${addr.fullName}</p>
-                                <p><strong>${window.I18n.t('account.phone_label', 'الهاتف:')}</strong> ${addr.phone}</p>
-                                <p><strong>${window.I18n.t('account.city_label', 'المدينة:')}</strong> ${addr.city}</p>
-                                <p><strong>${window.I18n.t('account.address_label', 'العنوان:')}</strong> ${addr.address}</p>
+                                ${addr.isDefault ? '<span class="address-badge">' + (window.I18n ? window.I18n.t('account.default_badge', 'العنوان الافتراضي') : 'العنوان الافتراضي') + '</span>' : ''}
+                                <h4>${addr.title || (window.I18n ? window.I18n.t('account.address_fallback', 'عنوان') : 'عنوان')}</h4>
+                                <p><strong>${window.I18n ? window.I18n.t('account.recipient_label', 'المستلم:') : 'المستلم:'}</strong> ${addr.fullName}</p>
+                                <p><strong>${window.I18n ? window.I18n.t('account.phone_label', 'الهاتف:') : 'الهاتف:'}</strong> ${addr.phone}</p>
+                                <p><strong>${window.I18n ? window.I18n.t('account.city_label', 'المدينة:') : 'المدينة:'}</strong> ${addr.city}</p>
+                                <p><strong>${window.I18n ? window.I18n.t('account.address_label', 'العنوان:') : 'العنوان:'}</strong> ${addr.address}</p>
                                 <div class="address-actions">
                                     <button class="btn-sm-danger" onclick="deleteAddress(${addr.id})">
-                                        <i class="fas fa-trash"></i> {window.I18n.t()}
+                                        <i class="fas fa-trash"></i> <span>${window.I18n ? window.I18n.t('common.delete', 'حذف') : 'حذف'}</span>
                                     </button>
                                 </div>
                             </div>
                         `).join('');
                     }
-                } catch (e) {
-
-                }
+                } catch (e) {}
             }
 
             // Modal address handlers
             const addressModal = document.getElementById('add-address-modal');
-            document.getElementById('open-add-address-btn').addEventListener('click', () => addressModal.classList.add('show'));
-            document.getElementById('close-address-modal').addEventListener('click', () => addressModal.classList.remove('show'));
-            document.getElementById('cancel-address-btn').addEventListener('click', () => addressModal.classList.remove('show'));
+            const openAddBtn = document.getElementById('open-add-address-btn');
+            const closeAddBtn = document.getElementById('close-address-modal');
+            const cancelAddBtn = document.getElementById('cancel-address-btn');
 
-            document.getElementById('add-address-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const payload = {
-                    title: document.getElementById('addr-title').value.trim(),
-                    fullName: document.getElementById('addr-fullname').value.trim(),
-                    phone: document.getElementById('addr-phone').value.trim(),
-                    city: document.getElementById('addr-city').value.trim(),
-                    address: document.getElementById('addr-street').value.trim(),
-                    isDefault: document.getElementById('addr-default').checked
-                };
+            if (openAddBtn) openAddBtn.addEventListener('click', () => addressModal && addressModal.classList.add('show'));
+            if (closeAddBtn) closeAddBtn.addEventListener('click', () => addressModal && addressModal.classList.remove('show'));
+            if (cancelAddBtn) cancelAddBtn.addEventListener('click', () => addressModal && addressModal.classList.remove('show'));
 
-                try {
-                    const res = await fetch('/api/user/addresses', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify(payload)
-                    });
-                    if (res.ok) {
-                        showToast(window.I18n.t('messages.address_saved', 'تم حفظ العنوان بنجاح'), 'success');
-                        addressModal.classList.remove('show');
-                        document.getElementById('add-address-form').reset();
-                        loadAddresses();
-                    } else {
-                        showToast(window.I18n.t('messages.address_save_error', 'حدث خطأ أثناء حفظ العنوان'), 'error');
+            const addAddressForm = document.getElementById('add-address-form');
+            if (addAddressForm) {
+                addAddressForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const payload = {
+                        title: document.getElementById('addr-title').value.trim(),
+                        fullName: document.getElementById('addr-fullname').value.trim(),
+                        phone: document.getElementById('addr-phone').value.trim(),
+                        city: document.getElementById('addr-city').value.trim(),
+                        address: document.getElementById('addr-street').value.trim(),
+                        isDefault: document.getElementById('addr-default').checked
+                    };
+
+                    try {
+                        const headers = { 'Content-Type': 'application/json' };
+                        try {
+                            const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                            if (csrfRes.ok) {
+                                const csrfData = await csrfRes.json();
+                                if (csrfData && csrfData.csrfToken) headers['X-CSRF-Token'] = csrfData.csrfToken;
+                            }
+                        } catch (e) {}
+
+                        const res = await fetch('/api/user/addresses', {
+                            method: 'POST',
+                            credentials: 'include',
+                            headers,
+                            body: JSON.stringify(payload)
+                        });
+                        if (res.ok) {
+                            showToast(window.I18n ? window.I18n.t('messages.address_saved', 'تم حفظ العنوان بنجاح') : 'تم حفظ العنوان بنجاح', 'success');
+                            if (addressModal) addressModal.classList.remove('show');
+                            document.getElementById('add-address-form').reset();
+                            loadAddresses();
+                        } else {
+                            showToast(window.I18n ? window.I18n.t('messages.address_save_error', 'حدث خطأ أثناء حفظ العنوان') : 'حدث خطأ أثناء حفظ العنوان', 'error');
+                        }
+                    } catch (e) {
+                        showToast(window.I18n ? window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم') : 'خطأ في الاتصال بالخادم', 'error');
                     }
-                } catch (e) {
-                    showToast(window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم'), 'error');
-                }
-            });
+                });
+            }
 
             window.deleteAddress = async function(id) {
-                if (!confirm(window.I18n.t('messages.confirm_delete_address', 'هل أنت تأكد من إزالة هذا العنوان؟'))) return;
+                if (!confirm(window.I18n ? window.I18n.t('messages.confirm_delete_address', 'هل أنت متأكد من حذف هذا العنوان؟') : 'هل أنت متأكد من حذف هذا العنوان؟')) return;
                 try {
+                    const headers = {};
+                    try {
+                        const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                        if (csrfRes.ok) {
+                            const csrfData = await csrfRes.json();
+                            if (csrfData && csrfData.csrfToken) headers['X-CSRF-Token'] = csrfData.csrfToken;
+                        }
+                    } catch (e) {}
+
                     const res = await fetch(`/api/user/addresses/${id}`, {
                         method: 'DELETE',
-                        headers: { 'Authorization': `Bearer ${token}` }
+                        credentials: 'include',
+                        headers
                     });
                     if (res.ok) {
-                        showToast('تم {window.I18n.t()} العنوان بنجاح', 'info');
+                        showToast(window.I18n ? window.I18n.t('messages.address_deleted', 'تم حذف العنوان بنجاح') : 'تم حذف العنوان بنجاح', 'info');
                         loadAddresses();
                     }
                 } catch (e) {
-                    showToast('حدث خطأ في ال{window.I18n.t()}', 'error');
+                    showToast(window.I18n ? window.I18n.t('messages.server_error', 'حدث خطأ أثناء حذف العنوان') : 'حدث خطأ أثناء حذف العنوان', 'error');
                 }
             };
 
             // Load Orders
             async function loadUserOrders() {
                 const container = document.getElementById('orders-container');
+                if (!container) return;
                 try {
-                    const res = await fetch('/api/orders');
+                    const res = await fetch('/api/orders', { credentials: 'include' });
                     if (res.ok) {
                         const orders = await res.json();
-                        if (orders.length === 0) {
-                            container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;">{window.I18n.t()}</div>`;
+                        if (!Array.isArray(orders) || orders.length === 0) {
+                            container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;"><i class="fas fa-box-open" style="font-size: 2.5rem; margin-bottom: 12px; display: block; color: #cbd5e1;"></i><span>${window.I18n ? window.I18n.t('account.no_orders', 'لا توجد طلبات سابقة حتى الآن.') : 'لا توجد طلبات سابقة حتى الآن.'}</span></div>`;
                             return;
                         }
 
@@ -902,49 +953,53 @@
                             <div class="order-item-card">
                                 <div class="order-header-row">
                                     <div>
-                                        <span class="order-id-tag">${window.I18n.t('account.order_id', 'طلب #{id}').replace('{id}', ord.id)}</span>
+                                        <span class="order-id-tag">${window.I18n ? window.I18n.t('account.order_id', 'طلب #{id}').replace('{id}', ord.id) : 'طلب #' + ord.id}</span>
                                         <span style="font-size: 0.85rem; color: #7f8c8d; margin-right: 12px;">
-                                            ${new Date(ord.created_at || Date.now()).toLocaleDateString('ar-EG')}
+                                            ${new Date(ord.created_at || Date.now()).toLocaleDateString('ar-DZ')}
                                         </span>
                                     </div>
                                     <div>
                                         <span class="order-status-badge status-${ord.status}">${getStatusLabel(ord.status)}</span>
-                                        <strong style="margin-right: 15px; font-size: 1.1rem; color: var(--success-color);">${ord.total ? ord.total.toLocaleString() : '0'} ${window.I18n.t('common.currency_alt', 'د.ج')}</strong>
+                                        <strong style="margin-right: 15px; font-size: 1.1rem; color: var(--success-color); font-weight: 800;">${ord.total ? Number(ord.total).toLocaleString() : '0'} ${window.I18n ? window.I18n.t('common.currency', 'دج') : 'دج'}</strong>
                                     </div>
                                 </div>
-                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 5px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
                                     <p style="margin: 0; font-size: 0.9rem; color: #555;">
-                                        <strong>طريقة الدفع:</strong> ${ord.shippingInfo && ord.shippingInfo.paymentMethod === 'cod' ? '<span data-i18n="features.cod_title">الدفع عند الاستلام</span>' : 'بطاقة إلكترونية'}
+                                        <strong>${window.I18n ? window.I18n.t('account.payment_method_label', 'طريقة الدفع:') : 'طريقة الدفع:'}</strong> ${ord.payment_method === 'chargily' ? (window.I18n ? window.I18n.t('conf.epay', 'دفع إلكتروني (بطاقة ذهبية / CIB)') : 'دفع إلكتروني') : (window.I18n ? window.I18n.t('features.cod_title', 'الدفع عند الاستلام') : 'الدفع عند الاستلام')}
                                     </p>
-                                    <a href="order-confirmation.html?id=${ord.id}" class="order-details-btn">
-                                        ${window.I18n.t('account.view_details', 'عرض التفاصيل')} <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
+                                    <a href="order-confirmation.html?id=${ord.id}&phone=${encodeURIComponent(ord.phone || '')}&token=${encodeURIComponent(ord.tracking_token || '')}" class="order-details-btn">
+                                        ${window.I18n ? window.I18n.t('account.view_details', 'عرض التفاصيل') : 'عرض التفاصيل'} <i class="fas fa-chevron-left" style="font-size: 0.75rem;"></i>
                                     </a>
                                 </div>
                             </div>
                         `).join('');
+                    } else {
+                        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #7f8c8d;"><i class="fas fa-box-open" style="font-size: 2.5rem; margin-bottom: 12px; display: block; color: #cbd5e1;"></i><span>${window.I18n ? window.I18n.t('account.no_orders', 'لا توجد طلبات سابقة حتى الآن.') : 'لا توجد طلبات سابقة حتى الآن.'}</span></div>`;
                     }
                 } catch (e) {
-                    container.innerHTML = `<div style="text-align: center; padding: 20px;">{window.I18n.t()}</div>`;
+                    container.innerHTML = `<div style="text-align: center; padding: 30px; color: #ef4444;"><span>${window.I18n ? window.I18n.t('messages.server_error', 'حدث خطأ أثناء تحميل الطلبات') : 'حدث خطأ أثناء تحميل الطلبات'}</span></div>`;
                 }
             }
 
             function getStatusLabel(status) {
                 switch(status) {
-                    case 'pending': return window.I18n.t('account.status_pending_alt', 'قيد الانتظار');
-                    case 'processing': return window.I18n.t('account.status_processing_alt', 'جاري المعالجة');
-                    case 'shipped': return 'تم الشحن';
-                    case 'delivered': return 'تم التسليم';
-                    default: return status || 'قيد المعالجة';
+                    case 'pending': return window.I18n ? window.I18n.t('account.status_pending_alt', 'قيد الانتظار') : 'قيد الانتظار';
+                    case 'processing': return window.I18n ? window.I18n.t('account.status_processing_alt', 'جاري المعالجة') : 'جاري المعالجة';
+                    case 'shipped': return window.I18n ? window.I18n.t('order_status.shipped', 'تم الشحن') : 'تم الشحن';
+                    case 'delivered': return window.I18n ? window.I18n.t('order_status.delivered', 'تم التسليم') : 'تم التسليم';
+                    case 'cancelled': return window.I18n ? window.I18n.t('order_status.cancelled', 'ملغي') : 'ملغي';
+                    default: return status || 'قيد الانتظار';
                 }
             }
 
             // Load Wishlist Items
             async function loadUserWishlist() {
                 const container = document.getElementById('wishlist-container');
+                if (!container) return;
                 const wishlistIds = window.getWishlist ? window.getWishlist() : [];
 
                 if (wishlistIds.length === 0) {
-                    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><span data-i18n="account.wishlist_tab">قائمة المفضلة</span> فارغة حالياً.</div>`;
+                    container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><i class="fas fa-heart-broken" style="font-size: 2.5rem; margin-bottom: 12px; display: block; color: #cbd5e1;"></i><span>${window.I18n ? window.I18n.t('wishlist.empty_msg', 'قائمة المفضلة فارغة حالياً.') : 'قائمة المفضلة فارغة حالياً.'}</span></div>`;
                     return;
                 }
 
@@ -956,31 +1011,29 @@
                         const favoritedProducts = products.filter(p => wishlistIds.includes(p.id));
 
                         if (favoritedProducts.length === 0) {
-                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><span data-i18n="account.wishlist_tab">قائمة المفضلة</span> فارغة حالياً.</div>`;
+                            container.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><i class="fas fa-heart-broken" style="font-size: 2.5rem; margin-bottom: 12px; display: block; color: #cbd5e1;"></i><span>${window.I18n ? window.I18n.t('wishlist.empty_msg', 'قائمة المفضلة فارغة حالياً.') : 'قائمة المفضلة فارغة حالياً.'}</span></div>`;
                             return;
                         }
 
                         container.innerHTML = favoritedProducts.map(p => `
                             <div class="product-card" style="border: 1px solid var(--border-color, #e1e8ed); border-radius: var(--border-radius-sm, 8px); padding: 12px; display: flex; flex-direction: column; justify-content: space-between; background: var(--card-bg, #fff);">
                                 <div>
-                                    <img src="${p.image_url}" alt="${p.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
+                                    <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${p.name}" style="width: 100%; height: 140px; object-fit: cover; border-radius: 6px; margin-bottom: 10px;">
                                     <h4 style="font-size: 0.95rem; margin-bottom: 8px;">${p.name}</h4>
-                                    <p style="font-weight: bold; color: var(--primary-color); margin-bottom: 12px;">${p.price.toLocaleString()} ${window.I18n.t('common.currency_alt', 'د.ج')}</p>
+                                    <p style="font-weight: bold; color: var(--primary-color); margin-bottom: 12px;">${Number(p.price).toLocaleString()} ${window.I18n ? window.I18n.t('common.currency', 'دج') : 'دج'}</p>
                                 </div>
                                 <div style="display: flex; gap: 8px;">
-                                    <button class="btn" style="flex: 1; font-size: 0.8rem; padding: 6px;" onclick="addToCart(${p.id})">
-                                        <i class="fas fa-shopping-cart"></i> {window.I18n.t()}
+                                    <button class="btn" style="flex: 1; font-size: 0.8rem; padding: 6px;" onclick="addToCart({ id: ${p.id}, name: '${p.name.replace(/'/g, "\\'")}', price: ${p.price}, image: '${p.image_url}' })">
+                                        <i class="fas fa-shopping-cart"></i> <span>${window.I18n ? window.I18n.t('common.add_to_cart', 'أضف للسلة') : 'أضف للسلة'}</span>
                                     </button>
-                                    <button class="btn-sm-danger" style="padding: 6px 10px;" onclick="removeFromWishlist(${p.id}, '${p.name}')">
+                                    <button class="btn-sm-danger" style="padding: 6px 10px;" onclick="removeFromWishlist(${p.id}, '${p.name.replace(/'/g, "\\'")}')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </div>
                             </div>
                         `).join('');
                     }
-                } catch (e) {
-
-                }
+                } catch (e) {}
             }
 
             window.removeFromWishlist = function(id, name) {
@@ -991,16 +1044,21 @@
             };
 
             // Sidebar Logout button
-            document.getElementById('logout-sidebar-btn').addEventListener('click', () => {
-                if (window.logoutUser) {
-                    window.logoutUser();
-                } else {
-                    localStorage.removeItem('currentUser');
-                    sessionStorage.removeItem('currentUser');
-                    window.location.href = 'index.html';
-                }
-            });
+            const logoutBtn = document.getElementById('logout-sidebar-btn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', () => {
+                    if (window.logoutUser) {
+                        window.logoutUser();
+                    } else {
+                        localStorage.removeItem('currentUser');
+                        sessionStorage.removeItem('currentUser');
+                        fetch('/api/logout', { method: 'POST', credentials: 'include' }).catch(() => {});
+                        window.location.href = 'index.html';
+                    }
+                });
+            }
         });
     </script>
 </body>
 </html>
+
