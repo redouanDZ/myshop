@@ -294,6 +294,8 @@ async function placeOrderNow() {
     const orderPayload = {
         userId: currentUser && currentUser.id ? currentUser.id : null,
         paymentMethod: paymentMethod,
+        couponCode: promo ? promo.code : null,
+        discountAmount: discount,
         total: grandTotal,
         cart: cart.map(item => ({
             id: item.id || item.product_id,
@@ -313,6 +315,7 @@ async function placeOrderNow() {
             deliveryType: currentDeliveryType,
             shippingCost: currentShippingCost,
             paymentMethod: paymentMethod,
+            couponCode: promo ? promo.code : null,
             notes: notes
         }
     };

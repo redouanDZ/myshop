@@ -743,7 +743,7 @@
                     throw new Error(data.error || data.message || window.I18n.t('messages.order_confirm_fail', 'تعذر تأكيد الطلب، يرجى المحاولة لاحقاً'));
                 }
 
-                window.location.href = `order-confirmation.html?orderId=${data.id}&orderNumber=${encodeURIComponent(data.orderNumber || '')}&token=${encodeURIComponent(data.trackingToken || '')}`;
+                window.location.href = `order-confirmation.html?id=${data.id}&orderNumber=${encodeURIComponent(data.orderNumber || '')}&token=${encodeURIComponent(data.trackingToken || '')}&phone=${encodeURIComponent(cleanPhone)}`;
             } catch (err) {
                 alert(err.message || window.I18n.t('messages.order_error', 'حدث خطأ أثناء تأكيد الطلب'));
                 if (submitBtn) {

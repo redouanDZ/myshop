@@ -523,7 +523,7 @@
       }
     }
 
-    // تطبيق كود الخصم
+        // تطبيق كود الخصم عبر قاعدة البيانات
     async function applyPromoCode(codeArg) {
       let code = codeArg;
       if (typeof code !== 'string') {
@@ -568,35 +568,15 @@
           if (window.showToast) window.showToast(successMsg, 'success');
           else alert(successMsg);
         } else {
-          // Offline / Demo codes fallback
-          const demoCodes = { 'SAVE10': 0.1, 'SAVE20': 0.2, 'WELCOME': 0.15, 'SUMMER2026': 0.1 };
-          if (demoCodes[code]) {
-            const discRate = demoCodes[code];
-            discountRate = discRate;
-            appliedPromo = { code, discount: discRate, calculatedDiscount: Math.round(subtotal * discRate) };
-            localStorage.setItem('promoCode', JSON.stringify(appliedPromo));
-            const msg = window.I18n ? window.I18n.t('messages.promo_success', 'تم تطبيق الخصم بنجاح! ({discount}%)').replace('{discount}', Math.round(discRate * 100)) : 'تم تطبيق الخصم بنجاح!';
-            if (window.showToast) window.showToast(msg, 'success');
-            else alert(msg);
-          } else {
-            const errMsg = (data && data.error) ? data.error : (window.I18n ? window.I18n.t('messages.promo_invalid', 'كود الخصم غير صالح أو منتهي الصلاحية') : 'كود الخصم غير صالح أو منتهي الصلاحية');
-            if (window.showToast) window.showToast(errMsg, 'error');
-            else alert(errMsg);
-          }
+          removePromoCode();
+          const errMsg = (data && data.error) ? data.error : (window.I18n ? window.I18n.t('messages.promo_invalid', 'كود الخصم غير صالح أو منتهي الصلاحية') : 'كود الخصم غير صالح أو منتهي الصلاحية');
+          if (window.showToast) window.showToast(errMsg, 'error');
+          else alert(errMsg);
         }
       } catch (err) {
-        const demoCodes = { 'SAVE10': 0.1, 'SAVE20': 0.2, 'WELCOME': 0.15, 'SUMMER2026': 0.1 };
-        if (demoCodes[code]) {
-          const discRate = demoCodes[code];
-          discountRate = discRate;
-          appliedPromo = { code, discount: discRate, calculatedDiscount: Math.round(subtotal * discRate) };
-          localStorage.setItem('promoCode', JSON.stringify(appliedPromo));
-          const msg = window.I18n ? window.I18n.t('messages.promo_success', 'تم تطبيق الخصم بنجاح! ({discount}%)').replace('{discount}', Math.round(discRate * 100)) : 'تم تطبيق الخصم بنجاح!';
-          if (window.showToast) window.showToast(msg, 'success');
-        } else {
-          const errMsg = window.I18n ? window.I18n.t('messages.promo_invalid', 'كود الخصم غير صالح أو منتهي الصلاحية') : 'كود الخصم غير صالح أو منتهي الصلاحية';
-          if (window.showToast) window.showToast(errMsg, 'error');
-        }
+        removePromoCode();
+        const errMsg = window.I18n ? window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم') : 'خطأ في الاتصال بالخادم';
+        if (window.showToast) window.showToast(errMsg, 'error');
       }
       updateSummary();
     }

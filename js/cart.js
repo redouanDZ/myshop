@@ -223,20 +223,51 @@ function updateOrderSummary(subtotal = null) {
 
 async function applyPromoCode(code) {
     if (window.location.pathname.endsWith("cart.html") || window.location.pathname.endsWith("/cart")) return;
-    if (!code) {
+    const cleanCode = String(code || '').trim().toUpperCase();
+    if (!cleanCode) {
         localStorage.removeItem('promoCode');
-        showNotification(window.I18n.t('messages.promo_canceled', 'تم إلغاء كود الخصم'), 'info');
+        showNotification(window.I18n ? window.I18n.t('messages.promo_canceled', 'تم إلغاء كود الخصم') : 'تم إلغاء كود الخصم', 'info');
         updateOrderSummary();
         return;
     }
-    const promoCodes = { 'SAVE10': 0.1, 'SAVE20': 0.2, 'WELCOME': 0.15 };
-    const discount = promoCodes[code.toUpperCase()];
-    if (discount) {
-        localStorage.setItem('promoCode', JSON.stringify({ code: code.toUpperCase(), discount }));
-        showNotification(window.I18n.t('messages.promo_success', 'تم تطبيق الخصم بنجاح! ({discount}%)').replace('{discount}', discount*100), 'success');
-        updateOrderSummary();
-    } else {
-        showNotification(window.I18n.t('messages.promo_invalid', 'كود الخصم غير صالح. استخدم SAVE10 أو SAVE20'), 'error');
+
+    const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+    try {
+        const response = await fetch('/api/coupons/validate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ code: cleanCode, orderAmount: subtotal })
+        });
+        const data = await response.json();
+
+        if (response.ok && data.valid) {
+            let discRate = 0;
+            if (data.discountPercent > 0) {
+                discRate = data.discountPercent / 100;
+            } else if (data.calculatedDiscount > 0 && subtotal > 0) {
+                discRate = data.calculatedDiscount / subtotal;
+            } else {
+                discRate = 0.1;
+            }
+            const savedPromo = {
+                code: data.code || cleanCode,
+                discount: discRate,
+                calculatedDiscount: data.calculatedDiscount || Math.round(subtotal * discRate)
+            };
+            localStorage.setItem('promoCode', JSON.stringify(savedPromo));
+            const msg = data.message || (window.I18n ? window.I18n.t('messages.promo_success', 'تم تطبيق الخصم بنجاح! ({discount}%)').replace('{discount}', Math.round(discRate * 100)) : 'تم تطبيق الخصم بنجاح!');
+            showNotification(msg, 'success');
+            updateOrderSummary();
+        } else {
+            localStorage.removeItem('promoCode');
+            const errMsg = data.error || (window.I18n ? window.I18n.t('messages.promo_invalid', 'كود الخصم غير صالح أو منتهي الصلاحية') : 'كود الخصم غير صالح أو منتهي الصلاحية');
+            showNotification(errMsg, 'error');
+            updateOrderSummary();
+        }
+    } catch (err) {
+        console.error('Coupon validation error:', err);
+        showNotification(window.I18n ? window.I18n.t('messages.server_error', 'خطأ في الاتصال بالخادم') : 'خطأ في الاتصال بالخادم', 'error');
     }
 }
 
