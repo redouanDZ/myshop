@@ -137,11 +137,16 @@ function updateUIForLoggedInUser(user) {
         const btn = icon.querySelector('.user-avatar-btn');
         const dropdown = icon.querySelector('.user-dropdown');
 
+        // إزالة رابط href حتى لا تنتقل الصفحة عند النقر
+        icon.removeAttribute('href');
+        icon.addEventListener('click', (e) => e.preventDefault());
+
         if (wrap && btn && dropdown) {
             // منع انتشار الحدث من الحاوية بالكامل لمنع إغلاق القائمة فوراً
             wrap.addEventListener('click', (e) => e.stopPropagation());
 
             btn.addEventListener('click', (e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 const isOpen = dropdown.style.display === 'block';
                 // إغلاق جميع القوائم الأخرى
