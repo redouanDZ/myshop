@@ -142,7 +142,23 @@ window.WishlistManager = {
         const prodId = Number(productId);
         if (this.isUserLoggedIn()) {
             try {
-                await fetch(`/api/wishlist/${prodId}`, { method: 'DELETE', credentials: 'include' });
+                let csrfToken = '';
+                try {
+                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
+                    if (csrfRes.ok) {
+                        const csrfData = await csrfRes.json();
+                        csrfToken = csrfData.csrfToken || '';
+                    }
+                } catch (e) {}
+
+                const headers = { 'Content-Type': 'application/json' };
+                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+
+                await fetch(`/api/wishlist/${prodId}`, { 
+                    method: 'DELETE', 
+                    credentials: 'include',
+                    headers
+                });
             } catch (e) {}
         }
         let local = this.getLocalItems();
