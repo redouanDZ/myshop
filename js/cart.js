@@ -222,7 +222,6 @@ function updateOrderSummary(subtotal = null) {
 }
 
 async function applyPromoCode(code) {
-    if (window.location.pathname.endsWith("cart.html") || window.location.pathname.endsWith("/cart")) return;
     const cleanCode = String(code || '').trim().toUpperCase();
     if (!cleanCode) {
         localStorage.removeItem('promoCode');
