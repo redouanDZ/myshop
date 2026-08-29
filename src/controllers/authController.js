@@ -42,15 +42,40 @@ async function register(req, res) {
             return res.status(400).json({ message: 'كلمة المرور يجب أن تكون 6 أحرف على الأقل' });
         }
 
-        const user = await db.createUser({ username, email, phone, password });
-        const verificationToken = randomToken();
-        await db.updateUserVerificationToken(user.id, verificationToken, Date.now() + 24 * 60 * 60 * 1000);
+        const requireVerification = process.env.REQUIRE_EMAIL_VERIFICATION === 'true';
+        const user = await db.createUser({
+            username,
+            email,
+            phone,
+            password,
+            is_verified: !requireVerification
+        });
 
-        const payload = { message: 'تم إنشاء الحساب بنجاح! يرجى التحقق من البريد الإلكتروني.', user: sanitizeUser(user), verificationRequired: true };
-        if (!config.isProduction) {
-            payload.verificationToken = verificationToken;
+        if (requireVerification) {
+            const verificationToken = randomToken();
+            await db.updateUserVerificationToken(user.id, verificationToken, Date.now() + 24 * 60 * 60 * 1000);
+            return res.status(201).json({
+                message: 'تم إنشاء الحساب بنجاح! يرجى التحقق من البريد الإلكتروني.',
+                user: sanitizeUser(user),
+                verificationRequired: true
+            });
         }
-        res.status(201).json(payload);
+
+        // Auto login on register when verification is not mandatory
+        const sessionId = await issueSession(user, req);
+        const accessToken = createAccessToken(user, sessionId);
+        const refreshToken = createRefreshToken(user, sessionId);
+        const csrfToken = randomToken();
+
+        setCookie(res, 'access_token', accessToken, { httpOnly: true, sameSite: 'lax', secure: config.isProduction, maxAge: 15 * 60 * 1000 });
+        setCookie(res, 'refresh_token', refreshToken, { httpOnly: true, sameSite: 'lax', secure: config.isProduction, maxAge: 7 * 24 * 60 * 60 * 1000 });
+        setCookie(res, 'csrf_token', csrfToken, { httpOnly: false, sameSite: 'lax', secure: config.isProduction, maxAge: 60 * 60 * 1000 });
+
+        res.status(201).json({
+            message: 'تم إنشاء الحساب وتسجيل الدخول بنجاح! 🎉',
+            user: sanitizeUser(user),
+            sessionId
+        });
     } catch (error) {
         console.error('Registration error:', error);
         res.status(400).json({ message: error.message || 'خطأ أثناء تسجيل الحساب' });
@@ -78,7 +103,7 @@ async function login(req, res) {
             return res.status(401).json({ message: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' });
         }
 
-        if (!user.is_verified) {
+        if (process.env.REQUIRE_EMAIL_VERIFICATION === 'true' && !user.is_verified) {
             return res.status(403).json({ message: 'يرجى التحقق من البريد الإلكتروني قبل تسجيل الدخول.' });
         }
 

@@ -462,10 +462,11 @@ class MysqlRepository {
     const email = String(userData.email || '').trim().toLowerCase();
     const phone = String(userData.phone || '').trim();
     const hashedPassword = await bcrypt.hash(String(userData.password || ''), 10);
+    const isVerified = userData.is_verified !== undefined ? (userData.is_verified ? 1 : 0) : 1;
 
     const [result] = await this.pool.query(
-      'INSERT INTO users (username, email, phone, password, role) VALUES (?, ?, ?, ?, ?)',
-      [username, email, phone, hashedPassword, userData.role || 'customer']
+      'INSERT INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, ?)',
+      [username, email, phone, hashedPassword, userData.role || 'customer', isVerified]
     );
 
     return this.findUserById(result.insertId);
