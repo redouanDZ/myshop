@@ -111,6 +111,11 @@ function updateUIForLoggedInUser(user) {
 
     document.querySelectorAll('.user-icon').forEach(icon => {
         icon.style.cursor = 'default';
+        // إزالة أي مستمعي أحداث قديمة على الأيقونة نفسها بنسخها
+        const freshIcon = icon.cloneNode(false);
+        icon.parentNode.replaceChild(freshIcon, icon);
+        icon = freshIcon;
+
         icon.innerHTML = `
             <div class="user-menu-wrap" style="position:relative;display:inline-block;">
                 <button class="user-avatar-btn" title="${displayName}" style="background:var(--primary-color,#6366f1);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:0.92rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">
@@ -128,20 +133,31 @@ function updateUIForLoggedInUser(user) {
                 </div>
             </div>`;
 
+        const wrap = icon.querySelector('.user-menu-wrap');
         const btn = icon.querySelector('.user-avatar-btn');
         const dropdown = icon.querySelector('.user-dropdown');
-        if (btn && dropdown) {
+
+        if (wrap && btn && dropdown) {
+            // منع انتشار الحدث من الحاوية بالكامل لمنع إغلاق القائمة فوراً
+            wrap.addEventListener('click', (e) => e.stopPropagation());
+
             btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 const isOpen = dropdown.style.display === 'block';
+                // إغلاق جميع القوائم الأخرى
                 document.querySelectorAll('.user-dropdown').forEach(d => { d.style.display = 'none'; });
                 dropdown.style.display = isOpen ? 'none' : 'block';
             });
         }
     });
-    document.addEventListener('click', () => {
-        document.querySelectorAll('.user-dropdown').forEach(d => { d.style.display = 'none'; });
-    });
+
+    // مستمع واحد فقط على document لإغلاق القائمة عند النقر خارجها
+    if (!window._userDropdownCloseHandler) {
+        window._userDropdownCloseHandler = () => {
+            document.querySelectorAll('.user-dropdown').forEach(d => { d.style.display = 'none'; });
+        };
+        document.addEventListener('click', window._userDropdownCloseHandler);
+    }
 }
 window.updateUIForLoggedInUser = updateUIForLoggedInUser;
 
