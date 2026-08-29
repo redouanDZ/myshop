@@ -10,15 +10,16 @@ window.I18n = {
      * جلب ملف الترجمة
      */
     async loadDictionary(lang) {
-        if (this.cache[lang]) return this.cache[lang];
+        const targetLang = lang || this.currentLang || 'ar';
+        if (this.cache[targetLang]) return this.cache[targetLang];
         try {
-            const res = await fetch(`/locales/${lang}.json`);
+            const res = await fetch(`/locales/${targetLang}.json`);
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             const dict = await res.json();
-            this.cache[lang] = dict;
+            this.cache[targetLang] = dict;
             return dict;
         } catch (err) {
-            console.warn(`Could not load /locales/${lang}.json:`, err);
+            console.warn(`Could not load /locales/${targetLang}.json:`, err);
             return null;
         }
     },
@@ -27,11 +28,11 @@ window.I18n = {
      * استخراج القيمة من مسار مفاتيح متداخلة (e.g. 'nav.home')
      */
     getValue(dict, keyPath) {
-        if (!dict || !keyPath) return '';
-        const keys = keyPath.split('.');
+        if (!dict || !keyPath) return null;
+        const keys = String(keyPath).split('.');
         let val = dict;
         for (const k of keys) {
-            if (val && val[k] !== undefined) {
+            if (val && typeof val === 'object' && val[k] !== undefined) {
                 val = val[k];
             } else {
                 return null;
@@ -41,13 +42,55 @@ window.I18n = {
     },
 
     /**
-     * Get translation dynamically
+     * ترجمة فورية لمفتاح معين مع نص بديل افتراضي
      */
     t(keyPath, defaultValue = '') {
         const dict = this.cache[this.currentLang];
         if (!dict) return defaultValue || keyPath;
         const val = this.getValue(dict, keyPath);
-        return val !== null ? val : (defaultValue || keyPath);
+        return val !== null && val !== undefined ? val : (defaultValue || keyPath);
+    },
+
+    /**
+     * ترجمة عناصر الصفحة أو حاوية محددة (data-i18n, data-i18n-placeholder, data-i18n-title)
+     */
+    async translatePage(targetRoot) {
+        const root = (targetRoot && targetRoot.querySelectorAll) ? targetRoot : document;
+        const dict = await this.loadDictionary(this.currentLang);
+        if (!dict) return;
+
+        // تحديث النصوص ذات سمة data-i18n
+        root.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (key) {
+                const val = this.getValue(dict, key);
+                if (val !== null && val !== undefined) {
+                    el.textContent = val;
+                }
+            }
+        });
+
+        // تحديث النصوص ذات سمة data-i18n-placeholder
+        root.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (key) {
+                const val = this.getValue(dict, key);
+                if (val !== null && val !== undefined) {
+                    el.placeholder = val;
+                }
+            }
+        });
+
+        // تحديث النصوص ذات سمة data-i18n-title
+        root.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const key = el.getAttribute('data-i18n-title');
+            if (key) {
+                const val = this.getValue(dict, key);
+                if (val !== null && val !== undefined) {
+                    el.title = val;
+                }
+            }
+        });
     },
 
     /**
@@ -67,23 +110,8 @@ window.I18n = {
         document.documentElement.dir = dir;
         if (document.body) document.body.dir = dir;
 
-        // تحديث النصوص ذات سمة data-i18n
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            const val = this.getValue(dict, key);
-            if (val !== null) {
-                el.textContent = val;
-            }
-        });
-
-        // تحديث النصوص ذات سمة data-i18n-placeholder
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-            const key = el.getAttribute('data-i18n-placeholder');
-            const val = this.getValue(dict, key);
-            if (val !== null) {
-                el.placeholder = val;
-            }
-        });
+        // ترجمة كافة العناصر في الصفحة
+        await this.translatePage(document);
 
         // مزامنة محدد اللغة
         document.querySelectorAll('.lang-select, #langSelect').forEach(select => {
@@ -120,15 +148,6 @@ window.I18n = {
                 container.insertBefore(wrap, container.firstChild);
             }
         });
-    },
-
-    /**
-     * ترجمة فورية لمفتاح معين
-     */
-    t(keyPath, defaultText = '') {
-        const dict = this.cache[this.currentLang];
-        const val = this.getValue(dict, keyPath);
-        return val !== null ? val : defaultText;
     }
 };
 
