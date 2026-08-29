@@ -243,7 +243,7 @@ header .container {
 }
 
 /* القائمة الرئيسية */
-header nav, nav.main-nav, nav {
+header nav, nav.main-nav {
     display: flex !important;
     align-items: center !important;
 }
@@ -3644,7 +3644,7 @@ body.dark-mode .mobile-nav-item.active {
    ========================================================================== */
 @media (max-width: 768px) {
     .mobile-bottom-nav {
-        display: flex;
+        display: flex !important;
         justify-content: space-around;
         align-items: center;
     }
