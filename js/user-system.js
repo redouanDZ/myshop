@@ -100,6 +100,52 @@ async function fetchJson(url, options = {}) {
 }
 
 /**
+ * تحديث واجهة المستخدم بعد تسجيل الدخول
+ * يُظهر قائمة منسدلة في أيقونة المستخدم مع رابط لوحة التحكم للأدمن
+ */
+function updateUIForLoggedInUser(user) {
+    if (!user) return;
+    const isAdmin = user.role === 'admin';
+    const displayName = (user.username || user.name || user.email || '').split(' ')[0];
+    const avatarLetter = displayName ? displayName[0].toUpperCase() : '?';
+
+    document.querySelectorAll('.user-icon').forEach(icon => {
+        icon.style.cursor = 'default';
+        icon.innerHTML = `
+            <div class="user-menu-wrap" style="position:relative;display:inline-block;">
+                <button class="user-avatar-btn" title="${displayName}" style="background:var(--primary-color,#6366f1);color:#fff;border:none;border-radius:50%;width:34px;height:34px;font-size:0.92rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;">
+                    ${avatarLetter}
+                </button>
+                <div class="user-dropdown" style="display:none;position:absolute;top:42px;inset-inline-end:0;background:var(--card-bg,#fff);border:1px solid var(--border-color,#e2e8f0);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,0.12);min-width:190px;z-index:9999;padding:8px 0;">
+                    <div style="padding:10px 16px 8px;border-bottom:1px solid var(--border-color,#e2e8f0);">
+                        <strong style="display:block;font-size:0.95rem;color:var(--text-color,#1e293b);">${displayName}</strong>
+                        ${isAdmin ? '<span style="color:var(--primary-color,#6366f1);font-size:0.75rem;font-weight:700;">⚙️ مدير النظام</span>' : '<span style="color:var(--light-text,#64748b);font-size:0.78rem;">عميل</span>'}
+                    </div>
+                    ${isAdmin ? '<a href="admin/index.html" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:var(--primary-color,#6366f1);font-weight:700;text-decoration:none;font-size:0.9rem;"><i class="fas fa-tachometer-alt"></i> لوحة التحكم</a>' : ''}
+                    <a href="account.html" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:var(--text-color,#1e293b);text-decoration:none;font-size:0.9rem;"><i class="fas fa-user-circle"></i> حسابي الشخصي</a>
+                    <div style="border-top:1px solid var(--border-color,#e2e8f0);margin:4px 0;"></div>
+                    <button onclick="window.logoutUser && logoutUser()" style="display:flex;align-items:center;gap:10px;padding:10px 16px;color:#ef4444;background:none;border:none;cursor:pointer;width:100%;font-size:0.9rem;text-align:start;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</button>
+                </div>
+            </div>`;
+
+        const btn = icon.querySelector('.user-avatar-btn');
+        const dropdown = icon.querySelector('.user-dropdown');
+        if (btn && dropdown) {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = dropdown.style.display === 'block';
+                document.querySelectorAll('.user-dropdown').forEach(d => { d.style.display = 'none'; });
+                dropdown.style.display = isOpen ? 'none' : 'block';
+            });
+        }
+    });
+    document.addEventListener('click', () => {
+        document.querySelectorAll('.user-dropdown').forEach(d => { d.style.display = 'none'; });
+    });
+}
+window.updateUIForLoggedInUser = updateUIForLoggedInUser;
+
+/**
  * تهيئة نموذج تسجيل الدخول
  */
 function initLoginForm() {
@@ -970,17 +1016,37 @@ window.getCurrentUser = getCurrentUser;
 window.isLoggedIn = isLoggedIn;
 window.showLoginForm = showLoginForm;
 window.showSignupForm = showSignupForm;
+window.logoutUser = logoutUser;
 
-// Bind user icon click to open login modal if user is not logged in
+// عند تحميل الصفحة: استعادة حالة المستخدم أو ربط نافذة الدخول بالأيقونة
 document.addEventListener('DOMContentLoaded', () => {
-    const userIcons = document.querySelectorAll('.user-icon');
-    userIcons.forEach(icon => {
-        icon.addEventListener('click', (e) => {
-            if (!isLoggedIn()) {
+    const savedUser = readSessionUser();
+    if (savedUser) {
+        updateUIForLoggedInUser(savedUser);
+
+        // التحقق من صلاحية الجلسة مع الخادم في الخلفية
+        fetchJson(`${API_BASE_URL}/auth/session`).then(res => {
+            if (res && res.ok) {
+                res.json().then(data => {
+                    if (data && data.user) {
+                        saveSessionUser(data.user);
+                        updateUIForLoggedInUser(data.user);
+                    }
+                }).catch(() => {});
+            } else if (res && res.status === 401) {
+                clearSessionAuthState();
+            }
+        }).catch(() => {});
+    } else {
+        // لم يسجل دخول — اجعل أيقونة المستخدم تفتح نافذة الدخول
+        document.querySelectorAll('.user-icon').forEach(icon => {
+            icon.style.cursor = 'pointer';
+            icon.addEventListener('click', (e) => {
                 e.preventDefault();
                 showLoginForm();
-            }
+            });
         });
-    });
+    }
 });
+
 
