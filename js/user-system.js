@@ -438,6 +438,205 @@ function showSignupForm() {
 }
 
 /**
+ * عرض نموذج استعادة كلمة المرور
+ */
+function showForgotPasswordForm() {
+    let modal = document.getElementById('auth-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'auth-modal';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="auth.forgot_password_title">استعادة كلمة المرور</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="color: var(--light-text, #64748b); font-size: 0.9rem; margin-bottom: 18px; line-height: 1.5;" data-i18n="auth.forgot_password_desc">
+                    أدخل بريدك الإلكتروني المسجل وسنرسل لك تعليمات استعادة كلمة المرور.
+                </p>
+                <form id="forgot-password-form">
+                    <div class="form-group">
+                        <label for="forgot-email" data-i18n="auth.email">البريد الإلكتروني</label>
+                        <input type="email" id="forgot-email" required placeholder="name@example.com">
+                    </div>
+                    <button type="submit" id="forgot-submit-btn" class="btn" style="width: 100%; margin-top: 10px;">
+                        <span data-i18n="auth.send_reset_btn">إرسال رابط الاستعادة</span>
+                    </button>
+                    <div class="auth-links" style="margin-top: 18px; text-align: center;">
+                        <a href="#" id="forgot-back-to-login" data-i18n="auth.back_to_login">العودة لتسجيل الدخول</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+
+    modal.style.display = 'block';
+    if (window.I18n && typeof window.I18n.translatePage === 'function') {
+        window.I18n.translatePage(modal);
+    }
+
+    const closeModalBtn = modal.querySelector('.close-modal');
+    if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+    const backToLogin = modal.querySelector('#forgot-back-to-login');
+    if (backToLogin) backToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+    });
+
+    const form = modal.querySelector('#forgot-password-form');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('forgot-email');
+            const submitBtn = document.getElementById('forgot-submit-btn');
+            const email = emailInput ? emailInput.value.trim() : '';
+            if (!email) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (window.I18n ? window.I18n.t('common.sending', 'جاري الإرسال...') : 'جاري الإرسال...');
+
+            try {
+                const res = await fetchJson(`${API_BASE_URL}/auth/forgot-password`, {
+                    method: 'POST',
+                    body: JSON.stringify({ email })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showNotification(data.message || 'تم إرسال تعليمات الاستعادة بنجاح!', 'success');
+                    if (data.resetToken) {
+                        setTimeout(() => {
+                            showResetPasswordForm(data.resetToken, email);
+                        }, 1200);
+                    }
+                } else {
+                    showNotification(data.message || 'حدث خطأ أثناء معالجة الطلب', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = window.I18n ? window.I18n.t('auth.send_reset_btn', 'إرسال رابط الاستعادة') : 'إرسال رابط الاستعادة';
+                }
+            } catch (err) {
+                showNotification('حدث خطأ في الاتصال بالخادم', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = window.I18n ? window.I18n.t('auth.send_reset_btn', 'إرسال رابط الاستعادة') : 'إرسال رابط الاستعادة';
+            }
+        });
+    }
+}
+
+/**
+ * عرض نموذج تعيين كلمة المرور الجديدة
+ */
+function showResetPasswordForm(prefilledToken = '', userEmail = '') {
+    let modal = document.getElementById('auth-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'auth-modal';
+        modal.className = 'modal';
+        document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 data-i18n="auth.reset_password_title">تعيين كلمة مرور جديدة</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="reset-password-form">
+                    <div class="form-group">
+                        <label for="reset-token" data-i18n="auth.reset_token">رمز الاستعادة / Token</label>
+                        <input type="text" id="reset-token" required value="${prefilledToken || ''}" placeholder="أدخل الرمز المستلم...">
+                    </div>
+                    <div class="form-group">
+                        <label for="reset-password" data-i18n="auth.new_password">كلمة المرور الجديدة</label>
+                        <input type="password" id="reset-password" required minlength="6" placeholder="******">
+                    </div>
+                    <div class="form-group">
+                        <label for="reset-confirm-password" data-i18n="auth.confirm_new_password">تأكيد كلمة المرور</label>
+                        <input type="password" id="reset-confirm-password" required minlength="6" placeholder="******">
+                    </div>
+                    <button type="submit" id="reset-submit-btn" class="btn" style="width: 100%; margin-top: 10px;">
+                        <span data-i18n="auth.reset_password_btn">حفظ كلمة المرور الجديدة</span>
+                    </button>
+                    <div class="auth-links" style="margin-top: 18px; text-align: center;">
+                        <a href="#" id="reset-back-to-login" data-i18n="auth.back_to_login">العودة لتسجيل الدخول</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    `;
+
+    modal.style.display = 'block';
+    if (window.I18n && typeof window.I18n.translatePage === 'function') {
+        window.I18n.translatePage(modal);
+    }
+
+    const closeModalBtn = modal.querySelector('.close-modal');
+    if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+
+    const backToLogin = modal.querySelector('#reset-back-to-login');
+    if (backToLogin) backToLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        showLoginForm();
+    });
+
+    const form = modal.querySelector('#reset-password-form');
+    if (form) {
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const token = document.getElementById('reset-token').value.trim();
+            const password = document.getElementById('reset-password').value;
+            const confirmPassword = document.getElementById('reset-confirm-password').value;
+            const submitBtn = document.getElementById('reset-submit-btn');
+
+            if (!token) {
+                showNotification('يرجى إدخال رمز التحقق المستلم', 'error');
+                return;
+            }
+            if (!password || password.length < 6) {
+                showNotification('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showNotification('كلمتا المرور غير متطابقتين', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> ' + (window.I18n ? window.I18n.t('common.sending', 'جاري التحديث...') : 'جاري التحديث...');
+
+            try {
+                const res = await fetchJson(`${API_BASE_URL}/auth/reset-password`, {
+                    method: 'POST',
+                    body: JSON.stringify({ token, password })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    showNotification(data.message || 'تم تحديث كلمة المرور بنجاح! يمكنك الآن تسجيل الدخول.', 'success');
+                    setTimeout(() => {
+                        showLoginForm();
+                    }, 1000);
+                } else {
+                    showNotification(data.message || 'فشل تحديث كلمة المرور. الرمز غير صالح أو منتهي الصلاحية.', 'error');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = window.I18n ? window.I18n.t('auth.reset_password_btn', 'حفظ كلمة المرور الجديدة') : 'حفظ كلمة المرور الجديدة';
+                }
+            } catch (err) {
+                showNotification('حدث خطأ في الاتصال بالخادم', 'error');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = window.I18n ? window.I18n.t('auth.reset_password_btn', 'حفظ كلمة المرور الجديدة') : 'حفظ كلمة المرور الجديدة';
+            }
+        });
+    }
+}
+
+
+/**
  * Handle Google Sign-In authentication flow
  */
 window.initiateGoogleLogin = async function() {

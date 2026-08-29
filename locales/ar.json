@@ -200,7 +200,17 @@
     "create_account": "سجل حساباً جديداً",
     "sign_in": "سجل الدخول الآن",
     "logout": "تسجيل الخروج",
-    "admin_badge": "لوحة الإدارة"
+    "admin_badge": "لوحة الإدارة",
+    "forgot_password": "نسيت كلمة المرور؟",
+    "forgot_password_title": "استعادة كلمة المرور",
+    "forgot_password_desc": "أدخل بريدك الإلكتروني المسجل وسنرسل لك تعليمات استعادة كلمة المرور.",
+    "send_reset_btn": "إرسال رابط الاستعادة",
+    "back_to_login": "العودة لتسجيل الدخول",
+    "reset_password_title": "تعيين كلمة مرور جديدة",
+    "new_password": "كلمة المرور الجديدة",
+    "confirm_new_password": "تأكيد كلمة المرور",
+    "reset_password_btn": "حفظ كلمة المرور الجديدة",
+    "reset_token": "رمز التحقق (Token)"
   },
   "product": {
     "specs_tab": "المواصفات الفنية",

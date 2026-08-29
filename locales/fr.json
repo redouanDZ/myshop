@@ -200,7 +200,17 @@
     "create_account": "Créer un nouveau compte",
     "sign_in": "Connectez-vous",
     "logout": "Déconnexion",
-    "admin_badge": "Administration"
+    "admin_badge": "Administration",
+    "forgot_password": "Mot de passe oublié ?",
+    "forgot_password_title": "Réinitialisation du mot de passe",
+    "forgot_password_desc": "Entrez votre adresse email enregistrée pour recevoir les instructions de réinitialisation.",
+    "send_reset_btn": "Envoyer le lien",
+    "back_to_login": "Retour à la connexion",
+    "reset_password_title": "Nouveau mot de passe",
+    "new_password": "Nouveau mot de passe",
+    "confirm_new_password": "Confirmer le mot de passe",
+    "reset_password_btn": "Enregistrer le mot de passe",
+    "reset_token": "Code de vérification (Token)"
   },
   "product": {
     "specs_tab": "Fiche technique",

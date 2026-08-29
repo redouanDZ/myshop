@@ -26,7 +26,6 @@ class MailService {
 
         if (this.isConfigured) {
             try {
-                // In production with credentials, transport can be initialized or sent via SMTP
                 console.log(`📧 [MailService] Sending email to ${to}: "${subject}"`);
                 return true;
             } catch (error) {
@@ -60,53 +59,43 @@ class MailService {
         `).join('');
 
         const html = `
-        <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e1e8ed; border-radius: 8px; overflow: hidden; color: #2c3e50;">
-            <div style="background: #2563eb; color: #ffffff; padding: 25px; text-align: center;">
-                <h1 style="margin: 0; font-size: 24px;">${storeConfig.storeName}</h1>
-                <p style="margin: 5px 0 0 0; opacity: 0.9;">شكراً لطلبك معنا!</p>
+        <div dir="rtl" style="font-family: sans-serif; padding: 20px; color: #333; line-height: 1.6;">
+            <div style="background: #2563eb; color: #fff; padding: 20px; text-align: center; border-radius: 8px 8px 0 0;">
+                <h1 style="margin: 0;">شكراً لطلبك من ${storeConfig.storeName}</h1>
+                <p style="margin: 5px 0 0;">رقم الطلب: <strong>${orderNum}</strong></p>
             </div>
-            <div style="padding: 25px;">
-                <h2 style="color: #1e293b; margin-top: 0;">تم تأكيد استلام طلبك بنجاح</h2>
-                <p>مرحباً <strong>${order.shipping_full_name || (order.shippingInfo && order.shippingInfo.fullName) || 'عميلنا العزيز'}</strong>،</p>
-                <p>لقد تم استلام طلبك رقم <strong style="color: #2563eb;">${orderNum}</strong> وهو الآن قيد المراجعة والتجهيز.</p>
+            
+            <div style="background: #fff; border: 1px solid #ddd; border-top: none; padding: 20px; border-radius: 0 0 8px 8px;">
+                <h3>تفاصيل الطلب:</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 10px; text-align: right;">المنتج</th>
+                            <th style="padding: 10px; text-align: center;">الكمية</th>
+                            <th style="padding: 10px; text-align: left;">السعر</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsRows}
+                    </tbody>
+                </table>
 
-                <div style="background: #f8fafc; border-radius: 6px; padding: 15px; margin: 20px 0;">
-                    <h3 style="margin-top: 0; font-size: 16px; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">تفاصيل الطلب</h3>
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr style="background: #f1f5f9; color: #475569;">
-                                <th style="padding: 8px; text-align: right;">المنتج</th>
-                                <th style="padding: 8px; text-align: center;">الكمية</th>
-                                <th style="padding: 8px; text-align: left;">السعر</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${itemsRows}
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td colspan="2" style="padding: 10px; text-align: right; font-weight: bold;">المبلغ الإجمالي:</td>
-                                <td style="padding: 10px; text-align: left; font-weight: bold; color: #2563eb;">${Number(order.total).toLocaleString()} ${storeConfig.currencySymbol}</td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" style="padding: 6px 10px; text-align: right; color: #64748b;">طريقة الدفع:</td>
-                                <td style="padding: 6px 10px; text-align: left; color: #64748b;">${order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : 'الدفع عند الاستلام (COD)'}</td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                    <p style="margin: 5px 0;"><strong>تكلفة الشحن:</strong> ${Number(order.shipping_cost || 0).toLocaleString()} ${storeConfig.currencySymbol}</p>
+                    <p style="margin: 5px 0; font-size: 1.1em; color: #2563eb;"><strong>المجموع الإجمالي:</strong> ${Number(order.total).toLocaleString()} ${storeConfig.currencySymbol}</p>
+                    <p style="margin: 5px 0;"><strong>عنوان التوصيل:</strong> ${order.address || order.city || ''} (${order.wilaya_name || ''})</p>
+                    <p style="margin: 5px 0;"><strong>طريقة الدفع:</strong> ${order.payment_method === 'chargily' ? 'دفع إلكتروني (بطاقة ذهبية / CIB)' : 'الدفع عند الاستلام (COD)'}</p>
                 </div>
 
                 <div style="text-align: center; margin: 30px 0;">
-                    <a href="${trackingUrl}" style="background: #2563eb; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; display: inline-block; margin-left: 10px;">تتبع مسار الطلب</a>
-                    <a href="${invoiceUrl}" style="background: #f1f5f9; color: #334155; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; display: inline-block; border: 1px solid #cbd5e1;">عرض الفاتورة</a>
+                    <a href="${trackingUrl}" style="background: #2563eb; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; margin-left: 10px; display: inline-block;">تتبع حالة طلبك</a>
+                    <a href="${invoiceUrl}" style="background: #64748b; color: #ffffff; text-decoration: none; padding: 12px 25px; border-radius: 6px; font-weight: bold; display: inline-block;">عرض الفاتورة</a>
                 </div>
 
-                <p style="font-size: 13px; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 15px; margin-top: 25px;">
-                    إذا كان لديك أي استفسار، يمكنك الاتصال بنا على الهاتف: <strong>${storeConfig.storePhone}</strong> أو عبر البريد: <strong>${storeConfig.storeEmail}</strong>.
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+                <p style="font-size: 0.9em; color: #666; text-align: center;">
+                    إذا كان لديك أي استفسار، تواصل معنا عبر الهاتف: <strong>${storeConfig.storePhone}</strong> أو عبر البريد: <strong>${storeConfig.storeEmail}</strong>.
                 </p>
-            </div>
-            <div style="background: #f8fafc; padding: 15px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
-                &copy; ${new Date().getFullYear()} ${storeConfig.storeName} - جميع الحقوق محفوظة.
             </div>
         </div>
         `;
@@ -119,34 +108,31 @@ class MailService {
     }
 
     /**
-     * Send Order Status Update to Customer
+     * Send Status Update Notification
      */
     async sendOrderStatusUpdate(order, newStatus) {
         const email = order.email || (order.shippingInfo && order.shippingInfo.email);
         if (!email) return false;
 
         const orderNum = order.order_number || `#ORD-${order.id}`;
-        const statusMap = {
-            'pending': 'قيد المعالجة',
-            'processing': 'قيد التجهيز والتأكيد',
-            'shipped': 'تم الشحن مع شركة التوصيل 🚚',
-            'delivered': 'تم التسليم بنجاح ✅',
+        const trackingUrl = `${storeConfig.baseUrl}/track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}`;
+
+        const statusLabels = {
+            'pending': 'قيد الانتظار',
+            'processing': 'قيد المعالجة والتجهيز 📦',
+            'shipped': 'تم الشحن وهو في الطريق إليك 🚚',
+            'delivered': 'تم التوصيل بنجاح ✅',
             'cancelled': 'ملغي ❌'
         };
 
-        const statusText = statusMap[newStatus] || newStatus;
-        const trackingUrl = `${storeConfig.baseUrl}/track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}`;
+        const statusText = statusLabels[newStatus] || newStatus;
 
         const html = `
-        <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e1e8ed; border-radius: 8px; overflow: hidden; color: #2c3e50;">
-            <div style="background: #0284c7; color: #ffffff; padding: 20px; text-align: center;">
-                <h1 style="margin: 0; font-size: 22px;">${storeConfig.storeName}</h1>
-                <p style="margin: 5px 0 0 0;">تحديث حالة طلبك</p>
-            </div>
-            <div style="padding: 25px;">
-                <p>مرحباً <strong>${order.shipping_full_name || (order.shippingInfo && order.shippingInfo.fullName) || 'عميلنا العزيز'}</strong>،</p>
-                <p>نود إعلامك بأنه تم تحديث حالة طلبك رقم <strong>${orderNum}</strong> إلى:</p>
-
+        <div dir="rtl" style="font-family: sans-serif; padding: 20px; color: #333;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; padding: 20px; border-radius: 8px;">
+                <h2>تحديث حالة الطلب: ${orderNum}</h2>
+                <p>مرحباً ${order.shipping_full_name || 'عميلنا العزيز'}،</p>
+                <p>تم تحديث حالة طلبك إلى:</p>
                 <div style="background: #e0f2fe; border: 1px solid #bae6fd; border-radius: 6px; padding: 15px; text-align: center; margin: 20px 0;">
                     <span style="font-size: 18px; font-weight: bold; color: #0369a1;">${statusText}</span>
                 </div>
@@ -163,6 +149,33 @@ class MailService {
             subject: `تحديث حالة طلبك ${orderNum}: ${statusText} - ${storeConfig.storeName}`,
             html
         });
+    }
+
+    /**
+     * Send Password Reset Email
+     */
+    async sendPasswordResetEmail({ email, resetToken, username }) {
+        if (!email) return false;
+        const resetUrl = `${storeConfig.baseUrl}/index.html?action=reset-password&token=${encodeURIComponent(resetToken)}&email=${encodeURIComponent(email)}`;
+        const subject = `استعادة كلمة المرور - ${storeConfig.storeName || 'المتجر الإلكتروني'}`;
+        const html = `
+            <div dir="rtl" style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden;">
+                <div style="background: #2563eb; color: #ffffff; padding: 24px; text-align: center;">
+                    <h2 style="margin: 0; font-size: 1.4rem;">استعادة كلمة المرور 🔐</h2>
+                </div>
+                <div style="padding: 24px; color: #334155; line-height: 1.6;">
+                    <p>مرحباً <strong>${username || 'عزيزي العميل'}</strong>،</p>
+                    <p>تلقينا طلباً لإعادة تعيين كلمة المرور الخاصة بحسابك في متجرنا.</p>
+                    <p>يمكنك تعيين كلمة مرور جديدة بالضغط على الزر أدناه:</p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="${resetUrl}" style="background: #2563eb; color: #ffffff; padding: 14px 28px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block;">إعادة تعيين كلمة المرور</a>
+                    </div>
+                    <p style="font-size: 0.9rem; color: #64748b;">أو استخدم رمز الاستعادة التالي: <strong style="color: #1e293b; letter-spacing: 2px;">${resetToken}</strong></p>
+                    <p style="font-size: 0.85rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 15px; margin-top: 25px;">إذا لم تطلب إعادة تعيين كلمة المرور، يمكنك تجاهل هذه الرسالة بأمان.</p>
+                </div>
+            </div>
+        `;
+        return this.sendMail({ to: email, subject, html });
     }
 
     /**

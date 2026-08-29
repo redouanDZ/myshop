@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const { OAuth2Client } = require('google-auth-library');
 const db = require('../data/db-connection.js');
 const config = require('../config/database');
+const mailService = require('../services/mailService');
 const {
     randomToken,
     hashToken,
@@ -138,17 +139,30 @@ async function forgotPassword(req, res) {
 
         const user = await db.findUserByEmail(email);
         if (!user) {
-            return res.json({ message: 'إذا كان البريد الإلكتروني مسجلاً، سيتم إرسال تعليمات استعادة كلمة المرور.' });
+            return res.json({ message: 'إذا كان البريد الإلكتروني مسجلاً، تم إرسال تعليمات استعادة كلمة المرور.' });
         }
 
         const resetToken = randomToken();
         await db.updatePasswordResetToken(email, resetToken, Date.now() + 60 * 60 * 1000);
 
-        if (!config.isProduction) {
-            return res.json({ message: 'إذا كان البريد الإلكتروني مسجلاً، سيتم إرسال تعليمات استعادة كلمة المرور.', resetToken });
+        try {
+            await mailService.sendPasswordResetEmail({
+                email: user.email,
+                resetToken,
+                username: user.username || user.name
+            });
+        } catch (mailErr) {
+            console.error('Password reset email error:', mailErr.message);
         }
 
-        res.json({ message: 'إذا كان البريد الإلكتروني مسجلاً، سيتم إرسال تعليمات استعادة كلمة المرور.' });
+        const payload = {
+            message: 'تم إرسال تعليمات استعادة كلمة المرور إلى بريدك الإلكتروني بنجاح.'
+        };
+        if (!config.isProduction) {
+            payload.resetToken = resetToken;
+        }
+
+        res.json(payload);
     } catch (error) {
         console.error('Password reset request error:', error);
         res.status(500).json({ message: 'فشل طلب استعادة كلمة المرور' });
@@ -169,11 +183,11 @@ async function resetPassword(req, res) {
             return res.status(400).json({ message: 'رمز استعادة كلمة المرور غير صالح أو منتهي الصلاحية' });
         }
 
-        const hashedPassword = await require('bcryptjs').hash(password, 10);
-        await db.updateUserProfile(user.id, { password: hashedPassword });
+        await db.updateUserProfile(user.id, { password });
         
-        // Invalidate token
+        // Invalidate token and verify email
         await db.updatePasswordResetToken(user.email, null, null);
+        await db.verifyUserEmail(user.id);
         
         res.json({ message: 'تم تحديث كلمة المرور بنجاح.' });
     } catch (error) {

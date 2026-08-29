@@ -200,7 +200,17 @@
     "create_account": "Register now",
     "sign_in": "Sign in now",
     "logout": "Sign Out",
-    "admin_badge": "Admin Dashboard"
+    "admin_badge": "Admin Dashboard",
+    "forgot_password": "Forgot password?",
+    "forgot_password_title": "Reset Password",
+    "forgot_password_desc": "Enter your registered email address to receive password reset instructions.",
+    "send_reset_btn": "Send Reset Link",
+    "back_to_login": "Back to Login",
+    "reset_password_title": "Set New Password",
+    "new_password": "New Password",
+    "confirm_new_password": "Confirm New Password",
+    "reset_password_btn": "Save New Password",
+    "reset_token": "Verification Token"
   },
   "product": {
     "specs_tab": "Specifications",
