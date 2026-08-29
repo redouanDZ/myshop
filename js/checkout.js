@@ -194,10 +194,10 @@ function renderReviewItems() {
                 <img src="${item.image || item.image_url || '/images/product-placeholder.jpg'}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
                 <div>
                     <strong style="display: block; font-size: 0.95rem; color: #1e293b;">${item.name}</strong>
-                    <span style="font-size: 0.85rem; color: #64748b;">' + window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity) + '</span>
+                    <span style="font-size: 0.85rem; color: #64748b;">${window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity)}</span>
                 </div>
             </div>
-            <strong style="color: #2563eb;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</strong>
+            <strong style="color: #2563eb;">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</strong>
         </div>
     `).join('');
 }

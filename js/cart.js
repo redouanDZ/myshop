@@ -117,9 +117,9 @@ function updateCartUI() {
         container.innerHTML = `
             <div class="empty-cart-state" style="text-align: center; padding: 50px 20px; background: white; border-radius: 16px; border: 1px solid var(--border-color); grid-column: 1 / -1;">
                 <i class="fas fa-shopping-basket" style="font-size: 3rem; color: var(--light-text); margin-bottom: 15px;"></i>
-                <h3 style="font-size: 1.25rem; margin-bottom: 10px; color: var(--dark-color);">' + window.I18n.t('cart.empty_title', 'عربة التسوق فارغة حالياً') + '</h3>
-                <p style="color: var(--light-text); margin-bottom: 20px;">' + window.I18n.t('cart.empty_desc', 'استكشف تشكيلتنا الواسعة وأضف منتجاتك المفضلة للسلة!') + '</p>
-                <a href="shop.html" class="btn btn-primary"><i class="fas fa-store"></i> ' + window.I18n.t('cart.browse_shop', 'تصفح المنتجات') + '</a>
+                <h3 style="font-size: 1.25rem; margin-bottom: 10px; color: var(--dark-color);">${window.I18n.t('cart.empty_title', 'عربة التسوق فارغة حالياً')}</h3>
+                <p style="color: var(--light-text); margin-bottom: 20px;">${window.I18n.t('cart.empty_desc', 'استكشف تشكيلتنا الواسعة وأضف منتجاتك المفضلة للسلة!')}</p>
+                <a href="shop.html" class="btn btn-primary"><i class="fas fa-store"></i> ${window.I18n.t('cart.browse_shop', 'تصفح المنتجات')}</a>
             </div>
         `;
         updateOrderSummary(0);
@@ -138,15 +138,15 @@ function createCartItemHTML(item) {
             <div class="item-image"><img src="${item.image}" alt="${safeName}"></div>
             <div class="item-details">
                 <h3>${safeName}</h3>
-                <div class="item-price">${Number(item.price).toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</div>
+                <div class="item-price">${Number(item.price).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</div>
             </div>
             <div class="item-quantity">
                 <button class="quantity-btn decrease" data-id="${item.id}">-</button>
                 <input type="number" value="${item.quantity}" min="1" max="20" data-id="${item.id}">
                 <button class="quantity-btn increase" data-id="${item.id}">+</button>
             </div>
-            <div class="item-total">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</div>
-            <button class="remove-item" data-id="${item.id}" title="' + window.I18n.t('cart.remove_item', 'إزالة العنصر') + '"><i class="fas fa-trash-alt"></i></button>
+            <div class="item-total">${(Number(item.price) * Number(item.quantity)).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</div>
+            <button class="remove-item" data-id="${item.id}" title="${window.I18n.t('cart.remove_item', 'إزالة العنصر')}"><i class="fas fa-trash-alt"></i></button>
         </div>
     `;
 }
@@ -193,14 +193,14 @@ function updateOrderSummary(subtotal = null) {
     const total = subtotal + shippingCost - discountAmount;
 
     summaryContainer.innerHTML = `
-        <h2>' + window.I18n.t('cart.summary', 'ملخص الطلب') + '</h2>
-        <div class="summary-item"><span>' + window.I18n.t('cart.total_products', 'إجمالي المنتجات') + '</span><span>${subtotal.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</span></div>
-        <div class="summary-item"><span>' + window.I18n.t('cart.shipping', 'الشحن والتوصيل') + '</span><span>${shippingCost === 0 ? window.I18n.t('cart.free', 'مجاني') : shippingCost.toLocaleString() + ' دج'}</span></div>
-        ${discount > 0 ? `<div class="summary-item discount" style="color: var(--success-color); font-weight: 700;"><span>' + window.I18n.t('cart.discount_code', 'كود خصم').replace('{discount}', discount*100) + '</span><span>-${discountAmount.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</span></div>` : ''}
-        <div class="summary-total" style="font-size: 1.2rem; font-weight: 800; border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 12px; display: flex; justify-content: space-between;"><span>' + window.I18n.t('cart.total', 'المبلغ الإجمالي') + '</span><span style="color: var(--primary-color);">${total.toLocaleString()} ' + window.I18n.t('common.currency', 'دج') + '</span></div>
-        <div class="promo-code" style="margin: 15px 0; display: flex; gap: 8px;"><input type="text" placeholder="' + window.I18n.t('cart.promo_placeholder', 'أدخل كود الخصم (مثل: SAVE10)') + '" value="${savedPromo ? savedPromo.code : ''}" style="flex:1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;"><button class="apply-promo btn btn-outline" style="padding: 10px 16px;">' + window.I18n.t('cart.apply_promo', 'تطبيق') + '</button></div>
-        <button class="checkout-btn btn btn-primary w-full" style="width: 100%; margin-top: 10px; padding: 14px;"><i class="fas fa-credit-card"></i> ' + window.I18n.t('cart.checkout_btn', 'إتمام الشراء') + '</button>
-        <a href="shop.html" class="continue-shopping" style="display: block; text-align: center; margin-top: 15px; color: var(--light-text);"><i class="fas fa-arrow-right"></i> ' + window.I18n.t('cart.continue_shopping', 'متابعة التسوق') + '</a>
+        <h2>${window.I18n.t('cart.summary', 'ملخص الطلب')}</h2>
+        <div class="summary-item"><span>${window.I18n.t('cart.total_products', 'إجمالي المنتجات')}</span><span>${subtotal.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</span></div>
+        <div class="summary-item"><span>${window.I18n.t('cart.shipping', 'الشحن والتوصيل')}</span><span>${shippingCost === 0 ? window.I18n.t('cart.free', 'مجاني') : shippingCost.toLocaleString() + ' دج'}</span></div>
+        ${discount > 0 ? `<div class="summary-item discount" style="color: var(--success-color); font-weight: 700;"><span>${window.I18n.t('cart.discount_code', 'كود خصم').replace('{discount}', discount*100)}</span><span>-${discountAmount.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</span></div>` : ''}
+        <div class="summary-total" style="font-size: 1.2rem; font-weight: 800; border-top: 1px solid var(--border-color); padding-top: 12px; margin-top: 12px; display: flex; justify-content: space-between;"><span>${window.I18n.t('cart.total', 'المبلغ الإجمالي')}</span><span style="color: var(--primary-color);">${total.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</span></div>
+        <div class="promo-code" style="margin: 15px 0; display: flex; gap: 8px;"><input type="text" placeholder="${window.I18n.t('cart.promo_placeholder', 'أدخل كود الخصم (مثل: SAVE10)')}" value="${savedPromo ? savedPromo.code : ''}" style="flex:1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px;"><button class="apply-promo btn btn-outline" style="padding: 10px 16px;">${window.I18n.t('cart.apply_promo', 'تطبيق')}</button></div>
+        <button class="checkout-btn btn btn-primary w-full" style="width: 100%; margin-top: 10px; padding: 14px;"><i class="fas fa-credit-card"></i> ${window.I18n.t('cart.checkout_btn', 'إتمام الشراء')}</button>
+        <a href="shop.html" class="continue-shopping" style="display: block; text-align: center; margin-top: 15px; color: var(--light-text);"><i class="fas fa-arrow-right"></i> ${window.I18n.t('cart.continue_shopping', 'متابعة التسوق')}</a>
     `;
 
     const promoInput = summaryContainer.querySelector('.promo-code input');
