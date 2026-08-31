@@ -387,13 +387,16 @@
 
     <!-- Scripts -->
     <script src="../js/api-client.js"></script>
-    <script src="../js/main.js"></script>
+    <script src="js/admin.js"></script>
     <script>
         async function loadSettings() {
             try {
-                const res = await fetch('/api/admin/settings', { credentials: 'include' });
+                const res = await fetch('/api/admin/settings', { 
+                    credentials: 'include',
+                    headers: AdminAuth.getHeaders(false)
+                });
                 if (res.status === 401 || res.status === 403) {
-                    window.location.href = '../account.html?redirect=admin/settings.html';
+                    window.location.href = '../index.html';
                     return;
                 }
                 const settings = await res.json();
@@ -433,17 +436,7 @@
             formData.append('file', file);
 
             try {
-                let csrfToken = '';
-                try {
-                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
-                    if (csrfRes.ok) {
-                        const csrfData = await csrfRes.json();
-                        csrfToken = csrfData.csrfToken || '';
-                    }
-                } catch (e) {}
-
-                const headers = {};
-                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
+                const headers = AdminAuth.getHeaders(false);
 
                 const res = await fetch('/api/admin/upload-media', {
                     method: 'POST',
@@ -462,11 +455,9 @@
                     preview.style.display = 'block';
                 }
 
-                if (window.showToast) window.showToast('تم رفع الصورة بنجاح! ☁️', 'success');
-                else alert('تم رفع الصورة بنجاح!');
+                AdminUI.showToast('تم رفع الصورة بنجاح! ☁️', 'success');
             } catch (err) {
-                if (window.showToast) window.showToast(err.message, 'error');
-                else alert(err.message);
+                AdminUI.showToast(err.message, 'error');
             }
         }
 
@@ -502,46 +493,24 @@
             };
 
             try {
-                let csrfToken = '';
-                try {
-                    const csrfRes = await fetch('/api/csrf-token', { credentials: 'include' });
-                    if (csrfRes.ok) {
-                        const csrfData = await csrfRes.json();
-                        csrfToken = csrfData.csrfToken || '';
-                    }
-                } catch (e) {}
-
-                const headers = { 'Content-Type': 'application/json' };
-                if (csrfToken) headers['X-CSRF-Token'] = csrfToken;
-
                 const res = await fetch('/api/admin/settings', {
                     method: 'PUT',
                     credentials: 'include',
-                    headers,
+                    headers: AdminAuth.getHeaders(true),
                     body: JSON.stringify(payload)
                 });
 
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'فشل حفظ الإعدادات');
 
-                if (window.showToast) window.showToast('تم حفظ كافة الإعدادات بنجاح! ⚙️', 'success');
-                else alert('تم حفظ كافة الإعدادات بنجاح!');
+                AdminUI.showToast('تم حفظ كافة الإعدادات بنجاح! ⚙️', 'success');
             } catch (err) {
-                if (window.showToast) window.showToast(err.message, 'error');
-                else alert(err.message);
+                AdminUI.showToast(err.message, 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-save"></i> حفظ كافة التغييرات والإعدادات';
             }
         }
-
-        document.getElementById('adminLogoutBtn')?.addEventListener('click', async (e) => {
-            e.preventDefault();
-            try {
-                await fetch('/api/logout', { method: 'POST', credentials: 'include' });
-            } catch (e) {}
-            window.location.href = '../account.html';
-        });
 
         document.addEventListener('DOMContentLoaded', loadSettings);
     </script>
