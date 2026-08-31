@@ -8,6 +8,9 @@ const { upload, validateUploadedImage } = require('../middlewares/uploadMiddlewa
 router.get('/dashboard-stats', requireAdmin, adminController.getDashboardStats);
 router.get('/store-config', adminController.getPublicConfig);
 
+// Orders Management
+router.delete('/orders/:id', requireAdmin, require('../controllers/orderController').deleteOrder);
+
 // Customers & Users Management
 router.get('/users', requireAdmin, adminController.getAdminUsers);
 router.get('/users/:id', requireAdmin, adminController.getAdminUserById);

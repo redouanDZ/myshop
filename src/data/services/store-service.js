@@ -134,6 +134,10 @@ class StoreService {
     return this.repository.updateOrderStatus(orderId, status);
   }
 
+  async deleteOrder(id) {
+    return this.repository.deleteOrder(id);
+  }
+
   async updateOrderPaymentStatus(orderId, paymentStatus, paymentMethod = null) {
     return this.repository.updateOrderPaymentStatus(orderId, paymentStatus, paymentMethod);
   }

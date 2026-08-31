@@ -316,6 +316,30 @@ async function exportOrders(req, res) {
     }
 }
 
+async function deleteOrder(req, res) {
+    try {
+        const orderId = validateId(req.params.id);
+        if (!orderId) {
+            return res.status(400).json({ error: 'معرّف الطلب غير صالح' });
+        }
+
+        const order = await db.getOrderById(orderId);
+        if (!order) {
+            return res.status(404).json({ error: 'الطلب غير موجود' });
+        }
+
+        const success = await db.deleteOrder(orderId);
+        if (!success) {
+            return res.status(500).json({ error: 'فشل في حذف الطلب' });
+        }
+
+        res.json({ message: 'تم حذف الطلب بنجاح', orderId });
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        res.status(500).json({ error: error.message || 'خطأ في حذف الطلب' });
+    }
+}
+
 module.exports = {
     createOrder,
     getOrders,
@@ -323,5 +347,6 @@ module.exports = {
     getOrderItems,
     trackOrder,
     updateOrderStatus,
-    exportOrders
+    exportOrders,
+    deleteOrder
 };

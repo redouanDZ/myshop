@@ -14,7 +14,8 @@ router.get('/order-items/:orderId', orderController.getOrderItems);
 // Authenticated customer routes
 router.get('/orders', requireAuth, orderController.getOrders);
 
-// Admin order status update
+// Admin order status update & deletion
 router.put('/orders/:id/status', requireAdmin, orderController.updateOrderStatus);
+router.delete('/orders/:id', requireAdmin, orderController.deleteOrder);
 
 module.exports = router;

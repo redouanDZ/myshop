@@ -60,6 +60,7 @@ module.exports = {
     getOrderByNumber: buildProxy('getOrderByNumber'),
     getOrderByTracking: buildProxy('getOrderByTracking'),
     updateOrderStatus: buildProxy('updateOrderStatus'),
+    deleteOrder: buildProxy('deleteOrder'),
     updateOrderPaymentStatus: buildProxy('updateOrderPaymentStatus'),
     getOrderItems: buildProxy('getOrderItems'),
     getOrders: buildProxy('getOrders'),

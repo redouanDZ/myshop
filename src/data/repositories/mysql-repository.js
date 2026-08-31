@@ -1126,6 +1126,46 @@ class MysqlRepository {
     return result.affectedRows > 0;
   }
 
+  async deleteOrder(id) {
+    const cleanId = Number(id);
+    const connection = await this.pool.getConnection();
+    try {
+      await connection.beginTransaction();
+
+      const [orderRows] = await connection.query('SELECT * FROM orders WHERE id = ? FOR UPDATE', [cleanId]);
+      if (!orderRows[0]) {
+        await connection.rollback();
+        return false;
+      }
+
+      const order = orderRows[0];
+
+      // If order was active (not cancelled), restore product stock before deletion
+      if (order.status !== 'cancelled') {
+        const [items] = await connection.query('SELECT product_id, quantity FROM order_items WHERE order_id = ?', [cleanId]);
+        for (const item of items) {
+          if (item.product_id && item.quantity > 0) {
+            await connection.query('UPDATE products SET stock = stock + ? WHERE id = ?', [Number(item.quantity), Number(item.product_id)]);
+          }
+        }
+      }
+
+      // Delete order items
+      await connection.query('DELETE FROM order_items WHERE order_id = ?', [cleanId]);
+
+      // Delete order
+      const [result] = await connection.query('DELETE FROM orders WHERE id = ?', [cleanId]);
+
+      await connection.commit();
+      return result.affectedRows > 0;
+    } catch (error) {
+      await connection.rollback();
+      throw error;
+    } finally {
+      connection.release();
+    }
+  }
+
   async updateOrderPaymentStatus(orderId, paymentStatus, paymentMethod = null) {
     const fields = ['payment_status = ?'];
     const params = [String(paymentStatus)];

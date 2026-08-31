@@ -47,6 +47,7 @@
         .order-action-btn:hover { background: #2563eb; color: #fff; }
         .order-action-btn.view-btn:hover { background: #0284c7; color: #fff; }
         .order-action-btn.invoice-btn:hover { background: #10b981; color: #fff; }
+        .order-action-btn.delete-btn:hover { background: #dc2626; color: #fff; }
         
         .status-tab-btn {
             padding: 6px 14px;
@@ -311,6 +312,7 @@
                         <button class="order-action-btn" onclick="printThermalLabel(${order.id})" style="color: #ea580c;" title="طباعة بوليصة الشحن الحرارية (Thermal Label)"><i class="fas fa-tag"></i></button>
                         <a href="../invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn invoice-btn" title="طباعة الفاتورة"><i class="fas fa-file-invoice"></i></a>
                         <a href="../track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn" title="تتبع الشحنة"><i class="fas fa-truck"></i></a>
+                        <button class="order-action-btn delete-btn" onclick="deleteAdminOrder(${order.id}, '${AdminTable.escapeHtml(order.order_number || '#' + order.id)}')" style="color: #dc2626;" title="حذف الطلب نهائياً"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 </tr>
             `).join('');
@@ -601,6 +603,30 @@
 
         function closeOrderDetailsModal() {
             document.getElementById('orderDetailsModal').style.display = 'none';
+        }
+
+        async function deleteAdminOrder(orderId, orderNum) {
+            const confirmed = await AdminUI.confirm(`هل أنت متأكد من رغبتك في حذف الطلب (${orderNum}) نهائياً؟ سيتم إلغاء الطلب واسترجاع المخزون تلقائياً.`, 'تأكيد حذف الطلب');
+            if (!confirmed) return;
+
+            try {
+                const headers = AdminAuth.getHeaders(true);
+                const res = await fetch(`/api/orders/${orderId}`, {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers
+                });
+
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    throw new Error(data.error || 'فشل حذف الطلب');
+                }
+
+                AdminUI.showToast('تم حذف الطلب بنجاح', 'success');
+                await loadAdminOrders();
+            } catch (err) {
+                AdminUI.showToast(err.message || 'فشل حذف الطلب', 'error');
+            }
         }
     </script>
 </body>
