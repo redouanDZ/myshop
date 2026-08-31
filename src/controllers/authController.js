@@ -125,7 +125,7 @@ async function login(req, res) {
         });
     } catch (error) {
         console.error('Login error:', error);
-        res.status(500).json({ message: 'خطأ أثناء تسجيل الدخول' });
+        res.status(500).json({ message: error.message || 'خطأ أثناء تسجيل الدخول' });
     }
 }
 

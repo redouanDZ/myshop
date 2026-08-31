@@ -71,9 +71,10 @@ function clearLoginFailure(identifier) {
 }
 
 function createAccessToken(user, sessionId) {
+    const jwtSecret = config.JWT_SECRET || process.env.JWT_SECRET || 'myshop_production_jwt_fallback_secret_2026_key_dz';
     return jwt.sign(
         { id: user.id, email: user.email, role: user.role || 'customer', sessionId, type: 'access' },
-        config.JWT_SECRET,
+        jwtSecret,
         { expiresIn: '15m', issuer: 'myshop' }
     );
 }
