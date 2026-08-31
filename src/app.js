@@ -75,11 +75,21 @@ app.use('/api', apiRateLimiter);
 // CORS Config
 const corsOptions = {
     origin: (origin, callback) => {
-        if (!origin || config.ALLOWED_ORIGINS.includes(origin)) {
-            callback(null, true);
-            return;
+        if (!origin) {
+            return callback(null, true);
         }
-        callback(new Error('Not allowed by CORS'));
+        // Allow all configured origins, onrender.com subdomains, or localhost
+        if (
+            config.ALLOWED_ORIGINS.includes(origin) ||
+            origin.endsWith('.onrender.com') ||
+            origin.startsWith('http://localhost') ||
+            origin.startsWith('http://127.0.0.1') ||
+            !config.isProduction
+        ) {
+            return callback(null, true);
+        }
+        // Allow any production origin that connects directly to the store
+        return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
