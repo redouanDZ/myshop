@@ -3,6 +3,7 @@ const db = require('../data/db-connection.js');
 const { parseUserFromReq } = require('../utils/tokenUtils');
 const { validateId } = require('../utils/helpers');
 const mailService = require('../services/mailService');
+const telegramService = require('../services/telegramService');
 
 async function createOrder(req, res) {
     try {
@@ -33,6 +34,7 @@ async function createOrder(req, res) {
             if (order) {
                 mailService.sendOrderConfirmation(order, items).catch(e => console.error('Mail confirmation error:', e.message));
                 mailService.notifyAdminNewOrder(order).catch(e => console.error('Mail admin notification error:', e.message));
+                telegramService.notifyNewOrder(order, items).catch(e => console.error('Telegram notification error:', e.message));
             }
         } catch (mailErr) {
             console.error('Error in post-order notifications:', mailErr.message);

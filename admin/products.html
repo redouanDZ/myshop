@@ -55,6 +55,7 @@
                     <li><a href="users.html">العملاء</a></li>
                     <li><a href="coupons.html">الكوبونات</a></li>
                     <li><a href="reviews.html">التقييمات</a></li>
+                    <li><a href="settings.html">الإعدادات</a></li>
                 </ul>
             </nav>
             <div class="user-actions" style="display: flex; gap: 15px; align-items: center;">
@@ -83,6 +84,7 @@
                 <li><a href="users.html"><i class="fas fa-users"></i> إدارة المستخدمين</a></li>
                 <li><a href="coupons.html"><i class="fas fa-ticket-alt"></i> قسائم الخصم</a></li>
                 <li><a href="reviews.html"><i class="fas fa-star"></i> تقييمات المنتجات</a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> الإعدادات والبكسلات</a></li>
                 <li><a href="../index.html"><i class="fas fa-store"></i> واجهة المتجر</a></li>
                 <li style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px;">
                     <a href="#" id="adminLogoutBtn" style="color: #ef4444;"><i class="fas fa-sign-out-alt"></i> تسجيل الخروج</a>
@@ -196,10 +198,14 @@
                         </div>
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
                         <div>
-                            <label for="productPrice" style="display: block; margin-bottom: 5px; font-weight: bold;">السعر (دج) *</label>
-                            <input type="number" id="productPrice" placeholder="أدخل السعر بالدج" min="0" step="1" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                            <label for="productPrice" style="display: block; margin-bottom: 5px; font-weight: bold;">سعر البيع (دج) *</label>
+                            <input type="number" id="productPrice" placeholder="سعر البيع" min="0" step="1" required style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
+                        </div>
+                        <div>
+                            <label for="productCostPrice" style="display: block; margin-bottom: 5px; font-weight: bold;">سعر التكلفة / الشراء (دج)</label>
+                            <input type="number" id="productCostPrice" placeholder="سعر التكلفة" min="0" step="1" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px;">
                         </div>
                         <div>
                             <label for="productStock" style="display: block; margin-bottom: 5px; font-weight: bold;">الكمية المتوفرة *</label>
@@ -442,6 +448,7 @@
             document.getElementById('productName').value = '';
             document.getElementById('productCategory').value = '';
             document.getElementById('productPrice').value = '';
+            document.getElementById('productCostPrice').value = '';
             document.getElementById('productStock').value = '';
             document.getElementById('productStatus').value = 'active';
             document.getElementById('productDescription').value = '';
@@ -465,6 +472,7 @@
                 document.getElementById('productName').value = product.name || '';
                 document.getElementById('productCategory').value = product.category_name || product.category || '';
                 document.getElementById('productPrice').value = product.price || '';
+                document.getElementById('productCostPrice').value = product.cost_price || '';
                 document.getElementById('productStock').value = product.stock || '0';
                 document.getElementById('productStatus').value = product.status || 'active';
                 document.getElementById('productDescription').value = product.description || '';
@@ -490,6 +498,7 @@
                 formData.append('name', document.getElementById('productName').value.trim());
                 formData.append('category', document.getElementById('productCategory').value.trim());
                 formData.append('price', document.getElementById('productPrice').value);
+                formData.append('cost_price', document.getElementById('productCostPrice').value || '0');
                 formData.append('stock', document.getElementById('productStock').value);
                 formData.append('status', document.getElementById('productStatus').value);
                 formData.append('description', document.getElementById('productDescription').value.trim());

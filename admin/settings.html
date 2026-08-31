@@ -365,7 +365,42 @@
                     </div>
                 </div>
 
-                <!-- 6. Cloud Media Storage Info -->
+                <!-- 6. Telegram Instant Order Alerts -->
+                <div class="settings-section-card">
+                    <h3><i class="fab fa-telegram" style="color: #0088cc;"></i> إشعارات تيليجرام الفورية للطلبات (Telegram Instant Order Alerts)</h3>
+                    <p style="color: #64748b; font-size: 0.9rem; margin-top: -8px; margin-bottom: 16px;">
+                        استلم إشعاراً فورياً على هاتفك عبر تطبيق Telegram مع رنة تنبيه وتفاصيل العميل بمجرد تسجيل أي طلب شراء جديد.
+                    </p>
+                    <div class="toggle-switch-container" style="margin-bottom: 16px;">
+                        <div>
+                            <strong style="display: block; color: #1e293b;"><i class="fas fa-bell" style="color: #0088cc;"></i> تفعيل إشعارات التيليجرام</strong>
+                            <small style="color: #64748b;">إرسال تفاصيل كل طلب شراء جديد فور تسجيله إلى حساب التيليجرام الخاص بك</small>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="setting_telegram_notifications_enabled" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label><i class="fas fa-key"></i> رمز توكن البوت (Telegram Bot Token)</label>
+                            <input type="password" id="setting_telegram_bot_token" placeholder="مثال: 123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ" dir="ltr">
+                            <small style="color: #64748b;">يمكنك إنشاء بوت مجاني والحصول على التوكن من <strong>@BotFather</strong></small>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-id-badge"></i> معرّف المحادثة (Telegram Chat ID)</label>
+                            <input type="text" id="setting_telegram_chat_id" placeholder="مثال: 123456789 أو -100xxxxxxx" dir="ltr">
+                            <small style="color: #64748b;">يمكنك معرفة الـ ID الخاص بك عبر مراسلة <strong>@userinfobot</strong></small>
+                        </div>
+                    </div>
+                    <div style="margin-top: 14px; display: flex; gap: 10px;">
+                        <button type="button" onclick="testTelegramNotification()" id="testTelegramBtn" style="background: #0088cc; color: #fff; border: none; padding: 9px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem;">
+                            <i class="fas fa-paper-plane"></i> اختبار الإرسال الفوري للتيليجرام
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 7. Cloud Media Storage Info -->
                 <div class="settings-section-card" style="background: #f0fdf4; border-color: #bbf7d0;">
                     <h3 style="border-bottom: none; margin-bottom: 8px; color: #166534;">
                         <i class="fas fa-cloud" style="color: #16a34a;"></i> حالة التخزين السحابي للوسائط (Cloud Media Storage)
@@ -489,7 +524,10 @@
                 tiktok_pixel_id: document.getElementById('setting_tiktok_pixel_id').value.trim(),
                 google_analytics_id: document.getElementById('setting_google_analytics_id').value.trim(),
                 snapchat_pixel_id: document.getElementById('setting_snapchat_pixel_id').value.trim(),
-                google_client_id: document.getElementById('setting_google_client_id').value.trim()
+                google_client_id: document.getElementById('setting_google_client_id').value.trim(),
+                telegram_bot_token: document.getElementById('setting_telegram_bot_token').value.trim(),
+                telegram_chat_id: document.getElementById('setting_telegram_chat_id').value.trim(),
+                telegram_notifications_enabled: document.getElementById('setting_telegram_notifications_enabled').checked ? 'true' : 'false'
             };
 
             try {
@@ -509,6 +547,39 @@
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<i class="fas fa-save"></i> حفظ كافة التغييرات والإعدادات';
+            }
+        }
+
+        async function testTelegramNotification() {
+            const btn = document.getElementById('testTelegramBtn');
+            const botToken = document.getElementById('setting_telegram_bot_token').value.trim();
+            const chatId = document.getElementById('setting_telegram_chat_id').value.trim();
+
+            if (!botToken || !chatId) {
+                AdminUI.showToast('يرجى إدخال رمز البوت (Bot Token) ومعرّف المحادثة (Chat ID) أولاً', 'warning');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري إرسال الاختبار...';
+
+            try {
+                const res = await fetch('/api/admin/test-telegram', {
+                    method: 'POST',
+                    credentials: 'include',
+                    headers: AdminAuth.getHeaders(true),
+                    body: JSON.stringify({ botToken, chatId })
+                });
+
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'فشل إرسال رسالة الاختبار');
+
+                AdminUI.showToast(data.message || 'تم إرسال رسالة الاختبار بنجاح! تفقد تطبيق تيليجرام 📱', 'success');
+            } catch (err) {
+                AdminUI.showToast(err.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane"></i> اختبار الإرسال الفوري للتيليجرام';
             }
         }
 

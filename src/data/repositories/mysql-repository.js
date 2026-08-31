@@ -146,6 +146,7 @@ function normalizeProductRow(row) {
     category: row.category_name || row.category || 'إلكترونيات',
     category_id: row.category_id ? Number(row.category_id) : null,
     price: Number(row.price),
+    cost_price: Number(row.cost_price || 0),
     stock: Number(row.stock),
     image_url: row.image_url || '/images/product-placeholder.jpg',
     status: row.status || 'active',
@@ -232,14 +233,24 @@ class MysqlRepository {
     this.pool = pool;
   }
 
-  async initializeSchema() { const runMigrations = require('../../../database/migrate'); await runMigrations(); await this.seedDefaultData(); }
+  async initializeSchema() {
+    const runMigrations = require('../../../database/migrate');
+    await runMigrations();
+    try {
+      const [cols] = await this.pool.query("SHOW COLUMNS FROM products LIKE 'cost_price'");
+      if (!cols.length) {
+        await this.pool.query('ALTER TABLE products ADD COLUMN cost_price DECIMAL(12,2) NOT NULL DEFAULT 0.00 AFTER price');
+      }
+    } catch (e) {}
+    await this.seedDefaultData();
+  }
 
   async seedDefaultData() {
     const isProduction = process.env.NODE_ENV === 'production';
 
     const [userCountRow] = await this.pool.query('SELECT COUNT(*) AS total FROM users');
-    if (Number(userCountRow[0].total) === 0) {
-      if (isProduction) {
+    if (isProduction) {
+      if (Number(userCountRow[0].total) === 0) {
         const adminEmail = process.env.ADMIN_EMAIL;
         const adminPassword = process.env.ADMIN_PASSWORD;
         if (adminEmail && adminPassword) {
@@ -252,14 +263,14 @@ class MysqlRepository {
         } else {
           console.log('ℹ️ [Production Init] No initial admin seeded. Use "npm run create-admin" to create administrator account.');
         }
-      } else {
-        const customerHash = await bcrypt.hash('password123', 10);
-        const adminHash = await bcrypt.hash('adminpassword', 10);
-        await this.pool.query(
-          'INSERT IGNORE INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1), (?, ?, ?, ?, ?, 1)',
-          ['مستخدم تجريبي', 'user@example.com', '0550000000', customerHash, 'customer', 'مدير النظام', 'admin@example.com', '0660000000', adminHash, 'admin']
-        );
       }
+    } else {
+      const customerHash = await bcrypt.hash('password123', 10);
+      const adminHash = await bcrypt.hash('adminpassword', 10);
+      await this.pool.query(
+        'INSERT IGNORE INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1), (?, ?, ?, ?, ?, 1)',
+        ['مستخدم تجريبي', 'user@example.com', '0550000000', customerHash, 'customer', 'مدير النظام', 'admin@example.com', '0660000000', adminHash, 'admin']
+      );
     }
 
     const [addressCountRow] = await this.pool.query('SELECT COUNT(*) AS total FROM user_addresses');
@@ -711,12 +722,14 @@ class MysqlRepository {
 
   async createProduct(productData) {
     const categoryId = await this.ensureCategory(productData.category);
+    const costPrice = Number(productData.cost_price ?? productData.costPrice ?? 0);
     const [result] = await this.pool.query(
-      'INSERT INTO products (category_id, name, price, stock, image_url, status, description, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      'INSERT INTO products (category_id, name, price, cost_price, stock, image_url, status, description, rating) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
       [
         categoryId,
         String(productData.name || '').trim(),
         Number(productData.price || 0),
+        costPrice,
         Number(productData.stock || 0),
         productData.image_url || '/images/product-placeholder.jpg',
         productData.status || 'active',
@@ -743,6 +756,9 @@ class MysqlRepository {
     }
     if (productData.price !== undefined) {
       fields.push('price = ?'); params.push(Number(productData.price));
+    }
+    if (productData.cost_price !== undefined || productData.costPrice !== undefined) {
+      fields.push('cost_price = ?'); params.push(Number(productData.cost_price ?? productData.costPrice ?? 0));
     }
     if (productData.stock !== undefined) {
       fields.push('stock = ?'); params.push(Number(productData.stock));
@@ -1238,8 +1254,28 @@ class MysqlRepository {
       SELECT id, name, price, stock, image_url FROM products WHERE stock <= 3 ORDER BY stock ASC LIMIT 6
     `);
 
+    // Estimated Total Cost & Net Profit
+    let totalCost = 0;
+    try {
+      const [cogsRow] = await this.pool.query(`
+        SELECT COALESCE(SUM(COALESCE(p.cost_price, 0) * oi.quantity), 0) AS total_cost
+        FROM order_items oi
+        JOIN orders o ON o.id = oi.order_id
+        LEFT JOIN products p ON p.id = oi.product_id
+        WHERE o.status != 'cancelled'
+      `);
+      totalCost = Number(cogsRow[0]?.total_cost || 0);
+    } catch (e) {
+      totalCost = 0;
+    }
+
+    const totalRevenue = Number(totalRevenueRow[0]?.total_revenue || 0);
+    const netProfit = Math.max(0, totalRevenue - totalCost);
+
     return {
-      totalRevenue: Number(totalRevenueRow[0]?.total_revenue || 0),
+      totalRevenue,
+      totalCost,
+      netProfit,
       totalOrders: Number(totalOrdersRow[0]?.total_orders || 0),
       newOrders: Number(newOrdersRow[0]?.new_orders || 0),
       outOfStockCount: Number(outOfStockRow[0]?.out_of_stock || 0),

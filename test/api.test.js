@@ -5,8 +5,21 @@ const test = require('node:test');
 const assert = require('node:assert');
 const db = require('../src/data/db-connection.js');
 
+let testUser;
+
 test.before(async () => {
     await db.initializeDatabase();
+    testUser = await db.findUserByEmail('user@example.com');
+    if (!testUser) {
+        await db.createUser({
+            username: 'مستخدم تجريبي',
+            email: 'user@example.com',
+            phone: '0550000000',
+            password: 'password123',
+            role: 'customer'
+        });
+        testUser = await db.findUserByEmail('user@example.com');
+    }
 });
 
 test('Product Search and Filters Logic Test', async () => {
@@ -58,7 +71,7 @@ test('Cart Calculation and Order Placement Test', async () => {
     const productsRes = await db.getProducts({ limit: 1 });
     const product = (productsRes.products && productsRes.products[0]) || { id: 1, price: 125000, name: 'Test Product' };
     const orderRes = await db.createOrder({
-        userId: 1,
+        userId: testUser.id,
         total: Number(product.price),
         cart: [{ id: product.id, name: product.name, price: Number(product.price), quantity: 1 }]
     });
@@ -93,24 +106,24 @@ test('Session Lifecycle and Strict Revocation Security Test', async () => {
 
     // 1. Issue a valid session and token
     const sessionId = await issueSession(
-        { id: 1, email: 'user@example.com', role: 'customer' },
+        { id: testUser.id, email: testUser.email, role: 'customer' },
         { headers: { 'user-agent': 'TestRunner/1.0' }, ip: '127.0.0.1' }
     );
     assert.ok(sessionId, 'Session ID must be issued');
-    const token = createAccessToken({ id: 1, email: 'user@example.com', role: 'customer' }, sessionId);
+    const token = createAccessToken({ id: testUser.id, email: testUser.email, role: 'customer' }, sessionId);
 
     // 2. Validate session works
     const userId = await parseUserFromReq({ headers: { authorization: `Bearer ${token}` } });
-    assert.strictEqual(userId, 1, 'Valid session should return user ID 1');
+    assert.strictEqual(userId, testUser.id, 'Valid session should return user ID');
 
     // 3. Simulate server restart / in-memory cache wipe
     activeSessions.clear();
     const userAfterRestart = await parseUserFromReq({ headers: { authorization: `Bearer ${token}` } });
-    assert.strictEqual(userAfterRestart, 1, 'Valid session should persist and survive in-memory cache wipe via DB');
+    assert.strictEqual(userAfterRestart, testUser.id, 'Valid session should persist and survive in-memory cache wipe via DB');
 
     // 4. Test valid JWT signature with non-existent session ID
     const fakeToken = jwt.sign(
-        { id: 1, email: 'user@example.com', role: 'customer', sessionId: 'fake_non_existent_session_123', type: 'access' },
+        { id: testUser.id, email: testUser.email, role: 'customer', sessionId: 'fake_non_existent_session_123', type: 'access' },
         config.JWT_SECRET,
         { expiresIn: '15m' }
     );
@@ -197,7 +210,7 @@ test('Algerian 58 Wilayas Retrieval Test', async () => {
 
 test('Wishlist Add, Check, List and Remove Test', async () => {
     const db = require('../src/data/db-connection.js');
-    const userId = 1;
+    const userId = testUser.id;
     const productId = 1;
 
     // Add to wishlist

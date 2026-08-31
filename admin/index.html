@@ -83,7 +83,7 @@
             </div>
 
             <!-- Stats Cards Grid -->
-            <div class="stats-container">
+            <div class="stats-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; margin-bottom: 25px;">
                 <div class="stat-card">
                     <div class="stat-info">
                         <h3 id="statTotalRevenue">0 دج</h3>
@@ -91,6 +91,16 @@
                     </div>
                     <div class="stat-icon green">
                         <i class="fas fa-wallet"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h3 id="statNetProfit" style="color: #059669;">0 دج</h3>
+                        <p>صافي الأرباح التقديرية 📈</p>
+                    </div>
+                    <div class="stat-icon green" style="background: rgba(16, 185, 129, 0.15); color: #059669;">
+                        <i class="fas fa-chart-line"></i>
                     </div>
                 </div>
 
@@ -185,6 +195,10 @@
 
                 // Fill KPI cards
                 document.getElementById('statTotalRevenue').textContent = `${Number(stats.totalRevenue || 0).toLocaleString()} دج`;
+                const netProfitEl = document.getElementById('statNetProfit');
+                if (netProfitEl) {
+                    netProfitEl.textContent = `${Number(stats.netProfit || 0).toLocaleString()} دج`;
+                }
                 document.getElementById('statTotalOrders').textContent = stats.totalOrders || 0;
                 document.getElementById('statNewOrders').textContent = stats.newOrders || 0;
                 document.getElementById('statLowStock').textContent = (stats.outOfStockCount || 0) + (stats.lowStockCount || 0);

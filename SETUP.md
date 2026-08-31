@@ -32,6 +32,11 @@ cp .env.example .env
 | `CHARGILY_PUBLIC_KEY` | المفتاح العام لبوابة Chargily Pay V2 | `live_pk_...` |
 | `CHARGILY_SECRET_KEY` | المفتاح السري لبوابة Chargily Pay V2 | `live_sk_...` |
 | `CHARGILY_MODE` | وضع الدفع (`live` للإنتاج أو `test`) | `live` |
+| `TELEGRAM_BOT_TOKEN` | توكن بوت تيليجرام للإشعارات الفورية | `123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ` |
+| `TELEGRAM_CHAT_ID` | معرّف المحادثة أو القناة المستلمة | `123456789` |
+| `CLOUDINARY_CLOUD_NAME` | اسم سحابة Cloudinary لتخزين الصور | `your-cloud-name` |
+| `CLOUDINARY_API_KEY` | المفتاح العام لـ Cloudinary | `your-api-key` |
+| `CLOUDINARY_API_SECRET` | المفتاح السري لـ Cloudinary | `your-api-secret` |
 | `BASE_URL` | النطاق الرسمي للإنتاج | `https://myshop.dz` |
 
 > 🔑 **توليد مفاتيح سرية قوية**:
@@ -55,7 +60,16 @@ npm run migrate
 
 ---
 
-## 4. 🚀 خيارات النشر والتشغيل (Deployment)
+## 4. 📱 إعداد إشعارات تيليجرام الفورية (Telegram Alerts Setup)
+
+1. افتح تطبيق تيليجرام وابحث عن `@BotFather`.
+2. أرسل الأمر `/newbot` واتبع التعليمات لإنشاء البوت والحصول على `Bot Token`.
+3. لمعرفة معرّف حسابك (`Chat ID`)، راسل `@userinfobot` وانسخ رقم الـ ID.
+4. ادخل إلى **لوحة التحكم > الإعدادات والبكسلات** وضع التوكن والـ ID، ثم اضغط على **"اختبار الإرسال الفوري للتيليجرام"** للتأكد من وصول التنبيهات.
+
+---
+
+## 5. 🚀 خيارات النشر والتشغيل (Deployment)
 
 ### الخيار أ: التشغيل عبر Docker Compose (موصى به)
 
@@ -82,7 +96,7 @@ pm2 save
 
 ---
 
-## 5. 📦 النسخ الاحتياطي والاستعادة في الإنتاج (Production Backup & Recovery)
+## 6. 📦 النسخ الاحتياطي والاستعادة في الإنتاج (Production Backup & Recovery)
 
 ### 1. أخذ نسخة احتياطية كاملة (Backup with Schema, Data & Triggers):
 ```bash
@@ -103,10 +117,10 @@ mysql -h 127.0.0.1 -P 3306 -u myshop_user -p myshop_db < backup_file.sql
 
 ---
 
-## 6. 🧪 التحقق من الجودة والاختبارات
+## 7. 🧪 التحقق من الجودة والاختبارات
 
 ```bash
-# 1. تشغيل الاختبارات الآلية الشاملة (30/30)
+# 1. تشغيل الاختبارات الآلية الشاملة (52/52)
 npm test
 
 # 2. فحص جودة الكود
@@ -121,7 +135,7 @@ npm audit
 
 ---
 
-## 7. 🛠️ حل المشاكل الشائعة (Troubleshooting)
+## 8. 🛠️ حل المشاكل الشائعة (Troubleshooting)
 
 - **خطأ الاتصال بقاعدة البيانات (`ECONNREFUSED`)**: تأكد من أن خدمة MySQL تعمل على المنفذ المحدد وأن بيانات الاتصال في `.env` متطابقة.
 - **خطأ CSRF Token**: تأكد من تمرير ترويسة `x-csrf-token` أو استخدام كوكي الجلسة الصحيح.

@@ -39,5 +39,6 @@ router.delete('/reviews/:id', requireAdmin, adminController.deleteReview);
 router.get('/settings', requireAdmin, adminController.getStoreSettings);
 router.put('/settings', requireAdmin, adminController.updateStoreSettings);
 router.post('/upload-media', requireAdmin, upload.single('file'), validateUploadedImage, adminController.uploadMedia);
+router.post('/test-telegram', requireAdmin, adminController.testTelegramAlert);
 
 module.exports = router;

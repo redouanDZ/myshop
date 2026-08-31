@@ -317,6 +317,30 @@ async function deleteCategory(req, res) {
     }
 }
 
+async function testTelegramAlert(req, res) {
+    try {
+        const { botToken, chatId } = req.body || {};
+        const telegramService = require('../services/telegramService');
+        const settings = await db.getStoreSettings().catch(() => ({}));
+        const token = botToken || settings.telegram_bot_token || process.env.TELEGRAM_BOT_TOKEN;
+        const id = chatId || settings.telegram_chat_id || process.env.TELEGRAM_CHAT_ID;
+
+        if (!token || !id) {
+            return res.status(400).json({ error: 'يرجى تقديم رمز البوت (Bot Token) ومعرّف المحادثة (Chat ID)' });
+        }
+
+        const result = await telegramService.sendTestAlert(token, id);
+        if (!result.success) {
+            return res.status(400).json({ error: result.error || 'فشل إرسال رسالة الاختبار إلى تيليجرام' });
+        }
+
+        res.json({ message: 'تم إرسال رسالة الاختبار بنجاح إلى حساب التيليجرام الخاص بك!' });
+    } catch (error) {
+        console.error('Error sending test Telegram message:', error);
+        res.status(500).json({ error: error.message || 'خطأ أثناء اختبار إشعارات تيليجرام' });
+    }
+}
+
 module.exports = {
     getDashboardStats,
     getPublicConfig,
@@ -338,5 +362,6 @@ module.exports = {
     deleteReview,
     getStoreSettings,
     updateStoreSettings,
-    uploadMedia
+    uploadMedia,
+    testTelegramAlert
 };

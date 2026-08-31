@@ -47,6 +47,7 @@
         .order-action-btn:hover { background: #2563eb; color: #fff; }
         .order-action-btn.view-btn:hover { background: #0284c7; color: #fff; }
         .order-action-btn.invoice-btn:hover { background: #10b981; color: #fff; }
+        .order-action-btn.whatsapp-btn:hover { background: #25d366; color: #fff; }
         .order-action-btn.delete-btn:hover { background: #dc2626; color: #fff; }
         
         .status-tab-btn {
@@ -309,6 +310,7 @@
                     </td>
                     <td style="padding: 12px 10px; text-align: center;">
                         <button class="order-action-btn view-btn" onclick="viewOrderDetails(${order.id})" title="معاينة تفاصيل ومحتويات الطلب"><i class="fas fa-eye"></i></button>
+                        <button class="order-action-btn whatsapp-btn" onclick="openWhatsAppContact('${AdminTable.escapeHtml(order.phone || '')}', '${AdminTable.escapeHtml(order.order_number || '#' + order.id)}', '${AdminTable.escapeHtml(order.shipping_full_name || '')}', ${order.total})" style="color: #25d366;" title="مراسلة وتأكيد الطلب عبر واتساب"><i class="fab fa-whatsapp"></i></button>
                         <button class="order-action-btn" onclick="printThermalLabel(${order.id})" style="color: #ea580c;" title="طباعة بوليصة الشحن الحرارية (Thermal Label)"><i class="fas fa-tag"></i></button>
                         <a href="../invoice.html?id=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn invoice-btn" title="طباعة الفاتورة"><i class="fas fa-file-invoice"></i></a>
                         <a href="../track-order.html?orderId=${order.id}&phone=${encodeURIComponent(order.phone || '')}" target="_blank" class="order-action-btn" title="تتبع الشحنة"><i class="fas fa-truck"></i></a>
@@ -603,6 +605,26 @@
 
         function closeOrderDetailsModal() {
             document.getElementById('orderDetailsModal').style.display = 'none';
+        }
+
+        function openWhatsAppContact(phone, orderNum, customerName, total) {
+            if (!phone || phone === '-' || phone === 'undefined') {
+                AdminUI.showToast('رقم هاتف العميل غير متوفر لهذا الطلب', 'warning');
+                return;
+            }
+
+            let cleanPhone = String(phone).replace(/[\s\-\+\(\)]/g, '');
+            if (cleanPhone.startsWith('0')) {
+                cleanPhone = '213' + cleanPhone.substring(1);
+            } else if (!cleanPhone.startsWith('213')) {
+                cleanPhone = '213' + cleanPhone;
+            }
+
+            const greeting = customerName ? `الأستاذ(ة) ${customerName}` : 'عزيزي العميل';
+            const msg = `مرحباً ${greeting} 👋\nنتواصل معك من متجر MYSHOP بخصوص طلبك رقم (${orderNum}) بمبلغ ${Number(total).toLocaleString()} دج.\nهل تؤكد رغبتك في شحن وتوصيل الطلب إلى عنوانك؟`;
+
+            const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`;
+            window.open(waUrl, '_blank');
         }
 
         async function deleteAdminOrder(orderId, orderNum) {
