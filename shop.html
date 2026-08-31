@@ -166,6 +166,14 @@
     </script>
 </head>
 <body>
+  <!-- Announcement & Sales Promotion Bar -->
+  <div style="background: linear-gradient(90deg, #1e1b4b, #2563eb, #1e1b4b); color: #ffffff; padding: 8px 16px; font-size: 0.88rem; font-weight: bold; text-align: center; display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <span>💼 هل تود امتلاك متجر إلكتروني احترافي مثل هذا لبيع منتجاتك؟</span>
+      <a href="landing.html#pricing" style="background: #ffffff; color: #1e1b4b; padding: 3px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);">
+          <i class="fas fa-bolt" style="color: #f59e0b;"></i> استعرض الباقات والأسعار
+      </a>
+  </div>
+
   <!-- رأس الموقع -->
   <header>
     <div class="container">
@@ -182,6 +190,7 @@
                     <li><a href="cart.html"><i class="fas fa-shopping-cart"></i> <span data-i18n="nav.cart">عربة التسوق</span></a></li>
                     <li><a href="wishlist.html"><i class="fas fa-heart"></i> <span data-i18n="nav.wishlist">المفضلة</span></a></li>
                     <li><a href="track-order.html"><i class="fas fa-truck"></i> <span data-i18n="nav.track_order">تتبع طلبي</span></a></li>
+                    <li><a href="landing.html#pricing" style="color: #2563eb; font-weight: 800;"><i class="fas fa-tags" style="color: #f59e0b;"></i> <span>باقات شراء المتجر</span></a></li>
                 </ul>
             </nav>
       <div class="user-actions">
@@ -679,5 +688,10 @@
   <script src="js/cart.js"></script>
   <script src="js/wishlist.js"></script>
   <script src="js/i18n.js"></script>
+
+  <!-- Floating Buy Store Badge -->
+  <a href="landing.html#pricing" style="position: fixed; bottom: 22px; left: 22px; z-index: 999; background: linear-gradient(135deg, #2563eb, #1d4ed8); color: #ffffff; text-decoration: none; padding: 12px 20px; border-radius: 50px; font-weight: 800; font-size: 0.92rem; display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(37, 99, 235, 0.45); border: 1px solid rgba(255,255,255,0.25); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.06)'" onmouseout="this.style.transform='scale(1)'">
+      <i class="fas fa-bolt" style="color: #fbbf24;"></i> امتلك متجرك (الأسعار والباقات) ⚡
+  </a>
 </body>
 </html>
