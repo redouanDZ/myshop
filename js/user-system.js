@@ -270,6 +270,19 @@ function showLoginForm() {
                         <a href="#" id="show-signup" data-i18n="auth.create_account">إنشاء حساب جديد</a>
                         <a href="#" id="show-forgot-password" data-i18n="auth.forgot_password">نسيت كلمة المرور؟</a>
                     </div>
+
+                    <!-- Quick 1-Click Demo Access -->
+                    <div style="margin-top: 16px; padding: 10px 12px; background: rgba(16, 185, 129, 0.08); border: 1px dashed #10b981; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 0.82rem; color: #059669; font-weight: bold; display: block; margin-bottom: 6px;">⚡ الدخول التجريبي السريع (1-Click Demo):</span>
+                        <div style="display: flex; gap: 8px; justify-content: center; flex-wrap: wrap;">
+                            <button type="button" onclick="fillDemoLogin('demo@myshop.dz', 'demo1234')" style="background: #10b981; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fas fa-user-shield"></i> أدمن تجريبي
+                            </button>
+                            <button type="button" onclick="fillDemoLogin('customer@myshop.dz', 'demo1234')" style="background: #2563eb; color: #fff; border: none; padding: 5px 12px; border-radius: 6px; font-size: 0.82rem; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                                <i class="fas fa-user"></i> زبون تجريبي
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -750,6 +763,16 @@ async function handleLogin() {
         showNotification('حدث خطأ أثناء محاولة تسجيل الدخول. يرجى المحاولة لاحقاً.', 'error');
     }
 }
+
+window.fillDemoLogin = function(email, password) {
+    const emailInput = document.getElementById('login-email');
+    const passwordInput = document.getElementById('login-password');
+    if (emailInput && passwordInput) {
+        emailInput.value = email;
+        passwordInput.value = password;
+        handleLogin();
+    }
+};
 
 /**
  * Handle new account creation

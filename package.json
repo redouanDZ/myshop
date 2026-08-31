@@ -12,6 +12,7 @@
     "migrate": "node database/migrate.js",
     "db:reset": "node database/reset.js",
     "create-admin": "node src/scripts/create-admin.js",
+    "seed:demo": "node scripts/seedDemoData.js",
     "test": "node --test test/all.test.js"
   },
   "keywords": [
