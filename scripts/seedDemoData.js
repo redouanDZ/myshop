@@ -171,6 +171,9 @@ async function seedDemoData() {
         const names = ['كريم بلحاج', 'ياسمين قادري', 'عمر منصوري', 'فاطمة الزهراء', 'سمير دراجي'];
         const phones = ['0551234567', '0662345678', '0773456789', '0554567890', '0665678901'];
 
+        const [custRows] = await pool.query('SELECT id FROM users WHERE email = "customer@myshop.dz" LIMIT 1');
+        const customerId = custRows.length > 0 ? custRows[0].id : null;
+
         for (let i = 0; i < 5; i++) {
             const w = wilayas[i];
             const pId1 = insertedProductIds[i % insertedProductIds.length];
@@ -187,13 +190,13 @@ async function seedDemoData() {
 
             const [orderRes] = await pool.query(`
                 INSERT INTO orders (
-                    user_id, order_number, total, shipping_cost, discount_amount,
+                    user_id, order_number, total, shipping_cost,
                     status, payment_method, payment_status,
                     shipping_full_name, phone, wilaya_id, wilaya_name, city, address, delivery_type,
                     created_at
-                ) VALUES (?, ?, ?, ?, 0, ?, 'cod', ?, ?, ?, ?, ?, ?, ?, 'home', DATE_SUB(NOW(), INTERVAL ? DAY))
+                ) VALUES (?, ?, ?, ?, ?, 'cod', ?, ?, ?, ?, ?, ?, ?, 'home', DATE_SUB(NOW(), INTERVAL ? DAY))
             `, [
-                2, orderNum, total, w.cost,
+                customerId, orderNum, total, w.cost,
                 statuses[i], statuses[i] === 'delivered' ? 'paid' : 'pending',
                 names[i], phones[i], w.id, w.name, w.city, `حي السلام، ${w.city}`,
                 (5 - i) * 2
