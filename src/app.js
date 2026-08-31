@@ -12,6 +12,7 @@ const { errorHandler, notFoundHandler } = require('./middlewares/errorMiddleware
 const app = express();
 
 app.disable('x-powered-by');
+app.set('trust proxy', 1);
 
 // Security Headers
 app.use(helmet({
