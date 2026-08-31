@@ -29,7 +29,7 @@ const dbEnvironments = {
         })(),
         database: process.env.DB_NAME || 'ecommerce_store',
         waitForConnections: true,
-        connectionLimit: 20,
+        connectionLimit: 3,
         queueLimit: 0,
         namedPlaceholders: true,
         dateStrings: true,

@@ -243,9 +243,15 @@ async function seedDemoData() {
     console.log('----------------------------------------------------');
 }
 
-seedDemoData().then(() => {
+seedDemoData().then(async () => {
+    if (db.pool) {
+        await db.pool.end();
+    }
     process.exit(0);
-}).catch(err => {
+}).catch(async (err) => {
     console.error('❌ Error during demo data seeding:', err);
+    if (db.pool) {
+        await db.pool.end();
+    }
     process.exit(1);
 });

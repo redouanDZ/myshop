@@ -97,7 +97,7 @@ async function runMigrations() {
       ...dbConfig,
       multipleStatements: true,
       waitForConnections: true,
-      connectionLimit: 5
+      connectionLimit: 1
     });
 
     // 1. إنشاء جدول سجل الترحيلات إذا لم يكن موجوداً
