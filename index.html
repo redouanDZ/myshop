@@ -7,6 +7,9 @@
     <meta name="description" data-i18n="home.meta.description" content="متجر إلكتروني حديث يقدم أفضل الأجهزة الإلكترونية والتقنية في الجزائر بأسعار تنافسية وتوصيل سريع.">
     <meta name="theme-color" content="#2563eb">
     <link rel="manifest" href="/manifest.json">
+    
+    <!-- Preload Hero Image for LCP -->
+    <link rel="preload" as="image" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
 
     <!-- OpenGraph Tags -->
     <meta property="og:title" data-i18n="home.meta.og_title" content="متجري - متجر الإلكترونيات العصرية">
@@ -339,12 +342,12 @@
     </footer>
 
     <!-- Main Scripts -->
-    <script src="js/api-client.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/user-system.js"></script>
-    <script src="js/cart.js"></script>
-    <script src="js/wishlist.js"></script>
-    <script src="js/i18n.js"></script>
+    <script src="js/api-client.js" defer></script>
+    <script src="js/main.js" defer></script>
+    <script src="js/user-system.js" defer></script>
+    <script src="js/cart.js" defer></script>
+    <script src="js/wishlist.js" defer></script>
+    <script src="js/i18n.js" defer></script>
     <script>
         let homeProductsList = [];
 
