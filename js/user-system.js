@@ -110,11 +110,13 @@ function updateUIForLoggedInUser(user) {
     const avatarLetter = displayName ? displayName[0].toUpperCase() : '?';
 
     document.querySelectorAll('.user-icon').forEach(icon => {
-        icon.style.cursor = 'default';
-        // إزالة أي مستمعي أحداث قديمة على الأيقونة نفسها بنسخها
-        const freshIcon = icon.cloneNode(false);
-        icon.parentNode.replaceChild(freshIcon, icon);
-        icon = freshIcon;
+        // Create a div to replace the anchor tag and prevent invalid nested <a> tags
+        const newIcon = document.createElement('div');
+        newIcon.className = icon.className;
+        newIcon.style.cursor = 'default';
+        
+        icon.parentNode.replaceChild(newIcon, icon);
+        icon = newIcon;
 
         icon.innerHTML = `
             <div class="user-menu-wrap" style="position:relative;display:inline-block;">

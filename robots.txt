@@ -6,4 +6,4 @@ Disallow: /account.html
 Disallow: /cart.html
 Disallow: /checkout.html
 
-Sitemap: /sitemap.xml
+Sitemap: https://myshop-aa9v.onrender.com/sitemap.xml
