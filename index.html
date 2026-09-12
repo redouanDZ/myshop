@@ -9,7 +9,7 @@
     <link rel="manifest" href="/manifest.json">
     
     <!-- Preload Hero Image for LCP -->
-    <link rel="preload" as="image" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+    <link rel="preload" as="image" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg" fetchpriority="high">
 
     <!-- OpenGraph Tags -->
     <meta property="og:title" data-i18n="home.meta.og_title" content="متجري - متجر الإلكترونيات العصرية">
@@ -41,11 +41,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="./css/style.css">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <link rel="apple-touch-icon" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
+    <!-- Font Awesome Deferred -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
+    
+    <link rel="apple-touch-icon" href="/images/christopher-gower-m_HRfLhgABo-unsplash.jpg">
 
     <!-- Theme Anti-Flicker -->
     <script>
