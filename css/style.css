@@ -663,7 +663,7 @@ nav ul li a:hover, nav ul li a.active {
 
 /* قسم البانر البصري الفاخر (Hero Section) */
 .banner {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(79, 70, 229, 0.88)), url('../images/christopher-gower-m_HRfLhgABo-unsplash.jpg');
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(79, 70, 229, 0.88)), url('../images/hero-banner.jpg');
     background-size: cover;
     background-position: center;
     border-radius: 24px;
