@@ -3454,6 +3454,7 @@ body.dark-mode .back-to-top-btn:hover {
     box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border-color, #e2e8f0);
     position: relative;
+    margin: auto !important; /* Fixed: Force center alignment in flex container */
     animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
