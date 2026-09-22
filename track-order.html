@@ -206,6 +206,13 @@
         .status-shipped { background: #ede9fe; color: #7c3aed; }
         .status-delivered { background: #d1fae5; color: #059669; }
         .status-cancelled { background: #fee2e2; color: #dc2626; }
+        
+        /* Sticky Footer Fix */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
     </style>
   <meta name="theme-color" content="#2563eb">
   <link rel="manifest" href="/manifest.json">
@@ -269,7 +276,7 @@
     </section>
 
     <!-- Main Content -->
-    <section class="container">
+    <section class="container" style="flex: 1 0 auto;">
         <div class="track-container">
             <form id="trackingForm" onsubmit="event.preventDefault(); submitTrack();">
                 <div class="track-form-grid">
