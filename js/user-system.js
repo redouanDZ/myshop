@@ -214,6 +214,35 @@ function initSignupForm() {
 }
 
 /**
+ * إظهار نافذة التوثيق المنبثقة
+ */
+function openAuthModalElement(modal) {
+    if (!modal) modal = document.getElementById('auth-modal');
+    if (!modal) return;
+    modal.classList.add('active');
+    modal.style.display = 'flex';
+}
+
+/**
+ * إغلاق نافذة التوثيق المنبثقة
+ */
+function closeAuthModalElement(modal) {
+    if (!modal) modal = document.getElementById('auth-modal');
+    if (!modal) return;
+    modal.classList.remove('active');
+    modal.style.display = 'none';
+}
+
+if (typeof document !== 'undefined' && !window._authModalEscBound) {
+    window._authModalEscBound = true;
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeAuthModalElement();
+        }
+    });
+}
+
+/**
  * عرض نموذج تسجيل الدخول
  */
 function showLoginForm() {
@@ -290,8 +319,14 @@ function showLoginForm() {
         </div>
     `;
 
-    // إظهار النافذة
-    modal.style.display = 'block';
+    // إظهار النافذة في الوسط بمرونة
+    openAuthModalElement(modal);
+
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeAuthModalElement(modal);
+        }
+    };
 
     if (window.I18n && typeof window.I18n.translatePage === 'function') {
         window.I18n.translatePage(modal);
@@ -314,7 +349,7 @@ function showLoginForm() {
 
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
+            closeAuthModalElement(modal);
         });
     }
 
@@ -415,7 +450,13 @@ function showSignupForm() {
         </div>
     `;
 
-    modal.style.display = 'block';
+    openAuthModalElement(modal);
+
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeAuthModalElement(modal);
+        }
+    };
 
     if (window.I18n && typeof window.I18n.translatePage === 'function') {
         window.I18n.translatePage(modal);
@@ -436,7 +477,7 @@ function showSignupForm() {
 
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
+            closeAuthModalElement(modal);
         });
     }
 
@@ -485,13 +526,20 @@ function showForgotPasswordForm() {
         </div>
     `;
 
-    modal.style.display = 'block';
+    openAuthModalElement(modal);
+
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeAuthModalElement(modal);
+        }
+    };
+
     if (window.I18n && typeof window.I18n.translatePage === 'function') {
         window.I18n.translatePage(modal);
     }
 
     const closeModalBtn = modal.querySelector('.close-modal');
-    if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+    if (closeModalBtn) closeModalBtn.addEventListener('click', () => closeAuthModalElement(modal));
 
     const backToLogin = modal.querySelector('#forgot-back-to-login');
     if (backToLogin) backToLogin.addEventListener('click', (e) => {
@@ -587,13 +635,20 @@ function showResetPasswordForm(prefilledToken = '', userEmail = '') {
         </div>
     `;
 
-    modal.style.display = 'block';
+    openAuthModalElement(modal);
+
+    modal.onclick = function(e) {
+        if (e.target === modal) {
+            closeAuthModalElement(modal);
+        }
+    };
+
     if (window.I18n && typeof window.I18n.translatePage === 'function') {
         window.I18n.translatePage(modal);
     }
 
     const closeModalBtn = modal.querySelector('.close-modal');
-    if (closeModalBtn) closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
+    if (closeModalBtn) closeModalBtn.addEventListener('click', () => closeAuthModalElement(modal));
 
     initPasswordToggles(modal);
 
@@ -694,8 +749,7 @@ window.handleGoogleCredentialResponse = async function(response) {
 
         saveSessionUser(data.user);
         updateUIForLoggedInUser(data.user);
-        const modal = document.getElementById('auth-modal');
-        if (modal) modal.style.display = 'none';
+        closeAuthModalElement();
         showNotification('تم تسجيل الدخول بنجاح عبر Google! 🎉', 'success');
         if (window.location.pathname.includes('account.html')) {
             window.location.reload();
@@ -734,8 +788,7 @@ async function handleLogin() {
                 localStorage.setItem('rememberedUser', JSON.stringify(data.user));
             }
 
-            const authModal = document.getElementById('auth-modal');
-            if (authModal) authModal.style.display = 'none';
+            closeAuthModalElement();
             updateUIForLoggedInUser(data.user);
             showNotification(data.message || 'تم تسجيل الدخول بنجاح! 🎉', 'success');
             updateCartUI();
@@ -821,8 +874,7 @@ async function handleSignup() {
                 saveSessionUser(data.user);
                 updateUIForLoggedInUser(data.user);
             }
-            const modal = document.getElementById('auth-modal');
-            if (modal) modal.style.display = 'none';
+            closeAuthModalElement();
 
             showNotification(data.message || (window.I18n ? window.I18n.t('auth.register_success', 'تم إنشاء الحساب بنجاح!') : 'تم إنشاء الحساب بنجاح!'));
 

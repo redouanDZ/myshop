@@ -3424,29 +3424,34 @@ body.dark-mode .back-to-top-btn:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     background: rgba(15, 23, 42, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     z-index: 99999;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 20px 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-sizing: border-box;
     animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .modal.active, 
-.modal[style*="display: block"], 
-.modal[style*="display: flex"] {
+.modal[style*="block"], 
+.modal[style*="flex"] {
     display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
 }
 
 .modal-content {
     background: var(--card-bg, #ffffff);
     color: var(--text-color, #1e293b);
     width: 100%;
-    max-width: 460px;
+    max-width: 480px;
     max-height: 90vh;
     overflow-y: auto;
     border-radius: 20px;
@@ -3454,7 +3459,8 @@ body.dark-mode .back-to-top-btn:hover {
     box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.4);
     border: 1px solid var(--border-color, #e2e8f0);
     position: relative;
-    margin: auto !important; /* Fixed: Force center alignment in flex container */
+    margin: auto !important; /* Force center alignment horizontally and vertically */
+    box-sizing: border-box;
     animation: modalSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -3494,6 +3500,24 @@ body.dark-mode .back-to-top-btn:hover {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 12px;
+}
+
+@media (max-width: 576px) {
+    .modal {
+        padding: 12px;
+        align-items: center;
+    }
+    .modal-content {
+        padding: 20px 16px;
+        max-height: 92vh;
+        border-radius: 16px;
+        width: 100%;
+        margin: auto !important;
+    }
+    .modal-body .form-row {
+        grid-template-columns: 1fr !important;
+        gap: 0 !important;
+    }
 }
 
 .modal-body .form-group {
