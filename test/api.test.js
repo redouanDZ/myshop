@@ -20,6 +20,20 @@ test.before(async () => {
         });
         testUser = await db.findUserByEmail('user@example.com');
     }
+    
+    // Ensure test product (id: 1) exists for tests
+    if (db.pool && typeof db.pool.query === 'function') {
+        const [cats] = await db.pool.query('SELECT id FROM categories WHERE id = 1');
+        if (cats.length === 0) {
+            await db.pool.query('INSERT IGNORE INTO categories (id, name, slug) VALUES (1, "Test Category", "test-cat")');
+        }
+        const [prods] = await db.pool.query('SELECT id FROM products WHERE id = 1');
+        if (prods.length === 0) {
+            await db.pool.query('INSERT IGNORE INTO products (id, category_id, name, price, stock, status) VALUES (1, 1, "Test Product", 125000, 100, "active")');
+        } else {
+            await db.pool.query('UPDATE products SET stock = 100 WHERE id = 1');
+        }
+    }
 });
 
 test('Product Search and Filters Logic Test', async () => {
