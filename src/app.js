@@ -142,6 +142,7 @@ app.use('/css', express.static(path.join(rootDir, 'css')));
 app.use('/js', express.static(path.join(rootDir, 'js')));
 app.use('/images', express.static(path.join(rootDir, 'images')));
 app.use('/locales', express.static(path.join(rootDir, 'locales')));
+app.use('/documentation', express.static(path.join(rootDir, 'documentation')));
 
 // Public HTML Pages
 const publicHtmlPages = ['index.html', 'landing.html', 'shop.html', 'product.html', 'cart.html', 'checkout.html', 'order-confirmation.html', 'account.html', 'track-order.html', 'invoice.html', 'wishlist.html'];
