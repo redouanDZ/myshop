@@ -45,7 +45,7 @@ app.use((req, res, next) => {
 // Rate Limiters
 const trackOrderRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 20,
+    max: config.isProduction ? 20 : 1000, // حد أعلى للمطورين
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'تم تجاوز عدد محاولات التتبع المسموح بها، يرجى المحاولة بعد 15 دقيقة' }
@@ -53,7 +53,7 @@ const trackOrderRateLimiter = rateLimit({
 
 const authRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 20,
+    max: config.isProduction ? 20 : 1000, // تعطيل فعلي للحد في المحلي
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'تم تجاوز عدد المحاولات المسموح بها، يرجى المحاولة بعد 15 دقيقة' }
@@ -61,7 +61,7 @@ const authRateLimiter = rateLimit({
 
 const apiRateLimiter = rateLimit({
     windowMs: 15 * 60 * 1000,
-    max: 200,
+    max: config.isProduction ? 200 : 5000,
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: 'تم تجاوز عدد المحاولات المسموح بها، يرجى المحاولة بعد 15 دقيقة' }
