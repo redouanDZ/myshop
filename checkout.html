@@ -9,7 +9,7 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"></noscript>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="stylesheet" href="../css/style.min.css">
+    <link rel="stylesheet" href="css/style.min.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
     <style>
@@ -46,13 +46,136 @@
             font-size: 0.85rem;
             color: #64748b;
         }
-        .payment-badge {
-            background: #10b981;
-            color: #fff;
-            font-size: 0.75rem;
-            padding: 2px 8px;
+
+        /* Modern Payment Options Styling */
+        .payment-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .payment-option {
+            border: 2px solid #e2e8f0;
             border-radius: 12px;
-            margin-right: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            position: relative;
+        }
+        .payment-option:hover {
+            border-color: #6366f1;
+            background: #faf5ff;
+        }
+        .payment-option.active {
+            border-color: #4f46e5;
+            background: #f5f3ff;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+        }
+        .payment-option:last-child:nth-child(odd) {
+            grid-column: 1 / -1;
+        }
+        .payment-option input {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .payment-option label {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            cursor: pointer;
+            width: 100%;
+            margin: 0;
+        }
+        .payment-option-icon {
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+        .payment-option-icon.cod {
+            background: #ecfdf5;
+            color: #059669;
+        }
+        .payment-option-icon.epay {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+        .payment-option-icon.bank {
+            background: #fffbeb;
+            color: #d97706;
+        }
+        .payment-option-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .payment-option-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 4px;
+        }
+        .payment-option-header strong {
+            color: #1e293b;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+        .payment-badge {
+            display: inline-flex;
+            align-items: center;
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 9px;
+            border-radius: 9999px;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+        [data-theme="dark"] .payment-option {
+            background: #1e293b;
+            border-color: #334155;
+        }
+        [data-theme="dark"] .payment-option:hover {
+            border-color: #818cf8;
+            background: #1e293b;
+        }
+        [data-theme="dark"] .payment-option.active {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.12);
+        }
+        [data-theme="dark"] .payment-option-header strong {
+            color: #f1f5f9;
+        }
+        [data-theme="dark"] .payment-badge {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        [data-theme="dark"] .payment-option-icon.cod {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+        [data-theme="dark"] .payment-option-icon.epay {
+            background: rgba(37, 99, 235, 0.15);
+            color: #60a5fa;
+        }
+        [data-theme="dark"] .payment-option-icon.bank {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+        @media (max-width: 640px) {
+            .payment-options {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
   <meta name="theme-color" content="#2563eb">
@@ -205,11 +328,15 @@
                             <div class="payment-option active">
                                 <input type="radio" id="cash" name="payment-method" value="cod" checked>
                                 <label for="cash">
-                                    <i class="fas fa-money-bill-wave" style="color: #10b981;"></i>
-                                    <div>
-                                        <strong><span data-i18n="checkout.cod_title">الدفع عند الاستلام (COD)</span></strong>
-                                        <span class="payment-badge"><span data-i18n="checkout.most_used">الأكثر استخداماً</span>
-                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.cod_desc">ادفع نقداً ومباشرة عند استلام الطلب من موزع شركة التوصيل.</span></p>
+                                    <div class="payment-option-icon cod">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                    </div>
+                                    <div class="payment-option-content">
+                                        <div class="payment-option-header">
+                                            <strong><span data-i18n="checkout.cod_title">الدفع عند الاستلام (COD)</span></strong>
+                                            <span class="payment-badge"><span data-i18n="checkout.most_used">الأكثر استخداماً</span></span>
+                                        </div>
+                                        <p style="margin: 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.cod_desc">ادفع نقداً ومباشرة عند استلام الطلب من موزع شركة التوصيل.</span></p>
                                     </div>
                                 </label>
                             </div>
@@ -217,10 +344,14 @@
                             <div class="payment-option">
                                 <input type="radio" id="chargily" name="payment-method" value="chargily">
                                 <label for="chargily">
-                                    <i class="fas fa-credit-card" style="color: #2563eb;"></i>
-                                    <div>
-                                        <strong><span data-i18n="checkout.epay_title">الدفع الإلكتروني (البطاقة الذهبية / CIB)</span></strong>
-                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.epay_desc">دفع فوري وآمن عبر بوابة الدفع الإلكتروني الجزائرية الرسمية.</span></p>
+                                    <div class="payment-option-icon epay">
+                                        <i class="fas fa-credit-card"></i>
+                                    </div>
+                                    <div class="payment-option-content">
+                                        <div class="payment-option-header">
+                                            <strong><span data-i18n="checkout.epay_title">الدفع الإلكتروني (البطاقة الذهبية / CIB)</span></strong>
+                                        </div>
+                                        <p style="margin: 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.epay_desc">دفع فوري وآمن عبر بوابة الدفع الإلكتروني الجزائرية الرسمية.</span></p>
                                     </div>
                                 </label>
                             </div>
@@ -228,10 +359,14 @@
                             <div class="payment-option">
                                 <input type="radio" id="bank-transfer" name="payment-method" value="bank-transfer">
                                 <label for="bank-transfer">
-                                    <i class="fas fa-university" style="color: #f59e0b;"></i>
-                                    <div>
-                                        <strong><span data-i18n="checkout.ccp_title">تحويل بريدي / بنكي (CCP / BaridiMob)</span></strong>
-                                        <p style="margin: 3px 0 0 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.ccp_desc">إرسال المبلغ إلى الحساب البريدي وتأكيد الطلب بإرسال الوصل.</span></p>
+                                    <div class="payment-option-icon bank">
+                                        <i class="fas fa-university"></i>
+                                    </div>
+                                    <div class="payment-option-content">
+                                        <div class="payment-option-header">
+                                            <strong><span data-i18n="checkout.ccp_title">تحويل بريدي / بنكي (CCP / BaridiMob)</span></strong>
+                                        </div>
+                                        <p style="margin: 0; font-size: 0.85rem; color: #64748b;"><span data-i18n="checkout.ccp_desc">إرسال المبلغ إلى الحساب البريدي وتأكيد الطلب بإرسال الوصل.</span></p>
                                     </div>
                                 </label>
                             </div>
