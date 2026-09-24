@@ -248,21 +248,23 @@ class MysqlRepository {
   async seedDefaultData() {
     const isProduction = process.env.NODE_ENV === 'production';
 
-    const [userCountRow] = await this.pool.query('SELECT COUNT(*) AS total FROM users');
     if (isProduction) {
-      if (Number(userCountRow[0].total) === 0) {
-        const adminEmail = process.env.ADMIN_EMAIL;
-        const adminPassword = process.env.ADMIN_PASSWORD;
-        if (adminEmail && adminPassword) {
+      const adminEmail = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase();
+      const adminPassword = process.env.ADMIN_PASSWORD;
+      if (adminEmail && adminPassword) {
+        const [adminRows] = await this.pool.query('SELECT id FROM users WHERE email = ? LIMIT 1', [adminEmail]);
+        if (!adminRows.length) {
           const adminHash = await bcrypt.hash(adminPassword, 12);
           await this.pool.query(
-            'INSERT IGNORE INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1)',
-            ['مدير النظام', adminEmail.toLowerCase().trim(), '0550000000', adminHash, 'admin']
+            'INSERT INTO users (username, email, phone, password, role, is_verified) VALUES (?, ?, ?, ?, ?, 1)',
+            ['مدير النظام', adminEmail, '0550000000', adminHash, 'admin']
           );
           console.log(`✅ [Production Init] Initialized admin user from environment (${adminEmail}).`);
         } else {
-          console.log('ℹ️ [Production Init] No initial admin seeded. Use "npm run create-admin" to create administrator account.');
+          console.log(`ℹ️ [Production Init] Admin account already exists (${adminEmail}).`);
         }
+      } else {
+        console.log('ℹ️ [Production Init] Set ADMIN_EMAIL and ADMIN_PASSWORD to create an administrator account.');
       }
     } else {
       const customerHash = await bcrypt.hash('password123', 10);
