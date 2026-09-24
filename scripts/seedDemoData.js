@@ -7,7 +7,8 @@ const bcrypt = require('bcryptjs');
 const db = require('../src/data/db-connection');
 
 if (process.env.NODE_ENV === 'production') {
-    throw new Error('Demo seeding is disabled in production.');
+    console.log('Demo seeding is disabled in production; skipping seed step.');
+    process.exit(0);
 }
 
 async function seedDemoData() {
