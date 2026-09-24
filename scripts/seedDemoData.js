@@ -1,6 +1,6 @@
 /**
- * Demo Data Seeder for MYSHOP Pro
- * Populates the database with realistic demo products, categories, reviews, coupons, and orders.
+ * Catalog Seeder for MYSHOP Pro
+ * Populates a review-ready catalog with realistic products, categories, reviews, coupons, and orders.
  */
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
@@ -21,15 +21,15 @@ async function seedDemoData() {
         process.exit(1);
     }
 
-    // 1. Ensure Demo Users
-    console.log('👤 Seeding Demo Users...');
+    // 1. Ensure review accounts
+    console.log('👤 Seeding review accounts...');
     const hashedAdminPass = await bcrypt.hash('demo1234', 10);
     const hashedCustomerPass = await bcrypt.hash('demo1234', 10);
 
     await pool.query(`
         INSERT INTO users (username, email, password, role, phone)
         VALUES 
-            ('مدير المتجر التجريبي', 'demo@myshop.dz', ?, 'admin', '0550000001'),
+            ('مدير المتجر', 'demo@myshop.dz', ?, 'admin', '0550000001'),
             ('أحمد بوعلام', 'customer@myshop.dz', ?, 'customer', '0661234567')
         ON DUPLICATE KEY UPDATE 
             username = VALUES(username),
@@ -59,8 +59,8 @@ async function seedDemoData() {
         }
     }
 
-    // 3. Demo Products
-    console.log('📦 Seeding Demo Products...');
+    // 3. Review-ready products
+    console.log('📦 Seeding store products...');
     const demoProducts = [
         {
             name: 'ساعة ذكية Ultra Pro Series 9 مع سوارين',
@@ -220,29 +220,29 @@ async function seedDemoData() {
     }
 
     // 6. Update Store Settings
-    console.log('⚙️ Updating Demo Store Settings...');
-    const demoSettings = {
-        store_name: 'متجر MYSHOP التجريبي',
+    console.log('⚙️ Updating Store Settings...');
+    const storeSettings = {
+        store_name: 'متجر MYSHOP',
         store_currency: 'دج',
         store_phone: '0550 00 00 00',
         store_whatsapp: '213550000000',
         store_email: 'contact@myshop.dz',
         store_address: 'الجزائر العاصمة، الجزائر',
         enable_cod: 'true',
-        enable_chargily: 'true',
-        announcement_bar_text: '🎉 مرحباً بكم في المتجر التجريبي MYSHOP Pro — توصيل سريع لـ 58 ولاية والدفع عند الاستلام!'
+        enable_chargily: process.env.CHARGILY_PUBLIC_KEY && process.env.CHARGILY_SECRET_KEY ? 'true' : 'false',
+        announcement_bar_text: '🎉 توصيل سريع إلى 58 ولاية والدفع عند الاستلام متاح الآن!'
     };
 
-    for (const [key, value] of Object.entries(demoSettings)) {
+    for (const [key, value] of Object.entries(storeSettings)) {
         await pool.query(
             'INSERT INTO store_settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?',
             [key, value, value]
         );
     }
 
-    console.log('✅ MYSHOP Pro Demo Seeding completed successfully!');
+    console.log('✅ MYSHOP Pro catalog seeding completed successfully!');
     console.log('----------------------------------------------------');
-    console.log('🔑 Demo Admin Credentials:');
+    console.log('🔑 Review Admin Credentials:');
     console.log('   Email:    demo@myshop.dz (or admin@example.com)');
     console.log('   Password: demo1234');
     console.log('----------------------------------------------------');
