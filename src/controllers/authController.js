@@ -267,11 +267,11 @@ async function getSession(req, res) {
         }
 
         const decoded = jwt.verify(token, config.JWT_SECRET);
-        if (!decoded || !decoded.userId) {
+        if (!decoded || !decoded.id) {
             return res.json({ user: null });
         }
 
-        const user = await db.findUserById(decoded.userId);
+        const user = await db.findUserById(decoded.id);
         if (!user) {
             return res.json({ user: null });
         }

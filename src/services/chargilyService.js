@@ -54,7 +54,11 @@ class ChargilyService {
             }
         }
 
-        // Test Simulation Mode (when CHARGILY_SECRET_KEY is not set)
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('Chargily payment is not configured for production.');
+        }
+
+        // Simulation is available only during local development.
         console.log(`💳 [Chargily Simulation Mode] Created checkout for Order #${orderId} (${amount} DZD)`);
         return {
             checkoutUrl: `${successUrl}&simulation=chargily_test_mode`,

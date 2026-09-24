@@ -178,6 +178,27 @@ async function getStoreSettings(req, res) {
     }
 }
 
+async function getPublicStoreSettings(req, res) {
+    try {
+        const settings = await db.getStoreSettings();
+        const publicKeys = [
+            'store_name', 'store_logo', 'store_favicon', 'store_phone', 'store_whatsapp',
+            'store_email', 'store_address', 'store_currency', 'facebook_url', 'instagram_url',
+            'tiktok_url', 'shipping_policy', 'return_policy', 'warranty_policy', 'enable_cod',
+            'enable_chargily', 'announcement_bar_text', 'facebook_pixel_id', 'tiktok_pixel_id',
+            'google_analytics_id', 'snapchat_pixel_id', 'google_client_id'
+        ];
+        const publicSettings = Object.fromEntries(
+            publicKeys.filter(key => Object.prototype.hasOwnProperty.call(settings, key))
+                .map(key => [key, settings[key]])
+        );
+        res.json(publicSettings);
+    } catch (error) {
+        console.error('Error fetching public store settings:', error);
+        res.status(500).json({ error: 'خطأ في جلب إعدادات المتجر' });
+    }
+}
+
 async function updateStoreSettings(req, res) {
     try {
         const updated = await db.updateStoreSettings(req.body);
@@ -361,6 +382,7 @@ module.exports = {
     updateReviewStatus,
     deleteReview,
     getStoreSettings,
+    getPublicStoreSettings,
     updateStoreSettings,
     uploadMedia,
     testTelegramAlert

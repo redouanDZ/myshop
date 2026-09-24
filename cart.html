@@ -4,16 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="cart.meta_title">عربة التسوق - متجر الإلكتروني</title>
-  <link rel="stylesheet" href="css/style.min.css">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet"> <!-- خط عربي للدعم RTL -->
   <style>
     /* CSS محسن لصفحة العربة مع نظام التصميم الموحد */
     .cart-section { padding: 36px 0 60px; }
-    .cart-container { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; margin-top: 24px; }
+    .cart-container { display: grid; grid-template-columns: 1fr 380px; gap: 32px; align-items: start; margin-top: 24px; width: 100%; max-width: 100%; box-sizing: border-box; }
+    .cart-items { width: 100%; max-width: 100%; box-sizing: border-box; }
     .cart-items h2 { margin-bottom: 20px; color: var(--dark-color, #1e293b); font-size: 1.3rem; font-weight: 800; }
-    .cart-items-grid { display: flex; flex-direction: column; gap: 16px; }
+    .cart-items-grid { display: flex; flex-direction: column; gap: 16px; width: 100%; max-width: 100%; box-sizing: border-box; }
     .cart-item {
       display: grid;
       grid-template-columns: 90px 1fr auto auto auto;
@@ -25,6 +26,9 @@
       background: var(--card-bg, #fff);
       transition: all 0.2s ease;
       box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
     }
     .cart-item:hover {
       border-color: #cbd5e1;
@@ -38,14 +42,16 @@
       background: var(--light-color, #f8fafc);
       border: 1px solid #f1f5f9;
     }
+    .item-details { min-width: 0; }
     .item-details h3 {
       margin: 0 0 4px 0;
       color: var(--dark-color, #1e293b);
       font-size: 1.05rem;
       font-weight: 700;
       line-height: 1.3;
+      word-break: break-word;
     }
-    .item-price { font-weight: 700; color: var(--primary-color); font-size: 1.05rem; }
+    .item-price { font-weight: 700; color: var(--primary-color); font-size: 1.05rem; white-space: nowrap; }
     .item-quantity {
       display: inline-flex;
       align-items: center;
@@ -57,7 +63,7 @@
     }
     .item-quantity input {
       width: 44px;
-      height: 32px;
+      height: 36px;
       text-align: center;
       border: none;
       background: transparent;
@@ -67,14 +73,16 @@
       outline: none;
     }
     .quantity-btn {
-      width: 30px;
-      height: 30px;
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
       border: none;
       background: var(--card-bg, #fff);
       cursor: pointer;
       border-radius: 6px;
       font-weight: bold;
-      font-size: 1rem;
+      font-size: 1.1rem;
       color: var(--dark-color, #1e293b);
       box-shadow: 0 1px 2px rgba(0,0,0,0.05);
       transition: all 0.15s ease;
@@ -83,13 +91,15 @@
       justify-content: center;
     }
     .quantity-btn:hover { background: var(--primary-color); color: #fff; }
-    .item-total { font-size: 1.15rem; font-weight: 800; color: var(--dark-color, #1e293b); min-width: 90px; text-align: left; }
+    .item-total { font-size: 1.15rem; font-weight: 800; color: var(--dark-color, #1e293b); min-width: 90px; text-align: end; white-space: nowrap; }
     .remove-item {
       background: #fee2e2;
       color: #ef4444;
       border: none;
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
+      min-width: 38px;
+      min-height: 38px;
       border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
@@ -106,14 +116,19 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.04);
       position: sticky;
       top: 90px;
+      box-sizing: border-box;
+      width: 100%;
+      max-width: 100%;
     }
     .cart-summary h2 { margin-bottom: 18px; color: var(--dark-color, #1e293b); font-size: 1.2rem; font-weight: 800; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
     .summary-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; font-size: 0.95rem; color: var(--text-color, #1e293b); }
+    .summary-item span:last-child { white-space: nowrap; }
     .summary-total { font-weight: 800; border-top: 1px solid var(--border-color, #e2e8f0); padding-top: 16px; margin-top: 16px; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; }
+    .summary-total span:last-child { white-space: nowrap; }
     .promo-code { display: flex; gap: 8px; margin: 18px 0; }
-    .promo-code input { flex: 1; padding: 10px 14px; border: 1px solid var(--border-color, #cbd5e1); border-radius: 8px; outline: none; font-size: 0.9rem; }
+    .promo-code input { flex: 1; padding: 10px 14px; border: 1px solid var(--border-color, #cbd5e1); border-radius: 8px; outline: none; font-size: 0.9rem; min-width: 0; }
     .promo-code input:focus { border-color: var(--primary-color); }
-    .apply-promo { background: var(--light-color, #f1f5f9); color: var(--text-color, #1e293b); border: 1px solid #cbd5e1; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: var(--transition); }
+    .apply-promo { background: var(--light-color, #f1f5f9); color: var(--text-color, #1e293b); border: 1px solid #cbd5e1; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.9rem; transition: var(--transition); white-space: nowrap; }
     .apply-promo:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); }
     .checkout-btn { width: 100%; background: var(--primary-gradient); color: white; border: none; padding: 15px; border-radius: 10px; cursor: pointer; font-size: 1.05rem; margin-bottom: 10px; font-weight: 800; transition: var(--transition); box-shadow: 0 4px 14px rgba(79,70,229,0.3); display: flex; align-items: center; justify-content: center; gap: 8px; }
     .checkout-btn:hover { background: var(--primary-hover-gradient); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(79,70,229,0.4); }
@@ -122,25 +137,31 @@
     .empty-cart { text-align: center; padding: 60px 20px; background: var(--card-bg, #fff); border-radius: 16px; border: 1px dashed var(--border-color, #cbd5e1); }
     .empty-cart i { font-size: 4rem; margin-bottom: 18px; color: #cbd5e1; }
     @media (max-width: 768px) {
-      .cart-container { grid-template-columns: 1fr; margin-top: 15px; }
+      .cart-section { padding: 20px 0 40px; }
+      .cart-container { grid-template-columns: 100%; margin-top: 15px; width: 100%; max-width: 100%; box-sizing: border-box; }
+      .cart-items { width: 100%; max-width: 100%; box-sizing: border-box; }
+      .cart-items-grid { width: 100%; max-width: 100%; box-sizing: border-box; }
       .cart-item {
-        grid-template-columns: 85px 1fr auto;
-        padding: 14px 12px;
+        grid-template-columns: 80px 1fr auto;
+        padding: 12px;
         gap: 10px 12px;
         align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 100%;
       }
       .cart-item img {
         grid-column: 1;
         grid-row: 1 / 3;
-        width: 85px; height: 85px;
-        align-self: start;
+        width: 80px; height: 80px;
+        align-self: center;
       }
-      .item-details { grid-column: 2; grid-row: 1; align-self: start; }
-      .item-details h3 { font-size: 0.95rem; }
-      .remove-item { grid-column: 3; grid-row: 1; align-self: start; width: 34px; height: 34px; }
-      .item-quantity { grid-column: 2; grid-row: 2; justify-self: start; transform: scale(0.9); transform-origin: right center; }
-      .item-total { grid-column: 3; grid-row: 2; font-size: 1rem; min-width: auto; }
-      .cart-summary { position: relative; top: 0; padding: 18px 16px; margin-top: 10px; }
+      .item-details { grid-column: 2; grid-row: 1; align-self: start; min-width: 0; }
+      .item-details h3 { font-size: 0.95rem; word-break: break-word; }
+      .remove-item { grid-column: 3; grid-row: 1; align-self: start; width: 36px; height: 36px; min-width: 36px; min-height: 36px; }
+      .item-quantity { grid-column: 2; grid-row: 2; justify-self: start; }
+      .item-total { grid-column: 3; grid-row: 2; font-size: 0.98rem; min-width: auto; white-space: nowrap; text-align: end; }
+      .cart-summary { position: relative; top: 0; padding: 18px 16px; margin-top: 16px; width: 100%; max-width: 100%; box-sizing: border-box; }
     }
   </style>
   <meta name="theme-color" content="#2563eb">
@@ -243,8 +264,13 @@
             <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
           </div>
           <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-            <span data-i18n="footer.description">وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.</span>
+            <span data-i18n="footer.description">وجهتك الأولى الموثوقة للتسوق الإلكتروني في الجزائر. نقدم منتجات تقنية أصلية بأفضل الأسعار مع توصيل سريع لـ 58 ولاية ودفع آمن عند الاستلام.</span>
           </p>
+          <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+            <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-truck"></i> <span data-i18n="footer.badge_wilayas">58 ولاية</span></span>
+            <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-shield-alt"></i> <span data-i18n="footer.badge_warranty">ضمان 100%</span></span>
+            <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-hand-holding-usd"></i> <span data-i18n="footer.badge_cod">الدفع عند الاستلام</span></span>
+          </div>
         </div>
         <div class="footer-col">
           <h3 data-i18n="footer.quick_links">روابط سريعة</h3>
@@ -260,18 +286,28 @@
           <ul>
             <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer.address">الجزائر العاصمة، الجزائر</span></li>
             <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
+            <li><i class="fas fa-phone-alt"></i> +213 555 12 34 56</li>
           </ul>
         </div>
         <div class="footer-col">
-          <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
+          <h3 data-i18n="footer.payment_shipping">طرق الدفع والشحن</h3>
           <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-            <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
-            <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
+            <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
+            <span style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
+          </div>
+          <div class="social-links">
+            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
           </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <p data-i18n="footer.copyright">&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+      <div class="footer-bottom" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-top: 30px;">
+        <p style="margin: 0; font-size: 0.88rem; color: #94a3b8;"><span data-i18n="footer.copyright">&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</span></p>
+        <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+          <a href="landing.html" style="color: #38bdf8; text-decoration: none; font-size: 0.88rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-bolt"></i> امتلك متجراً مثل هذا (MYSHOP Pro)</a>
+        </div>
       </div>
     </div>
   </footer>

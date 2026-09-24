@@ -1,4 +1,4 @@
-const CACHE_NAME = 'myshop-pwa-v31';
+const CACHE_NAME = 'myshop-pwa-v33';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -52,6 +52,11 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
 
+  // Ignore cross-origin requests (let browser fetch CDNs, Cloudinary, and external analytics directly)
+  if (url.origin !== self.location.origin) {
+    return;
+  }
+
   // 1. For modifying API requests (POST/PUT/DELETE) -> strictly Network Only
   if (event.request.method !== 'GET') {
     return;
@@ -91,7 +96,10 @@ self.addEventListener('fetch', (event) => {
           if (event.request.headers.get('accept')?.includes('text/html')) {
             return caches.match(event.request).then((cached) => cached || caches.match('/index.html'));
           }
-          return new Response('', { status: 503, statusText: 'Service Unavailable' });
+          if (event.request.destination === 'image') {
+            return caches.match('/images/product-placeholder.jpg');
+          }
+          return cachedResponse || new Response('Asset not available offline', { status: 404, statusText: 'Not Found' });
         });
 
       return cachedResponse || fetchPromise;

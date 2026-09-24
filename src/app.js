@@ -19,18 +19,71 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            scriptSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://accounts.google.com'],
+            scriptSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                'https://cdnjs.cloudflare.com', 
+                'https://cdn.jsdelivr.net', 
+                'https://accounts.google.com',
+                'https://connect.facebook.net',
+                'https://analytics.tiktok.com',
+                'https://*.tiktok.com',
+                'https://www.googletagmanager.com',
+                'https://*.google-analytics.com'
+            ],
             scriptSrcAttr: ["'unsafe-inline'"],
-            styleSrc: ["'self'", "'unsafe-inline'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://accounts.google.com'],
-            imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
-            fontSrc: ["'self'", 'https://cdnjs.cloudflare.com', 'https://fonts.gstatic.com', 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net', 'data:'],
-            connectSrc: ["'self'", 'https://cdnjs.cloudflare.com', 'https://cdn.jsdelivr.net', 'https://fonts.googleapis.com', 'https://fonts.gstatic.com', 'https://geoip.maxmind.com', 'https://accounts.google.com', 'https://*.chargily.com', 'https://*.chargily.net', 'ws:', 'wss:'],
+            styleSrc: [
+                "'self'", 
+                "'unsafe-inline'", 
+                'https://cdnjs.cloudflare.com', 
+                'https://cdn.jsdelivr.net', 
+                'https://fonts.googleapis.com', 
+                'https://accounts.google.com'
+            ],
+            imgSrc: ["'self'", 'data:', 'https:', 'blob:', 'https://res.cloudinary.com', 'https://*.cloudinary.com'],
+            fontSrc: [
+                "'self'", 
+                'https://cdnjs.cloudflare.com', 
+                'https://fonts.gstatic.com', 
+                'https://fonts.googleapis.com', 
+                'https://cdn.jsdelivr.net', 
+                'data:'
+            ],
+            connectSrc: [
+                "'self'", 
+                'https://cdnjs.cloudflare.com', 
+                'https://cdn.jsdelivr.net', 
+                'https://fonts.googleapis.com', 
+                'https://fonts.gstatic.com', 
+                'https://geoip.maxmind.com', 
+                'https://accounts.google.com', 
+                'https://*.chargily.com', 
+                'https://*.chargily.net', 
+                'https://res.cloudinary.com',
+                'https://*.cloudinary.com',
+                'https://connect.facebook.net',
+                'https://*.facebook.com',
+                'https://analytics.tiktok.com',
+                'https://*.tiktok.com',
+                'https://www.googletagmanager.com',
+                'https://*.google-analytics.com',
+                'https://*.analytics.google.com',
+                'ws:', 
+                'wss:'
+            ],
             objectSrc: ["'none'"],
             baseUri: ["'self'"],
             frameAncestors: ["'none'"],
-            frameSrc: ["'self'", 'https://accounts.google.com']
+            frameSrc: [
+                "'self'", 
+                'https://accounts.google.com',
+                'https://*.facebook.com',
+                'https://*.chargily.com',
+                'https://*.chargily.net'
+            ]
         }
     },
+    crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: { policy: 'cross-origin' },
     frameguard: { action: 'DENY' },
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
@@ -78,18 +131,17 @@ const corsOptions = {
         if (!origin) {
             return callback(null, true);
         }
-        // Allow all configured origins, onrender.com subdomains, or localhost
+        // Production must only trust explicitly configured storefront origins.
         if (
             config.ALLOWED_ORIGINS.includes(origin) ||
-            origin.endsWith('.onrender.com') ||
-            origin.startsWith('http://localhost') ||
-            origin.startsWith('http://127.0.0.1') ||
-            !config.isProduction
+            (!config.isProduction && (
+                origin.startsWith('http://localhost') ||
+                origin.startsWith('http://127.0.0.1')
+            ))
         ) {
             return callback(null, true);
         }
-        // Allow any production origin that connects directly to the store
-        return callback(null, true);
+        return callback(new Error('Origin not allowed by CORS'));
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],

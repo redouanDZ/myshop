@@ -9,10 +9,31 @@ let currentShippingCost = 500;
 
 document.addEventListener('DOMContentLoaded', async function() {
     await loadWilayas();
+    await loadPaymentConfiguration();
     loadCartData();
     initPaymentMethodListeners();
     prefillCustomerInfo();
 });
+
+async function loadPaymentConfiguration() {
+    const chargilyInput = document.getElementById('chargily');
+    if (!chargilyInput) return;
+
+    try {
+        const response = await fetch('/api/admin/store-config');
+        const config = response.ok ? await response.json() : {};
+        if (config.chargilyEnabled) return;
+
+        const paymentOption = chargilyInput.closest('.payment-option');
+        if (paymentOption) paymentOption.remove();
+        const cashInput = document.getElementById('cash');
+        if (cashInput) cashInput.checked = true;
+    } catch (error) {
+        // Keep COD available when optional payment configuration is unavailable.
+        const paymentOption = chargilyInput.closest('.payment-option');
+        if (paymentOption) paymentOption.remove();
+    }
+}
 
 /**
  * جلب قائمة الولايات الـ 58 من API
@@ -188,12 +209,14 @@ function renderReviewItems() {
     let cart = [];
     try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
 
+    const escape = window.escapeHtml || (value => String(value ?? ''));
+
     container.innerHTML = cart.map(item => `
         <div class="order-item" style="display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #f1f5f9;">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <img src="${item.image || item.image_url || '/images/product-placeholder.jpg'}" alt="${item.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                <img src="${escape(item.image || item.image_url || '/images/product-placeholder.jpg')}" alt="${escape(item.name)}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
                 <div>
-                    <strong style="display: block; font-size: 0.95rem; color: #1e293b;">${item.name}</strong>
+                    <strong style="display: block; font-size: 0.95rem; color: #1e293b;">${escape(item.name)}</strong>
                     <span style="font-size: 0.85rem; color: #64748b;">${window.I18n.t('cart.item_qty', 'الكمية: {qty}').replace('{qty}', item.quantity)}</span>
                 </div>
             </div>

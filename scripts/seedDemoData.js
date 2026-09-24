@@ -6,6 +6,10 @@ require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const db = require('../src/data/db-connection');
 
+if (process.env.NODE_ENV === 'production') {
+    throw new Error('Demo seeding is disabled in production.');
+}
+
 async function seedDemoData() {
     console.log('🌱 Starting MYSHOP Pro Demo Data Seeding...');
     await db.initializeDatabase();

@@ -43,16 +43,23 @@
    DB_NAME=ضع_اسم_قاعدة_البيانات_هنا
    DB_USER=ضع_اسم_المستخدم_هنا
    DB_PASSWORD=ضع_كلمة_المرور_هنا
-   JWT_SECRET=myshop_super_secret_jwt_key_2026
-   COOKIE_SECRET=myshop_super_secret_cookie_key_2026
+   JWT_SECRET=ضع_قيمة_عشوائية_طويلة_لا_تقل_عن_32_حرفاً
+   COOKIE_SECRET=ضع_قيمة_عشوائية_طويلة_لا_تقل_عن_32_حرفاً
+   ALLOWED_ORIGINS=https://your-app.onrender.com
+   # Optional: the store owner supplies these Chargily keys
+   CHARGILY_PUBLIC_KEY=
+   CHARGILY_SECRET_KEY=
+   CHARGILY_MODE=live
    ```
+
+> الدفع عند الاستلام يعمل بدون مفاتيح Chargily. يضع مالك المتجر مفاتيح حسابه بنفسه في متغيرات البيئة؛ لا تضع مفاتيحك الشخصية داخل المشروع أو Git. عند ترك المفاتيح فارغة سيُخفى خيار الدفع الإلكتروني تلقائيًا من checkout.
 
 6. اضغط على زر **Create Web Service**.
 
 ---
 
-### 3️⃣ الخطوة الثالثة: ملء البيانات التجريبية بضغطة زر (Seeding)
-بمجرد تشغيل السيرفر، يمكنك الدخول إلى شاشة الأوامر (Render Shell) وتشغيل:
+### 3️⃣ الخطوة الثالثة: تجهيز بيانات العرض قبل النشر (Seeding)
+نفّذ Seeder في بيئة تطوير أو قاعدة بيانات تجريبية فقط قبل النشر. لا تشغّله على خدمة الإنتاج:
 ```bash
 npm run seed:demo
 ```
@@ -61,6 +68,8 @@ npm run seed:demo
 ---
 
 ## 🔑 بيانات الدخول التجريبية (Demo Accounts):
+
+هذه الحسابات مخصصة للعرض المحلي فقط، ويجب حذفها أو تغيير كلمات مرورها قبل فتح المتجر للعامة.
 
 | الحساب | البريد الإلكتروني | كلمة المرور | الصلاحية |
 |---|---|---|---|

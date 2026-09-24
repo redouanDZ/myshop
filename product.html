@@ -9,12 +9,9 @@
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap"></noscript>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></noscript>
-    <style>
-        /* CSS كما في النسخة السابقة (بدون تغيير) */
-    </style>
   <meta name="theme-color" content="#2563eb">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" href="/images/logo.png">
@@ -70,7 +67,6 @@
 
     <div class="page-title">
         <div class="container">
-            <h1 id="product-title">تفاصيل المنتج</h1>
             <div class="breadcrumb">
                 <a href="index.html" data-i18n="footer.link_home">الرئيسية</a> <i class="fas fa-chevron-left"></i> <a href="shop.html" data-i18n="shop.title">التسوق</a> <i class="fas fa-chevron-left"></i> <span id="product-breadcrumb" data-i18n="product.page_title">تفاصيل المنتج</span>
             </div>
@@ -85,27 +81,31 @@
                     <div class="thumbnail-images" id="thumbnail-images"></div>
                 </div>
                 <div class="product-info">
-                    <h2 id="product-name">اسم المنتج هنا</h2>
+                    <h1 id="product-name" style="font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; color: var(--dark-color); line-height: 1.35;">اسم المنتج هنا</h1>
                     <div class="product-rating" id="product-rating"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><span id="rating-score">(4.0)</span></div>
-                    <div class="product-price"><span class="price" id="product-price">299.00 <span data-i18n="common.currency">دج</span></span><span class="old-price" id="old-price">399.00 <span data-i18n="common.currency">دج</span></span><span class="discount" id="discount">-25%</span></div>
+                    <div class="product-price">
+                        <span class="price" id="product-price">299.00 <span data-i18n="common.currency">دج</span></span>
+                        <span class="old-price" id="old-price" style="display: none;">399.00 <span data-i18n="common.currency">دج</span></span>
+                        <span class="discount" id="discount" style="display: none;">-25%</span>
+                    </div>
                     <div class="product-description" id="product-description"><p>وصف المنتج...</p></div>
                     <div class="product-options">
                         <div class="color-options"><h3 data-i18n="product.color_label">اللون:</h3><div class="color-select" id="color-select"></div></div>
                         <div class="size-options"><h3 data-i18n="product.size_label">المقاس:</h3><div class="size-select" id="size-select"></div></div>
                     </div>
                     <div class="product-actions">
-                        <div class="quantity"><button class="quantity-btn decrease" onclick="changeQuantity(-1)">-</button><input type="number" id="quantity" value="1" min="1" max="10" onchange="updateExpressCalculations()"><button class="quantity-btn increase" onclick="changeQuantity(1)">+</button></div>
-                        <button class="add-to-cart" onclick="addToCartFromProduct()" data-i18n="common.add_to_cart"><i class="fas fa-cart-plus"></i> أضف إلى السلة</button>
-                        <button class="add-to-wishlist" onclick="addToWishlist()" data-i18n-title="product.add_wishlist_title" title="أضف للمفضلة"><i class="far fa-heart"></i></button>
+                        <div class="quantity"><button type="button" class="quantity-btn decrease" onclick="changeQuantity(-1)">-</button><input type="number" id="quantity" value="1" min="1" max="10" onchange="updateExpressCalculations()"><button type="button" class="quantity-btn increase" onclick="changeQuantity(1)">+</button></div>
+                        <button type="button" class="add-to-cart" onclick="addToCartFromProduct()" data-i18n="common.add_to_cart"><i class="fas fa-cart-plus"></i> أضف إلى السلة</button>
+                        <button type="button" class="add-to-wishlist" onclick="addToWishlist()" data-i18n-title="product.add_wishlist_title" title="أضف للمفضلة"><i class="far fa-heart"></i></button>
                     </div>
 
                     <!-- ===== ⚡ 1-Click Direct COD Checkout Box ===== -->
-                    <div class="express-checkout-box" id="express-checkout-box" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid var(--primary-color, #2563eb); border-radius: 12px; padding: 20px; margin-top: 24px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.08);">
+                    <div class="express-checkout-box" id="express-checkout-box" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border: 2px solid var(--primary-color, #2563eb); border-radius: 14px; padding: 20px; margin-top: 24px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.08);">
                         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px;">
                             <h3 style="margin: 0; font-size: 1.12rem; color: #1e293b; display: flex; align-items: center; gap: 8px;">
                                 <i class="fas fa-bolt" style="color: #f59e0b;"></i> <span data-i18n="product.quick_buy_title">الشراء السريع (الدفع عند الاستلام)</span>
                             </h3>
-                            <span style="background: #e0f2fe; color: #0369a1; font-size: 0.78rem; font-weight: bold; padding: 3px 8px; border-radius: 20px;">
+                            <span style="background: #e0f2fe; color: #0369a1; font-size: 0.78rem; font-weight: bold; padding: 4px 10px; border-radius: 20px;">
                                 <i class="fas fa-shield-alt"></i> <span data-i18n="product.direct_order">طلب مباشر</span>
                             </span>
                         </div>
@@ -113,35 +113,35 @@
                         <form id="express-order-form" onsubmit="handleExpressOrder(event)" style="display: grid; gap: 12px;">
                             <div>
                                 <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;"><span data-i18n="checkout.full_name">الاسم الكامل</span> <span style="color:#ef4444;">*</span></label>
-                                <input type="text" id="express-name" required data-i18n="product.name_placeholder" placeholder="مثال: أحمد بن علي" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;">
+                                <input type="text" id="express-name" required data-i18n="product.name_placeholder" placeholder="مثال: أحمد بن علي" style="width: 100%; min-height: 42px; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;">
                             </div>
 
                             <div>
                                 <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;"><span data-i18n="checkout.phone">رقم الهاتف</span> <span style="color:#ef4444;">*</span></label>
-                                <input type="tel" id="express-phone" required placeholder="05 / 06 / 07 XX XX XX XX" style="width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;" dir="ltr">
+                                <input type="tel" id="express-phone" required placeholder="05 / 06 / 07 XX XX XX XX" style="width: 100%; min-height: 42px; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; background: #fff;" dir="ltr">
                             </div>
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px;">
                                 <div>
                                     <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;"><span data-i18n="checkout.wilaya">الولاية</span> <span style="color:#ef4444;">*</span></label>
-                                    <select id="express-wilaya" required onchange="onExpressWilayaChange()" style="width: 100%; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
+                                    <select id="express-wilaya" required onchange="onExpressWilayaChange()" style="width: 100%; min-height: 42px; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
                                         <option value="" data-i18n="product.select_wilaya">-- اختر الولاية --</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;" data-i18n="checkout.address">البلدية / العنوان</label>
-                                    <input type="text" id="express-address" data-i18n="product.address_placeholder" placeholder="البلدية أو العنوان" style="width: 100%; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
+                                    <input type="text" id="express-address" data-i18n="product.address_placeholder" placeholder="البلدية أو العنوان" style="width: 100%; min-height: 42px; padding: 10px 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; background: #fff;">
                                 </div>
                             </div>
 
                             <div>
                                 <label style="display: block; font-size: 0.88rem; font-weight: 600; margin-bottom: 4px; color: #334155;" data-i18n="product.delivery_type">نوع التوصيل</label>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                    <label style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.84rem;">
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px;">
+                                    <label style="display: flex; align-items: center; gap: 8px; background: #fff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.88rem; min-height: 42px;">
                                         <input type="radio" name="express-delivery" value="home" checked onchange="updateExpressCalculations()">
                                         <span>🏠 للمنزل (<span id="express-home-price">500 <span data-i18n="common.currency">دج</span></span>)</span>
                                     </label>
-                                    <label style="display: flex; align-items: center; gap: 6px; background: #fff; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.84rem;">
+                                    <label style="display: flex; align-items: center; gap: 8px; background: #fff; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 8px; cursor: pointer; font-size: 0.88rem; min-height: 42px;">
                                         <input type="radio" name="express-delivery" value="desk" onchange="updateExpressCalculations()">
                                         <span>🏢 للمكتب (<span id="express-desk-price">350 <span data-i18n="common.currency">دج</span></span>)</span>
                                     </label>
@@ -202,7 +202,10 @@
                     <div class="tab-panel" id="shipping"><h3 data-i18n="cart.shipping">سياسة الشحن والتوصيل</h3><p data-i18n="product.shipping_policy">نوفر خدمة التوصيل السريع والآمن إلى كافة ولايات الجزائر (58 ولاية). يتم حساب سعر الشحن تلقائياً عند الدفع بناءً على الولاية المختارة ونوع التوصيل (منزلي أو مكتب استلام).</p></div>
                 </div>
             </div>
-            <div class="similar-products"><h2 data-i18n="product.similar_products">منتجات مشابهة</h2><div class="products-grid" id="similar-products"></div></div>
+            <div class="similar-products" style="margin-top: 50px;">
+                <h2 data-i18n="product.similar_products" style="font-size: 1.4rem; font-weight: 800; margin-bottom: 24px;">منتجات مشابهة</h2>
+                <div class="products-grid" id="similar-products"></div>
+            </div>
         </div>
     </section>
 
@@ -210,40 +213,66 @@
     <footer>
         <div class="container">
             <div class="footer-grid">
+                <!-- About Store -->
                 <div class="footer-col">
                     <div style="font-size: 1.4rem; font-weight: 900; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
                         <i class="fas fa-shopping-bag" style="color: var(--primary-color);"></i> <span data-i18n="footer.brand">المتجر الإلكتروني</span>
                     </div>
                     <p style="line-height: 1.6; color: #94a3b8; font-size: 0.92rem;">
-                        <span data-i18n="footer.description">وجهتك الأولى للتسوق الإلكتروني في الجزائر. منتجات أصلية، توصيل لـ 58 ولاية، والدفع عند الاستلام.</span>
+                        <span data-i18n="footer.description">وجهتك الأولى الموثوقة للتسوق الإلكتروني في الجزائر. نقدم منتجات تقنية أصلية بأفضل الأسعار مع توصيل سريع لـ 58 ولاية ودفع آمن عند الاستلام.</span>
                     </p>
+                    <div style="display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap;">
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-truck"></i> <span data-i18n="footer.badge_wilayas">58 ولاية</span></span>
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-shield-alt"></i> <span data-i18n="footer.badge_warranty">ضمان 100%</span></span>
+                        <span style="background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; color: #cbd5e1;"><i class="fas fa-hand-holding-usd"></i> <span data-i18n="footer.badge_cod">الدفع عند الاستلام</span></span>
+                    </div>
                 </div>
+
+                <!-- Quick Links -->
                 <div class="footer-col">
                     <h3 data-i18n="footer.quick_links">روابط سريعة</h3>
                     <ul>
-                        <li><a href="index.html" data-i18n="footer.link_home">الرئيسية</a></li>
-                        <li><a href="shop.html" data-i18n="shop.title">التسوق</a></li>
-                        <li><a href="cart.html" data-i18n="footer.link_cart">عربة التسوق</a></li>
-                        <li><a href="track-order.html" data-i18n="footer.link_track">تتبع طلبي</a></li>
+                        <li><a href="index.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> <span data-i18n="footer.link_home">الرئيسية</span></a></li>
+                        <li><a href="shop.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> <span data-i18n="footer.link_shop">متجر المنتجات</span></a></li>
+                        <li><a href="cart.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> <span data-i18n="footer.link_cart">سلة التسوق</span></a></li>
+                        <li><a href="wishlist.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> <span data-i18n="footer.link_wishlist">قائمة المفضلة</span></a></li>
+                        <li><a href="track-order.html"><i class="fas fa-chevron-left" style="font-size: 0.7rem; margin-left: 6px;"></i> <span data-i18n="footer.link_track">تتبع طلبيتك</span></a></li>
                     </ul>
                 </div>
+
+                <!-- Customer Support -->
                 <div class="footer-col">
-                    <h3 data-i18n="footer.contact">تواصل معنا</h3>
+                    <h3 data-i18n="footer.contact">خدمة العملاء والتواصل</h3>
                     <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> <span data-i18n="footer.address">الجزائر العاصمة، الجزائر</span></li>
-                        <li><i class="fas fa-envelope"></i> contact@myshop.dz</li>
+                        <li><i class="fas fa-map-marker-alt" style="color: var(--primary-color); margin-left: 8px;"></i> <span data-i18n="footer.address">الجزائر العاصمة، الجزائر</span></li>
+                        <li><i class="fas fa-envelope" style="color: var(--primary-color); margin-left: 8px;"></i> contact@myshop.dz</li>
+                        <li><i class="fas fa-clock" style="color: var(--primary-color); margin-left: 8px;"></i> <span data-i18n="footer.hours">السبت - الخميس: 9:00 ص - 6:00 م</span></li>
                     </ul>
                 </div>
+
+                <!-- Payment Methods & Social -->
                 <div class="footer-col">
-                    <h3 data-i18n="footer.payment_shipping">طرق الدفع</h3>
-                    <div style="display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap;">
-                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave"></i> <span data-i18n="features.cod_title">الدفع عند الاستلام</span></span>
-                        <span style="background: #1e293b; border: 1px solid #334155; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card"></i> EDAHABIA / CIB</span>
+                    <h3 data-i18n="footer.payment_shipping">طرق الدفع والشحن</h3>
+                    <p style="font-size: 0.88rem; color: #94a3b8; margin-bottom: 12px;" data-i18n="footer.payment_desc">نقبل الدفع الآمن عند الاستلام أو عبر البطاقات الإلكترونية الجزائرية:</p>
+                    <div style="display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;">
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-money-bill-wave" style="color: var(--success-color);"></i> <span data-i18n="footer.cod_cash">COD نقداً</span></span>
+                        <span style="background: #1e293b; border: 1px solid #334155; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #f8fafc;"><i class="fas fa-credit-card" style="color: var(--secondary-color);"></i> EDAHABIA / CIB</span>
+                    </div>
+                    <h3 data-i18n="footer.follow">تابعنا على الشبكات</h3>
+                    <div class="social-links">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
-            <div class="footer-bottom">
-                <p data-i18n="footer.copyright">&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</p>
+
+            <div class="footer-bottom" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px; margin-top: 30px;">
+                <p style="margin: 0; font-size: 0.88rem; color: #94a3b8;"><span data-i18n="footer.copyright">&copy; 2026 متجر الإلكتروني (MYSHOP). جميع الحقوق محفوظة.</span></p>
+                <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
+                    <a href="landing.html" style="color: #38bdf8; text-decoration: none; font-size: 0.88rem; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;"><i class="fas fa-bolt"></i> امتلك متجراً مثل هذا (MYSHOP Pro)</a>
+                </div>
             </div>
         </div>
     </footer>
@@ -264,8 +293,32 @@
                 document.getElementById('product-breadcrumb').textContent = currentProduct.name;
                 document.getElementById('product-name').textContent = currentProduct.name;
                 document.getElementById('product-price').textContent = `${Number(currentProduct.price).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
+                
+                // Old price and discount badge handling
+                const oldPriceEl = document.getElementById('old-price');
+                const discountEl = document.getElementById('discount');
+                if (currentProduct.old_price && Number(currentProduct.old_price) > Number(currentProduct.price)) {
+                    const oldVal = Number(currentProduct.old_price);
+                    const curVal = Number(currentProduct.price);
+                    const discountPercent = Math.round(((oldVal - curVal) / oldVal) * 100);
+                    if (oldPriceEl) {
+                        oldPriceEl.textContent = `${oldVal.toLocaleString()} ${window.I18n.t('common.currency', 'دج')}`;
+                        oldPriceEl.style.display = 'inline-block';
+                    }
+                    if (discountEl) {
+                        discountEl.textContent = `-${discountPercent}%`;
+                        discountEl.style.display = 'inline-block';
+                    }
+                } else {
+                    if (oldPriceEl) oldPriceEl.style.display = 'none';
+                    if (discountEl) discountEl.style.display = 'none';
+                }
+
                 const safeDescription = window.escapeHtml ? window.escapeHtml(currentProduct.description || window.I18n.t('product.no_description', 'وصف غير متوفر')).replace(/\n/g, '<br>') : (currentProduct.description || window.I18n.t('product.no_description', 'وصف غير متوفر'));
                 document.getElementById('product-description').innerHTML = `<p>${safeDescription}</p>`;
+                const descContentEl = document.getElementById('description-content');
+                if (descContentEl) descContentEl.innerHTML = `<p>${safeDescription}</p>`;
+
                 document.title = `${currentProduct.name} - <span data-i18n="footer.brand">المتجر الإلكتروني</span>`;
                 const metaDesc = document.querySelector('meta[name="description"]');
                 if (metaDesc && currentProduct.description) metaDesc.content = currentProduct.description.substring(0, 160);
@@ -555,6 +608,38 @@
             }
         });
 
+        async function handleSimilarAddToCart(productId) {
+            try {
+                let p = window._similarProductsMap && window._similarProductsMap[productId];
+                if (!p) {
+                    const res = await fetch(`/api/products/${productId}`);
+                    if (res.ok) p = await res.json();
+                }
+                if (!p) return;
+                if (typeof window.addToCart === 'function') {
+                    await window.addToCart(p, 1);
+                } else {
+                    let cart = [];
+                    try { cart = JSON.parse(localStorage.getItem('cart') || '[]'); } catch (e) {}
+                    const existing = cart.find(item => item.id === p.id);
+                    if (existing) {
+                        existing.quantity = Math.min(20, existing.quantity + 1);
+                    } else {
+                        cart.push({
+                            id: p.id,
+                            name: p.name,
+                            price: Number(p.price) || 0,
+                            image: p.image_url || '/images/product-placeholder.jpg',
+                            quantity: 1
+                        });
+                    }
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    window.cart = cart;
+                    if (window.showToast) window.showToast(window.I18n.t('messages.add_cart_success', 'تمت إضافة المنتج إلى السلة بنجاح! 🛒'), 'success');
+                }
+            } catch (err) {}
+        }
+
         async function loadSimilarProducts(category) {
             try {
                 const response = await fetch(`/api/products?category=${encodeURIComponent(category || '')}`);
@@ -568,14 +653,45 @@
                     container.innerHTML = '<p style="color: #64748b; padding: 15px;">' + window.I18n.t('product.no_similar_products', 'لا توجد منتجات مشابهة حالياً') + '</p>';
                     return;
                 }
-                container.innerHTML = similar.map(p => `
-                    <div class="similar-product">
-                        <img src="${p.image_url || 'images/product-placeholder.jpg'}" alt="${p.name}">
-                        <h3>${p.name}</h3>
-                        <p class="price">${Number(p.price).toLocaleString()} ${window.I18n.t('common.currency', 'دج')}</p>
-                        <a href="product.html?id=${p.id}"><span data-i18n="product.view_details">عرض التفاصيل</span></a>
+                window._similarProductsMap = {};
+                similar.forEach(p => { window._similarProductsMap[p.id] = p; });
+
+                container.innerHTML = similar.map(p => {
+                    const stockNum = Number(p.stock) || 0;
+                    const safeName = window.escapeHtml ? window.escapeHtml(p.name) : p.name;
+                    const safeCat = window.escapeHtml ? window.escapeHtml(p.category || window.I18n.t('categories.general', 'عام')) : (p.category || window.I18n.t('categories.general', 'عام'));
+                    return `
+                    <div class="product-card" id="similar-product-${p.id}">
+                        <span class="product-badge">${safeCat}</span>
+                        <a href="product.html?id=${p.id}" class="product-image">
+                            <img src="${p.image_url || '/images/product-placeholder.jpg'}" alt="${safeName}" loading="lazy" onerror="this.onerror=null;this.src='/images/product-placeholder.jpg';">
+                        </a>
+                        <div class="product-info">
+                            <span class="product-category">${safeCat}</span>
+                            <h3 class="product-name">
+                                <a href="product.html?id=${p.id}">${safeName}</a>
+                            </h3>
+                            <div class="product-rating">
+                                <div class="rating-stars" style="color: #f59e0b; font-size: 0.85rem;">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="rating-count" style="font-size: 0.8rem; color: var(--light-text); margin-inline-start: 6px;">(${p.rating || '4.5'})</span>
+                            </div>
+                            <div class="product-price-row" style="display: flex; justify-content: space-between; align-items: baseline; margin: 10px 0 14px;">
+                                <span class="product-price">${Number(p.price).toLocaleString()} <small style="font-size: 0.85rem; font-weight: 600;" data-i18n="common.currency">دج</small></span>
+                                <span style="font-size: 0.8rem; color: ${stockNum > 3 ? 'var(--success-color)' : stockNum > 0 ? 'var(--warning-color)' : 'var(--danger-color)'}; font-weight: 600;">
+                                    <i class="fas fa-box"></i> ${stockNum > 0 ? window.I18n.t('product.in_stock_count', 'متوفر ({count})').replace('{count}', stockNum) : window.I18n.t('product.out_of_stock', 'نفد المخزون')}
+                                </span>
+                            </div>
+                            <div class="product-card-actions">
+                                <a href="product.html?id=${p.id}" class="btn btn-secondary" data-i18n="product.details">التفاصيل</a>
+                                <button type="button" onclick="handleSimilarAddToCart(${p.id})" class="btn" ${stockNum <= 0 ? 'disabled' : ''}>
+                                    <i class="fas fa-cart-plus"></i> <span data-i18n="product.add_to_cart">أضف للسلة</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                `).join('');
+                `;}).join('');
                 if (window.I18n) window.I18n.translatePage();
             } catch (error) {
                 const container = document.getElementById('similar-products');
