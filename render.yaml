@@ -26,3 +26,5 @@ services:
         sync: false
       - key: BASE_URL
         sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://myshop-aa9v.onrender.com
